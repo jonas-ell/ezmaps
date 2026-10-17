@@ -2,24 +2,41 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
-## GM-010 – Review Teil 0: Neon-Karte nach Vorlage
+## GM-011 – Review Teil 0 zusammengeführt: Relief, weiße Symbole, Legende
 
-**Ziel:** Punkte 0.1–0.7 aus `docs/TODO_PROTOTYP_REVIEW.md`, Vergleich mit der Vorlage (0.8).
+**Ziel:** Teil 0 parallel vom lokalen Claude und vom Cloud-Claude bearbeitet – zusammenführen. Look-Entscheidungen des Cloud-Claude (GM-010, nach neueren Vorlagebildern) gelten; dazu die Teile, die nur hier gebaut wurden.
 
 **Dateien:** `tools/prototype/js/{map,app,phone,carplay}.js`, `tools/prototype/style.css`, `tools/prototype/hillshade.py` (neu), `tools/prototype/data/hillshade.png` (neu), `docs/ASSETS_CODEX.md`, `docs/TODO_PROTOTYP_REVIEW.md`, `docs/previews/*`
 
 **Geändert:**
-- 0.1 Neon-Palette: Land `#1E1F20`, Flächen nur minimal heller, Gebäude `#29292B`, Wasser hell `#8FA3B0`, Wald/Park neutral
-- 0.2 Straßen nicht mehr in der Textur, sondern als feine Vektorlinien in Bildschirm-Pixeln (0,9–3 pt, Rang über Helligkeit); Kreisel ohne dicken Ring
-- 0.3 Hügel-Schattierung aus freien Höhendaten (Terrain Tiles/AWS: SRTM, EU-DEM © Copernicus), `hillshade.py` erzeugt `data/hillshade.png`; Quelle im Profil genannt; Texturrand läuft weich aus
-- 0.4 Stöbern weiter raus: ganze Stadt im Blick (iPhone 0,17 px/m, CarPlay 0,26 px/m), Zoom bis 2 px/m
-- 0.5 Neon-Symbole einfarbig weiß mit dunkler Kontur (eigener Glyphen-Satz), Essen in der Übersicht ausgeblendet; Codex-Prompt für passenden Glyphen-Satz ergänzt
-- 0.6 Legende über den Ebenen-Knopf (iPhone), Tippen hebt Symbole hervor; CarPlay ohne Legende (wenig Ablenkung)
-- 0.7 Maßstab unten links über dem Ortsteil-Kasten (iPhone und CarPlay), passt sich dem Zoom an
+- Übernommen aus GM-010: Palette, Stadtblöcke, breite Straßen in der Textur, iPhone-Zoom 0,3, CarPlay-Radar-Zoom
+- 0.3 Hügel-Schattierung aus freien Höhendaten (Terrain Tiles/AWS: SRTM, EU-DEM © Copernicus); `hillshade.py` erzeugt `data/hillshade.png`; Quelle im Profil; Texturrand läuft weich aus
+- 0.5 Neon-Symbole einfarbig weiß mit dunkler Kontur (eigener Glyphen-Satz), Essen in der Übersicht ausgeblendet; Codex-Prompt „NeonMono“ ergänzt
+- 0.6 Legende über den Ebenen-Knopf (iPhone), Tippen hebt Symbole hervor; CarPlay bewusst ohne Legende (wenig Ablenkung)
+- 0.7 Maßstab: eine Umsetzung (lokal) statt zwei
+- Vektorstraßen (`drawRoads`) bleiben im Code, sind aber aus – Entscheidung GM-010: Straßen breit und mitwachsend
 
-**Tatsächlich geprüft:** `shots.py` ohne Konsolenfehler, Bilder angesehen; Vergleichsbild Vorlage ↔ CarPlay-Übersicht erstellt (nicht im Repo, Vorlage ist fremdes Bildmaterial).
+**Tatsächlich geprüft:** `shots.py` nach dem Zusammenführen ohne Konsolenfehler, 22 Bilder neu erzeugt und angesehen (Karte, Vorschau, Navigation, Stile, CarPlay).
 
-**Ungetestet:** Prototyp nur in Chromium. Swift-Karte (0.9) erst nach Freigabe. Zeichenaufwand der Vektorstraßen auf schwachen Geräten nicht gemessen.
+**Ungetestet:** Prototyp nur in Chromium. Swift-Karte (0.9) erst nach Freigabe des Looks.
+
+## GM-010 – Neon City sieht aus wie die Vorlage (dunkle Stadtübersicht), Maßstab
+
+**Ziel:** Die Neon-Karte an die Vorlagebilder des Nutzers angleichen: fast schwarzes Gelände, Stadt als dunkelgraue Blöcke, breite hellgraue Straßen, Maßstab unten links.
+
+**Dateien:** `tools/prototype/js/map.js`, `tools/prototype/js/app.js`, `tools/prototype/js/phone.js`, `tools/prototype/js/carplay.js`, `tools/prototype/style.css`, `docs/TODO_PROTOTYP_REVIEW.md`
+
+**Geändert:**
+- `NEON`-Palette: Land `#1c1c1d`, Wald/Feld/Park fast schwarz, bebaute Fläche `#2c2c2d`, Gebäude `#373738` mit feiner Kante, Wasser grau `#4b4e4d`, Straßen `#b0b0b0`/`#a3a3a3`/`#8e8e8e` ohne Rand und 1,5× breiter; Hintergrund und Dunst passend dunkel
+- Neu `urbanBlocks()`: Bebaute Fläche wird automatisch aus Gebäuden und Wohnstraßen erzeugt (OSM hat in Idstein kaum `landuse=residential`), freies Gelände bleibt dunkel
+- iPhone-Stöbern startet weiter rausgezoomt (0,3 statt 0,42), gilt für alle Stile; CarPlay behält den Radar-Zoom aus GM-008
+- Maßstab („0 ── 250 m“) unten links über dem Ortsteil-Kasten auf iPhone und CarPlay, passt sich beim Zoomen an
+- Aufgabenliste: 0.1, 0.2 (geändert: Straßen bleiben in Metern, weil sie in der Vorlage mitwachsen), 0.4, 0.7 abgehakt
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Skriptfehler; Bildschirmfotos von Karte (iPhone + CarPlay), Routen-Vorschau und Navigation angesehen. Die Detail-Kachel in der Navigation nutzt die neue Palette.
+
+**Ungetestet:** Swift nicht angepasst (erst nach Freigabe, Punkt 0.9). `docs/previews/` nicht neu erzeugt (in der Cloud fehlt die Pricedown-Schrift). Wild West, Pixel Quest und Toy Town nur durch den weiteren Zoom betroffen, nicht angesehen.
+
 
 ## GM-009 – Review Teil 1: Fehler behoben
 
