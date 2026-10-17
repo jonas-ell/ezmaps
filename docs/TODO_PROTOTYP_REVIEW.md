@@ -71,10 +71,10 @@ Aufgaben:
 - [ ] **4.1 CarPlay-Navigation bei Apple beantragen** (Entitlement `com.apple.developer.carplay-maps`) – Nutzer
 - [x] **4.2 Karte für ganz Deutschland** _(GM-015, Prototyp: OpenFreeMap; App: siehe `docs/KARTENDATEN.md`)_
 - [x] **4.3 Alle Stile überall** _(GM-015, Prototyp)_ – in der App: MapLibre-Stile für Neon/Western, eigener Renderer für Toy/Pixel
-- [x] **4.4 Routing Deutschland** _(GM-015, Prototyp: Valhalla FOSSGIS)_ – App: eigener Server
-- [x] **4.5 Suche Deutschland** _(GM-015, Prototyp: Photon)_ – App: eigener Photon oder MapKit
+- [x] **4.4 Routing Deutschland** _(GM-015, Prototyp: Valhalla FOSSGIS)_ – App: eigener Server _(GM-017: `ValhallaClient` in Core, ungetestet)_
+- [x] **4.5 Suche Deutschland** _(GM-015, Prototyp: Photon)_ – App: eigener Photon oder MapKit _(GM-017: `PhotonClient` in Core, ungetestet)_
 - [x] **4.6 Echte Tempolimits** _(GM-015, OSM maxspeed über Valhalla)_
-- [x] **4.7 Neuberechnung bei Abweichung** _(GM-015, im Prototyp per Knopf „Falsch abbiegen“)_ – App: automatisch bei > 30 m Abstand zur Route
+- [x] **4.7 Neuberechnung bei Abweichung** _(GM-015, im Prototyp per Knopf „Falsch abbiegen“; GM-016 Ausweich-Versuche)_ – App: automatisch bei > 30 m Abstand zur Route _(GM-017: `RerouteMonitor` in Core mit Tests – noch nicht auf dem Mac gebaut)_
 - [ ] **4.8 Navigation im Hintergrund, Live-Aktivität, Dynamic Island** – nur in Swift
 - [ ] **4.9 GPS einrasten (Map-Matching), Tunnel** – nur in Swift
 - [ ] **4.10 Spritpreise (Tankerkönig-API, Schlüssel nötig), E-Ladesäulen (Open Charge Map)**

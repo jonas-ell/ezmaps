@@ -2,6 +2,24 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-017 – Swift: MapLibre-Karte „Neon City“, Valhalla, Photon, Neuberechnung (ungetestet)
+
+**Ziel:** Erste echte Swift-Bausteine nach dem Prototyp: Karte mit MapLibre Native, Routing/Suche/Tempolimits in `Core/`, automatische Neuberechnung.
+
+**Dateien:** `project.yml`, `App/NeonMapView.swift` (neu), `App/ContentView.swift`, `App/CarPlaySceneDelegate.swift`, `App/MapStyles/style-neon-city.json` (neu, erzeugt), `tools/maplibre/build_style.py` (neu), `Core/Sources/EzMapsCore/{Coordinate,Polyline,HTTPClient,Route,ValhallaClient,PhotonClient,RerouteMonitor}.swift` (neu), `Core/Tests/EzMapsCoreTests/RoutingTests.swift` (neu), `tools/mac_build.sh` (neu), `CLAUDE.md`, `.gitignore`, `docs/TODO_PROTOTYP_REVIEW.md`
+
+**Geändert:**
+- MapLibre Native per SPM (`maplibre-gl-native-distribution`, ab 6.0.0)
+- Stil „Neon City“ als MapLibre-JSON, erzeugt aus `tools/prototype/js/map.js` (NEON-Farben, Straßenbreiten in Metern ×0,75×1,5, Mindestbreiten MIN_PX, Stadtblöcke 46 m); Quelle OpenFreeMap; keine Text-Ebenen (keine Glyphen nötig). Relief fehlt noch (OpenFreeMap liefert keine Höhendaten)
+- iPhone: Vollbild-Karte, „© OpenStreetMap-Mitwirkende“ immer sichtbar; CarPlay: Kartenfenster mit derselben Karte, flach (kein Neigen), OSM-Hinweis
+- Core: `ValhallaClient` (Route + Alternativen, Manöver wie im Prototyp, Neuberechnung mit Ausweich-Versuch, Tempolimits über `trace_attributes` inkl. „unlimited“), `PhotonClient` (Suche, deutsche Kategorien, Dubletten < 400 m), `Polyline` (Genauigkeit 5/6), `SpeedLimits.fill` (Spiegel von `fillLimits`), `RerouteMonitor` (> 30 m Abstand → neu berechnen, 8 s Sperrzeit)
+- Netzwerk über Protokoll `HTTPClient`; Tests mit Attrappe, laufen ohne Internet
+- `tools/mac_build.sh` für das neue Mac-Gate (Anleitung `App/MAC_ZUGANG_NEUE_APP.md`, liegt nur lokal – enthält Team-/Key-IDs, Repo ist öffentlich); eigener Schlüssel `~/.ssh/ezmaps_mac` auf dem PC erzeugt; `CLAUDE.md` mit neuem Build-Weg
+
+**Tatsächlich geprüft:** Nur der Stil: `gl-style-validate` (MapLibre-Style-Spec) ohne Fehler, Darstellung mit MapLibre GL JS im Browser (Idstein, Frankfurt, Deutschland) angesehen – entspricht dem Prototyp.
+
+**Ungetestet:** **Kein Swift-Code gebaut, `swift test` nicht gelaufen** – der Mac ist für EzMaps noch nicht eingerichtet (neuer Schlüssel wird abgewiesen, Gate fehlt). MapLibre-API-Namen (`MLNMapView`, `attributionButtonPosition`) und SPM-Version auf dem Mac prüfen.
+
 ## GM-016 – Deutschland-Funktionen im Prototyp geprüft und repariert (Chromium + WebKit)
 
 **Ziel:** GM-015 (Kacheln, Suche, Routing, Tempolimits, Neuberechnung) in Chrome- und Safari-Engine prüfen und Fehler beheben.
