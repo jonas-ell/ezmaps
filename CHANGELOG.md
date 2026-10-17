@@ -2,6 +2,19 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-007 – Aufgabenliste aus dem Prototyp-Review
+
+**Ziel:** Gefundene Fehler, Verbesserungen und Ideen zum Prototyp als Aufgabenliste für den lokalen Claude festhalten.
+
+**Dateien:** `docs/TODO_PROTOTYP_REVIEW.md` (neu)
+
+**Geändert:**
+- Neue Aufgabenliste in drei Teilen: Fehler (u. a. OSM-Hinweis fehlt in Entdecken/Stile, Symbole über der Oberfläche, unlesbare Fahrzeit, verdeckter Spieler-Pfeil), Verbesserungen, Ideen. Am Ende steht, was auf dem Gerät zu testen ist.
+
+**Tatsächlich geprüft:** Die 22 Bildschirmfotos aus `docs/previews/` (Stand GM-006) angesehen, die genannten Code-Stellen nachgeschlagen.
+
+**Ungetestet:** Nichts am Code geändert. Die vermutete Ursache für die Symbole über der Oberfläche (3D-Kamera per CSS) ist nicht bestätigt.
+
 ## GM-006 – Codex-Assets und App-Icon eingebaut, Navi-Zoom wie Apple Maps
 
 **Ziel:** Echte Assets statt Platzhalter im Prototyp, App-Icon in der App, deutlich näherer Zoom während der Fahrt.
