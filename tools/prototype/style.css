@@ -203,6 +203,16 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .spinner { width: 34px; height: 34px; border: 3px solid rgba(255,255,255,.25); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* Tastatur-Fokus (wie Knopf-Steuerung im Auto) */
+.kfocus { outline: 3px solid #0a84ff !important; outline-offset: 2px; box-shadow: 0 0 0 6px rgba(10,132,255,.35) !important; position: relative; z-index: 3; }
+.car .kfocus { outline-color: #fff !important; box-shadow: 0 0 0 6px rgba(255,255,255,.3) !important; }
+.device:has(.phone.ktarget) { box-shadow: 0 0 0 2px #77746f, 0 0 0 5px rgba(10,132,255,.55), 0 30px 80px rgba(0,0,0,.6); }
+.carframe:has(.car.ktarget) { box-shadow: 0 0 0 2px #333, 0 0 0 5px rgba(10,132,255,.55), 0 30px 80px rgba(0,0,0,.6); }
+.cp-pan button { position: absolute; width: 56px; height: 56px; border-radius: 28px; background: rgba(28,28,30,.9); display: grid; place-items: center; color: #fff; }
+.cp-pan .top { left: calc(50% - 28px); top: 54px; } .cp-pan .bottom { left: calc(50% - 28px); bottom: 14px; }
+.cp-pan .left { left: 14px; top: calc(50% - 28px); } .cp-pan .right { right: 14px; top: calc(50% - 28px); }
+.cp-cross { position: absolute; left: 50%; top: 55%; width: 22px; height: 22px; margin: -11px; border: 2px solid rgba(255,255,255,.8); border-radius: 50%; pointer-events: none; }
+
 /* ---------------- CarPlay ---------------- */
 .car { display: flex; width: 1280px; height: 480px; background: #000; color: #fff; font-family: Inter, sans-serif; overflow: hidden; border-radius: 6px; }
 .dock { width: 76px; flex: none; background: #000; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 10px 0; font: 600 13px Inter; }

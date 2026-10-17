@@ -2,7 +2,35 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
-## GM-007 – Aufgabenliste aus dem Prototyp-Review
+## GM-008 – CarPlay-Karte flach von oben wie ein Spiel-Radar
+
+**Ziel:** CarPlay-Ansicht nach Nutzervorlage: flach, Fahrtrichtung oben, große Symbole.
+
+**Dateien:** `tools/prototype/js/carplay.js`, `tools/prototype/js/app.js`
+
+**Geändert:**
+- CarPlay-Navigation: keine 3D-Neigung mehr, 1,8 px/m, Pfeil leicht rechts der Mitte
+- CarPlay-Karte (ohne Route): näher (1,1 px/m), Symbole deutlich größer
+
+**Tatsächlich geprüft:** Bildschirmfotos CarPlay-Karte und -Navigation angesehen, keine Konsolenfehler.
+
+**Ungetestet:** Prototyp nur in Chromium; `docs/previews` noch nicht neu erzeugt.
+
+## GM-007 – Suche repariert, Steuerung per Pfeiltasten überall
+
+**Ziel:** In die Suche tippen können; überall mit Pfeiltasten navigieren wie mit Knopf-/Pfeilsteuerung im Auto.
+
+**Dateien:** `tools/prototype/js/keys.js` (neu), `tools/prototype/js/{app,phone,carplay,icons}.js`, `tools/prototype/{style.css,index.html}`, `docs/previews/*`
+
+**Geändert:**
+- Fehler: Ein Tipp auf die Bildschirm-Tastatur nahm dem Suchfeld den Fokus, danach kam von der echten Tastatur nichts mehr an. Jetzt bleibt der Cursor in der Suche immer im Feld
+- Pfeiltasten springen räumlich zum nächsten Knopf/Listeneintrag (blaue Markierung, bei CarPlay weiß), Enter wählt, Esc geht zurück, Tab wechselt iPhone ↔ CarPlay, +/− zoomt; offene Dialoge/Blätter fangen den Fokus
+- CarPlay: Kartentaste „Verschieben“ wie `CPMapTemplate.showPanningInterface` – vier Pfeilknöpfe, Pfeiltasten bewegen die Karte, „Fertig“/Esc beendet
+
+**Tatsächlich geprüft:** Playwright: Einstieg, Stilwahl, Suche (Tippen + Bildschirmtasten gemischt), Auswahl per Pfeil/Enter, Zurück per Esc, CarPlay-Ziele per Tastatur bis zur Routen-Vorschau, Verschieben per Pfeiltasten; keine Konsolenfehler.
+
+**Ungetestet:** In der echten App kommt die Fokus-Steuerung im Auto von iOS (Focus Engine) – hier nur nachgebildet. Prototyp nur in Chromium.
+## GM-007b – Aufgabenliste aus dem Prototyp-Review
 
 **Ziel:** Gefundene Fehler, Verbesserungen und Ideen zum Prototyp als Aufgabenliste für den lokalen Claude festhalten.
 
@@ -14,6 +42,8 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 **Tatsächlich geprüft:** Die 22 Bildschirmfotos aus `docs/previews/` (Stand GM-006) angesehen, die genannten Code-Stellen nachgeschlagen.
 
 **Ungetestet:** Nichts am Code geändert. Die vermutete Ursache für die Symbole über der Oberfläche (3D-Kamera per CSS) ist nicht bestätigt.
+_(Nummer parallel zu GM-007 vergeben, deshalb „b“.)_
+
 
 ## GM-006 – Codex-Assets und App-Icon eingebaut, Navi-Zoom wie Apple Maps
 

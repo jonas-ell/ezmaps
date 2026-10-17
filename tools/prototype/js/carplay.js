@@ -5,6 +5,7 @@ import { app, set, useStyle, planTo, selectRoute, startNav, endNav, nextManeuver
 import { cpic as ic, manIc } from './icons.js';
 import { fmtDist, fmtMin, smoothHeading, pointAt } from './route.js';
 import { STYLES } from './map.js';
+import { panBy } from './keys.js';
 import { fit, limitFor, category } from './phone.js';
 
 const root = () => document.getElementById('cui');
@@ -14,7 +15,7 @@ export function carCamera(view) {
   const s = app.state, n = s.nav, c = s.car;
   if (n && n.active) {
     const r = n.route, pos = pointAt(r.pts, r.cum, n.progress).p;
-    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 4.6, tilt: 60, anchor: [0.66, 0.84] }; // GM-006: nah wie Apple Maps CarPlay
+    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 1.8, tilt: 0, anchor: [0.62, 0.6] }; // GM-008: Nutzervorlage – flach von oben wie ein Spiel-Radar, nah, Fahrtrichtung oben
   }
   const [W] = view.size();
   if (c.screen === 'preview' && n) return { mode: 'preview', ...fit(n.routes.map(r => r.route.pts).flat(), view, 70, 20, Math.min(330, W * 0.42) + 30, 80) };
@@ -50,11 +51,13 @@ export function renderCar() {
   root().innerHTML = h;
 }
 
-const navbar = (left, right) => `<div class="cp-navbar"><div>${left.map(([a, i, t]) => `<button data-act="${a}">${ic(i, 18)}${t ? `<span>${t}</span>` : ''}</button>`).join('')}</div><div>${right.map(([a, i, t]) => `<button data-act="${a}">${ic(i, 18)}${t ? `<span>${t}</span>` : ''}</button>`).join('')}</div></div>`;
-const mapButtons = () => `<div class="cp-mapbtns">${[['zoom:in', 'plus'], ['zoom:out', 'minus'], ['recenter', 'locate']].map(([a, i]) => `<button data-act="${a}">${ic(i, 22)}</button>`).join('')}</div>`;
+const navbar = (left, right) => `<div class="cp-navbar"><div>${left.map(([a, i, t]) => `<button data-act="${a}"${i === 'back' ? ' class="back"' : ''}>${ic(i, 18)}${t ? `<span>${t}</span>` : ''}</button>`).join('')}</div><div>${right.map(([a, i, t]) => `<button data-act="${a}">${ic(i, 18)}${t ? `<span>${t}</span>` : ''}</button>`).join('')}</div></div>`;
+const mapButtons = (pan = false) => `<div class="cp-mapbtns">${[['zoom:in', 'plus'], ['zoom:out', 'minus'], ...(pan ? [['pan:on', 'pan']] : []), ['recenter', 'locate']].map(([a, i]) => `<button data-act="${a}">${ic(i, 22)}</button>`).join('')}</div>`;
 function mapTpl() {
   const d = 'Altstadt';
-  return navbar([['go:dest', 'search', 'Ziele'], ['go:styles', 'layers', 'Stil']], [['friends', 'friends', '']]) + mapButtons() +
+  // Verschiebe-Modus wie CPMapTemplate.showPanningInterface: vier Pfeile, Pfeiltasten bewegen die Karte
+  if (app.state.car.pan) return navbar([], [['pan:off', 'check', 'Fertig']]) + `<div class="cp-pan">${[['move:0,-1', 'up', 'top'], ['move:0,1', 'down', 'bottom'], ['move:-1,0', 'left', 'left'], ['move:1,0', 'right', 'right']].map(([a, i, c]) => `<button class="${c}" data-act="${a}">${ic(i, 26)}</button>`).join('')}</div><div class="cp-cross"></div><div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>`;
+  return navbar([['go:dest', 'search', 'Ziele'], ['go:styles', 'layers', 'Stil']], [['friends', 'friends', '']]) + mapButtons(true) +
     `<div class="cp-district panel"><div class="row sb"><span class="upper b">Idstein ${d}</span><span class="head">${pct(d)}%</span></div><div class="bar thin"><i style="width:${pct(d)}%;background:var(--ok)"></i></div></div><div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>`;
 }
 function destItems() {
@@ -99,6 +102,8 @@ document.getElementById('cui').addEventListener('click', async e => {
     case 'friends': set({ friends: !app.state.friends }); break;
     case 'zoom': zoom('car', v === 'in' ? 1.4 : 1 / 1.4); break;
     case 'recenter': recenter('car'); break;
+    case 'pan': set({ car: { pan: v === 'on' } }); break;
+    case 'move': { const [dx, dy] = v.split(',').map(Number); panBy('car', dx, dy); break; }
   }
 });
 function renderCarList(items) { root().innerHTML = listTpl(app.state.car.title, items, 'dest'); }
