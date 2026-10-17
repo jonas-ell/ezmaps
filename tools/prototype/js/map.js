@@ -1,5 +1,11 @@
 // Karten-Textur je Stil (einmal zeichnen) + MapView (Kamera per CSS-3D, Overlay pro Frame).
 // Später in der App: MapLibre-Style-JSON je Stil. Farben hier = Quelle für diese Styles.
+import { A } from './assets.js';
+const blipSet = style => A.ok ? ({ neon: A.blips.Neon, western: A.blips.Western, pixel: A.blips.Pixel })[style] : null; // Toy Town: eigene Zeichnung
+function drawAsset(u, im, x, y, size, pixel) {
+  if (pixel) { const k = Math.max(1, Math.round(size / im.width)); u.imageSmoothingEnabled = false; u.drawImage(im, Math.round(x - im.width * k / 2), Math.round(y - im.height * k / 2), im.width * k, im.height * k); u.imageSmoothingEnabled = true; }
+  else u.drawImage(im, x - size / 2, y - size / 2, size, size);
+}
 
 export const TEX = { x0: -1800, y0: -1500, w: 3600, h: 3000 };
 const WIDTH = { 0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5 };
@@ -27,7 +33,10 @@ function inPoly(pts, x, y) {
 const bbox = pts => { let a = Infinity, b = Infinity, c = -Infinity, d = -Infinity; for (const [x, y] of pts) { a = Math.min(a, x); b = Math.min(b, y); c = Math.max(c, x); d = Math.max(d, y); } return [a, b, c, d]; };
 const areaOf = pts => { let s = 0; for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) s += (pts[j][0] + pts[i][0]) * (pts[j][1] - pts[i][1]); return s / 2; };
 
-function noiseCanvas(size, fn) { const c = document.createElement('canvas'); c.width = c.height = size; fn(c.getContext('2d'), size); return c; }
+// GM-006: Canvas auch im Worker (OffscreenCanvas) erzeugen können
+const mk = (w, h) => typeof document !== 'undefined' ? Object.assign(document.createElement('canvas'), { width: w, height: h }) : new OffscreenCanvas(w, h);
+let R = TEX; // gerade gezeichneter Bereich (Meter)
+function noiseCanvas(size, fn) { const c = mk(size, size); fn(c.getContext('2d'), size); return c; }
 const terrainTexture = () => noiseCanvas(1024, (g, size) => {
   for (let i = 0; i < 260; i++) {
     const x = rnd() * size, y = rnd() * size, r = 20 + rnd() * 140, light = rnd() > 0.5, grad = g.createRadialGradient(x, y, 0, x, y, r);
@@ -59,14 +68,12 @@ const treePattern = ink => noiseCanvas(64, g => {
 });
 
 // ------------------------------------------------------------------ Textur zeichnen
-export async function renderTexture(scene, style) {
-  seed = 7;
+export function renderRegion(scene, style, region, S) {
+  seed = 7; R = region;
   const pixel = style === 'pixel';
-  const S = pixel ? 0.625 : 1.8;                      // Bildpunkte pro Meter
-  const c = document.createElement('canvas');
-  c.width = Math.round(TEX.w * S); c.height = Math.round(TEX.h * S);
+  const c = mk(Math.round(region.w * S), Math.round(region.h * S));
   const ctx = c.getContext('2d', { willReadFrequently: pixel });
-  const world = new DOMMatrix().scale(S).translate(-TEX.x0, -TEX.y0);
+  const world = new DOMMatrix().scale(S).translate(-region.x0, -region.y0);
   if (pixel) drawPixel(ctx, scene, c.width, c.height, world, S);
   else {
     ctx.setTransform(world);
@@ -74,6 +81,13 @@ export async function renderTexture(scene, style) {
     if (style === 'western') drawClassic(ctx, scene, S, WESTERN);
     if (style === 'toy') drawToy(ctx, scene, S);
   }
+  R = TEX;
+  return c;
+}
+export async function renderTexture(scene, style) {
+  const pixel = style === 'pixel';
+  const S = pixel ? 0.625 : 1.8;                      // Bildpunkte pro Meter
+  const c = renderRegion(scene, style, TEX, S);
   const blob = await new Promise(r => c.toBlob(r, pixel ? 'image/png' : 'image/jpeg', 0.9));
   c.width = c.height = 1; // Speicher freigeben
   return { url: URL.createObjectURL(blob), S, pixelated: pixel };
@@ -92,7 +106,7 @@ const WESTERN = {
 
 function drawClassic(ctx, scene, S, T) {
   const px = 1 / S;
-  ctx.fillStyle = T.land; ctx.fillRect(TEX.x0 - 50, TEX.y0 - 50, TEX.w + 100, TEX.h + 100);
+  ctx.fillStyle = T.land; ctx.fillRect(R.x0 - 50, R.y0 - 50, R.w + 100, R.h + 100);
   for (const k of ['farm', 'park', 'forest', 'residential', 'industrial', 'water']) {
     ctx.fillStyle = T[k]; for (const a of scene.areas) if (a.k === k) { poly(ctx, a.pts, true); ctx.fill(); }
   }
@@ -135,9 +149,9 @@ const TOY = {
   window: '#3c8fe0', frame: '#ffffff', ink: '#2f3640',
 };
 function drawToy(ctx, scene, S) {
-  ctx.fillStyle = TOY.grass; ctx.fillRect(TEX.x0 - 50, TEX.y0 - 50, TEX.w + 100, TEX.h + 100);
+  ctx.fillStyle = TOY.grass; ctx.fillRect(R.x0 - 50, R.y0 - 50, R.w + 100, R.h + 100);
   ctx.fillStyle = TOY.grass2; // helle Rasenflecken
-  for (let i = 0; i < 1400; i++) { const x = TEX.x0 + rnd() * TEX.w, y = TEX.y0 + rnd() * TEX.h, r = 6 + rnd() * 22; ctx.beginPath(); ctx.ellipse(x, y, r * 1.6, r, rnd() * 3, 0, 7); ctx.fill(); }
+  for (let i = 0; i < 1400 * R.w * R.h / (TEX.w * TEX.h); i++) { const x = R.x0 + rnd() * R.w, y = R.y0 + rnd() * R.h, r = 6 + rnd() * 22; ctx.beginPath(); ctx.ellipse(x, y, r * 1.6, r, rnd() * 3, 0, 7); ctx.fill(); }
   const fill = (k, col) => { ctx.fillStyle = col; for (const a of scene.areas) if (a.k === k) { poly(ctx, a.pts, true); ctx.fill(); } };
   fill('farm', TOY.farm); fill('park', TOY.park); fill('forest', TOY.forest); fill('industrial', TOY.industrial);
   // Wasser mit Steinrand
@@ -189,7 +203,7 @@ function drawToy(ctx, scene, S) {
   const items = [];
   for (const a of scene.areas) {
     if (a.k !== 'forest' && a.k !== 'park') continue;
-    const [x0, y0, x1, y1] = bbox(a.pts); if (x1 < TEX.x0 || x0 > TEX.x0 + TEX.w || y1 < TEX.y0 || y0 > TEX.y0 + TEX.h) continue;
+    const [x0, y0, x1, y1] = bbox(a.pts); if (x1 < R.x0 || x0 > R.x0 + R.w || y1 < R.y0 || y0 > R.y0 + R.h) continue;
     const step = a.k === 'forest' ? 7.5 : 14;
     for (let y = y0; y < y1; y += step) for (let x = x0; x < x1; x += step) {
       const jx = x + (hash(Math.round(x), Math.round(y)) - 0.5) * step, jy = y + (hash(Math.round(y), Math.round(x)) - 0.5) * step;
@@ -197,7 +211,7 @@ function drawToy(ctx, scene, S) {
       if (inPoly(a.pts, jx, jy)) items.push({ y: jy, tree: [jx, jy, 2.6 + hash(Math.round(jx), 5) * 1.6] });
     }
   }
-  scene.areas.forEach((a, i) => { if (a.k === 'building') items.push({ y: bbox(a.pts)[3], b: a, i }); });
+  scene.areas.forEach((a, i) => { if (a.k !== 'building') return; const bb = bbox(a.pts); if (bb[2] < R.x0 || bb[0] > R.x0 + R.w || bb[3] < R.y0 || bb[1] > R.y0 + R.h + 20) return; items.push({ y: bb[3], b: a, i }); });
   items.sort((p, q) => p.y - q.y);
   for (const it of items) it.tree ? toyTree(ctx, ...it.tree) : toyHouse(ctx, it.b.pts, it.i);
 }
@@ -316,14 +330,22 @@ export class MapView {
     this.el = el; el.classList.add('mv');
     this.ground = document.createElement('div'); this.ground.className = 'mv-ground';
     this.img = document.createElement('img'); this.img.className = 'mv-tex'; this.img.draggable = false;
-    this.ground.appendChild(this.img);
+    this.detail = document.createElement('canvas'); this.detail.className = 'mv-tex mv-detail'; this.detail.style.display = 'none';
+    this.ground.append(this.img, this.detail); this.det = null;
     this.canvas = document.createElement('canvas'); this.canvas.className = 'mv-over';
     this.haze = document.createElement('div'); this.haze.className = 'mv-haze';
     el.append(this.ground, this.haze, this.canvas);
     this.cam = { center: [0, 0], heading: 0, scale: 0.5, tilt: 0, anchor: [0.5, 0.5] };
     this.tex = null;
   }
+  setDetail(bitmap, region, S, style) {
+    if (!bitmap) { this.det = null; this.detail.style.display = 'none'; return; }
+    this.detail.width = bitmap.width; this.detail.height = bitmap.height;
+    this.detail.getContext('2d').drawImage(bitmap, 0, 0);
+    this.det = { region, S, style }; this.detail.style.display = 'block';
+  }
   setTexture(t, style) {
+    if (this.det && this.det.style !== style) this.setDetail(null);
     this.tex = t; this.style = style;
     this.img.src = t.url; this.img.style.imageRendering = t.pixelated ? 'pixelated' : 'auto';
     this.el.style.background = STYLES[style].bg;
@@ -342,6 +364,11 @@ export class MapView {
       const S = this.tex.S, k = c.scale / S;
       this.img.style.width = (TEX.w * S) + 'px'; this.img.style.height = (TEX.h * S) + 'px';
       this.img.style.transform = `translate(${ax}px,${ay}px) rotate(${-c.heading}rad) scale(${k}) translate(${S * (TEX.x0 - c.center[0])}px,${S * (TEX.y0 - c.center[1])}px)`;
+    }
+    if (this.det) {
+      const { region: g, S: D } = this.det;
+      this.detail.style.width = (g.w * D) + 'px'; this.detail.style.height = (g.h * D) + 'px';
+      this.detail.style.transform = `translate(${ax}px,${ay}px) rotate(${-c.heading}rad) scale(${c.scale / D}) translate(${D * (g.x0 - c.center[0])}px,${D * (g.y0 - c.center[1])}px)`;
     }
     const dpr = window.devicePixelRatio || 1;
     if (this.canvas.width !== Math.round(W * dpr) || this.canvas.height !== Math.round(H * dpr)) { this.canvas.width = Math.round(W * dpr); this.canvas.height = Math.round(H * dpr); }
@@ -374,7 +401,7 @@ export function drawRoute(u, mv, route, fromD, style, opts = {}) {
   const startI = fromD > 0 ? route.cum.findIndex(c => c >= fromD) : 0;
   if (fromD > 0) { const pa = interp(route, fromD); pts.push(mv.project(pa)); }
   for (let i = Math.max(0, startI); i < route.pts.length; i++) pts.push(mv.project(route.pts[i]));
-  const base = opts.width ?? (mv.cam.scale > 0.6 ? 9 : 6);
+  const base = opts.width ?? Math.max(6, Math.min(26, mv.cam.scale * 4.2));
   u.lineCap = 'round'; u.lineJoin = 'round';
   if (opts.alt) { strokeDepth(u, pts, base * 0.7, S.alt); return; }
   if (style === 'pixel') { // goldene Fußspuren
@@ -408,10 +435,10 @@ function strokeDepth(u, pts, w, color) {
   }
 }
 
-const BLIP = { fuel: ['#f08a2c', 'fuel'], parking: ['#5fb6ff', 'P'], fast_food: ['#7ee06a', 'food'], restaurant: ['#7ee06a', 'food'], cafe: ['#7ee06a', 'food'], supermarket: ['#f5d742', 'cart'] };
+const BLIP = { fuel: ['#f08a2c', 'fuel', 'fuel'], parking: ['#5fb6ff', 'P', 'parking'], fast_food: ['#7ee06a', 'food', 'food'], restaurant: ['#7ee06a', 'food', 'food'], cafe: ['#7ee06a', 'food', 'food'], supermarket: ['#f5d742', 'cart', 'shop'] };
 export function drawBlips(u, mv, scene, style, opts = {}) {
   const placed = [], near = mv.cam.scale > 0.45;
-  const base = opts.size ?? (near ? 9 : 6.5);
+  const base = opts.size ?? (near ? Math.min(14, 7 + mv.cam.scale * 1.4) : 6.5);
   for (const p of scene.pois) {
     const b = BLIP[p.kind]; if (!b) continue;
     if (near && (p.kind === 'restaurant' || p.kind === 'cafe') && mv.cam.tilt) continue;
@@ -421,7 +448,8 @@ export function drawBlips(u, mv, scene, style, opts = {}) {
     placed.push(q); blip(u, q[0], q[1], r, b, style);
   }
 }
-function blip(u, x, y, r, [color, g], style) {
+function blip(u, x, y, r, [color, g, file], style) {
+  const set = blipSet(style); if (set && set[file]) return drawAsset(u, set[file], x, y, r * 2.6, style === 'pixel');
   if (style === 'pixel') return sprite(u, SPR[g === 'P' ? 'P' : g], x, y, Math.max(2, Math.round(r / 3.4)));
   u.save(); u.translate(x, y); u.lineCap = 'round'; u.lineJoin = 'round';
   if (style === 'toy') { // runde Schilder wie auf dem Teppich
@@ -448,6 +476,8 @@ export function drawPlayer(u, mv, p, heading, style, size = 13) {
   const q = mv.project(p); if (q[2] <= 0) return;
   u.save(); u.translate(q[0], q[1]); u.rotate(heading - mv.cam.heading);
   if (mv.cam.tilt) u.scale(1, 0.85);
+  const pl = A.ok && A.player[style]; // Codex: player-neon.svg / player-western.svg (Pixel: Pfeil nach Nutzervorlage, Toy: eigenes Auto)
+  if (pl) { u.drawImage(pl, -size * 1.15, -size * 1.15, size * 2.3, size * 2.3); u.restore(); return; }
   if (style === 'pixel') { if (mv.cam.tilt) u.scale(1, 1 / 0.85); sprite(u, SPR.arrow, 0, 0, Math.max(2, Math.round(size / 4.5))); u.restore(); return; }
   if (style === 'toy') { // Spielzeugauto von oben
     const s = size / 13;
@@ -467,6 +497,7 @@ function rr(u, x, y, w, h, r) { u.beginPath(); u.roundRect(x, y, w, h, r); }
 export function drawDestination(u, mv, p, style, size = 8) {
   const q = mv.project(p); if (!mv.visible(q, 60)) return;
   const r = size * Math.max(0.8, Math.min(1.3, q[2]));
+  const set = blipSet(style); if (set && set.destination) return drawAsset(u, set.destination, q[0], q[1] - (style === 'pixel' ? r : 0), r * 3.2, style === 'pixel');
   if (style === 'pixel') return sprite(u, SPR.chest, q[0], q[1] - r, Math.max(2, Math.round(r / 3)));
   if (style === 'western') {
     u.save(); u.translate(q[0], q[1]); u.lineCap = 'round';
@@ -484,7 +515,9 @@ export function drawDestination(u, mv, p, style, size = 8) {
 
 export function drawFriend(u, mv, p, name, style) {
   const q = mv.project(p); if (!mv.visible(q)) return;
-  if (style === 'pixel') sprite(u, SPR.friend, q[0], q[1], 3);
+  const set = blipSet(style);
+  if (set && set.friend) drawAsset(u, set.friend, q[0], q[1], 22, style === 'pixel');
+  else if (style === 'pixel') sprite(u, SPR.friend, q[0], q[1], 3);
   else { u.fillStyle = '#000'; u.beginPath(); u.arc(q[0], q[1], 8, 0, 7); u.fill(); u.fillStyle = '#ff4fd8'; u.beginPath(); u.arc(q[0], q[1], 6, 0, 7); u.fill(); }
   u.font = '700 11px Inter'; u.textAlign = 'center'; u.lineWidth = 3; u.strokeStyle = '#000'; u.strokeText(name, q[0], q[1] - 13); u.fillStyle = '#fff'; u.fillText(name, q[0], q[1] - 13);
 }

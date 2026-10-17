@@ -7,6 +7,7 @@ from pathlib import Path
 import math
 import json
 import html
+import re
 from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[2] / 'Assets' / 'Generated'
@@ -250,15 +251,53 @@ def generate_blips():
         save_pixel('Blips/Pixel','blip-'+name,sprite(SPRITES[name]))
 
 
+def generate_toy_blips():
+    colors={'parking':'#1F6FE0','fuel':'#F08A2C','food':'#2FB94A',
+            'shop':'#F5D742','charging':'#33E1C7','hospital':'#FF5A5A',
+            'friend':'#1F6FE0','home':'#FF7A00','work':'#1F6FE0',
+            'waypoint':'#FF7A00'}
+    for name,(_,shapes) in BLIPS.items():
+        if name=='destination':
+            # A self-contained checkered flag, rather than another disc glyph.
+            body='<path d="M7 28V4" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/><path d="M7 28V4" fill="none" stroke="#2F3640" stroke-width="2" stroke-linecap="round"/>'
+            body+='<path d="M8 5H28V20H8Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="4"/>'
+            body+=''.join(f'<rect x="{8+5*x}" y="{5+5*y}" width="5" height="5" fill="#2F3640"/>' for y in range(3) for x in range(4) if (x+y)%2==0)
+            body+='<path d="M8 5H28V20H8Z" fill="none" stroke="#2F3640" stroke-width="1"/>'
+        else:
+            body=f'<circle cx="16" cy="16" r="14" fill="{colors[name]}" stroke="#FFFFFF" stroke-width="2"/><circle cx="16" cy="16" r="15.4" fill="none" stroke="#2F3640" stroke-width="0.6"/>'
+            glyph=geometry(shapes)
+            # Open glyph strokes are white, edged by a thin charcoal underlay.
+            body+='<g transform="translate(5.6 5.6) scale(.65)" stroke-linecap="round" stroke-linejoin="round">'
+            body+=f'<g fill="#FFFFFF" stroke="#2F3640" stroke-width="3.2">{glyph}</g><g fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1.6">{glyph}</g>'
+            details={'parking':'M14 9h6v6h-6z','fuel':'M9 7h8v6H9z',
+                     'charging':'M17 11l-5 7h4l-1 5 6-8h-4z','home':'M13 21h6v7h-6z'}
+            if name in details:body+=f'<path d="{details[name]}" fill="#2F3640"/>'
+            body+='</g>'
+        write('Blips/Toy','blip-'+name+'.svg',f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">{body}</svg>\n')
+
+
 def generate_player():
     shape=[poly((32,5),(56,56),(32,45),(8,56))]
     write('Player','player-neon.svg',svg(shape,64,'#000000',5,'#E9E9E9'))
     write('Player','player-western.svg',svg(shape,64,'#3A2414',5,'#F6EAD0',True))
-    car=sprite(['..kkkkk..','.kyrrryk.','.krrrrrk.','kkbbbbbkk','kkbbbbbkk','.krrrrrk.','.krrrrrk.','.krrrrrk.','kkbbbbbkk','kkrrrrrkk','.krrrrrk.','.krrrrrk.','..kkkkk..'])
-    # A 9x13 body needs a 13x9 canvas east/west and 17x17 diagonally to avoid clipping.
+    marker=sprite(['...k...','..kwk..','..kwk..','.kwwsk.','.kwwsk.','kdwwdsk','kdwwdsk','kdwwdsk','ksssssk','kkkkkkk'],
+                  {'k':'#000000','w':'#FFFFFF','d':'#DCDCDC','s':'#A4A4A4'})
+    # Expanded canvases preserve the pointed tip and flat back at every heading.
     for i,heading in enumerate(('n','ne','e','se','s','sw','w','nw')):
-        im=car.rotate(-45*i,resample=Image.Resampling.NEAREST,expand=True)
+        im=marker.rotate(-45*i,resample=Image.Resampling.NEAREST,expand=True)
         save_pixel('Player','player-pixel-'+heading,im)
+    toy='''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<defs><filter id="toy-car-shadow" x="-50%" y="-30%" width="200%" height="170%"><feDropShadow dx="0" dy="2" stdDeviation="1.6" flood-color="#2F3640" flood-opacity=".35"/></filter></defs>
+<g filter="url(#toy-car-shadow)" stroke="#2F3640" stroke-width="3" stroke-linejoin="round">
+<rect x="12" y="15" width="8" height="12" rx="3" fill="#2F3640"/><rect x="44" y="15" width="8" height="12" rx="3" fill="#2F3640"/>
+<rect x="12" y="39" width="8" height="12" rx="3" fill="#2F3640"/><rect x="44" y="39" width="8" height="12" rx="3" fill="#2F3640"/>
+<rect x="17" y="5" width="30" height="52" rx="11" fill="#E8372C"/>
+<path d="M23 19Q32 16 41 19L39 28H25Z" fill="#9DDFFF"/>
+<path d="M25 39H39L41 46Q32 49 23 46Z" fill="#9DDFFF"/>
+<path d="M21 11H27V15H21ZM37 11H43V15H37Z" fill="#FFCC33" stroke-width="1.5"/>
+<path d="M24 52H28M36 52H40" fill="none" stroke-linecap="round"/>
+</g></svg>\n'''
+    write('Player','player-toy.svg',toy)
 
 
 def generate_carplay():
@@ -298,6 +337,7 @@ def previews():
         bg='#DCC59A' if 'Western' in relative else '#1A2A6C' if 'Pixel' in relative else '#3D3E40'
         if relative=='Icons/Western': bg='#EFE2C0'
         if relative=='CarPlay': bg='#FFFFFF'
+        if relative=='Blips/Toy': bg='#8DC63F'
         cards=[]
         for p in sorted(folder.iterdir()):
             if p.suffix not in ('.svg','.png'):continue
@@ -310,9 +350,14 @@ def previews():
             samples=[]
             for scale in scales:
                 visual=p.read_text(encoding='utf-8') if p.suffix=='.svg' else f'<img src="{p.name}" alt="" width="{w*scale:g}" height="{h*scale:g}">'
+                if p.suffix=='.svg':
+                    # Each inline copy needs independent filter/clip definitions.
+                    for identifier in re.findall(r'id="([^"]+)"',visual):
+                        unique=f'{p.stem}-{scale}-{identifier}'
+                        visual=visual.replace(f'id="{identifier}"',f'id="{unique}"').replace(f'url(#{identifier})',f'url(#{unique})')
                 samples.append(f'<div><small>{scale}× · {w*scale:g}×{h*scale:g}</small><div class="sample" style="--w:{w*scale:g}px;--h:{h*scale:g}px">{visual}</div></div>')
             strip='<div class="strip">'+''.join(samples)+'</div>'
-            article_bg=('#DCC59A' if 'western' in p.name else '#1A2A6C' if 'pixel' in p.name else bg) if relative=='Player' else bg
+            article_bg=('#DCC59A' if 'western' in p.name else '#1A2A6C' if 'pixel' in p.name else '#8DC63F' if 'toy' in p.name else bg) if relative=='Player' else bg
             cards.append(f'<article style="background:{article_bg}"><h2><a href="{p.name}">{p.name}</a></h2>{strip}'+(f'<div class="light">{strip}</div>' if relative=='Icons/Neon' else '')+'</article>')
         style=f'body{{background:#181a20;color:#fff;font:14px system-ui;margin:24px}}a{{color:inherit}}h2{{font-size:13px}}article{{margin:12px 0;padding:16px;background:{bg};color:{"#2E1E10" if "Western" in relative else "white"};overflow:auto}}.strip{{display:flex;gap:28px;align-items:start}}small{{display:block;margin-bottom:12px}}.sample svg{{width:var(--w);height:var(--h)}}img{{image-rendering:pixelated;max-width:none}}.light{{background:white;color:black;margin-top:16px;padding:12px}}'
         if relative=='CarPlay': style+='article{color:black}'
@@ -332,6 +377,7 @@ if __name__=='__main__':
     generate_icons()
     generate_maneuvers()
     generate_blips()
+    generate_toy_blips()
     generate_player()
     generate_carplay()
     generate_badges()

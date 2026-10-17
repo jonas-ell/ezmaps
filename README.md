@@ -15,7 +15,7 @@ xcodebuild -project EzMaps.xcodeproj -scheme EzMaps \
 ## Prototyp im Browser (iPhone + CarPlay, klickbar)
 
 ```sh
-python tools/prototype/serve.py      # öffnet http://localhost:8765
+python tools/prototype/serve.py      # öffnet http://localhost:8765/tools/prototype/
 ```
 
 - iPhone 16 (393 × 852 pt) und CarPlay nebeneinander, gemeinsamer Zustand.

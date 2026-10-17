@@ -9,7 +9,8 @@ zeigen jede Datei in 1×, 2× und 4×; Pixel-UI-Icons zusätzlich in 8×.
 | `Icons/{Neon,Western,Pixel}` | Je 43 identisch benannte UI-Icons; Pixel zusätzlich als @4x |
 | `Maneuvers/{Neon,Western,Pixel}` | Je 25 Manöver, einschließlich fünf Kreisverkehr-Ausfahrten |
 | `Blips/{Neon,Western,Pixel}` | Je elf Kartensymbole; Pixel zusätzlich als @4x |
-| `Player` | Zwei Vektorpfeile und acht Auto-Richtungen, jeweils mit @4x |
+| `Blips/Toy` | Elf Spielmatten-Kartensymbole mit weißem Ring; Ziel als karierte Flagge |
+| `Player` | Zwei Vektorpfeile, ein Toy-Town-Auto als SVG und acht Pixel-Pfeilrichtungen mit @4x |
 | `CarPlay` | 13 Vorlagen, jeweils 30 pt sowie `-list`/`-map` mit 44 pt |
 | `Badges` | Zwölf Motive in Gold, Silber, Bronze und Locked: 48 SVGs |
 | `AppIcon` | Standard, Dark, Tinted; jeweils 1024×1024, deckendes RGB |
@@ -48,9 +49,14 @@ per Lanczos. Tinted wird beim Export auf neutrales Graustufen-RGB normalisiert.
 - Farbige Blips, Spieler und Abzeichen als Originalbilder verwenden.
 - Pixelraster mit Nearest Neighbor skalieren (`.interpolation(.none)` in SwiftUI).
   `@4x` sind explizite Vorschau-/Exportdateien, keine iOS-Screen-Scale-Zuweisung.
-- Das Nord-/Süd-Auto hat 9×13 Pixel, Ost/West 13×9, diagonale Richtungen 17×17.
+- Der Nord-/Süd-Pixelpfeil hat 7×10 Pixel, Ost/West 10×7, diagonale Richtungen 13×14.
   Alle mittig am Spieleranker ausrichten. Die erweiterten Flächen verhindern
   Beschnitt bei Drehung. Dateisuffixe sind `n`, `ne`, `e`, `se`, `s`, `sw`, `w`, `nw`.
+- Der Pixelspieler folgt der aktualisierten Textvorgabe: schwarze Ein-Pixel-Kontur,
+  weißer Kern, hellgrauer Körper und dunklere rechte/untere Kante. Die im Prompt
+  erwähnte Nutzerskizze war nicht beigefügt. Das frühere rote Pixel-Auto wurde ersetzt.
+- Toy-Town-Vorschauen verwenden Rasen `#8DC63F`. Das SVG-Spielzeugauto hat
+  rote Karosserie, hellblaue Scheiben, gelbe Scheinwerfer und einen weichen Schatten.
 - Kreisverkehr: Zufahrt von unten, Verlauf gegen den Uhrzeigersinn, für Rechtsverkehr.
 - `cp-parking` verwendet wegen der ausdrücklichen textfreien CarPlay-Vorgabe
   ein geparktes Auto. Die übrigen CarPlay-Vorlagen übernehmen Neon-Geometrien.

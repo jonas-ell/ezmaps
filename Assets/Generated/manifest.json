@@ -338,6 +338,50 @@
       "bytes": 191
     },
     {
+      "path": "Blips/Toy/blip-charging.svg",
+      "bytes": 1097
+    },
+    {
+      "path": "Blips/Toy/blip-destination.svg",
+      "bytes": 750
+    },
+    {
+      "path": "Blips/Toy/blip-food.svg",
+      "bytes": 1222
+    },
+    {
+      "path": "Blips/Toy/blip-friend.svg",
+      "bytes": 740
+    },
+    {
+      "path": "Blips/Toy/blip-fuel.svg",
+      "bytes": 886
+    },
+    {
+      "path": "Blips/Toy/blip-home.svg",
+      "bytes": 749
+    },
+    {
+      "path": "Blips/Toy/blip-hospital.svg",
+      "bytes": 868
+    },
+    {
+      "path": "Blips/Toy/blip-parking.svg",
+      "bytes": 778
+    },
+    {
+      "path": "Blips/Toy/blip-shop.svg",
+      "bytes": 904
+    },
+    {
+      "path": "Blips/Toy/blip-waypoint.svg",
+      "bytes": 616
+    },
+    {
+      "path": "Blips/Toy/blip-work.svg",
+      "bytes": 766
+    },
+    {
       "path": "Blips/Western/blip-charging.svg",
       "bytes": 1308
     },
@@ -1531,67 +1575,71 @@
     },
     {
       "path": "Player/player-pixel-e.png",
-      "bytes": 139
+      "bytes": 146
     },
     {
       "path": "Player/player-pixel-e@4x.png",
-      "bytes": 223
+      "bytes": 209
     },
     {
       "path": "Player/player-pixel-n.png",
-      "bytes": 162
+      "bytes": 131
     },
     {
       "path": "Player/player-pixel-n@4x.png",
-      "bytes": 248
+      "bytes": 193
     },
     {
       "path": "Player/player-pixel-ne.png",
-      "bytes": 224
+      "bytes": 177
     },
     {
       "path": "Player/player-pixel-ne@4x.png",
-      "bytes": 397
+      "bytes": 297
     },
     {
       "path": "Player/player-pixel-nw.png",
-      "bytes": 224
+      "bytes": 178
     },
     {
       "path": "Player/player-pixel-nw@4x.png",
-      "bytes": 404
+      "bytes": 286
     },
     {
       "path": "Player/player-pixel-s.png",
-      "bytes": 143
+      "bytes": 131
     },
     {
       "path": "Player/player-pixel-s@4x.png",
-      "bytes": 237
+      "bytes": 195
     },
     {
       "path": "Player/player-pixel-se.png",
-      "bytes": 219
+      "bytes": 167
     },
     {
       "path": "Player/player-pixel-se@4x.png",
-      "bytes": 398
+      "bytes": 291
     },
     {
       "path": "Player/player-pixel-sw.png",
-      "bytes": 227
+      "bytes": 156
     },
     {
       "path": "Player/player-pixel-sw@4x.png",
-      "bytes": 387
+      "bytes": 294
     },
     {
       "path": "Player/player-pixel-w.png",
-      "bytes": 143
+      "bytes": 137
     },
     {
       "path": "Player/player-pixel-w@4x.png",
-      "bytes": 224
+      "bytes": 201
+    },
+    {
+      "path": "Player/player-toy.svg",
+      "bytes": 970
     },
     {
       "path": "Player/player-western.svg",

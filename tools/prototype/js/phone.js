@@ -1,6 +1,7 @@
 // iPhone-Oberfläche (393 × 852 pt, 1 CSS-px = 1 pt).
 import { app, set, toast, useStyle, ensureTextures, planTo, selectRoute, startNav, endNav, nextManeuver, segSpeed, remaining, currentStreet, pct, totalPct, zoom, recenter } from './app.js';
-import { ic, maneuverIcon } from './icons.js';
+import { ic, manIc } from './icons.js';
+import { badgeUrl, appIconUrl } from './assets.js';
 import { fmtDist, fmtMin, smoothHeading, pointAt } from './route.js';
 import { MapView, STYLES, drawRoute, drawPlayer, drawBlips, drawDestination } from './map.js';
 
@@ -12,7 +13,7 @@ export function phoneCamera(view) {
   const s = app.state, n = s.nav, p = s.phone;
   if (n && n.active) {
     const r = n.route, pos = pointAt(r.pts, r.cum, n.progress).p;
-    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 1.05, tilt: 44, anchor: [0.5, 0.68] };
+    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 3.4, tilt: 58, anchor: [0.5, 0.76] }; // GM-006: Nutzerwunsch – nah wie Apple Maps (Pfeil unten, steile Neigung)
   }
   if (p.overlay === 'preview' && n) return { mode: 'preview', ...fit(n.routes.map(r => r.route.pts).flat(), view, 120, 470) };
   if (!p.overlay && p.tab === 'explore') return { mode: 'explore', center: [0, 80], heading: 0, scale: 0.155, tilt: 0, anchor: [0.5, 0.42] };
@@ -33,13 +34,13 @@ export function phoneHud() {
   const n = app.state.nav; if (!n || !n.active || app.state.phone.overlay !== 'nav') return;
   const m = nextManeuver(), rem = remaining(), sp = segSpeed();
   const eta = new Date(Date.now() + rem.s * 1000), etaStr = eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0');
-  const vals = { dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, text: m.text, eta: etaStr, rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: limitFor(sp), speed: Math.round(sp * 0.92), icon: maneuverIcon(m.kind), prog: n.progress / n.route.length };
+  const vals = { dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, text: m.text, eta: etaStr, rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: limitFor(sp), speed: Math.round(sp * 0.92), icon: m.kind, prog: n.progress / n.route.length };
   const key = JSON.stringify(vals); if (key === lastHud) return; lastHud = key;
   const $ = id => root().querySelector(`[data-hud=${id}]`);
   if (!$('dist')) return;
   $('dist').textContent = vals.dist; $('dist2').textContent = '↑ ' + vals.dist; $('street').textContent = vals.street; $('text').textContent = vals.text;
   $('eta').textContent = vals.eta; $('rem').textContent = vals.rem; $('cur').textContent = vals.cur; $('limit').textContent = vals.limit; $('speed').textContent = vals.speed;
-  $('icon').innerHTML = ic(vals.icon, 64, 'stroke-width:2.6'); $('prog').style.width = (vals.prog * 100) + '%'; $('time').style.width = (100 - vals.prog * 80) + '%';
+  $('icon').innerHTML = manIc(vals.icon, 64); $('prog').style.width = (vals.prog * 100) + '%'; $('time').style.width = (100 - vals.prog * 80) + '%';
 }
 export const limitFor = sp => sp >= 100 ? 120 : sp >= 70 ? 100 : sp >= 45 ? 50 : sp >= 25 ? 30 : 10;
 
@@ -73,7 +74,7 @@ const tabs = on => `<nav class="tabs">${[['map', 'map', 'Karte'], ['explore', 'e
 
 function splash(dim) {
   return `<div class="splash ${dim ? 'dim' : ''}">
-    <div class="logo">Ez</div><div class="head" style="font-size:52px;margin-top:22px">EzMaps</div>
+    <img class="logo" src="${appIconUrl}" alt="EzMaps"><div class="head" style="font-size:52px;margin-top:22px">EzMaps</div>
     <div class="sub">Deine Stadt als Open World.<br>Echte Navigation – iPhone &amp; CarPlay.</div>
     ${dim ? '' : `<button class="cta" data-act="go:permission">Los geht's</button><div class="fine">Kartendaten © OpenStreetMap-Mitwirkende</div>`}</div>`;
 }
@@ -181,7 +182,7 @@ function explore() {
     <div class="explorepanel panel"><div class="row sb" style="margin-bottom:10px"><span class="head" style="font-size:28px">Ortsteile</span><button data-act="clip" class="muted">${ic('share', 20)}</button></div>
       <div class="dlist">${ds.map(d => `<div class="drow"><div class="row sb b"><span>${d}</span><span>${pct(d)} %</span></div><div class="bar thin"><i style="width:${pct(d)}%;background:var(--ok)"></i></div></div>`).join('')}</div>
       <div class="row" style="gap:8px;margin-top:10px"><div class="tile"><small class="muted">Wochenziel</small><div class="head" style="font-size:24px">8 / 10 km</div><div class="bar thin"><i style="width:80%;background:var(--accent2)"></i></div></div>
-      <div class="tile"><small class="muted">Abzeichen · 3 / 12</small><div class="row" style="gap:6px;margin-top:6px">${['#d9ad3a', '#a13df0', '#58b05f', '#555'].map(c => `<span class="badge" style="background:${c}">${ic('star', 16)}</span>`).join('')}</div></div></div></div>`;
+      <div class="tile"><small class="muted">Abzeichen · 3 / 12</small><div class="row" style="gap:4px;margin-top:6px">${[['first-drive', 'gold'], ['old-town', 'silver'], ['10-km', 'bronze'], ['explorer-50', 'locked']].map(([n, t]) => `<img class="badge" src="${badgeUrl(n, t)}" alt="">`).join('')}</div></div></div></div>`;
 }
 function styles() {
   return `<div class="page solid"><div class="page-in">

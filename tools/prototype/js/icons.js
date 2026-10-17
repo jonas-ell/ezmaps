@@ -1,4 +1,7 @@
-// Platzhalter-Icons (24er Raster, Linien). Werden durch die Codex-Assets aus docs/ASSETS_CODEX.md ersetzt.
+// Icons: zuerst die Codex-Assets (Assets/Generated), sonst Platzhalter (24er Raster, Linien).
+import { A, ICON_FILE, CP_FILE, iconSet, pixelIconUrl, pixelManeuverUrl } from './assets.js';
+let STYLE = 'neon';
+export const setIconStyle = s => { STYLE = s; };
 const I = {
   search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/>',
   home: '<path d="M3 11 12 4l9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/>',
@@ -39,6 +42,29 @@ const I = {
   uturn: '<path d="M8 21V9a4.5 4.5 0 0 1 9 0v6"/><path d="m13.5 12 3.5 3.5 3.5-3.5"/>',
   dest: '<path d="M6.5 21V4M6.5 4.5h11l-2 4 2 4h-11"/>',
 };
-export const ic = (name, size = 22, extra = '') =>
+const sized = (svg, size, extra) => svg.replace('<svg', `<svg class="ic" width="${size}" height="${size}" style="${extra}"`);
+export function ic(name, size = 22, extra = '') {
+  const f = ICON_FILE[name], set = iconSet(STYLE);
+  if (A.ok && f) {
+    if (set === 'Pixel') return `<img class="ic pix" src="${pixelIconUrl(f)}" width="${size}" height="${size}" alt="">`;
+    if (A.icons[set][f]) return sized(A.icons[set][f], size, extra);
+  }
+  return placeholder(name, size, extra);
+}
+// CarPlay-Systemknöpfe: einfarbige Vorlagen (iOS färbt sie), unabhängig vom Stil
+export function cpic(name, size = 22, extra = '') {
+  const f = CP_FILE[name];
+  if (A.ok && f && A.cp[f]) return sized(A.cp[f], size, extra);
+  if (A.ok && ICON_FILE[name] && A.icons.Neon[ICON_FILE[name]]) return sized(A.icons.Neon[ICON_FILE[name]], size, extra);
+  return placeholder(name, size, extra);
+}
+// Abbiegepfeile je Stil (CarPlay: Systemkarte, immer neutral)
+export function manIc(kind, size = 60, cp = false) {
+  const set = cp ? 'Neon' : iconSet(STYLE);
+  if (A.ok && set === 'Pixel') return `<img class="ic pix" src="${pixelManeuverUrl(kind)}" width="${size}" height="${size}" alt="">`;
+  if (A.ok && A.man[set][kind]) return sized(A.man[set][kind], size, '');
+  return placeholder(maneuverIcon(kind), size, 'stroke-width:2.6');
+}
+const placeholder = (name, size = 22, extra = '') =>
   `<svg class="ic" viewBox="0 0 24 24" width="${size}" height="${size}" style="${extra}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${I[name] || ''}</svg>`;
 export const maneuverIcon = kind => ({ left: 'turnLeft', right: 'turnRight', 'sharp-left': 'turnLeft', 'sharp-right': 'turnRight', 'slight-left': 'slightLeft', 'slight-right': 'slightRight', 'uturn-left': 'uturn', 'uturn-right': 'uturn', destination: 'dest' })[kind] || 'straight';

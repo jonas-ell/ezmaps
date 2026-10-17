@@ -48,7 +48,8 @@ for category,prefix,names in [('Icons','ic-',ICONS),('Maneuvers','maneuver-',MAN
         expect(f'{category}/{style}',[prefix+n for n in names],'.png' if style=='Pixel' else '.svg')
 expect('Badges',[f'badge-{n}-{t}' for n in BADGES for t in ('gold','silver','bronze','locked')],'.svg')
 expect('CarPlay',[f'cp-{n}{s}' for n in CP for s in ('','-list','-map')],'.svg')
-expect('Player',['player-neon','player-western'],'.svg')
+expect('Blips/Toy',['blip-'+n for n in BLIPS],'.svg')
+expect('Player',['player-neon','player-western','player-toy'],'.svg')
 expect('Player',['player-pixel-'+d for d in ('n','ne','e','se','s','sw','w','nw')],'.png')
 expect('AppIcon',['appicon-1024','appicon-1024-dark','appicon-1024-tinted'],'.png')
 expect('Store',['store-neon','store-western','store-pixel'],'.png')
@@ -98,8 +99,15 @@ for p in ROOT.rglob('*.png'):
             check(im.size==(24,24),f'{rel}: expected 24×24')
         elif rel.startswith('Blips/Pixel/'):
             check(im.size in ((8,8),(10,10)),f'{rel}: native blip size')
-        elif p.stem=='player-pixel-n':
-            check(im.size==(9,13),f'{rel}: car size')
+        elif p.stem.startswith('player-pixel-'):
+            direction=p.stem.removeprefix('player-pixel-')
+            expected=(7,10) if direction in ('n','s') else (10,7) if direction in ('e','w') else (13,14)
+            check(im.size==expected,f'{rel}: marker dimensions {im.size}, expected {expected}')
+            allowed={(0,0,0,0),(0,0,0,255),(255,255,255,255),(220,220,220,255),(164,164,164,255)}
+            check(set(im.getdata())<=allowed,f'{rel}: marker palette')
+            if direction=='n':
+                check(sum(im.getpixel((x,0))[3]>0 for x in range(7))==1,f'{rel}: single-pixel tip')
+                check(all(im.getpixel((x,9))==(0,0,0,255) for x in range(7)),f'{rel}: flat black back edge')
         if not rel.startswith('Maneuvers/'):
             check(p.with_name(p.stem+'@4x.png').exists(),f'{rel}: missing 4× export')
 

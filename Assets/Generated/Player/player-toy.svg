@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<defs><filter id="toy-car-shadow" x="-50%" y="-30%" width="200%" height="170%"><feDropShadow dx="0" dy="2" stdDeviation="1.6" flood-color="#2F3640" flood-opacity=".35"/></filter></defs>
+<g filter="url(#toy-car-shadow)" stroke="#2F3640" stroke-width="3" stroke-linejoin="round">
+<rect x="12" y="15" width="8" height="12" rx="3" fill="#2F3640"/><rect x="44" y="15" width="8" height="12" rx="3" fill="#2F3640"/>
+<rect x="12" y="39" width="8" height="12" rx="3" fill="#2F3640"/><rect x="44" y="39" width="8" height="12" rx="3" fill="#2F3640"/>
+<rect x="17" y="5" width="30" height="52" rx="11" fill="#E8372C"/>
+<path d="M23 19Q32 16 41 19L39 28H25Z" fill="#9DDFFF"/>
+<path d="M25 39H39L41 46Q32 49 23 46Z" fill="#9DDFFF"/>
+<path d="M21 11H27V15H21ZM37 11H43V15H37Z" fill="#FFCC33" stroke-width="1.5"/>
+<path d="M24 52H28M36 52H40" fill="none" stroke-linecap="round"/>
+</g></svg>

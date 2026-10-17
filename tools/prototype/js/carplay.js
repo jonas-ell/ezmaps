@@ -2,7 +2,7 @@
 // CPMapTemplate/CPListTemplate/CPTripPreview nachgebaut – in der App zeichnet iOS sie selbst.
 // Unser Teil: nur die Karte im carWindow plus kleine Einblendungen darin. Größe immer aus dem Fenster berechnen.
 import { app, set, useStyle, planTo, selectRoute, startNav, endNav, nextManeuver, segSpeed, remaining, currentStreet, pct, zoom, recenter } from './app.js';
-import { ic, maneuverIcon } from './icons.js';
+import { cpic as ic, manIc } from './icons.js';
 import { fmtDist, fmtMin, smoothHeading, pointAt } from './route.js';
 import { STYLES } from './map.js';
 import { fit, limitFor, category } from './phone.js';
@@ -14,7 +14,7 @@ export function carCamera(view) {
   const s = app.state, n = s.nav, c = s.car;
   if (n && n.active) {
     const r = n.route, pos = pointAt(r.pts, r.cum, n.progress).p;
-    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 0.85, tilt: 46, anchor: [0.66, 0.76] };
+    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 4.6, tilt: 60, anchor: [0.66, 0.84] }; // GM-006: nah wie Apple Maps CarPlay
   }
   const [W] = view.size();
   if (c.screen === 'preview' && n) return { mode: 'preview', ...fit(n.routes.map(r => r.route.pts).flat(), view, 70, 20, Math.min(330, W * 0.42) + 30, 80) };
@@ -26,10 +26,10 @@ let last = '';
 export function carHud() {
   const n = app.state.nav; if (!n || !n.active || app.state.car.screen !== 'nav') return;
   const m = nextManeuver(), rem = remaining(), eta = new Date(Date.now() + rem.s * 1000);
-  const vals = { dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, icon: maneuverIcon(m.kind), eta: eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0'), rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: limitFor(segSpeed()), prog: n.progress / n.route.length };
+  const vals = { dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, icon: m.kind, eta: eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0'), rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: limitFor(segSpeed()), prog: n.progress / n.route.length };
   const k = JSON.stringify(vals); if (k === last) return; last = k;
   const $ = id => root().querySelector(`[data-hud=${id}]`); if (!$('dist')) return;
-  $('dist').textContent = vals.dist; $('street').textContent = vals.street; $('icon').innerHTML = ic(vals.icon, 54, 'stroke-width:2.6');
+  $('dist').textContent = vals.dist; $('street').textContent = vals.street; $('icon').innerHTML = manIc(vals.icon, 54, true);
   $('eta').textContent = vals.eta; $('rem').textContent = vals.rem; $('cur').textContent = vals.cur; $('dist2').textContent = '↑ ' + vals.dist;
   $('limit').textContent = vals.limit; $('prog').style.width = vals.prog * 100 + '%'; $('time').style.width = (100 - vals.prog * 80) + '%';
 }

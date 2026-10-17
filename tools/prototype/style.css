@@ -61,7 +61,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .t-western .splash { background: radial-gradient(circle at 50% 35%, #f2e4bf, #b58f58 80%); color: #2e1e10; }
 .t-pixel .splash { background: #1a2a6c; } .t-toy .splash { background: radial-gradient(circle at 50% 35%, #bfe6ff, #8dc63f 80%); color: #2f3640; }
 .splash.dim { filter: brightness(.55); }
-.logo { width: 108px; height: 108px; border-radius: 26px; background: linear-gradient(135deg, var(--accent), #2a0c4a); display: grid; place-items: center; font: 54px Pricedown, Impact; color: #fff; box-shadow: 0 10px 40px rgba(161,61,240,.5); }
+.logo { width: 108px; height: 108px; border-radius: 24px; box-shadow: 0 10px 40px rgba(161,61,240,.5); }
 .splash .sub { margin-top: 14px; font-size: calc(16px * var(--bs)); line-height: 1.45; opacity: .85; }
 .cta { display: grid; place-items: center; height: 54px; padding: 0 30px; margin-top: 36px; background: var(--accent); color: #fff; font: 700 calc(18px * var(--bs)) var(--body); border-radius: var(--radius); }
 .t-neon .cta { border-radius: 0; } .t-pixel .cta, .t-toy .cta { color: #1a1a1a; } .t-toy .cta { border: var(--edge); box-shadow: var(--shadow); color: #fff; }
@@ -172,7 +172,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .dlist { max-height: 215px; overflow-y: auto; scrollbar-width: none; }
 .drow { margin-bottom: 10px; font-size: calc(14px * var(--bs)); } .drow .bar { margin-top: 5px; }
 .tile { flex: 1; padding: 10px; background: rgba(127,127,127,.14); font-size: calc(12px * var(--bs)); }
-.badge { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: #000; }
+.badge { width: 34px; height: 34px; }
+.ic.pix { image-rendering: pixelated; }
 
 /* Stile */
 .stylecard { position: relative; display: block; width: 100%; height: 190px; margin-bottom: 14px; overflow: hidden; border-radius: 10px; outline: 1px solid rgba(255,255,255,.15); }
@@ -206,7 +207,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .car { display: flex; width: 1280px; height: 480px; background: #000; color: #fff; font-family: Inter, sans-serif; overflow: hidden; border-radius: 6px; }
 .dock { width: 76px; flex: none; background: #000; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 10px 0; font: 600 13px Inter; }
 .dock .app { width: 50px; height: 50px; border-radius: 12px; }
-.dock .ez { background: linear-gradient(135deg, #a13df0, #3a1066); display: grid; place-items: center; font: 28px Pricedown, Impact; }
+.dock .ez { display: block; object-fit: cover; }
 .dock .dgrid { margin-top: auto; width: 36px; height: 36px; border-radius: 9px; background: #333; }
 .carmain { position: relative; flex: 1; overflow: hidden; }
 .carmain.off .map { display: none; }

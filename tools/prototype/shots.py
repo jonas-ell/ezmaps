@@ -13,11 +13,11 @@ from playwright.sync_api import sync_playwright
 ROOT = pathlib.Path(__file__).parent
 OUT = ROOT.parent.parent / "docs" / "previews"
 TEST = len(sys.argv) > 1
-handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT))
+handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT.parent.parent))  # Repo-Wurzel, damit Assets/Generated erreichbar ist
 handler.log_message = lambda *a: None
 server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
 threading.Thread(target=server.serve_forever, daemon=True).start()
-URL = f"http://127.0.0.1:{server.server_address[1]}/index.html"
+URL = f"http://127.0.0.1:{server.server_address[1]}/tools/prototype/index.html"
 
 
 def main():
@@ -52,7 +52,7 @@ def main():
         for st in ["western", "pixel", "toy"]:
             page.evaluate(f"import('./js/app.js').then(m => m.useStyle('{st}'))")
             page.wait_for_function(f"document.getElementById('phone').className.includes('t-{st}')", timeout=120000)
-            shot(f"07-navigation-{st}", wait=900); shot(f"c4-carplay-navigation-{st}", car, wait=0)
+            shot(f"07-navigation-{st}", wait=3500); shot(f"c4-carplay-navigation-{st}", car, wait=0)
         page.evaluate("import('./js/app.js').then(m => m.useStyle('neon'))"); page.wait_for_timeout(800)
         page.evaluate("import('./js/app.js').then(m => { m.app.state.simSpeed = 200; })"); page.wait_for_function("document.querySelector('.arrival') !== null", timeout=60000)
         shot("08-ankunft", wait=600); shot("c5-carplay-ankunft", car, wait=0)

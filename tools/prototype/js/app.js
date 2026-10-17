@@ -3,6 +3,8 @@ import { Router, pointAt, smoothHeading, edgeKey, fmtDist } from './route.js';
 import { MapView, renderTexture, drawRoute, drawBlips, drawPlayer, drawDestination, drawFriend, drawFog, STYLES } from './map.js';
 import { renderPhone, phoneCamera, phoneHud } from './phone.js';
 import { renderCar, carCamera, carHud } from './carplay.js';
+import { loadAssets } from './assets.js';
+import { setIconStyle } from './icons.js';
 
 export const app = {
   scene: null, router: null, textures: {}, views: {},
@@ -24,11 +26,15 @@ export function toast(text) { set({ toast: text }); clearTimeout(toast.t); toast
 
 // ------------------------------------------------------------ Laden
 async function boot() {
+  await loadAssets();
   const scene = await (await fetch('data/idstein.json')).json();
   app.scene = scene; app.router = new Router(scene.graph);
   app.start = scene.presets.start;
   app.state.browse.phone.center = [...app.start]; app.state.browse.car.center = [...app.start];
   setupExplore();
+  app.tiles = new Worker('js/tileworker.js', { type: 'module' });
+  app.tiles.postMessage({ type: 'scene', scene });
+  app.tiles.onmessage = e => { const t = e.data; app.tilePending = false; if (t.style !== app.state.style) return; app.tile = t; for (const v of Object.values(app.views)) v.setDetail(t.bitmap, t.region, t.S, t.style); };
   app.views.phone = new MapView(document.getElementById('pmap'));
   app.views.car = new MapView(document.getElementById('cmap'));
   await useStyle('neon');
@@ -39,11 +45,13 @@ async function boot() {
 }
 
 export async function useStyle(style) {
-  if (!app.textures[style]) {
+  app.tile = null; for (const v of Object.values(app.views || {})) v.setDetail?.(null);
+    if (!app.textures[style]) {
     set({ loading: `${STYLES[style].name} wird gezeichnet …` });
     await new Promise(r => setTimeout(r, 30));
     app.textures[style] = await renderTexture(app.scene, style);
   }
+  setIconStyle(style);
   for (const v of Object.values(app.views)) v.setTexture(app.textures[style], style);
   document.getElementById('phone').className = `phone t-${style}`;
   document.getElementById('car').className = `car t-${style}`;
@@ -142,6 +150,20 @@ function announce() {
   }
 }
 
+// GM-006: scharfe Detail-Kachel (900 × 900 m, 4 px/m) rund um das Auto – wie Kachel-Nachladen in echten Karten-Engines
+const TILE = 900, TILE_S = 4;
+export function requestTile(n) {
+  if (app.state.style === 'pixel' || app.tilePending || !app.tiles) return;
+  const ahead = pointAt(n.route.pts, n.route.cum, n.progress + 150).p, car = pointAt(n.route.pts, n.route.cum, n.progress).p;
+  const t = app.tile;
+  if (t && t.style === app.state.style) {
+    const cx = t.region.x0 + TILE / 2, cy = t.region.y0 + TILE / 2;
+    if (Math.hypot(car[0] - cx, car[1] - cy) < 220) return;
+  }
+  app.tilePending = true;
+  app.tiles.postMessage({ type: 'tile', id: Date.now(), style: app.state.style, S: TILE_S, region: { x0: ahead[0] - TILE / 2, y0: ahead[1] - TILE / 2, w: TILE, h: TILE } });
+}
+
 // ------------------------------------------------------------ Hauptschleife
 let last = performance.now();
 const cams = { phone: null, car: null };
@@ -154,6 +176,7 @@ function loop(now) {
     const i = pointAt(n.route.pts, n.route.cum, n.progress).i;
     if (n.route.edges[i - 1] !== undefined) markExplored(n.route.edges[i - 1]);
     announce();
+    requestTile(n);
     if (n.progress >= n.route.length - 1) { n.arrived = true; app.start = n.route.pts[n.route.pts.length - 1]; set({ phone: { sheet: 'arrival' }, car: { screen: 'arrival' } }); }
   }
   for (const [key, view, camFn, hudFn] of [['phone', app.views.phone, phoneCamera, phoneHud], ['car', app.views.car, carCamera, carHud]]) {
@@ -181,7 +204,7 @@ function drawOverlay(u, view, key, mode) {
   if (n) drawDestination(u, view, n.dest.p, style, key === 'car' ? 7 : 8);
   if (n && n.active) {
     const p = pointAt(n.route.pts, n.route.cum, n.progress).p;
-    drawPlayer(u, view, p, smoothHeading(n.route, n.progress), style, key === 'car' ? 12 : 13);
+    drawPlayer(u, view, p, smoothHeading(n.route, n.progress), style, key === 'car' ? 17 : 15);
   } else drawPlayer(u, view, app.start, 0, style, key === 'car' ? 10 : 11);
 }
 
