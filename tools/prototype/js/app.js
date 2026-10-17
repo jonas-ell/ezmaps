@@ -1,6 +1,6 @@
 // EzMaps – klickbarer Prototyp. Gemeinsamer Zustand für iPhone und CarPlay (wie später ein geteiltes Modell in der App).
 import { Router, pointAt, smoothHeading, edgeKey, fmtDist } from './route.js';
-import { MapView, renderTexture, drawRoute, drawBlips, drawPlayer, drawDestination, drawFriend, drawFog, STYLES } from './map.js';
+import { MapView, renderTexture, drawRoute, drawBlips, drawPlayer, drawDestination, drawFriend, drawFog, STYLES, LEGEND_KINDS } from './map.js';
 import { renderPhone, phoneCamera, phoneHud } from './phone.js';
 import { renderCar, carCamera, carHud } from './carplay.js';
 import { loadAssets } from './assets.js';
@@ -209,7 +209,8 @@ function drawOverlay(u, view, key, mode) {
   if (mode === 'explore') { drawFog(u, view, app.scene, exploredLines()); drawPlayer(u, view, app.start, 0, style, 9); return; }
   if (n && !n.active) n.routes.forEach((r, i) => i !== n.sel && drawRoute(u, view, r.route, 0, style, { alt: true }));
   if (n) drawRoute(u, view, n.route, n.active && !n.arrived ? n.progress : 0, style);
-  drawBlips(u, view, app.scene, style, { size: key === 'car' ? 13 : undefined, avoid: app.uiRects[key] }); // GM-008: große Symbole auf CarPlay
+  const sel = key === 'phone' && s.phone.legend && s.phone.legendSel; // GM-011: Legende filtert
+  drawBlips(u, view, app.scene, style, { size: key === 'car' ? 13 : undefined, avoid: app.uiRects[key], only: sel ? LEGEND_KINDS[sel] || [sel] : null }); // GM-008: große Symbole auf CarPlay
   if (s.friends) { drawFriend(u, view, [app.start[0] + 260, app.start[1] - 420], 'Max', style); drawFriend(u, view, [app.start[0] + 880, app.start[1] - 160], 'Lea', style); }
   if (n) drawDestination(u, view, n.dest.p, style, key === 'car' ? 7 : 8);
   if (n && n.active) {

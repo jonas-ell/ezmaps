@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-011 – Kartensymbole nach Vorlage (Autohaus, Werkstatt …) und Legende
+
+**Ziel:** Orte wie Autohäuser, Werkstätten und Waschanlagen sollen auf der Neon-Karte als kleine Symbole wie in der Vorlage erscheinen.
+
+**Dateien:** `tools/prototype/js/map.js`, `tools/prototype/js/phone.js`, `tools/prototype/js/app.js`, `tools/prototype/style.css`, `docs/TODO_PROTOTYP_REVIEW.md`
+
+**Geändert:**
+- Eigener Symbolsatz (selbst gezeichnet, 24er-Raster, Path2D): Glyphe mit dunkler Kontur, meist weiß, einzelne farbig – Autohaus (türkis), Werkstatt, Waschanlage, Motorrad, Fahrrad, Tankstelle, Parken (blau), Supermarkt, Apotheke (grün), Essen, Café, Bar (grün), Kleidung (schwarz mit weißer Kontur), Friseur, Hotel, Bank
+- Neon nutzt diese Symbole statt der Codex-Blips; Quelle sind jetzt Kartenpunkte **und** Suchorte (dort stehen Autohäuser, Werkstätten, Apotheken), doppelte werden zusammengelegt; Auto-Themen haben Vorrang beim Platzieren
+- iPhone: Ebenen-Knopf öffnet in Neon die Legende rechts (weißer Text auf schwarzen Kästen, Symbol rechts); Tippen auf eine Zeile zeigt nur diese Symbole, nochmal tippen zeigt wieder alle. In den anderen Stilen führt der Knopf weiter zum Tab Stile
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Skriptfehler; Bildschirmfotos angesehen: iPhone-Karte bei den Autohäusern, Legende offen, Filter „Autohaus“, CarPlay-Karte.
+
+**Ungetestet:** Swift nicht angepasst. Wild West, Pixel Quest und Toy Town unverändert (alte Blips). Die Legende gibt es auf CarPlay nicht (Apple erlaubt dort keine eigenen Listen auf der Karte). `docs/previews/` nicht neu erzeugt.
+
 ## GM-010 – Neon City sieht aus wie die Vorlage (dunkle Stadtübersicht), Maßstab
 
 **Ziel:** Die Neon-Karte an die Vorlagebilder des Nutzers angleichen: fast schwarzes Gelände, Stadt als dunkelgraue Blöcke, breite hellgraue Straßen, Maßstab unten links.

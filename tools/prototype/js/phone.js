@@ -3,7 +3,7 @@ import { app, set, toast, useStyle, ensureTextures, planTo, selectRoute, startNa
 import { ic, manIc } from './icons.js';
 import { badgeUrl, appIconUrl } from './assets.js';
 import { fmtDist, fmtMin, smoothHeading, pointAt } from './route.js';
-import { MapView, STYLES, drawRoute, drawPlayer, drawBlips, drawDestination } from './map.js';
+import { MapView, STYLES, drawRoute, drawPlayer, drawBlips, drawDestination, LEGEND, legendSrc } from './map.js';
 
 const root = () => document.getElementById('pui');
 const H = 852, W = 393;
@@ -96,11 +96,18 @@ function pickStyle() {
     <button class="cta" style="margin-top:24px;width:100%" data-act="go:main">Weiter</button></div></div>`;
 }
 
+// GM-011: Legende wie in der Vorlage – Liste rechts, Tippen zeigt nur diese Symbole
+function legend() {
+  const sel = app.state.phone.legendSel;
+  return `<div class="legend">${LEGEND.map(([k, t]) => `<button class="lrow${sel === k ? ' on' : ''}" data-act="legendSel:${k}"><span>${t}</span><img src="${legendSrc(k)}" alt=""></button>`).join('')}</div>`;
+}
+
 function home() {
   const d = districtHere();
   return `<div class="searchbar panel" data-act="open:search">${ic('search', 20)}<span class="head" style="font-size:26px">Wohin?</span><span class="muted" style="margin-left:auto">${ic('mic', 20)}</span></div>
     <div class="chips">${[['home', 'Zuhause', 'dest:home', '#fff'], ['work', 'Arbeit', 'dest:work', '#fff'], ['fuel', 'Tanken', 'cat:fuel', '#f08a2c'], ['parking', 'Parken', 'cat:parking', '#5fb6ff']].map(([i, t, a, c]) => `<button class="chip panel" data-act="${a}"><span style="color:${c}">${ic(i, 16)}</span>${t}</button>`).join('')}</div>
-    <div class="rbtns">${btn('tab:styles', 'layers')}${btn('sheet:friends', 'friends')}${btn('recenter', 'locate')}${btn('zoom:in', 'plus')}${btn('zoom:out', 'minus')}</div>
+    ${app.state.style === 'neon' && app.state.phone.legend ? legend() : ''}
+    <div class="rbtns">${btn(app.state.style === 'neon' ? 'legend' : 'tab:styles', 'layers')}${btn('sheet:friends', 'friends')}${btn('recenter', 'locate')}${btn('zoom:in', 'plus')}${btn('zoom:out', 'minus')}</div>
     <div class="scalebar"><span>0</span><span></span></div>
     <button class="district panel" data-act="tab:explore"><div class="row sb"><span class="upper b">${d}</span><span class="head" style="font-size:30px">${pct(d)}%</span></div>
       <div class="bar"><i style="width:${pct(d)}%;background:var(--ok)"></i></div><div class="muted small">entdeckt · tippe für deine Karte</div></button>
@@ -265,6 +272,8 @@ document.getElementById('pui').addEventListener('click', async e => {
     case 'sheet': set({ phone: { sheet: v || null } }); break;
     case 'friends': set({ friends: v === '1', phone: { sheet: null } }); toast(v === '1' ? 'Freunde sehen dich jetzt' : 'Teilen beendet'); break;
     case 'recenter': recenter('phone'); break;
+    case 'legend': set({ phone: { legend: !s.phone.legend, legendSel: null } }); break;
+    case 'legendSel': set({ phone: { legendSel: s.phone.legendSel === v ? null : v } }); break;
     case 'zoom': zoom('phone', v === 'in' ? 1.4 : 1 / 1.4); break;
   }
 });

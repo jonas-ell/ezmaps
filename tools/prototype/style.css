@@ -109,6 +109,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .t-toy .searchbar, .t-western .searchbar, .t-pixel .searchbar { border-left: var(--edge); }
 .chips { position: absolute; top: 121px; left: 16px; right: 16px; display: flex; gap: 6px; }
 .chip { display: flex; align-items: center; gap: 5px; height: 34px; padding: 0 10px; font: 600 calc(12.5px * var(--bs)) var(--body); white-space: nowrap; }
+.legend { position: absolute; right: 70px; top: 172px; max-height: 470px; overflow-y: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; scrollbar-width: none; z-index: 1; }
+.lrow { display: flex; align-items: center; gap: 8px; padding: 4px 6px 4px 10px; background: rgba(0,0,0,.82); color: #fff; font: 500 13px Inter; white-space: nowrap; }
+.lrow img { width: 20px; height: 20px; }
+.lrow.on { background: #fff; color: #000; }
 .rbtns { position: absolute; right: 16px; top: 172px; display: flex; flex-direction: column; gap: 8px; }
 .mbtn { width: 46px; height: 46px; display: grid; place-items: center; }
 .t-western .mbtn, .t-toy .mbtn { border-radius: 12px; }
