@@ -5,6 +5,7 @@ import { app, set, useStyle, planTo, selectRoute, startNav, endNav, nextManeuver
 import { cpic as ic, manIc } from './icons.js';
 import { fmtDist, fmtMin, smoothHeading, pointAt } from './route.js';
 import { STYLES } from './map.js';
+import { panBy } from './keys.js';
 import { fit, limitFor, category } from './phone.js';
 
 const root = () => document.getElementById('cui');
@@ -12,9 +13,10 @@ let list = [];
 
 export function carCamera(view) {
   const s = app.state, n = s.nav, c = s.car;
+  if (n && n.active && n.arrived) return { mode: 'arrived', ...fit(n.route.pts, view, 60, 30, 30, 80) };
   if (n && n.active) {
     const r = n.route, pos = pointAt(r.pts, r.cum, n.progress).p;
-    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 4.6, tilt: 60, anchor: [0.66, 0.84] }; // GM-006: nah wie Apple Maps CarPlay
+    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 1.8, tilt: 0, anchor: [0.62, 0.6] }; // GM-008: Nutzervorlage – flach von oben wie ein Spiel-Radar, nah, Fahrtrichtung oben
   }
   const [W] = view.size();
   if (c.screen === 'preview' && n) return { mode: 'preview', ...fit(n.routes.map(r => r.route.pts).flat(), view, 70, 20, Math.min(330, W * 0.42) + 30, 80) };
@@ -44,17 +46,20 @@ export function renderCar() {
   else if (c.screen === 'cat') h = listTpl(c.title, list, 'dest');
   else if (c.screen === 'styles') h = listTpl('Stil', Object.entries(STYLES).map(([k, v]) => ({ name: v.name, sub: k === 'neon' ? 'Gratis' : 'Vorschau', icon: s.style === k ? 'check' : 'style', act: `style:${k}` })), 'map');
   else if (c.screen === 'preview' && s.nav) h = previewTpl();
-  else if ((c.screen === 'nav' || c.screen === 'arrival') && s.nav) h = navTpl() + (c.screen === 'arrival' ? alertTpl() : '');
+  else if (c.screen === 'arrival' && s.nav) h = navbar([], [['end', 'close', 'Beenden']]) + alertTpl() + '<div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>'; // GM-009 (1.6)
+  else if (c.screen === 'nav' && s.nav) h = navTpl();
   else h = mapTpl();
   h = h.replace(/class="head([^"]*)" style="font-size:(\d+)px/g, (m, c, n) => `class="head${c}" style="font-size:calc(${n}px * var(--hs))`);
   root().innerHTML = h;
 }
 
-const navbar = (left, right) => `<div class="cp-navbar"><div>${left.map(([a, i, t]) => `<button data-act="${a}">${ic(i, 18)}${t ? `<span>${t}</span>` : ''}</button>`).join('')}</div><div>${right.map(([a, i, t]) => `<button data-act="${a}">${ic(i, 18)}${t ? `<span>${t}</span>` : ''}</button>`).join('')}</div></div>`;
-const mapButtons = () => `<div class="cp-mapbtns">${[['zoom:in', 'plus'], ['zoom:out', 'minus'], ['recenter', 'locate']].map(([a, i]) => `<button data-act="${a}">${ic(i, 22)}</button>`).join('')}</div>`;
+const navbar = (left, right) => `<div class="cp-navbar"><div>${left.map(([a, i, t]) => `<button data-act="${a}"${i === 'back' ? ' class="back"' : ''}>${ic(i, 18)}${t ? `<span>${t}</span>` : ''}</button>`).join('')}</div><div>${right.map(([a, i, t]) => `<button data-act="${a}">${ic(i, 18)}${t ? `<span>${t}</span>` : ''}</button>`).join('')}</div></div>`;
+const mapButtons = (pan = false) => `<div class="cp-mapbtns">${[['zoom:in', 'plus'], ['zoom:out', 'minus'], ...(pan ? [['pan:on', 'pan']] : []), ['recenter', 'locate']].map(([a, i]) => `<button data-act="${a}">${ic(i, 22)}</button>`).join('')}</div>`;
 function mapTpl() {
   const d = 'Altstadt';
-  return navbar([['go:dest', 'search', 'Ziele'], ['go:styles', 'layers', 'Stil']], [['friends', 'friends', '']]) + mapButtons() +
+  // Verschiebe-Modus wie CPMapTemplate.showPanningInterface: vier Pfeile, Pfeiltasten bewegen die Karte
+  if (app.state.car.pan) return navbar([], [['pan:off', 'check', 'Fertig']]) + `<div class="cp-pan">${[['move:0,-1', 'up', 'top'], ['move:0,1', 'down', 'bottom'], ['move:-1,0', 'left', 'left'], ['move:1,0', 'right', 'right']].map(([a, i, c]) => `<button class="${c}" data-act="${a}">${ic(i, 26)}</button>`).join('')}</div><div class="cp-cross"></div><div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>`;
+  return navbar([['go:dest', 'search', 'Ziele'], ['go:styles', 'layers', 'Stil']], [['friends', 'friends', '']]) + mapButtons(true) +
     `<div class="scalebar cp"><span>0</span><span></span></div><div class="cp-district panel"><div class="row sb"><span class="upper b">Idstein ${d}</span><span class="head">${pct(d)}%</span></div><div class="bar thin"><i style="width:${pct(d)}%;background:var(--ok)"></i></div></div><div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>`;
 }
 function destItems() {
@@ -67,7 +72,7 @@ function destItems() {
 function listTpl(title, items, back) {
   list = items;
   return `<div class="cp-list"><div class="cp-lhead"><button data-act="go:${back}">${ic('back', 20)}<span>${back === 'map' ? 'Karte' : 'Zurück'}</span></button><b>${title}</b><span></span></div>
-    ${items.map((r, i) => `<button class="cp-row" data-act="${r.act || 'pick:' + i}"><span class="cp-ricon">${ic(r.icon, 22)}</span><span class="tl">${r.name}<small>${r.sub || ''}${r.p ? ' · ' + fmtDist(Math.hypot(r.p[0] - app.start[0], r.p[1] - app.start[1])) : ''}</small></span>${ic('chevron', 16)}</button>`).join('')}</div>`;
+    ${items.map((r, i) => `<button class="cp-row" data-act="${r.act || 'pick:' + i}"><span class="cp-ricon">${ic(r.icon, 22)}</span><span class="tl">${r.name}<small>${r.sub || ''}${r.p ? ' · ' + fmtDist(Math.hypot(r.p[0] - app.start[0], r.p[1] - app.start[1])) : ''}</small></span>${ic('chevron', 16)}</button>`).join('')}<div class="cp-list-osm">Ortsdaten © OpenStreetMap-Mitwirkende</div></div>`;
 }
 function previewTpl() {
   const n = app.state.nav;
@@ -99,6 +104,8 @@ document.getElementById('cui').addEventListener('click', async e => {
     case 'friends': set({ friends: !app.state.friends }); break;
     case 'zoom': zoom('car', v === 'in' ? 1.4 : 1 / 1.4); break;
     case 'recenter': recenter('car'); break;
+    case 'pan': set({ car: { pan: v === 'on' } }); break;
+    case 'move': { const [dx, dy] = v.split(',').map(Number); panBy('car', dx, dy); break; }
   }
 });
 function renderCarList(items) { root().innerHTML = listTpl(app.state.car.title, items, 'dest'); }

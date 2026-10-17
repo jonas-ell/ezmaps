@@ -41,6 +41,8 @@ const I = {
   straight: '<path d="M12 21V4"/><path d="m7 9 5-5 5 5"/>',
   uturn: '<path d="M8 21V9a4.5 4.5 0 0 1 9 0v6"/><path d="m13.5 12 3.5 3.5 3.5-3.5"/>',
   dest: '<path d="M6.5 21V4M6.5 4.5h11l-2 4 2 4h-11"/>',
+  pan: '<path d="M12 3v18M3 12h18"/><path d="m9 6 3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3"/>',
+  up: '<path d="m6 15 6-6 6 6"/>', down: '<path d="m6 9 6 6 6-6"/>', left: '<path d="m15 6-6 6 6 6"/>', right: '<path d="m9 6 6 6-6 6"/>',
 };
 const sized = (svg, size, extra) => svg.replace('<svg', `<svg class="ic" width="${size}" height="${size}" style="${extra}"`);
 export function ic(name, size = 22, extra = '') {

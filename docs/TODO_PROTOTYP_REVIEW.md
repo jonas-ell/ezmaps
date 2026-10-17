@@ -12,9 +12,9 @@ Für den lokalen Claude. Grundlage: Durchsicht aller Bildschirmfotos in `docs/pr
 
 Der Nutzer sagt: Die Karte sieht „null“ wie die Vorlage aus. Die Vorlage ist eine dunkle Open-World-Pausenkarte (Stadtübersicht von oben): fast schwarzes Land, dünne hellgraue Straßen, helles Wasser, weiße einfarbige Symbole, Legende rechts, Ortsname-Kasten unten links, Maßstab. **Recht:** Nur den Look nachbauen. Keine Spielnamen, keine Spiel-Symbole 1:1 kopieren, alle Symbole selbst zeichnen.
 
-Was vor GM-009 anders war (Farben in `js/map.js:96`, `NEON`, Zeichnen in `drawClassic`, `js/map.js:107`):
+Was vor GM-010 anders war (Farben in `js/map.js:96`, `NEON`, Zeichnen in `drawClassic`, `js/map.js:107`):
 
-| | Vor GM-009 | Vorlage |
+| | Vor GM-010 | Vorlage |
 |---|---|---|
 | Land | mittelgrau `#3d3e40` | fast schwarz, ca. `#1d1e1f`–`#232425`, leichtes Rauschen |
 | Gebäude | `#252628`, dunkler als das Land → schwarze Flecken überall, sie dominieren | in der Übersicht kaum sichtbar (Land + 3–5 % Helligkeit), erst nah deutlicher |
@@ -26,9 +26,9 @@ Was vor GM-009 anders war (Farben in `js/map.js:96`, `NEON`, Zeichnen in `drawCl
 
 Aufgaben:
 - [x] **0.1 Neue Palette für `NEON`:** Land fast schwarz, Wohn-/Gewerbe-/Parkflächen nur minimal heller, Gebäude knapp über dem Land, Wasser hell. Wald und Park nicht grün, sondern neutral mit leichtem Relief.
-- [x] **0.2 (geändert in GM-009)** Nach den weiteren Vorlagebildern sind die Straßen dort *breit* und wachsen mit dem Zoom – darum bleiben sie in Metern, aber 1,5× breiter, hellgrau, ohne Rand. Ursprünglich geplant: **Straßenbreiten in Bildschirm-Pixeln** statt in Metern, damit sie beim Zoomen dünn bleiben. Weil die Karte als Textur in Metern gezeichnet wird: Straßen entweder in der Überlagerung (`mv-over`) als Vektor zeichnen oder je Zoomstufe eine passende Textur erzeugen. Kreisel ohne dicken Ring.
+- [x] **0.2 (geändert in GM-010)** Nach den weiteren Vorlagebildern sind die Straßen dort *breit* und wachsen mit dem Zoom – darum bleiben sie in Metern, aber 1,5× breiter, hellgrau, ohne Rand. Ursprünglich geplant: **Straßenbreiten in Bildschirm-Pixeln** statt in Metern, damit sie beim Zoomen dünn bleiben. Weil die Karte als Textur in Metern gezeichnet wird: Straßen entweder in der Überlagerung (`mv-over`) als Vektor zeichnen oder je Zoomstufe eine passende Textur erzeugen. Kreisel ohne dicken Ring.
 - [ ] **0.3 Hügel-Schattierung:** Höhendaten (z. B. SRTM / Copernicus DEM 30 m, freie Lizenz, Quelle in der App nennen) in `prep.py` zu einem Graustufen-Bild für Idstein verarbeiten und mit `multiply`/`overlay` schwach über das Land legen.
-- [x] **0.4 Zoom beim Stöbern weiter raus**, sodass Idstein ganz auf den Bildschirm passt (iPhone und CarPlay). Das Hineinzoomen bleibt möglich.
+- [x] **0.4 Zoom beim Stöbern weiter raus**, sodass Idstein ganz auf den Bildschirm passt (iPhone; CarPlay bleibt beim Radar-Zoom aus GM-008). Das Hineinzoomen bleibt möglich.
 - [ ] **0.5 Symbole einfarbig weiß** mit dunkler Kontur in einem eigenen, schlichten Glyphen-Satz (Neon-Assets aus `Assets/Generated` anpassen oder neue Codex-Prompts in `docs/ASSETS_CODEX.md`). In der Übersicht weniger Symbole zeigen (nicht jedes Restaurant).
 - [ ] **0.6 Legende rechts** (iPhone: ausklappbar über den Ebenen-Knopf; CarPlay nur, wenn Apple-Vorgaben es erlauben): Liste der Symbole, weißer Text auf schwarzen Kästen, Tippen hebt die Symbole auf der Karte hervor. Eigene deutsche Begriffe (Tanken, Parken, Essen, Supermarkt, Apotheke …).
 - [x] **0.7 Maßstab** unten links über dem Ortsnamen-Kasten (z. B. „0 ─── 500 m“).
@@ -37,13 +37,13 @@ Aufgaben:
 
 ## Teil 1 – Fehler
 
-- [ ] **1.1 „© OpenStreetMap-Mitwirkende“ auf jedem Screen sichtbar machen (rechtlich Pflicht).** Der Hinweis fehlt im Tab Entdecken (`09-entdecken.png`) und im Tab Stile (`10-stile.png`), auch nicht in den Stil-Karten. Bei der Ankunft (`08-ankunft.png`) liegt das Blatt darüber. Heute gibt es `.attrib` nur in Karte und Navigation (`js/phone.js:103`, `:168`). Er soll auch über Blättern sichtbar bleiben (z. B. im Blatt selbst oder darüber). CarPlay ebenfalls prüfen.
-- [ ] **1.2 Kartensymbole liegen über der Oberfläche.** P- und Besteck-Symbole erscheinen über Statusleiste, Tab-Leiste („Stile“, „Profil“), Zoom-Knopf und dem Knopf „Los“ (`04-karte.png`, `05-suche.png`, `06-routen-vorschau.png`). Im Tab Stile liegt die „230 m“-Einblendung der 4. Karte über dem Tab „Karte“, und Symbole ragen über den Kartenrand hinaus (`10-stile.png`). Vermutete Ursache: Die 3D-Kamera per CSS (`js/map.js`, `.mv-tex`/`.mv-over`) erzeugt eigene Stapel-Ebenen, die `z-index` von `.ui`, `.tabs` und `.status` in `style.css` unterlaufen. Lösung z. B.: `.map` mit `isolation: isolate` / `overflow: hidden` / eigenem `z-index: 0`, Stil-Karten mit `overflow: hidden` und `isolation: isolate`.
-- [ ] **1.3 Die Fahrzeit der gewählten Route ist unlesbar.** In der Routen-Vorschau wird sie als schwarzer Klecks gezeichnet (Titelschrift `head` auf weißem Grund, `js/phone.js:150`). Sie braucht eine lesbare Schrift und Farbe auf dem hellen Grund.
-- [ ] **1.4 Der Spieler-Pfeil ist verdeckt.** Das Straßenfeld „WIESBADENER STRASSE“ (`.navinfo` / `.streetbox`) liegt in der Navigation auf dem Pfeil (`07-navigation*.png`). Entweder das Feld verschieben oder den Pfeil in der Kamera höher setzen. iPhone und CarPlay prüfen.
-- [ ] **1.5 Suche:** „Abbrechen“ ist rechts abgeschnitten (`05-suche.png`). Die Kategorie „Books“ ist Englisch und soll „Buchhandlung“ heißen; alle Kategorie-Namen auf deutsche Begriffe prüfen (Zuordnung in `tools/prototype/prep.py` bzw. `data/idstein.json`).
-- [ ] **1.6 Die Navigation scheint bei der Ankunft durch.** Hinter dem Blatt sind noch „0 m“, „28 km/h“, das Tempolimit 30 und „Musik leiser“ zu sehen (`08-ankunft.png`). Bei der Ankunft sollen Tacho, Tempolimit, Musik-Hinweis und untere Leiste verschwinden. Die Karte soll aus dem Navi-Zoom auf eine Übersicht der gefahrenen Strecke wechseln.
-- [ ] **1.7 Die Versionsanzeige im Profil ist veraltet.** Dort steht „Prototyp GM-005“ (`js/phone.js:203`). Die Nummer soll aus einer Stelle kommen und immer zur neuesten GM-Nummer passen.
+- [x] **1.1 „© OpenStreetMap-Mitwirkende“ auf jedem Screen sichtbar machen (rechtlich Pflicht).** Der Hinweis fehlt im Tab Entdecken (`09-entdecken.png`) und im Tab Stile (`10-stile.png`), auch nicht in den Stil-Karten. Bei der Ankunft (`08-ankunft.png`) liegt das Blatt darüber. Heute gibt es `.attrib` nur in Karte und Navigation (`js/phone.js:103`, `:168`). Er soll auch über Blättern sichtbar bleiben (z. B. im Blatt selbst oder darüber). CarPlay ebenfalls prüfen.
+- [x] **1.2 Kartensymbole liegen über der Oberfläche.** P- und Besteck-Symbole erscheinen über Statusleiste, Tab-Leiste („Stile“, „Profil“), Zoom-Knopf und dem Knopf „Los“ (`04-karte.png`, `05-suche.png`, `06-routen-vorschau.png`). Im Tab Stile liegt die „230 m“-Einblendung der 4. Karte über dem Tab „Karte“, und Symbole ragen über den Kartenrand hinaus (`10-stile.png`). Vermutete Ursache: Die 3D-Kamera per CSS (`js/map.js`, `.mv-tex`/`.mv-over`) erzeugt eigene Stapel-Ebenen, die `z-index` von `.ui`, `.tabs` und `.status` in `style.css` unterlaufen. Lösung z. B.: `.map` mit `isolation: isolate` / `overflow: hidden` / eigenem `z-index: 0`, Stil-Karten mit `overflow: hidden` und `isolation: isolate`.
+- [x] **1.3 Die Fahrzeit der gewählten Route ist unlesbar.** In der Routen-Vorschau wird sie als schwarzer Klecks gezeichnet (Titelschrift `head` auf weißem Grund, `js/phone.js:150`). Sie braucht eine lesbare Schrift und Farbe auf dem hellen Grund.
+- [x] **1.4 Der Spieler-Pfeil ist verdeckt.** Das Straßenfeld „WIESBADENER STRASSE“ (`.navinfo` / `.streetbox`) liegt in der Navigation auf dem Pfeil (`07-navigation*.png`). Entweder das Feld verschieben oder den Pfeil in der Kamera höher setzen. iPhone und CarPlay prüfen.
+- [x] **1.5 Suche:** „Abbrechen“ ist rechts abgeschnitten (`05-suche.png`). Die Kategorie „Books“ ist Englisch und soll „Buchhandlung“ heißen; alle Kategorie-Namen auf deutsche Begriffe prüfen (Zuordnung in `tools/prototype/prep.py` bzw. `data/idstein.json`).
+- [x] **1.6 Die Navigation scheint bei der Ankunft durch.** Hinter dem Blatt sind noch „0 m“, „28 km/h“, das Tempolimit 30 und „Musik leiser“ zu sehen (`08-ankunft.png`). Bei der Ankunft sollen Tacho, Tempolimit, Musik-Hinweis und untere Leiste verschwinden. Die Karte soll aus dem Navi-Zoom auf eine Übersicht der gefahrenen Strecke wechseln.
+- [x] **1.7 Die Versionsanzeige im Profil ist veraltet.** Dort steht „Prototyp GM-005“ (`js/phone.js:203`). Die Nummer soll aus einer Stelle kommen und immer zur neuesten GM-Nummer passen.
 
 ## Teil 2 – Verbesserungen
 

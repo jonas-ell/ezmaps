@@ -5,16 +5,17 @@ import { renderPhone, phoneCamera, phoneHud } from './phone.js';
 import { renderCar, carCamera, carHud } from './carplay.js';
 import { loadAssets } from './assets.js';
 import { setIconStyle } from './icons.js';
+import { restoreFocus } from './keys.js';
 
 export const app = {
-  scene: null, router: null, textures: {}, views: {},
+  scene: null, router: null, textures: {}, views: {}, uiRects: { phone: [], car: [] }, version: '?',
   state: {
     style: 'neon', voice: true, ducking: true, speedLimit: true, friends: false, simSpeed: 3, carConnected: true, carSize: '1280x480',
     phone: { screen: 'splash', tab: 'map', overlay: null, query: '', sheet: null },
     car: { screen: 'map' },
     nav: null,          // { dest, routes, sel, route, progress, active, arrived, spoken }
     toast: null, speaking: false, loading: null, recents: [],
-    browse: { phone: { center: null, scale: 0.3 }, car: { center: null, scale: 0.4 } },
+    browse: { phone: { center: null, scale: 0.3 }, car: { center: null, scale: 1.1 } }, // GM-010: iPhone weiter raus (Stadtübersicht), CarPlay bleibt Radar (GM-008)
   },
   explored: new Set(),
 };
@@ -27,6 +28,8 @@ export function toast(text) { set({ toast: text }); clearTimeout(toast.t); toast
 // ------------------------------------------------------------ Laden
 async function boot() {
   await loadAssets();
+  // GM-009 (1.7): Version immer = neueste GM-Nummer im Changelog
+  try { app.version = ((await (await fetch('../../CHANGELOG.md')).text()).match(/^## (GM-\d+\w*)/m) || [])[1] || '?'; } catch { app.version = '?'; }
   const scene = await (await fetch('data/idstein.json')).json();
   app.scene = scene; app.router = new Router(scene.graph);
   app.start = scene.presets.start;
@@ -189,7 +192,7 @@ function loop(now) {
   }
   requestAnimationFrame(loop);
 }
-// GM-009: Maßstab wie in der Vorlage (Linie mit „0“ und runder Entfernung), passt sich dem Zoom an
+// GM-010: Maßstab wie in der Vorlage (Linie mit „0“ und runder Entfernung), passt sich dem Zoom an
 const NICE = [25, 50, 100, 200, 250, 500, 1000, 2000, 5000];
 function scaleBar(key, cam) {
   const el = document.querySelector(key === 'phone' ? '#pui .scalebar' : '#cui .scalebar'); if (!el) return;
@@ -205,8 +208,8 @@ function drawOverlay(u, view, key, mode) {
   const s = app.state, n = s.nav, style = s.style;
   if (mode === 'explore') { drawFog(u, view, app.scene, exploredLines()); drawPlayer(u, view, app.start, 0, style, 9); return; }
   if (n && !n.active) n.routes.forEach((r, i) => i !== n.sel && drawRoute(u, view, r.route, 0, style, { alt: true }));
-  if (n) drawRoute(u, view, n.route, n.active ? n.progress : 0, style);
-  drawBlips(u, view, app.scene, style, { size: key === 'car' ? 8 : undefined });
+  if (n) drawRoute(u, view, n.route, n.active && !n.arrived ? n.progress : 0, style);
+  drawBlips(u, view, app.scene, style, { size: key === 'car' ? 13 : undefined, avoid: app.uiRects[key] }); // GM-008: große Symbole auf CarPlay
   if (s.friends) { drawFriend(u, view, [app.start[0] + 260, app.start[1] - 420], 'Max', style); drawFriend(u, view, [app.start[0] + 880, app.start[1] - 160], 'Lea', style); }
   if (n) drawDestination(u, view, n.dest.p, style, key === 'car' ? 7 : 8);
   if (n && n.active) {
@@ -228,9 +231,18 @@ function bindGestures(view, key) {
   view.el.addEventListener('wheel', e => { e.preventDefault(); zoom(key, e.deltaY < 0 ? 1.15 : 1 / 1.15); }, { passive: false });
 }
 export function zoom(key, f) { const b = app.state.browse[key]; b.scale = Math.max(key === 'car' ? 0.32 : 0.16, Math.min(1.6, b.scale * f)); }
-export function recenter(key) { app.state.browse[key].center = [...app.start]; app.state.browse[key].scale = key === 'car' ? 0.4 : 0.3; }
+export function recenter(key) { app.state.browse[key].center = [...app.start]; app.state.browse[key].scale = key === 'car' ? 1.1 : 0.3; }
 
-function renderAll() { renderPhone(); renderCar(); }
+function renderAll() { renderPhone(); renderCar(); restoreFocus(); requestAnimationFrame(collectRects); }
+// GM-009 (1.2): Bereiche der Bedienelemente merken – dort keine Kartensymbole zeichnen (Leisten/Panels sind teils durchsichtig)
+function collectRects() {
+  for (const [key, ui, map] of [['phone', 'pui', 'pmap'], ['car', 'cui', 'cmap']]) {
+    const base = document.getElementById(map).getBoundingClientRect();
+    const els = document.querySelectorAll(`#${ui} .panel, #${ui} .tabs, #${ui} button, #${ui} .sheet, #${ui} .kbd, #${ui} .limit, #${ui} .cp-trip, #${ui} .cp-maneuver, #${ui} .cp-eta, #${ui} .cp-ours, #${ui} .osm`);
+    app.uiRects[key] = [...els].map(e => e.getBoundingClientRect()).filter(r => r.width && r.height).map(r => [r.left - base.left - 6, r.top - base.top - 6, r.right - base.left + 6, r.bottom - base.top + 6]);
+    if (key === 'phone') app.uiRects.phone.push([0, 0, 393, 58]); // Statusleiste
+  }
+}
 
 // Steuerleiste der Seite
 document.addEventListener('click', e => {

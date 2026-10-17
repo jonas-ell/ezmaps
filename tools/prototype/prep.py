@@ -133,6 +133,24 @@ KIND = {"restaurant": "Restaurant", "cafe": "Café", "fast_food": "Imbiss", "fue
         "pub": "Kneipe", "ice_cream": "Eis", "museum": "Museum", "theatre": "Theater", "cinema": "Kino", "sports_centre": "Sport",
         "park": "Park", "playground": "Spielplatz", "car_repair": "Werkstatt", "drugstore": "Drogerie", "chemist": "Drogerie"}
 SKIP = {"information", "toilets", "atm", "bench", "waste_basket", "vending_machine", "recycling"}
+# GM-009: alle Kategorien auf Deutsch (Review 1.5); Unbekanntes heißt „Ort“, nie englischer Rohname
+KIND.update({"books": "Buchhandlung", "social_facility": "Soziale Einrichtung", "apartment": "Ferienwohnung", "artwork": "Kunstwerk",
+    "driving_school": "Fahrschule", "bar": "Bar", "veterinary": "Tierarzt", "tailor": "Schneiderei", "interior_decoration": "Einrichtung",
+    "jewelry": "Schmuck", "dry_cleaning": "Reinigung", "travel_agency": "Reisebüro", "car_wash": "Waschanlage", "toys": "Spielwaren",
+    "pitch": "Sportplatz", "community_centre": "Bürgerhaus", "bicycle": "Fahrradladen", "greengrocer": "Obst & Gemüse", "bed": "Betten",
+    "computer": "Computer", "energy": "Energie", "art": "Kunst", "perfumery": "Parfümerie", "stationery": "Schreibwaren", "tobacco": "Tabak",
+    "beauty": "Kosmetikstudio", "gift": "Geschenke", "funeral_directors": "Bestatter", "gallery": "Galerie", "cosmetics": "Kosmetik",
+    "medical_supply": "Sanitätshaus", "telecommunication": "Telefonladen", "wine": "Wein", "mobile_phone": "Handyladen", "fountain": "Brunnen",
+    "electronics": "Elektronik", "convenience": "Laden", "woodwork": "Schreinerei", "wool": "Wolle", "workshop": "Werkstatt",
+    "parcel_locker": "Paketstation", "vacuum_cleaner": "Staubsauger", "massage": "Massage", "marketplace": "Markt", "music": "Musik",
+    "chocolate": "Schokolade", "garden_centre": "Gartencenter", "freeshop": "Umsonstladen", "safety_equipment": "Arbeitsschutz",
+    "events_venue": "Veranstaltungsort", "tea": "Tee", "hifi": "HiFi", "musical_instrument": "Musikinstrumente", "deli": "Feinkost",
+    "stadium": "Stadion", "bus_station": "Busbahnhof", "hospital": "Krankenhaus", "sports_hall": "Sporthalle", "water_park": "Freizeitbad",
+    "public_bath": "Bad", "car_rental": "Autovermietung", "doityourself": "Baumarkt", "kitchen": "Küchenstudio", "fire_station": "Feuerwehr",
+    "arts_centre": "Kulturzentrum", "laundry": "Wäscherei", "college": "Hochschule", "police": "Polizei", "picnic_site": "Picknickplatz",
+    "caravan_site": "Wohnmobilplatz", "courthouse": "Gericht", "animal_training": "Hundeschule", "garden": "Garten", "childcare": "Kinderbetreuung",
+    "sports_centre": "Sportzentrum", "yes": "Ort"})
+
 for src in (named_src, extra_src):
     for el in json.load(open(src, encoding="utf-8"))["elements"]:
         t = el.get("tags", {})
@@ -152,7 +170,7 @@ for src in (named_src, extra_src):
         if key in seen:
             continue
         seen.add(key)
-        search.append({"name": n, "kind": kind, "label": KIND.get(kind, kind.replace("_", " ").title() if kind else "Ort"),
+        search.append({"name": n, "kind": kind, "label": KIND.get(kind, "Ort"),
                        "p": proj(lat, lon), "street": t.get("addr:street", ""), "no": t.get("addr:housenumber", "")})
 
 out = {"origin": [LAT0, LON0], "extent": [HALF_W, HALF_H], "areas": areas, "lines": lines, "pois": pois, "places": places,

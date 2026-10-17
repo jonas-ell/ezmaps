@@ -2,7 +2,7 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
-## GM-009 – Neon City sieht aus wie die Vorlage (dunkle Stadtübersicht), Maßstab
+## GM-010 – Neon City sieht aus wie die Vorlage (dunkle Stadtübersicht), Maßstab
 
 **Ziel:** Die Neon-Karte an die Vorlagebilder des Nutzers angleichen: fast schwarzes Gelände, Stadt als dunkelgraue Blöcke, breite hellgraue Straßen, Maßstab unten links.
 
@@ -11,7 +11,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 **Geändert:**
 - `NEON`-Palette: Land `#1c1c1d`, Wald/Feld/Park fast schwarz, bebaute Fläche `#2c2c2d`, Gebäude `#373738` mit feiner Kante, Wasser grau `#4b4e4d`, Straßen `#b0b0b0`/`#a3a3a3`/`#8e8e8e` ohne Rand und 1,5× breiter; Hintergrund und Dunst passend dunkel
 - Neu `urbanBlocks()`: Bebaute Fläche wird automatisch aus Gebäuden und Wohnstraßen erzeugt (OSM hat in Idstein kaum `landuse=residential`), freies Gelände bleibt dunkel
-- Stöbern startet weiter rausgezoomt (iPhone 0,3, CarPlay 0,4 statt 0,42/0,55), gilt für alle Stile
+- iPhone-Stöbern startet weiter rausgezoomt (0,3 statt 0,42), gilt für alle Stile; CarPlay behält den Radar-Zoom aus GM-008
 - Maßstab („0 ── 250 m“) unten links über dem Ortsteil-Kasten auf iPhone und CarPlay, passt sich beim Zoomen an
 - Aufgabenliste: 0.1, 0.2 (geändert: Straßen bleiben in Metern, weil sie in der Vorlage mitwachsen), 0.4, 0.7 abgehakt
 
@@ -19,7 +19,26 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Ungetestet:** Swift nicht angepasst (erst nach Freigabe, Punkt 0.9). `docs/previews/` nicht neu erzeugt (in der Cloud fehlt die Pricedown-Schrift). Wild West, Pixel Quest und Toy Town nur durch den weiteren Zoom betroffen, nicht angesehen.
 
-## GM-008 – Aufgabenliste: Karten-Look „Neon City“ nach Vorlage
+## GM-009 – Review Teil 1: Fehler behoben
+
+**Ziel:** Punkte 1.1–1.7 aus `docs/TODO_PROTOTYP_REVIEW.md`.
+
+**Dateien:** `tools/prototype/js/{phone,carplay,app,map}.js`, `tools/prototype/style.css`, `tools/prototype/prep.py`, `tools/prototype/data/idstein.json`, `docs/TODO_PROTOTYP_REVIEW.md`, `docs/previews/*`
+
+**Geändert:**
+- 1.1 „© OpenStreetMap-Mitwirkende“ zentral auf jedem iPhone-Screen (über Tab-Leiste, über der Tastatur, in Blättern), in jeder Stil-Karte („© OpenStreetMap“), in den CarPlay-Listen und über dem CarPlay-Ankunftshinweis
+- 1.2 Ursache: Leisten und Panels sind halbdurchsichtig, Symbole schienen durch. Jetzt werden Kartensymbole unter allen Bedienelementen und der Statusleiste gar nicht gezeichnet; Tab-Leiste (Neon) deckend, Statusleiste mit Verlauf, Karte und Stil-Karten isoliert
+- 1.3 Fahrzeit in der Routen-Vorschau in lesbarer Textschrift statt Titelschrift mit Kontur
+- 1.4 Spieler-Pfeil auf dem iPhone höher (Kamera-Anker 0,63), nicht mehr unter dem Straßenfeld; CarPlay geprüft (frei)
+- 1.5 „Abbrechen“ nicht mehr abgeschnitten; alle Suchkategorien deutsch (z. B. „Buchhandlung“, „Tierarzt“, „Waschanlage“), Unbekanntes heißt „Ort“
+- 1.6 Bei Ankunft verschwinden Abbiegekarte, Tacho, Tempolimit, Musik-Hinweis und untere Leiste; Karte zeigt Übersicht der gefahrenen Strecke (iPhone und CarPlay)
+- 1.7 Versionsanzeige im Profil liest die neueste GM-Nummer aus `CHANGELOG.md`
+
+**Tatsächlich geprüft:** `shots.py` ohne Konsolenfehler; alle 22 Bilder angesehen (OSM-Hinweis überall, keine Symbole über Leisten, Fahrzeit lesbar, Pfeil frei, Ankunft ohne Navi-Teile).
+
+**Ungetestet:** Prototyp nur in Chromium. Keine Swift-Änderungen.
+
+## GM-008b – Aufgabenliste: Karten-Look „Neon City“ nach Vorlage
 
 **Ziel:** Festhalten, warum die Neon-Karte nicht wie die Vorlage (dunkle Open-World-Stadtübersicht) aussieht und was der lokale Claude ändern soll.
 
@@ -31,8 +50,37 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 **Tatsächlich geprüft:** Bildschirmfoto des Nutzers (CarPlay-Karte) mit dem Vorlagebild verglichen, die Neon-Farben in `tools/prototype/js/map.js` nachgeschlagen.
 
 **Ungetestet:** Nichts am Code geändert, die Farbwerte in der Liste sind Schätzungen aus dem Vorlagebild.
+_(Nummer parallel zu GM-008 vergeben, deshalb „b“.)_
 
-## GM-007 – Aufgabenliste aus dem Prototyp-Review
+## GM-008 – CarPlay-Karte flach von oben wie ein Spiel-Radar
+
+**Ziel:** CarPlay-Ansicht nach Nutzervorlage: flach, Fahrtrichtung oben, große Symbole.
+
+**Dateien:** `tools/prototype/js/carplay.js`, `tools/prototype/js/app.js`
+
+**Geändert:**
+- CarPlay-Navigation: keine 3D-Neigung mehr, 1,8 px/m, Pfeil leicht rechts der Mitte
+- CarPlay-Karte (ohne Route): näher (1,1 px/m), Symbole deutlich größer
+
+**Tatsächlich geprüft:** Bildschirmfotos CarPlay-Karte und -Navigation angesehen, keine Konsolenfehler.
+
+**Ungetestet:** Prototyp nur in Chromium; `docs/previews` noch nicht neu erzeugt.
+
+## GM-007 – Suche repariert, Steuerung per Pfeiltasten überall
+
+**Ziel:** In die Suche tippen können; überall mit Pfeiltasten navigieren wie mit Knopf-/Pfeilsteuerung im Auto.
+
+**Dateien:** `tools/prototype/js/keys.js` (neu), `tools/prototype/js/{app,phone,carplay,icons}.js`, `tools/prototype/{style.css,index.html}`, `docs/previews/*`
+
+**Geändert:**
+- Fehler: Ein Tipp auf die Bildschirm-Tastatur nahm dem Suchfeld den Fokus, danach kam von der echten Tastatur nichts mehr an. Jetzt bleibt der Cursor in der Suche immer im Feld
+- Pfeiltasten springen räumlich zum nächsten Knopf/Listeneintrag (blaue Markierung, bei CarPlay weiß), Enter wählt, Esc geht zurück, Tab wechselt iPhone ↔ CarPlay, +/− zoomt; offene Dialoge/Blätter fangen den Fokus
+- CarPlay: Kartentaste „Verschieben“ wie `CPMapTemplate.showPanningInterface` – vier Pfeilknöpfe, Pfeiltasten bewegen die Karte, „Fertig“/Esc beendet
+
+**Tatsächlich geprüft:** Playwright: Einstieg, Stilwahl, Suche (Tippen + Bildschirmtasten gemischt), Auswahl per Pfeil/Enter, Zurück per Esc, CarPlay-Ziele per Tastatur bis zur Routen-Vorschau, Verschieben per Pfeiltasten; keine Konsolenfehler.
+
+**Ungetestet:** In der echten App kommt die Fokus-Steuerung im Auto von iOS (Focus Engine) – hier nur nachgebildet. Prototyp nur in Chromium.
+## GM-007b – Aufgabenliste aus dem Prototyp-Review
 
 **Ziel:** Gefundene Fehler, Verbesserungen und Ideen zum Prototyp als Aufgabenliste für den lokalen Claude festhalten.
 
@@ -44,6 +92,8 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 **Tatsächlich geprüft:** Die 22 Bildschirmfotos aus `docs/previews/` (Stand GM-006) angesehen, die genannten Code-Stellen nachgeschlagen.
 
 **Ungetestet:** Nichts am Code geändert. Die vermutete Ursache für die Symbole über der Oberfläche (3D-Kamera per CSS) ist nicht bestätigt.
+_(Nummer parallel zu GM-007 vergeben, deshalb „b“.)_
+
 
 ## GM-006 – Codex-Assets und App-Icon eingebaut, Navi-Zoom wie Apple Maps
 
