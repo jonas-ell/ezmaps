@@ -21,6 +21,20 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Ungetestet:** Prototyp nur in Chromium. Keine Swift-Änderungen.
 
+## GM-008b – Aufgabenliste: Karten-Look „Neon City“ nach Vorlage
+
+**Ziel:** Festhalten, warum die Neon-Karte nicht wie die Vorlage (dunkle Open-World-Stadtübersicht) aussieht und was der lokale Claude ändern soll.
+
+**Dateien:** `docs/TODO_PROTOTYP_REVIEW.md`
+
+**Geändert:**
+- Neuer Teil 0 (vor den Fehlern): Vergleich heute ↔ Vorlage (Land, Gebäude, Straßenbreiten, Wasser, Relief, Zoom, Symbole) und die Aufgaben 0.1–0.9: neue Palette, Straßen in Bildschirm-Pixeln, Hügel-Schattierung, weiterer Zoom, weiße Symbole, Legende, Maßstab, Vergleichsbild, danach Swift.
+
+**Tatsächlich geprüft:** Bildschirmfoto des Nutzers (CarPlay-Karte) mit dem Vorlagebild verglichen, die Neon-Farben in `tools/prototype/js/map.js` nachgeschlagen.
+
+**Ungetestet:** Nichts am Code geändert, die Farbwerte in der Liste sind Schätzungen aus dem Vorlagebild.
+_(Nummer parallel zu GM-008 vergeben, deshalb „b“.)_
+
 ## GM-008 – CarPlay-Karte flach von oben wie ein Spiel-Radar
 
 **Ziel:** CarPlay-Ansicht nach Nutzervorlage: flach, Fahrtrichtung oben, große Symbole.
