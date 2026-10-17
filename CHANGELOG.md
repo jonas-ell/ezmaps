@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-014 – Branch `claude/sharp-knuth-8k97wf` in `main` übernommen
+
+**Ziel:** Review-Arbeit (Teil 0–2, GM-009 bis GM-013, inkl. Cloud-Einträge) nach `main` bringen; Pricedown ins Repo legen, falls das Repo privat ist.
+
+**Dateien:** `CHANGELOG.md`, `docs/previews/*` (neu erzeugt)
+
+**Geändert:**
+- `main` per Fast-Forward auf den Branch-Stand gebracht (keine Konflikte, `main` war bereits im Branch enthalten); alle Einträge GM-009 bis GM-013 bleiben erhalten
+- Schrift **nicht** committet: Das Repo `jonas-ell/ezmaps` ist laut GitHub öffentlich (`visibility: public`). Pricedown hat nur eine Desktop-Lizenz und darf nicht öffentlich verteilt werden. `tools/prototype/fonts/` bleibt in `.gitignore`, `CLAUDE.md` und `README.md` unverändert
+- Geprüft: Pricedown war nie im Git-Verlauf
+
+**Tatsächlich geprüft:** `python tools/prototype/shots.py` auf `main` ohne Konsolenfehler, 22 Bilder erzeugt und angesehen; Sichtbarkeit über die GitHub-API ohne Anmeldung abgefragt (`private: false`).
+
+**Ungetestet:** Teil 3 der Aufgabenliste (Ideen) noch offen – soll erst im Prototyp gezeigt und vom Nutzer freigegeben werden.
+
 ## GM-013 – Review Teil 2: Verbesserungen
 
 **Ziel:** Punkte 2.1–2.9 aus `docs/TODO_PROTOTYP_REVIEW.md`.
