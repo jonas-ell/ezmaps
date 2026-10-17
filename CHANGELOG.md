@@ -2,6 +2,20 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-019 – Erster Mac-Build über das EzMaps-Gate: alles grün
+
+**Ziel:** GM-017/GM-018 auf dem Mac bauen und testen.
+
+**Dateien:** `CHANGELOG.md`, `docs/TODO_PROTOTYP_REVIEW.md` (kein Code geändert)
+
+**Geändert:**
+- Mac-Gate für EzMaps vom Nutzer eingerichtet (`~/bin/ezmaps-gate.sh`, eigener Schlüssel); `ssh mac-ezmaps ping` → „ok“, `ls` → „Nicht erlaubt“
+- Aufgabenliste: Core-Bausteine als gebaut und getestet vermerkt
+
+**Tatsächlich geprüft:** `bash tools/mac_run.sh` mit Commit `03937c1` auf dem Mac (2026-10-17 20:08): `xcodegen generate` ok, `xcodebuild` für den iOS-Simulator (unsigniert, mit MapLibre 6.31.0) **BUILD SUCCEEDED**, `swift test` **15 Tests, 0 Fehler** (MapStyle 3, Polyline 2, Valhalla 5, Photon 2, Neuberechnung 3).
+
+**Ungetestet:** App nicht im Simulator gestartet (Gate kann nur bauen) – Karte, OSM-Hinweis und CarPlay-Fenster muss der Nutzer in Xcode/Simulator ansehen. `ValhallaClient`/`PhotonClient`/`RerouteMonitor` sind noch nicht an die Oberfläche angeschlossen und nur gegen Attrappen getestet, nicht gegen die echten Server.
+
 ## GM-018 – Mac-Build vorbereitet, Swift-Code vorgeprüft
 
 **Ziel:** Alles so vorbereiten, dass nach der einmaligen Mac-Einrichtung ein einziger Befehl baut und testet.
