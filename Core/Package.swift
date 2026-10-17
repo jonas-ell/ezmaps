@@ -3,13 +3,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "GameMapCore",
+    name: "EzMapsCore",
     platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
-        .library(name: "GameMapCore", targets: ["GameMapCore"])
+        .library(name: "EzMapsCore", targets: ["EzMapsCore"])
     ],
     targets: [
-        .target(name: "GameMapCore", path: "Sources/GameMapCore"),
-        .testTarget(name: "GameMapCoreTests", dependencies: ["GameMapCore"], path: "Tests/GameMapCoreTests")
+        .target(name: "EzMapsCore", path: "Sources/EzMapsCore"),
+        .testTarget(name: "EzMapsCoreTests", dependencies: ["EzMapsCore"], path: "Tests/EzMapsCoreTests")
     ]
 )

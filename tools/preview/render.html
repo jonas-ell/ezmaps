@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@500;700;800&display=block" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: #111; }
+  #view { position: relative; overflow: hidden; background: #15181c; }
+  #map { position: absolute; left: 0; top: 0; }
+  #ui { position: absolute; inset: 0; }
+  .round { border-radius: 50%; }
+</style>
+</head>
+<body>
+<div id="view"><canvas id="map"></canvas><canvas id="ui"></canvas></div>
+<script>
+// Stil "Neon City" – eigener Stil, angelehnt an das Genre (keine Spiel-Assets).
+const S = {
+  land: '#16191d', residential: '#1d2126', industrial: '#22232a', farm: '#191d19',
+  park: '#1e3424', forest: '#18291c', water: '#24405c', waterLine: '#2b4d6e',
+  building: '#2a2e34', buildingEdge: '#343940',
+  casing: '#0b0d10',
+  road: { 0: '#e6e9ec', 1: '#d4d8dc', 2: '#b9bfc5', 3: '#9ba2a9', 4: '#868d94', 5: '#737a82', 6: '#5d636a', 7: '#3c4147' },
+  rail: '#4a4f57',
+  route: '#b04dff', routeGlow: 'rgba(176,77,255,0.45)', routeDone: 'rgba(176,77,255,0.18)',
+  dest: '#ffd23f',
+};
+const WIDTH = { 0: 15, 1: 12, 2: 11, 3: 9, 4: 8, 5: 6, 6: 5, 7: 3 };
+
+const params = new URLSearchParams(location.search);
+const MODE = params.get('mode') || 'overview';
+const PROGRESS = parseFloat(params.get('progress') || '520'); // gefahrene Meter auf der Route
+const MODES = {
+  overview: { w: 1600, h: 1170, scale: 0.26, tilt: 0, headingUp: false },
+  carplay:  { w: 1920, h: 720,  scale: 1.5, tilt: 46, headingUp: true, ox: 0.62, oy: 0.80 },
+  iphone:   { w: 1179, h: 2556, scale: 2.3, tilt: 44, headingUp: true, ox: 0.5, oy: 0.76 },
+  cluster:  { w: 640,  h: 640,  scale: 0.9,  tilt: 0, headingUp: true, ox: 0.5, oy: 0.5 },
+};
+const M = MODES[MODE];
+
+const view = document.getElementById('view'), map = document.getElementById('map'), ui = document.getElementById('ui');
+view.style.width = M.w + 'px'; view.style.height = M.h + 'px';
+if (MODE === 'cluster') view.classList.add('round');
+ui.width = M.w; ui.height = M.h;
+
+// --- Hilfen ---------------------------------------------------------------
+function pointAt(route, d) {
+  let acc = 0;
+  for (let i = 1; i < route.length; i++) {
+    const a = route[i - 1], b = route[i], l = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (acc + l >= d) { const t = (d - acc) / l; return { p: [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t], i, heading: Math.atan2(b[0] - a[0], -(b[1] - a[1])) }; }
+    acc += l;
+  }
+  const a = route[route.length - 2], b = route[route.length - 1];
+  return { p: b, i: route.length - 1, heading: Math.atan2(b[0] - a[0], -(b[1] - a[1])) };
+}
+function smoothHeading(route, d) {
+  // Mittelt die Richtung über die nächsten ~40 m, damit die Kamera ruhig bleibt.
+  const a = pointAt(route, d).p, b = pointAt(route, d + 40).p;
+  return Math.atan2(b[0] - a[0], -(b[1] - a[1]));
+}
+
+function poly(ctx, pts, close) {
+  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  if (close) ctx.closePath();
+}
+
+async function main() {
+  await Promise.all(['700 40px Oswald', '500 40px Oswald', '500 40px Inter', '700 40px Inter', '800 40px Inter'].map(f => document.fonts.load(f)));
+  const scene = await (await fetch('out/scene.json')).json();
+  const me = pointAt(scene.route, PROGRESS);
+  const heading = M.headingUp ? smoothHeading(scene.route, PROGRESS) : 0;
+  smoothHeadingCached = heading;
+  const center = MODE === 'overview' ? [Number(params.get('cx') || 300), Number(params.get('cy') || -250)] : me.p;
+
+  // Kartenleinwand: bei Neigung größer als der Ausschnitt, damit bis zum Horizont gefüllt ist.
+  const tiltRad = M.tilt * Math.PI / 180;
+  const cw = M.tilt ? M.w * 2.4 : M.w, ch = M.tilt ? M.h * 3.2 : M.h;
+  const ox = (M.ox ?? 0.5) * M.w, oy = (M.oy ?? 0.5) * M.h;      // Spielerposition im Ausschnitt
+  const cox = cw / 2, coy = M.tilt ? ch * 0.82 : ch / 2;           // Spielerposition auf der Leinwand
+  map.width = cw; map.height = ch;
+  map.style.left = (ox - cox) + 'px'; map.style.top = (oy - coy) + 'px';
+  const PERSP = M.h * 1.25;
+  if (M.tilt) {
+    view.style.perspective = PERSP + 'px';
+    view.style.perspectiveOrigin = `${ox}px ${oy}px`;
+    map.style.transformOrigin = `${cox}px ${coy}px`;
+    map.style.transform = `rotateX(${M.tilt}deg)`;
+  } else if (MODE !== 'overview') {
+    // nichts
+  }
+
+  const ctx = map.getContext('2d');
+  ctx.fillStyle = S.land; ctx.fillRect(0, 0, cw, ch);
+  // leichtes Rauschen für Spieloptik
+  const noise = ctx.createImageData(256, 256);
+  for (let i = 0; i < noise.data.length; i += 4) { const v = Math.random() * 18; noise.data[i] = noise.data[i + 1] = noise.data[i + 2] = v; noise.data[i + 3] = 22; }
+  const nc = document.createElement('canvas'); nc.width = nc.height = 256; nc.getContext('2d').putImageData(noise, 0, 0);
+  ctx.fillStyle = ctx.createPattern(nc, 'repeat'); ctx.fillRect(0, 0, cw, ch);
+
+  ctx.save();
+  ctx.translate(cox, coy); ctx.scale(M.scale, M.scale); ctx.rotate(-heading); ctx.translate(-center[0], -center[1]);
+  const px = 1 / M.scale; // eine Bildschirm-Einheit in Metern
+
+  const order = ['farm', 'residential', 'industrial', 'park', 'forest', 'water'];
+  for (const k of order) {
+    ctx.fillStyle = S[k];
+    for (const a of scene.areas) if (a.k === k) { poly(ctx, a.pts, true); ctx.fill(); }
+  }
+  // Bäche/Flüsse
+  ctx.strokeStyle = S.waterLine; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  for (const l of scene.lines) if (l.k === 'water') { ctx.lineWidth = (l.c === 'river' ? 9 : 3.5) * px * (MODE === 'overview' ? 0.7 : 1); poly(ctx, l.pts); ctx.stroke(); }
+  // Gebäude
+  ctx.fillStyle = S.building; ctx.strokeStyle = S.buildingEdge; ctx.lineWidth = 1 * px;
+  for (const a of scene.areas) if (a.k === 'building') { poly(ctx, a.pts, true); ctx.fill(); if (MODE !== 'overview') ctx.stroke(); }
+  // Bahn
+  for (const l of scene.lines) if (l.k === 'rail' && !l.tunnel) {
+    ctx.strokeStyle = S.rail; ctx.lineWidth = 4 * px; ctx.setLineDash([]); poly(ctx, l.pts); ctx.stroke();
+    ctx.strokeStyle = S.land; ctx.lineWidth = 2 * px; ctx.setLineDash([8 * px, 8 * px]); poly(ctx, l.pts); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  // Straßen: erst Kontur, dann Füllung, kleine Straßen zuerst
+  const zoomF = MODE === 'overview' ? 0.42 : 1;
+  const roads = scene.lines.filter(l => l.k === 'road' && l.r <= (MODE === 'overview' ? 6 : 7)).sort((a, b) => b.r - a.r);
+  for (const pass of ['casing', 'fill']) {
+    for (const l of roads) {
+      const w = WIDTH[l.r] * zoomF * px;
+      ctx.strokeStyle = pass === 'casing' ? S.casing : S.road[l.r];
+      ctx.lineWidth = pass === 'casing' ? w + 3 * px : w;
+      poly(ctx, l.pts); ctx.stroke();
+    }
+  }
+
+  // Route: gefahrener Teil blass, vorausliegender Teil leuchtend
+  const ahead = [me.p, ...scene.route.slice(me.i)];
+  const done = [...scene.route.slice(0, me.i), me.p];
+  const rw = (MODE === 'overview' ? 7 : 13) * px;
+  ctx.strokeStyle = S.routeDone; ctx.lineWidth = rw; poly(ctx, done); ctx.stroke();
+  ctx.shadowColor = S.routeGlow; ctx.shadowBlur = 24;
+  ctx.strokeStyle = S.routeGlow; ctx.lineWidth = rw * 1.9; poly(ctx, ahead); ctx.stroke();
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = S.route; ctx.lineWidth = rw; poly(ctx, ahead); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = rw * 0.22; poly(ctx, ahead); ctx.stroke();
+  ctx.restore();
+
+  // --- Projektion Welt -> Bildschirm (spiegelt CSS rotateX + perspective) ---
+  function toScreen(p) {
+    let x = p[0] - center[0], y = p[1] - center[1];
+    const c = Math.cos(-heading), s = Math.sin(-heading);
+    let rx = (x * c - y * s) * M.scale, ry = (x * s + y * c) * M.scale;
+    if (!M.tilt) return [ox + rx, oy + ry, 1];
+    const y2 = ry * Math.cos(tiltRad), z = ry * Math.sin(tiltRad);
+    const k = PERSP / (PERSP + z);
+    return [ox + rx * k, oy + y2 * k, k];
+  }
+
+  const u = ui.getContext('2d');
+  const inView = q => q[0] > -40 && q[0] < M.w + 40 && q[1] > (M.tilt ? M.h * 0.08 : -40) && q[1] < M.h + 40 && q[2] > 0;
+
+  // Blips (eigene, einfache Symbole)
+  const BLIP = {
+    fuel: ['#ff8a2a', 'fuel'], parking: ['#3fa9ff', 'P'], fast_food: ['#4cd964', 'food'], restaurant: ['#4cd964', 'food'],
+    cafe: ['#4cd964', 'food'], supermarket: ['#ffd23f', 'cart'], hospital: ['#ff4d5e', '+'], police: ['#5b7cff', 'star'],
+  };
+  function blip(x, y, r, color, glyph) {
+    u.save(); u.translate(x, y);
+    u.shadowColor = 'rgba(0,0,0,0.7)'; u.shadowBlur = r * 0.6;
+    u.fillStyle = '#0d0f12'; u.beginPath(); u.arc(0, 0, r, 0, Math.PI * 2); u.fill();
+    u.shadowBlur = 0; u.lineWidth = r * 0.16; u.strokeStyle = color; u.stroke();
+    u.fillStyle = color; u.strokeStyle = color; u.lineWidth = r * 0.17; u.lineCap = 'round';
+    if (glyph === 'P' || glyph === '+') { u.font = `800 ${r * 1.15}px Inter`; u.textAlign = 'center'; u.textBaseline = 'middle'; u.fillText(glyph, 0, r * 0.06); }
+    else if (glyph === 'fuel') { u.fillRect(-r * 0.42, -r * 0.45, r * 0.5, r * 0.9); u.beginPath(); u.moveTo(r * 0.08, -r * 0.2); u.lineTo(r * 0.38, -r * 0.05); u.lineTo(r * 0.38, r * 0.35); u.stroke(); u.fillStyle = '#0d0f12'; u.fillRect(-r * 0.32, -r * 0.35, r * 0.3, r * 0.25); }
+    else if (glyph === 'food') { u.beginPath(); u.moveTo(-r * 0.25, -r * 0.45); u.lineTo(-r * 0.25, r * 0.45); u.moveTo(-r * 0.42, -r * 0.45); u.lineTo(-r * 0.42, -r * 0.1); u.lineTo(-r * 0.08, -r * 0.1); u.lineTo(-r * 0.08, -r * 0.45); u.moveTo(r * 0.3, r * 0.45); u.lineTo(r * 0.3, -r * 0.45); u.quadraticCurveTo(r * 0.05, -r * 0.2, r * 0.3, 0); u.stroke(); }
+    else if (glyph === 'cart') { u.beginPath(); u.moveTo(-r * 0.5, -r * 0.35); u.lineTo(-r * 0.3, -r * 0.35); u.lineTo(-r * 0.15, r * 0.2); u.lineTo(r * 0.4, r * 0.2); u.lineTo(r * 0.5, -r * 0.2); u.lineTo(-r * 0.25, -r * 0.2); u.stroke(); u.beginPath(); u.arc(-r * 0.1, r * 0.4, r * 0.09, 0, 7); u.arc(r * 0.32, r * 0.4, r * 0.09, 0, 7); u.fill(); }
+    else if (glyph === 'star') { u.beginPath(); for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 - Math.PI / 2, rr = i % 2 ? r * 0.22 : r * 0.5; u.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } u.closePath(); u.fill(); }
+    else if (glyph === 'dest') { u.beginPath(); u.arc(0, 0, r * 0.38, 0, 7); u.fill(); }
+    u.restore();
+  }
+  const placed = [];
+  for (const p of scene.pois) {
+    const b = BLIP[p.kind]; if (!b) continue;
+    if (MODE !== 'overview' && (p.kind === 'restaurant' || p.kind === 'cafe')) continue; // weniger Unruhe beim Fahren
+    const q = toScreen(p.p); if (!inView(q)) continue;
+    const r = (MODE === 'overview' ? 15 : MODE === 'cluster' ? 15 : MODE === 'iphone' ? 30 : 21) * Math.max(0.7, Math.min(1.15, q[2]));
+    if (placed.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < r * (MODE === 'overview' ? 2.3 : 4))) continue; // keine Überlappung
+    placed.push(q); blip(q[0], q[1], r, b[0], b[1]);
+  }
+  // Ziel
+  const dq = toScreen(scene.route[scene.route.length - 1]);
+  if (inView(dq)) blip(dq[0], dq[1], MODE === 'iphone' ? 34 : 24, S.dest, 'dest');
+
+  // Ortsnamen
+  for (const pl of scene.places) {
+    const q = toScreen(pl.p); if (!inView(q)) continue;
+    const big = pl.kind === 'town';
+    const size = (big ? 46 : 26) * (MODE === 'overview' ? 1 : 0.9) * Math.min(1.2, q[2]);
+    u.font = `700 ${size}px Oswald`; u.textAlign = 'center'; u.textBaseline = 'middle';
+    u.letterSpacing = (size * 0.12) + 'px';
+    u.lineWidth = size * 0.18; u.strokeStyle = 'rgba(0,0,0,0.85)'; u.lineJoin = 'round';
+    const t = pl.name.toUpperCase();
+    u.strokeText(t, q[0], q[1]); u.fillStyle = big ? '#ffffff' : '#c9ced4'; u.fillText(t, q[0], q[1]);
+  }
+  u.letterSpacing = '0px';
+
+  // Spielerpfeil
+  const mq = toScreen(me.p);
+  const pr = MODE === 'iphone' ? 44 : MODE === 'overview' ? 22 : 30;
+  u.save(); u.translate(mq[0], mq[1]); u.rotate(M.headingUp ? 0 : me.heading);
+  if (M.tilt) u.scale(1, 0.8);
+  u.shadowColor = 'rgba(0,0,0,0.8)'; u.shadowBlur = 14;
+  u.beginPath(); u.moveTo(0, -pr); u.lineTo(pr * 0.72, pr * 0.72); u.lineTo(0, pr * 0.36); u.lineTo(-pr * 0.72, pr * 0.72); u.closePath();
+  u.fillStyle = '#f4f6f8'; u.fill(); u.shadowBlur = 0; u.lineWidth = pr * 0.1; u.strokeStyle = '#0b0d10'; u.stroke();
+  u.restore();
+
+  // Nebel am Horizont (Tiefe)
+  if (M.tilt) {
+    const g = u.createLinearGradient(0, 0, 0, M.h * 0.42);
+    g.addColorStop(0, 'rgba(10,11,14,1)'); g.addColorStop(1, 'rgba(10,11,14,0)');
+    u.fillStyle = g; u.fillRect(0, 0, M.w, M.h * 0.42);
+  }
+  // Vignette
+  const vg = u.createRadialGradient(M.w / 2, M.h / 2, Math.min(M.w, M.h) * 0.35, M.w / 2, M.h / 2, Math.max(M.w, M.h) * 0.75);
+  vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.55)');
+  u.fillStyle = vg; u.fillRect(0, 0, M.w, M.h);
+
+  hud(u, scene, me);
+  document.title = 'ready';
+}
+
+// --- HUD je Ansicht ----------------------------------------------------------
+function fmtDist(m) { return m >= 1000 ? (m / 1000).toFixed(1).replace('.', ',') + ' km' : (Math.round(m / 10) * 10) + ' m'; }
+function arrow(u, x, y, s, turn) {
+  u.save(); u.translate(x, y); u.lineCap = 'round'; u.lineJoin = 'round'; u.lineWidth = s * 0.16; u.strokeStyle = '#fff';
+  const dir = turn > 0 ? 1 : -1;
+  u.beginPath(); u.moveTo(0, s * 0.55); u.lineTo(0, -s * 0.05); u.quadraticCurveTo(0, -s * 0.3, dir * s * 0.25, -s * 0.3); u.lineTo(dir * s * 0.45, -s * 0.3); u.stroke();
+  u.beginPath(); u.moveTo(dir * s * 0.3, -s * 0.52); u.lineTo(dir * s * 0.55, -s * 0.3); u.lineTo(dir * s * 0.3, -s * 0.08); u.stroke();
+  u.restore();
+}
+function rrect(u, x, y, w, h, r) { u.beginPath(); u.roundRect(x, y, w, h, r); }
+
+function hud(u, scene, me) {
+  const next = scene.maneuvers.find(m => m.at > PROGRESS + 5) || { at: scene.routeLength, turn: 0, street: 'Ziel' };
+  const dist = next.at - PROGRESS, remain = scene.routeLength - PROGRESS;
+  const mins = Math.max(1, Math.round(remain / 1000 / 32 * 60));
+  const eta = new Date(2026, 9, 17, 16, 48 + mins);
+  const etaStr = eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0');
+  const W = MODES[MODE].w, H = MODES[MODE].h;
+  const attrib = (size, x, y, align) => { u.font = `500 ${size}px Inter`; u.textAlign = align; u.textBaseline = 'bottom'; u.fillStyle = 'rgba(255,255,255,0.55)'; u.fillText('© OpenStreetMap-Mitwirkende', x, y); };
+
+  if (MODE === 'carplay') {
+    // Von CarPlay selbst gezeichnet (CPMapTemplate): Abbiegekarte links, Kartentasten rechts.
+    u.fillStyle = 'rgba(28,28,30,0.92)'; rrect(u, 24, 24, 560, 250, 22); u.fill();
+    arrow(u, 110, 120, 110, next.turn);
+    u.fillStyle = '#fff'; u.textAlign = 'left'; u.textBaseline = 'alphabetic';
+    u.font = '700 64px Inter'; u.fillText(fmtDist(dist), 200, 125);
+    u.font = '600 40px Inter'; u.fillStyle = '#ebebf0'; u.fillText(next.street || 'Weiter', 200, 185);
+    u.fillStyle = 'rgba(60,60,64,0.9)'; rrect(u, 24, 286, 560, 110, 22); u.fill();
+    u.fillStyle = '#fff'; u.font = '700 42px Inter'; u.fillText(etaStr, 56, 355);
+    u.fillStyle = '#c7c7cc'; u.font = '500 34px Inter'; u.fillText(`${mins} Min · ${fmtDist(remain)}`, 200, 353);
+    for (let i = 0; i < 3; i++) { u.fillStyle = 'rgba(28,28,30,0.85)'; rrect(u, W - 120, 160 + i * 112, 96, 96, 24); u.fill(); }
+    u.fillStyle = '#fff'; u.font = '600 52px Inter'; u.textAlign = 'center'; u.textBaseline = 'middle';
+    u.fillText('+', W - 72, 208); u.fillText('−', W - 72, 320); u.font = '700 30px Inter'; u.fillText('N', W - 72, 432);
+    // Unser Teil: Tempolimit
+    speedSign(u, W - 230, H - 110, 62, 50);
+    attrib(22, W - 24, H - 18, 'right');
+  }
+
+  if (MODE === 'iphone') {
+    // Abbiegekarte im Spiel-Look
+    const top = 150;
+    u.fillStyle = 'rgba(10,11,14,0.88)'; rrect(u, 40, top, W - 80, 300, 40); u.fill();
+    u.fillStyle = S.route; rrect(u, 40, top, 22, 300, [40, 0, 0, 40]); u.fill();
+    arrow(u, 175, top + 150, 150, next.turn);
+    u.fillStyle = '#fff'; u.textAlign = 'left'; u.textBaseline = 'alphabetic';
+    u.font = '700 104px Oswald'; u.fillText(fmtDist(dist).toUpperCase(), 300, top + 140);
+    u.font = '600 58px Inter'; u.fillStyle = '#d6d9de'; u.fillText(next.street || 'Weiter', 300, top + 225);
+    // Tempo + Tempolimit unten links
+    speedSign(u, 140, H - 520, 78, 50);
+    u.fillStyle = 'rgba(10,11,14,0.85)'; rrect(u, 62, H - 405, 156, 120, 30); u.fill();
+    u.fillStyle = '#fff'; u.textAlign = 'center'; u.font = '700 64px Oswald'; u.fillText('47', 140, H - 338);
+    u.font = '600 26px Inter'; u.fillStyle = '#9aa0a6'; u.fillText('km/h', 140, H - 298);
+    // Unteres Panel
+    u.fillStyle = 'rgba(10,11,14,0.92)'; rrect(u, 0, H - 250, W, 250, [44, 44, 0, 0]); u.fill();
+    u.textAlign = 'left'; u.fillStyle = '#fff'; u.font = '700 84px Oswald'; u.fillText(etaStr, 70, H - 120);
+    u.fillStyle = '#9aa0a6'; u.font = '600 42px Inter'; u.fillText(`${mins} Min · ${fmtDist(remain)}`, 330, H - 128);
+    u.fillStyle = '#ff3b4f'; rrect(u, W - 290, H - 200, 220, 110, 55); u.fill();
+    u.fillStyle = '#fff'; u.font = '700 44px Inter'; u.textAlign = 'center'; u.fillText('Ende', W - 180, H - 130);
+    attrib(26, W - 40, H - 270, 'right');
+  }
+
+  if (MODE === 'cluster') {
+    // Rundes Radar fürs Kombiinstrument
+    u.save(); u.beginPath(); u.arc(W / 2, H / 2, W / 2 - 6, 0, Math.PI * 2); u.lineWidth = 12; u.strokeStyle = '#0b0d10'; u.stroke();
+    u.lineWidth = 3; u.strokeStyle = 'rgba(176,77,255,0.8)'; u.beginPath(); u.arc(W / 2, H / 2, W / 2 - 14, 0, Math.PI * 2); u.stroke();
+    const hdg = smoothHeadingCached;
+    const nx = W / 2 + Math.sin(-hdg) * (W / 2 - 40), ny = H / 2 - Math.cos(-hdg) * (H / 2 - 40);
+    u.fillStyle = '#0b0d10'; u.beginPath(); u.arc(nx, ny, 22, 0, 7); u.fill();
+    u.fillStyle = '#fff'; u.font = '700 26px Oswald'; u.textAlign = 'center'; u.textBaseline = 'middle'; u.fillText('N', nx, ny + 1);
+    u.fillStyle = 'rgba(10,11,14,0.85)'; rrect(u, W / 2 - 130, H - 150, 260, 70, 35); u.fill();
+    u.fillStyle = '#fff'; u.font = '700 36px Oswald'; u.fillText(`${fmtDist(dist).toUpperCase()}`, W / 2, H - 114);
+    u.restore();
+  }
+
+  if (MODE === 'overview') {
+    u.fillStyle = 'rgba(10,11,14,0.85)'; rrect(u, 30, 30, 520, 120, 24); u.fill();
+    u.fillStyle = S.route; rrect(u, 30, 30, 14, 120, [24, 0, 0, 24]); u.fill();
+    u.fillStyle = '#fff'; u.textAlign = 'left'; u.textBaseline = 'alphabetic'; u.font = '700 52px Oswald';
+    u.fillText('NEON CITY', 70, 95); u.font = '500 26px Inter'; u.fillStyle = '#9aa0a6'; u.fillText('Stil-Vorschau · Idstein', 72, 132);
+    attrib(22, W - 24, H - 18, 'right');
+  }
+}
+let smoothHeadingCached = 0;
+function speedSign(u, x, y, r, v) {
+  u.fillStyle = '#fff'; u.beginPath(); u.arc(x, y, r, 0, 7); u.fill();
+  u.lineWidth = r * 0.2; u.strokeStyle = '#e3001b'; u.beginPath(); u.arc(x, y, r * 0.86, 0, 7); u.stroke();
+  u.fillStyle = '#111'; u.font = `800 ${r * 0.85}px Inter`; u.textAlign = 'center'; u.textBaseline = 'middle'; u.fillText(v, x, y + r * 0.05);
+}
+main().catch(e => { document.title = 'error: ' + e; console.error(e); });
+</script>
+</body>
+</html>

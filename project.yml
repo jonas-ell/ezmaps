@@ -1,4 +1,4 @@
-name: GameMap
+name: EzMaps
 options:
   bundleIdPrefix: com.jonaselfounti
   deploymentTarget:
@@ -6,36 +6,36 @@ options:
   developmentLanguage: de
 
 packages:
-  GameMapCore:
+  EzMapsCore:
     path: Core
 
 targets:
-  GameMap:
+  EzMaps:
     type: application
     platform: iOS
     sources:
       - path: App
     dependencies:
-      - package: GameMapCore
+      - package: EzMapsCore
       - sdk: CarPlay.framework
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.jonaselfounti.gamemap
+        PRODUCT_BUNDLE_IDENTIFIER: com.jonaselfounti.ezmaps
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
         TARGETED_DEVICE_FAMILY: "1"
-        CODE_SIGN_ENTITLEMENTS: App/GameMap.entitlements
+        CODE_SIGN_ENTITLEMENTS: App/EzMaps.entitlements
         GENERATE_INFOPLIST_FILE: NO
     info:
       path: App/Info.plist
       properties:
-        CFBundleDisplayName: GameMap
+        CFBundleDisplayName: EzMaps
         CFBundleDevelopmentRegion: de
         CFBundleLocalizations: [de, en]
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIBackgroundModes: [location, audio]
-        NSLocationWhenInUseUsageDescription: "GameMap braucht deinen Standort, um dich zu navigieren und die Karte aufzudecken."
+        NSLocationWhenInUseUsageDescription: "EzMaps braucht deinen Standort, um dich zu navigieren und die Karte aufzudecken."
         NSLocationAlwaysAndWhenInUseUsageDescription: "Damit die Navigation weiterläuft, wenn die App im Hintergrund ist."
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: true

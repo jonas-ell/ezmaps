@@ -19,3 +19,7 @@ Secrets.xcconfig
 # System
 .DS_Store
 Thumbs.db
+
+# Heruntergeladene OSM-Rohdaten und Render-Ausgaben
+tools/preview/data/
+tools/preview/out/

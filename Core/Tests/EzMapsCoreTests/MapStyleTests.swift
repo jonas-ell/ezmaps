@@ -1,5 +1,5 @@
 import XCTest
-@testable import GameMapCore
+@testable import EzMapsCore
 
 final class MapStyleTests: XCTestCase {
     func testExactlyOneFreeStyle() {

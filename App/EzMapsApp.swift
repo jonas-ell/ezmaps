@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct GameMapApp: App {
+struct EzMapsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

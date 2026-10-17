@@ -1,5 +1,5 @@
 import SwiftUI
-import GameMapCore
+import EzMapsCore
 
 /// Platzhalter, bis die MapLibre-Karte kommt.
 struct ContentView: View {
