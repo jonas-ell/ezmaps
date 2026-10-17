@@ -1,12 +1,12 @@
 // CarPlay-Oberfläche. Systemteile (Leiste, Tasten, Listen, Abbiegekarte, Routen-Vorschau) sind
 // CPMapTemplate/CPListTemplate/CPTripPreview nachgebaut – in der App zeichnet iOS sie selbst.
 // Unser Teil: nur die Karte im carWindow plus kleine Einblendungen darin. Größe immer aus dem Fenster berechnen.
-import { app, set, useStyle, planTo, selectRoute, startNav, endNav, nextManeuver, segSpeed, remaining, currentStreet, pct, zoom, recenter } from './app.js';
+import { app, set, useStyle, planTo, currentLimit, selectRoute, startNav, endNav, nextManeuver, segSpeed, remaining, currentStreet, pct, zoom, recenter } from './app.js';
 import { cpic as ic, manIc } from './icons.js';
 import { fmtDist, fmtMin, smoothHeading, pointAt } from './route.js';
 import { STYLES } from './map.js';
 import { panBy } from './keys.js';
-import { fit, limitFor, category } from './phone.js';
+import { fit, category } from './phone.js';
 
 const root = () => document.getElementById('cui');
 let list = [];
@@ -28,7 +28,7 @@ let last = '';
 export function carHud() {
   const n = app.state.nav; if (!n || !n.active || app.state.car.screen !== 'nav') return;
   const m = nextManeuver(), rem = remaining(), eta = new Date(Date.now() + rem.s * 1000);
-  const vals = { dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, icon: m.kind, eta: eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0'), rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: limitFor(segSpeed()), prog: n.progress / n.route.length };
+  const vals = { dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, icon: m.kind, eta: eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0'), rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: currentLimit(), prog: n.progress / n.route.length };
   const ms = n.route.maneuvers, nx = ms[ms.indexOf(m) + 1];
   vals.then = nx ? (nx.kind === 'destination' ? `danach Ziel` : `danach ${nx.text.toLowerCase()} · ${nx.street}`) : '';
   const k = JSON.stringify(vals); if (k === last) return; last = k;
@@ -97,7 +97,7 @@ document.getElementById('cui').addEventListener('click', async e => {
   switch (a) {
     case 'go': if (v === 'dest' && app.state.nav && !app.state.nav.active) set({ nav: null }); set({ car: { screen: v } }); break;
     case 'cat': { const items = category(v).map(r => ({ ...r })); list = items; set({ car: { screen: 'cat', title: v === 'fuel' ? 'Tankstellen' : 'Parkplätze' } }); list = items; renderCarList(items); break; }
-    case 'pick': { const d = list[+v]; if (!d?.p) return; planTo(d); set({ car: { screen: 'preview' } }); break; }
+    case 'pick': { const d = list[+v]; if (!d?.p) return; planTo(d).then(ok => ok && set({ car: { screen: 'preview' } })); break; }
     case 'route': selectRoute(+v); break;
     case 'start': startNav(); break;
     case 'end': endNav(); break;

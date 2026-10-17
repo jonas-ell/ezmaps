@@ -1,8 +1,9 @@
 // iPhone-Oberfläche (393 × 852 pt, 1 CSS-px = 1 pt).
-import { app, set, toast, useStyle, ensureTextures, planTo, selectRoute, startNav, endNav, nextManeuver, segSpeed, remaining, currentStreet, pct, totalPct, zoom, recenter } from './app.js';
+import { app, set, toast, useStyle, ensureTextures, planTo, currentLimit, selectRoute, startNav, endNav, nextManeuver, segSpeed, remaining, currentStreet, pct, totalPct, zoom, recenter } from './app.js';
 import { ic, manIc } from './icons.js';
 import { badgeUrl, appIconUrl } from './assets.js';
 import { fmtDist, fmtMin, smoothHeading, pointAt } from './route.js';
+import { toLatLon, toLocal } from './geo.js';
 import { MapView, STYLES, drawRoute, drawPlayer, drawBlips, drawDestination, LEGEND, legendSrc } from './map.js';
 
 const root = () => document.getElementById('pui');
@@ -37,7 +38,7 @@ export function phoneHud() {
   const eta = new Date(Date.now() + rem.s * 1000), etaStr = eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0');
   const ms = n.route.maneuvers, nx = ms[ms.indexOf(m) + 1];
   const then = nx ? (nx.kind === 'destination' ? `danach Ziel · ${n.dest.name}` : `danach ${nx.text.toLowerCase()} · ${nx.street}`) : '';
-  const vals = { then, dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, text: m.text, eta: etaStr, rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: limitFor(sp), speed: Math.round(sp * 0.92), icon: m.kind, prog: n.progress / n.route.length };
+  const vals = { then, dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, text: m.text, eta: etaStr, rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: currentLimit(), speed: Math.round(sp * 0.92), icon: m.kind, prog: n.progress / n.route.length };
   const key = JSON.stringify(vals); if (key === lastHud) return; lastHud = key;
   const $ = id => root().querySelector(`[data-hud=${id}]`);
   if (!$('dist')) return;
@@ -45,7 +46,6 @@ export function phoneHud() {
   $('eta').textContent = vals.eta; $('rem').textContent = vals.rem; $('cur').textContent = vals.cur; $('limit').textContent = vals.limit; $('speed').textContent = vals.speed;
   $('icon').innerHTML = manIc(vals.icon, 64); $('prog').style.width = (vals.prog * 100) + '%'; $('proglbl').textContent = `${Math.round(vals.prog * 100)} % der Strecke`;
 }
-export const limitFor = sp => sp >= 100 ? 120 : sp >= 70 ? 100 : sp >= 45 ? 50 : sp >= 25 ? 30 : 10;
 
 // ------------------------------------------------------------ Rendern
 export function renderPhone() {
@@ -123,7 +123,32 @@ function results(q) {
   const out = [], seen = new Set();
   for (const s of app.scene.search) if (s.name.toLowerCase().includes(q) && !seen.has(s.name)) { seen.add(s.name); out.push({ name: s.name, sub: s.label + (s.street ? ` · ${s.street} ${s.no}` : ''), p: s.p, icon: iconFor(s.kind) }); }
   for (const l of app.scene.lines) if (l.k === 'road' && l.name && l.name.toLowerCase().includes(q) && !seen.has(l.name)) { seen.add(l.name); out.push({ name: l.name, sub: 'Straße · Idstein', p: l.pts[l.pts.length >> 1], icon: 'pin' }); }
-  return out.map(r => ({ ...r, d: Math.hypot(r.p[0] - app.start[0], r.p[1] - app.start[1]) })).sort((a, b) => (b.name.toLowerCase().startsWith(q) - a.name.toLowerCase().startsWith(q)) || a.d - b.d).slice(0, 7);
+  const local = out.map(r => ({ ...r, d: Math.hypot(r.p[0] - app.start[0], r.p[1] - app.start[1]) })).sort((a, b) => (b.name.toLowerCase().startsWith(q) - a.name.toLowerCase().startsWith(q)) || a.d - b.d).slice(0, local_n(q));
+  // GM-015: dazu Treffer aus ganz Deutschland (Photon, OSM-Daten) – kommen kurz danach
+  const far = remote(q).filter(r => !local.some(l => l.name === r.name && Math.hypot(l.p[0] - r.p[0], l.p[1] - r.p[1]) < 300));
+  return [...local, ...far].slice(0, 8);
+}
+const local_n = q => remoteCache.has(q) && remoteCache.get(q).length ? 4 : 7;
+const remoteCache = new Map(); let remoteTimer = 0;
+const OSM_LABEL = { city: 'Stadt', town: 'Stadt', village: 'Dorf', suburb: 'Ortsteil', fuel: 'Tankstelle', parking: 'Parkplatz', restaurant: 'Restaurant', cafe: 'Café', fast_food: 'Imbiss', supermarket: 'Supermarkt', pharmacy: 'Apotheke', hospital: 'Krankenhaus', car: 'Autohaus', car_repair: 'Werkstatt', station: 'Bahnhof', hotel: 'Hotel', residential: 'Straße', primary: 'Straße', secondary: 'Straße', tertiary: 'Straße', house: 'Adresse', attraction: 'Sehenswürdigkeit', museum: 'Museum', stadium: 'Stadion', pedestrian: 'Platz', square: 'Platz', living_street: 'Straße', unclassified: 'Straße', motorway_junction: 'Anschlussstelle', bus_stop: 'Haltestelle', school: 'Schule', townhall: 'Rathaus', place_of_worship: 'Kirche', university: 'Universität', airport: 'Flughafen', aerodrome: 'Flughafen' };
+function remote(q) {
+  if (remoteCache.has(q)) return remoteCache.get(q);
+  clearTimeout(remoteTimer);
+  remoteTimer = setTimeout(async () => {
+    try {
+      const [lat, lon] = toLatLon(app.start);
+      const j = await (await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&lang=de&limit=8&lat=${lat}&lon=${lon}`)).json();
+      const seen = [];
+      remoteCache.set(q, j.features.map(f => {
+        const pr = f.properties, [lo, la] = f.geometry.coordinates, p = toLocal(la, lo);
+        const name = pr.name || [pr.street, pr.housenumber].filter(Boolean).join(' ') || pr.city || 'Ort';
+        const sub = [OSM_LABEL[pr.osm_value] || 'Ort', pr.name && pr.street ? [pr.street, pr.housenumber].filter(Boolean).join(' ') : '', pr.city || pr.county || ''].filter(Boolean).join(' · ');
+        return { name, sub, p, icon: iconFor(pr.osm_value), d: Math.hypot(p[0] - app.start[0], p[1] - app.start[1]) };
+      }).filter(r => { const dup = seen.some(o => o.name === r.name && Math.hypot(o.p[0] - r.p[0], o.p[1] - r.p[1]) < 400); seen.push(r); return !dup; }));
+      if (app.state.phone.overlay === 'search') set({});
+    } catch { remoteCache.set(q, []); }
+  }, 280);
+  return [];
 }
 const iconFor = k => ({ fuel: 'fuel', parking: 'parking', restaurant: 'food', cafe: 'food', fast_food: 'food', supermarket: 'star', attraction: 'star', station: 'pin' })[k] || 'pin';
 const CAT_TITLE = { fuel: 'Tankstellen', parking: 'Parkplätze', food: 'Essen & Trinken', supermarket: 'Supermärkte' };
@@ -286,11 +311,10 @@ document.getElementById('pui').addEventListener('click', async e => {
     case 'zoom': zoom('phone', v === 'in' ? 1.4 : 1 / 1.4); break;
   }
 });
-function choose(dest) {
+async function choose(dest) {
   const pk = app.state.phone.pick;
   if (pk) { app.state.places[pk] = { sub: dest.name + (dest.sub ? ' · ' + dest.sub : ''), p: dest.p }; set({ phone: { overlay: null, pick: null, tab: 'profile' } }); return toast(`${pk === 'home' ? 'Zuhause' : 'Arbeit'} gespeichert`); }
-  planTo(dest);
-  if (!app.state.nav) return toast('Keine Route gefunden');
+  if (!(await planTo(dest))) return toast('Keine Route gefunden');
   set({ phone: { overlay: 'preview' } });
 }
 

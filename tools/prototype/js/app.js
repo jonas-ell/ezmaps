@@ -6,6 +6,8 @@ import { renderCar, carCamera, carHud } from './carplay.js';
 import { loadAssets } from './assets.js';
 import { setIconStyle } from './icons.js';
 import { restoreFocus } from './keys.js';
+import { initTiles, updateTiles } from './tiles.js';
+import { valhallaRoutes, speedLimits, segIndex } from './valhalla.js';
 
 export const app = {
   scene: null, router: null, textures: {}, views: {}, uiRects: { phone: [], car: [] }, version: '?',
@@ -42,6 +44,7 @@ async function boot() {
   app.tiles.onmessage = e => { const t = e.data; app.tilePending = false; if (t.style !== app.state.style) return; app.tile = t; for (const v of Object.values(app.views)) v.setDetail(t.bitmap, t.region, t.S, t.style); };
   app.views.phone = new MapView(document.getElementById('pmap'));
   app.views.car = new MapView(document.getElementById('cmap'));
+  initTiles(app); // GM-015: Deutschland-Kacheln laden automatisch im jeweiligen Stil
   await useStyle('neon');
   onChange(renderAll); renderAll();
   bindGestures(app.views.phone, 'phone'); bindGestures(app.views.car, 'car');
@@ -103,15 +106,49 @@ export const pct = d => Math.round(100 * app.districts[d].done / app.districts[d
 export function totalPct() { let t = 0, d = 0; for (const v of Object.values(app.districts)) { t += v.total; d += v.done; } return Math.round(100 * d / t); }
 
 // ------------------------------------------------------------ Navigation
-export function planTo(dest) {
+// GM-015: innerhalb von Idstein eigenes Routing (Nebel des Krieges), sonst Valhalla für ganz Deutschland
+const inIdstein = p => Math.abs(p[0]) < 2000 && Math.abs(p[1]) < 1700;
+export async function planTo(dest) {
   const from = app.start, r = app.router;
-  const o = { avoidHighway: app.state.avoidHighway };
-  const opts = [['Schnellste', r.route(from, dest.p, 'fast', null, o)], ['Kürzeste', r.route(from, dest.p, 'short', null, o)], ['Neues entdecken', r.route(from, dest.p, 'explore', app.explored, o)]]
-    .filter(([, x]) => x).filter(([, x], i, arr) => arr.findIndex(([, y]) => Math.abs(y.length - x.length) < 15) === i);
-  const routes = opts.map(([label, route]) => ({ label, route, gain: newShare(route) }));
+  const o = { avoidHighway: app.state.avoidHighway, avoidToll: app.state.avoidToll };
+  let routes;
+  if (inIdstein(from) && inIdstein(dest.p)) {
+    const opts = [['Schnellste', r.route(from, dest.p, 'fast', null, o)], ['Kürzeste', r.route(from, dest.p, 'short', null, o)], ['Neues entdecken', r.route(from, dest.p, 'explore', app.explored, o)]]
+      .filter(([, x]) => x).filter(([, x], i, arr) => arr.findIndex(([, y]) => Math.abs(y.length - x.length) < 15) === i);
+    routes = opts.map(([label, route]) => ({ label, route, gain: newShare(route) }));
+  } else {
+    set({ loading: 'Route wird berechnet …' });
+    try { routes = (await valhallaRoutes(from, dest.p, o)).map((route, i) => ({ label: i ? `Alternative ${i}` : 'Schnellste', route, gain: null })); }
+    catch (e) { console.warn('Routing', e); routes = []; }
+    set({ loading: null });
+  }
+  if (!routes.length) return false;
   set({ nav: { dest, routes, sel: 0, route: routes[0].route, progress: 0, active: false, arrived: false, spoken: {} } });
+  routes.forEach(x => loadLimits(x.route));
+  return true;
 }
-function newShare(route) { let l = 0; route.edges.forEach((k, i) => { if (!app.explored.has(k)) l += route.cum[i + 1] - route.cum[i]; }); return Math.round(100 * l / route.length); }
+// Echte Tempolimits (OSM maxspeed) nachladen – bis dahin geschätzt
+function loadLimits(route) { speedLimits(route).then(l => { route.limits = l; }).catch(e => console.warn('Tempolimits', e)); }
+export function currentLimit() {
+  const n = app.state.nav, r = n.route, sp = segSpeed();
+  const v = r.limits && r.limits[segIndex(r, n.progress)];
+  if (v === -1) return '∞';
+  return v > 0 ? v : (sp >= 100 ? 120 : sp >= 70 ? 100 : sp >= 45 ? 50 : sp >= 25 ? 30 : 10);
+}
+// GM-015: Abweichen simulieren – nächste Abbiegung verpasst, neue Route ab der aktuellen Position (Valhalla, Abbiegepunkt gesperrt)
+export async function reroute() {
+  const n = app.state.nav; if (!n || !n.active || n.arrived || n.rerouting) return;
+  const m = nextManeuver(); if (!m || m.kind === 'destination') return toast('Keine Abbiegung mehr vor dem Ziel');
+  n.rerouting = true; say('Route wird neu berechnet.'); toast('Abgewichen – Route wird neu berechnet');
+  const pos = pointAt(n.route.pts, n.route.cum, n.progress).p, heading = smoothHeading(n.route, n.progress) * 180 / Math.PI;
+  const turn = pointAt(n.route.pts, n.route.cum, m.at).p;
+  try {
+    const [route] = await valhallaRoutes(pos, n.dest.p, { heading, exclude: [turn], alternates: 0, avoidHighway: app.state.avoidHighway, avoidToll: app.state.avoidToll });
+    if (route) { loadLimits(route); set({ nav: { route, routes: [{ label: 'Neue Route', route, gain: null }], sel: 0, progress: 0, spoken: {}, rerouting: false } }); }
+  } catch (e) { console.warn('Neuberechnung', e); toast('Neuberechnung fehlgeschlagen'); }
+  n.rerouting = false;
+}
+function newShare(route) { if (!route.edges.length) return null; let l = 0; route.edges.forEach((k, i) => { if (!app.explored.has(k)) l += route.cum[i + 1] - route.cum[i]; }); return Math.round(100 * l / route.length); }
 export function selectRoute(i) { const n = app.state.nav; set({ nav: { sel: i, route: n.routes[i].route } }); }
 export function startNav() {
   const n = app.state.nav; if (!n) return;
@@ -161,6 +198,7 @@ const TILE = 900, TILE_S = 4;
 export function requestTile(n) {
   if (app.state.style === 'pixel' || app.tilePending || !app.tiles) return;
   const ahead = pointAt(n.route.pts, n.route.cum, n.progress + 150).p, car = pointAt(n.route.pts, n.route.cum, n.progress).p;
+  if (!inIdstein(car)) { if (app.tile) { app.tile = null; for (const v of Object.values(app.views)) v.setDetail(null); } return; } // GM-015: außerhalb zeichnen die Deutschland-Kacheln
   const t = app.tile;
   if (t && t.style === app.state.style) {
     const cx = t.region.x0 + TILE / 2, cy = t.region.y0 + TILE / 2;
@@ -194,6 +232,7 @@ function loop(now) {
     hudFn();
     scaleBar(view, key);
   }
+  updateTiles(now);
   requestAnimationFrame(loop);
 }
 function lerpCam(a, b, t) {
@@ -248,7 +287,7 @@ function bindGestures(view, key) {
   window.addEventListener('pointerup', () => drag = null);
   view.el.addEventListener('wheel', e => { e.preventDefault(); zoom(key, e.deltaY < 0 ? 1.15 : 1 / 1.15); }, { passive: false });
 }
-export function zoom(key, f) { const b = app.state.browse[key]; b.scale = Math.max(key === 'car' ? 0.32 : 0.16, Math.min(1.6, b.scale * f)); }
+export function zoom(key, f) { const b = app.state.browse[key]; b.scale = Math.max(0.0004, Math.min(1.6, b.scale * f)); } // GM-015: bis ganz Deutschland herauszoomen
 export function recenter(key) { app.state.browse[key].center = [...app.start]; app.state.browse[key].scale = key === 'car' ? 1.1 : 0.3; }
 
 function renderAll() { renderPhone(); renderCar(); restoreFocus(); requestAnimationFrame(collectRects); }
@@ -270,6 +309,7 @@ document.addEventListener('click', e => {
   if (k === 'carsize') { set({ carSize: v }); applyCarSize(); }
   if (k === 'car') set({ carConnected: !app.state.carConnected });
   if (k === 'reset') location.reload();
+  if (k === 'reroute') reroute();
   document.querySelectorAll('[data-ctl]').forEach(x => x.classList.toggle('on', x.dataset.ctl === `speed:${app.state.simSpeed}` || x.dataset.ctl === `carsize:${app.state.carSize}`));
 });
 export function applyCarSize() { const [w, h] = app.state.carSize.split('x').map(Number); const c = document.getElementById('car'); c.style.width = w + 'px'; c.style.height = h + 'px'; }
@@ -277,10 +317,10 @@ applyCarSize();
 boot().catch(e => { document.title = 'error: ' + e; console.error(e); document.body.insertAdjacentHTML('beforeend', `<pre style="color:#f66">${e.stack}</pre>`); });
 
 // GM-010 (0.7): Maßstab – runde Länge, die 60–140 px lang ist
-const NICE = [25, 50, 100, 200, 250, 500, 1000, 2000];
+const NICE = [25, 50, 100, 200, 250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000]; // GM-015: bis Deutschland-Ansicht
 function scaleBar(view, key) {
   const el = document.querySelector(`#${key === 'car' ? 'cui' : 'pui'} [data-scale]`); if (!el) return;
-  const s = view.cam.scale, m = NICE.find(v => v * s >= 60) || 2000, w = Math.round(m * s);
+  const s = view.cam.scale, m = NICE.find(v => v * s >= 60) || 500000, w = Math.round(m * s);
   if (el.dataset.w == w) return; el.dataset.w = w;
   el.innerHTML = `<span>0</span><i style="width:${w}px"></i><span>${m >= 1000 ? m / 1000 + ' km' : m + ' m'}</span>`;
 }

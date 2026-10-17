@@ -2,6 +2,27 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-015 – Ganz Deutschland: Karte lädt automatisch im Stil, Suche, Routing, echte Tempolimits, Neuberechnung
+
+**Ziel:** Die Karte soll nicht mehr nur Idstein zeigen, sondern ganz Deutschland – automatisch im gewählten Stil. Dazu Suche, Routing und Tempolimits überall.
+
+**Dateien:** `tools/prototype/js/{geo,mvt,vtscene,tiles,valhalla}.js` (neu), `tools/prototype/js/{app,map,phone,carplay,tileworker}.js`, `tools/prototype/{index.html,style.css}`, `docs/KARTENDATEN.md` (neu), `docs/TODO_PROTOTYP_REVIEW.md`
+
+**Geändert:**
+- Karte: Vektorkacheln von OpenFreeMap (OSM, OpenMapTiles-Schema, kostenlos) werden je nach Ausschnitt und Zoom nachgeladen, in 3 Hintergrund-Workern gelesen (eigener Protobuf-Leser) und mit denselben Stil-Funktionen gezeichnet – Neon, Wild West, Pixel Quest und Toy Town funktionieren überall. Zoomstufe und Schärfe passen sich an (von Straßendetail bis ganz Deutschland), grobe Kacheln füllen Lücken, bis feine da sind
+- Idstein bleibt die genaue Karte (Relief, Nebel des Krieges) und läuft am Rand weich in die Kacheln über
+- Straßen und Flüsse behalten aus der Ferne eine Mindestbreite; Rauszoomen bis ganz Deutschland, Maßstab bis 500 km; aus großer Höhe keine Ortssymbole
+- Kartensymbole (Autohaus, Werkstatt, Tankstelle …) kommen außerhalb von Idstein aus den Kacheln
+- Suche: lokale Treffer sofort, dazu Treffer aus ganz Deutschland über Photon (deutsche Bezeichnungen, Dubletten entfernt)
+- Routing: in Idstein weiter das eigene Routing (Nebel des Krieges), sonst Valhalla (FOSSGIS) mit 2 Alternativen, deutschen Straßennamen, Kreisverkehr-Ausfahrten, Auf-/Ausfahrten; „Autobahn meiden“/„Maut meiden“ werden übergeben
+- Tempolimit-Schild zeigt echte OSM-Werte (Valhalla `trace_attributes`), „∞“ auf Autobahnen ohne Limit; ohne Daten wie bisher geschätzt
+- Neuberechnung: Knopf „Falsch abbiegen“ in der Leiste simuliert eine verpasste Abbiegung – Ansage „Route wird neu berechnet“, neue Route ab der aktuellen Position
+- `docs/KARTENDATEN.md`: welche Kachel-, Routing- und Suchdienste für Prototyp und App in Frage kommen (openstreetmap.org-Kacheln sind für Apps nicht erlaubt)
+
+**Tatsächlich geprüft:** Playwright (Chromium, über den Proxy) ohne Skriptfehler: Karte am Idstein-Rand, Frankfurt, Ruhrgebiet und ganz Deutschland (iPhone + CarPlay); Frankfurt in allen vier Stilen; Suche „Römerberg Frankfurt“ → Route (49 km, 3 Routen) → Navigation mit Tempolimit 50 aus OSM → „Falsch abbiegen“ → neue Route. Bilder angesehen.
+
+**Ungetestet:** Swift nicht angepasst (App braucht MapLibre + eigene Dienste, siehe `docs/KARTENDATEN.md`). Nur Chromium. Öffentliche Server (OpenFreeMap, Photon, Valhalla FOSSGIS) nur für den Prototyp gedacht. Lange Routen: Tempolimits nur für die ersten 150 km. `docs/previews/` nicht neu erzeugt.
+
 ## GM-014 – Branch `claude/sharp-knuth-8k97wf` in `main` übernommen
 
 **Ziel:** Review-Arbeit (Teil 0–2, GM-009 bis GM-013, inkl. Cloud-Einträge) nach `main` bringen; Pricedown ins Repo legen, falls das Repo privat ist.

@@ -9,6 +9,7 @@ function drawAsset(u, im, x, y, size, pixel) {
 
 export const TEX = { x0: -1800, y0: -1500, w: 3600, h: 3000 };
 const WIDTH = { 0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5 };
+const MIN_PX = { 0: 4.4, 1: 3.6, 2: 3, 3: 2.4, 4: 2, 5: 1.4, 6: 1.2, 7: 1 };
 
 export const STYLES = {
   neon:    { name: 'Neon City', route: '#a13df0', routeEdge: '#4b1a73', alt: 'rgba(200,200,205,0.55)', bg: '#1c1c1d', haze: [28, 28, 29] },
@@ -127,7 +128,7 @@ function drawClassic(ctx, scene, S, T) {
     ctx.fillStyle = pat; for (const a of scene.areas) if (a.k === 'forest') { poly(ctx, a.pts, true); ctx.fill(); }
   }
   ctx.strokeStyle = T.waterLine; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  for (const l of scene.lines) if (l.k === 'water') { ctx.lineWidth = l.c === 'river' ? 9 : 3; poly(ctx, l.pts); ctx.stroke(); }
+  for (const l of scene.lines) if (l.k === 'water') { ctx.lineWidth = Math.max(l.c === 'river' ? 9 : 3, (l.c === 'river' ? 1.2 : 0.6) * px); poly(ctx, l.pts); ctx.stroke(); }
   if (T.hill && scene.hill) { // Hügel-Schattierung (Terrain Tiles: SRTM / EU-DEM)
     ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = 0.95; ctx.drawImage(scene.hill, TEX.x0, TEX.y0, TEX.w, TEX.h); ctx.restore();
   }
@@ -144,7 +145,7 @@ function drawClassic(ctx, scene, S, T) {
   }
   const roads = scene.lines.filter(l => l.k === 'road' && l.r <= 7).sort((a, b) => b.r - a.r);
   for (const pass of T.casing ? ['casing', 'fill'] : ['fill']) for (const l of roads) {
-    const w = WIDTH[l.r] * 0.75 * (T.widen || 1);
+    const w = Math.max(WIDTH[l.r] * 0.75 * (T.widen || 1), MIN_PX[l.r] * px * (T.thinMinor && l.r >= 5 ? 2.4 : 1)); // GM-015: aus der Ferne (Deutschland-Kacheln) sichtbar bleiben
     if (T.thinMinor && l.r >= 5) { if (pass === 'fill') { ctx.strokeStyle = T.road(l.r); ctx.lineWidth = w * 0.42; poly(ctx, l.pts); ctx.stroke(); } continue; }
     ctx.strokeStyle = pass === 'casing' ? T.casing : T.road(l.r); ctx.lineWidth = pass === 'casing' ? w + (T.thinMinor ? 2.2 : 1.2) : w;
     poly(ctx, l.pts); ctx.stroke();
@@ -360,9 +361,10 @@ export class MapView {
   constructor(el) {
     this.el = el; el.classList.add('mv');
     this.ground = document.createElement('div'); this.ground.className = 'mv-ground';
-    this.img = document.createElement('img'); this.img.className = 'mv-tex'; this.img.draggable = false;
+    this.img = document.createElement('img'); this.img.className = 'mv-tex mv-home'; this.img.draggable = false;
     this.detail = document.createElement('canvas'); this.detail.className = 'mv-tex mv-detail'; this.detail.style.display = 'none';
-    this.ground.append(this.img, this.detail); this.det = null;
+    this.vt = document.createElement('div'); this.vt.className = 'mv-vt'; this.vtiles = new Map(); // GM-015: Deutschland-Kacheln unter der Idstein-Textur
+    this.ground.append(this.vt, this.img, this.detail); this.det = null;
     this.canvas = document.createElement('canvas'); this.canvas.className = 'mv-over';
     this.haze = document.createElement('div'); this.haze.className = 'mv-haze';
     el.append(this.ground, this.haze, this.canvas);
@@ -374,6 +376,19 @@ export class MapView {
     this.detail.width = bitmap.width; this.detail.height = bitmap.height;
     this.detail.getContext('2d').drawImage(bitmap, 0, 0);
     this.det = { region, S, style }; this.detail.style.display = 'block';
+  }
+  // GM-015: Kacheln anzeigen – list: [{ key, url, region, S, pixelated }] (grob zuerst, fein oben)
+  setTiles(list) {
+    const keep = new Set(list.map(t => t.key));
+    for (const [k, el] of this.vtiles) if (!keep.has(k)) { el.remove(); this.vtiles.delete(k); }
+    list.forEach((t, i) => {
+      let el = this.vtiles.get(t.key);
+      if (!el) {
+        el = document.createElement('img'); el.className = 'mv-tex'; el.draggable = false; el.src = t.url; el._t = t; this.vtiles.set(t.key, el);
+        if (t.pixelated) el.style.imageRendering = 'pixelated';
+      }
+      el.style.zIndex = i; if (el.parentNode !== this.vt) this.vt.append(el);
+    });
   }
   setTexture(t, style) {
     if (this.det && this.det.style !== style) this.setDetail(null);
@@ -395,6 +410,11 @@ export class MapView {
       const S = this.tex.S, k = c.scale / S;
       this.img.style.width = (TEX.w * S) + 'px'; this.img.style.height = (TEX.h * S) + 'px';
       this.img.style.transform = `translate(${ax}px,${ay}px) rotate(${-c.heading}rad) scale(${k}) translate(${S * (TEX.x0 - c.center[0])}px,${S * (TEX.y0 - c.center[1])}px)`;
+    }
+    for (const el of this.vtiles.values()) {
+      const { region: g, S: D } = el._t;
+      el.style.width = (g.w * D) + 'px'; el.style.height = (g.h * D) + 'px';
+      el.style.transform = `translate(${ax}px,${ay}px) rotate(${-c.heading}rad) scale(${c.scale / D}) translate(${D * (g.x0 - c.center[0])}px,${D * (g.y0 - c.center[1])}px)`;
     }
     if (this.det) {
       const { region: g, S: D } = this.det;
@@ -512,11 +532,11 @@ function drawGlyph(u, x, y, size, name, fill, edge) {
 // Symbole aus Kartenpunkten und Suchorten zusammenführen (Suchorte haben Autohäuser, Werkstätten, Apotheken …)
 let blipCache = null;
 function blipList(scene) {
-  if (blipCache && blipCache.scene === scene) return blipCache.list;
-  const order = Object.keys(KINDS), all = [...scene.pois, ...scene.search].filter(p => KINDS[p.kind]), list = [];
+  if (blipCache && blipCache.scene === scene && blipCache.v === scene.extraV) return blipCache.list;
+  const order = Object.keys(KINDS), all = [...scene.pois, ...scene.search, ...(scene.extraPois || [])].filter(p => KINDS[p.kind]), list = []; // GM-015: + Orte aus Deutschland-Kacheln
   all.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
   for (const p of all) if (!list.some(o => o.kind === p.kind && Math.hypot(o.p[0] - p.p[0], o.p[1] - p.p[1]) < 30)) list.push(p);
-  blipCache = { scene, list }; return list;
+  blipCache = { scene, list, v: scene.extraV }; return list;
 }
 export const LEGEND = [['car', 'Autohaus'], ['car_repair', 'Werkstatt'], ['car_wash', 'Waschanlage'], ['fuel', 'Tankstelle'], ['parking', 'Parken'], ['bicycle', 'Fahrradladen'], ['supermarket', 'Supermarkt'], ['pharmacy', 'Apotheke'], ['restaurant', 'Essen'], ['cafe', 'Café'], ['bar', 'Bar'], ['clothes', 'Kleidung'], ['hairdresser', 'Friseur'], ['hotel', 'Hotel'], ['bank', 'Bank'], ['hospital', 'Krankenhaus'], ['police', 'Polizei']];
 export const LEGEND_KINDS = { restaurant: ['restaurant', 'fast_food'], bar: ['bar', 'pub'] };
@@ -536,6 +556,7 @@ export function drawBlips(u, mv, scene, style, opts = {}) {
     const b = glyphs ? KINDS[p.kind] : BLIP[p.kind]; if (!b) continue;
     const hl = hk && (hk.includes(p.kind) || hk.includes(b[2]));
     if (near && (p.kind === 'restaurant' || p.kind === 'cafe' || p.kind === 'fast_food') && mv.cam.tilt && !hl) continue;
+    if (mv.cam.scale < 0.04 && !hl) break; // GM-015: aus großer Höhe keine Ortssymbole
     if (glyphs && mv.cam.scale < 0.6 && !hl && (p.kind === 'restaurant' || p.kind === 'cafe' || p.kind === 'fast_food')) continue; // GM-010 (0.5): Übersicht ruhiger
     const q = mv.project(p.p); if (!mv.visible(q)) continue;
     const r = base * Math.max(0.7, Math.min(1.2, q[2]));

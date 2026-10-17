@@ -34,6 +34,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 /* Karte */
 .mv { overflow: hidden; }
+.mv-home { -webkit-mask-image: linear-gradient(to right, transparent, #000 7.2%, #000 92.8%, transparent), linear-gradient(to bottom, transparent, #000 8.7%, #000 91.3%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent, #000 7.2%, #000 92.8%, transparent), linear-gradient(to bottom, transparent, #000 8.7%, #000 91.3%, transparent); mask-composite: intersect; } /* GM-015: Idstein-Textur läuft weich in die Deutschland-Kacheln über */
 .mv-ground { position: absolute; inset: 0; transform-style: flat; }
 .mv-tex { position: absolute; left: 0; top: 0; transform-origin: 0 0; max-width: none; user-select: none; will-change: transform; }
 .mv-over { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }

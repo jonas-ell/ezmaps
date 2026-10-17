@@ -66,6 +66,23 @@ Aufgaben:
 - [ ] **3.5 Wochenrückblick als teilbares Bild** (km, aufgedeckte Fläche, Abzeichen) im Look des gewählten Stils.
 - [ ] **3.6 Freunde datenschutzfreundlich:** statt Live-Standort nur Fortschritt („X hat Oberauroff zu 60 % entdeckt“).
 
+## Teil 4 – Echtes Navi (aus der Frage „Was fehlt noch?“)
+
+- [ ] **4.1 CarPlay-Navigation bei Apple beantragen** (Entitlement `com.apple.developer.carplay-maps`) – Nutzer
+- [x] **4.2 Karte für ganz Deutschland** _(GM-015, Prototyp: OpenFreeMap; App: siehe `docs/KARTENDATEN.md`)_
+- [x] **4.3 Alle Stile überall** _(GM-015, Prototyp)_ – in der App: MapLibre-Stile für Neon/Western, eigener Renderer für Toy/Pixel
+- [x] **4.4 Routing Deutschland** _(GM-015, Prototyp: Valhalla FOSSGIS)_ – App: eigener Server
+- [x] **4.5 Suche Deutschland** _(GM-015, Prototyp: Photon)_ – App: eigener Photon oder MapKit
+- [x] **4.6 Echte Tempolimits** _(GM-015, OSM maxspeed über Valhalla)_
+- [x] **4.7 Neuberechnung bei Abweichung** _(GM-015, im Prototyp per Knopf „Falsch abbiegen“)_ – App: automatisch bei > 30 m Abstand zur Route
+- [ ] **4.8 Navigation im Hintergrund, Live-Aktivität, Dynamic Island** – nur in Swift
+- [ ] **4.9 GPS einrasten (Map-Matching), Tunnel** – nur in Swift
+- [ ] **4.10 Spritpreise (Tankerkönig-API, Schlüssel nötig), E-Ladesäulen (Open Charge Map)**
+- [ ] **4.11 Zwischenstopps, Abfahrt planen**
+- [ ] **4.12 Siri / Kurzbefehle, Links aus anderen Apps öffnen** – nur in Swift
+- [ ] **4.13 Datenschutzerklärung, Impressum, App-Store-Angaben, Pricedown-App-Lizenz** – Nutzer
+- [ ] **4.14 In-App-Käufe für Stile, Freunde-Server** – später
+
 ## Danach auf dem Gerät testen
 
 - Ist „© OpenStreetMap-Mitwirkende“ auf jedem Screen sichtbar (Karte, Suche, Vorschau, Navigation, Ankunft, Entdecken, Stile, Profil, CarPlay)?
