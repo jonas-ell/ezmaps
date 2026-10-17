@@ -15,10 +15,11 @@ grep -E "error:|warning: .*(EzMaps|App/)|BUILD SUCCEEDED|BUILD FAILED" /tmp/ezma
 echo "--- xcodebuild Exit: $APP"
 
 # GM-020: wie ▶ in Xcode – signiert für einen echten Simulator (Signieren lokal, kein Schlüsselbund nötig)
-SIM=$(xcrun simctl list devices available | grep -E "iPhone 1[5-9]" | head -1 | sed -E 's/^ *([^(]+) \(.*//' | sed 's/ *$//')
+SIM=$(xcrun simctl list devices available | grep -E "^ +iPhone" | head -1)
+SIMID=$(echo "$SIM" | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}' | head -1)
 echo "--- Simulator: ${SIM:-keiner gefunden}"
-if [ -n "$SIM" ]; then
-  xcodebuild -project EzMaps.xcodeproj -scheme EzMaps -destination "platform=iOS Simulator,name=$SIM"     -configuration Debug build > /tmp/ezmaps_xcb_signed.log 2>&1
+if [ -n "$SIMID" ]; then
+  xcodebuild -project EzMaps.xcodeproj -scheme EzMaps -destination "id=$SIMID"     -configuration Debug build > /tmp/ezmaps_xcb_signed.log 2>&1
   SIGNED=$?
   grep -E "error:|BUILD SUCCEEDED|BUILD FAILED" /tmp/ezmaps_xcb_signed.log | head -40
   echo "--- signierter Simulator-Build Exit: $SIGNED"
