@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EzMaps Prototyp</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rye&family=Press+Start+2P&family=VT323&family=Fredoka:wght@500;600;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="bar-top">
+  <b>EzMaps · klickbarer Prototyp</b><span class="hint">iPhone 16 (393 × 852 pt) und CarPlay teilen sich einen Zustand – wie in der echten App.</span>
+  <span class="ctl"><span>Fahrt</span><button data-ctl="speed:1">1×</button><button data-ctl="speed:3" class="on">3×</button><button data-ctl="speed:10">10×</button></span>
+  <span class="ctl"><span>CarPlay</span><button data-ctl="carsize:800x480">800×480</button><button data-ctl="carsize:1280x480" class="on">1280×480</button><button data-ctl="carsize:960x540">960×540</button><button data-ctl="car">ein/aus</button></span>
+  <button data-ctl="reset">Neu starten</button>
+</header>
+<main id="stage">
+  <div class="device">
+    <div id="phone" class="phone t-neon">
+      <div class="map" id="pmap"></div>
+      <div class="ui" id="pui"></div>
+      <div class="island"></div>
+      <div class="status"><span class="time" id="clock">16:48</span><span class="sicons">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx=".7"/><rect x="5" y="5.5" width="3" height="6.5" rx=".7"/><rect x="10" y="3" width="3" height="9" rx=".7"/><rect x="15" y="0" width="3" height="12" rx=".7"/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 2.3c2.4 0 4.6.9 6.3 2.5l1.2-1.3A10.8 10.8 0 0 0 8.5.5 10.8 10.8 0 0 0 1 3.5l1.2 1.3a9 9 0 0 1 6.3-2.5z"/><path d="M8.5 5.8c1.5 0 2.8.5 3.8 1.5l1.2-1.3a7.3 7.3 0 0 0-10 0l1.2 1.3c1-1 2.3-1.5 3.8-1.5z"/><path d="M8.5 9.2c.6 0 1.1.2 1.5.6L8.5 11.5 7 9.8c.4-.4.9-.6 1.5-.6z"/></svg>
+        <svg width="27" height="13" viewBox="0 0 27.3 13"><rect x=".5" y=".5" width="24" height="12" rx="3.8" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2" y="2" width="16" height="9" rx="2.3" fill="currentColor"/><path d="M25.8 4.5v4a2.2 2.2 0 0 0 0-4z" fill="currentColor" fill-opacity=".4"/></svg></span></div>
+      <div class="homebar"></div>
+    </div>
+  </div>
+  <div class="carwrap">
+    <div class="carframe"><div id="car" class="car t-neon">
+      <div class="dock"><div class="dtime" id="clock2">16:48</div><div class="app ez">Ez</div><div class="app" style="background:#1db954"></div><div class="app" style="background:#2fb94a"></div><div class="dgrid"></div></div>
+      <div class="carmain"><div class="map" id="cmap"></div><div class="ui" id="cui"></div></div>
+    </div></div>
+    <div class="note">Graue Systemteile (Leiste, Tasten, Listen, Abbiegekarte, Routen-Vorschau) zeichnet in der echten App iOS. Wir liefern nur Karte und Einblendungen darin. Kartendaten © OpenStreetMap-Mitwirkende.</div>
+  </div>
+</main>
+<script type="module" src="js/app.js"></script>
+<script>
+  const tick = () => { const d = new Date(), t = d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0'); document.getElementById('clock').textContent = t; document.getElementById('clock2').textContent = t; };
+  tick(); setInterval(tick, 10000);
+</script>
+</body>
+</html>

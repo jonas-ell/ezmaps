@@ -1,0 +1,92 @@
+{
+  "appicon-1024": {
+    "tool": "built-in image_gen",
+    "source_file": "exec-ca494377-9e1e-45e9-8c6f-5cebb2e5f320.png",
+    "source_size": [
+      1254,
+      1254
+    ],
+    "export_size": [
+      1024,
+      1024
+    ],
+    "resampling": "lanczos",
+    "mode": "RGB",
+    "grayscale": false
+  },
+  "appicon-1024-dark": {
+    "tool": "built-in image_gen",
+    "source_file": "exec-56895cba-0ed6-459f-bbbd-42950c5efee8.png",
+    "source_size": [
+      1254,
+      1254
+    ],
+    "export_size": [
+      1024,
+      1024
+    ],
+    "resampling": "lanczos",
+    "mode": "RGB",
+    "grayscale": false
+  },
+  "appicon-1024-tinted": {
+    "tool": "built-in image_gen",
+    "source_file": "exec-34fd42c2-8e10-4021-be3c-d1fb1a05498f.png",
+    "source_size": [
+      1254,
+      1254
+    ],
+    "export_size": [
+      1024,
+      1024
+    ],
+    "resampling": "lanczos",
+    "mode": "RGB",
+    "grayscale": true
+  },
+  "store-neon": {
+    "tool": "built-in image_gen",
+    "source_file": "exec-0bd2fc5b-0e9e-4dbb-87ff-2d47cd7c943a.png",
+    "source_size": [
+      852,
+      1846
+    ],
+    "export_size": [
+      1290,
+      2796
+    ],
+    "resampling": "lanczos",
+    "mode": "RGB",
+    "grayscale": false
+  },
+  "store-western": {
+    "tool": "built-in image_gen",
+    "source_file": "exec-2bd64bec-fcb3-4c39-bead-2cf5120bada9.png",
+    "source_size": [
+      853,
+      1844
+    ],
+    "export_size": [
+      1290,
+      2796
+    ],
+    "resampling": "lanczos",
+    "mode": "RGB",
+    "grayscale": false
+  },
+  "store-pixel": {
+    "tool": "built-in image_gen",
+    "source_file": "exec-cc12d761-32a5-4135-94fe-765856a79fb4.png",
+    "source_size": [
+      853,
+      1844
+    ],
+    "export_size": [
+      1290,
+      2796
+    ],
+    "resampling": "nearest",
+    "mode": "RGB",
+    "grayscale": false
+  }
+}

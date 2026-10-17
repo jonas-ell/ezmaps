@@ -1,0 +1,6 @@
+{
+  "tool": "built-in image_gen",
+  "prompts": {
+    "appicon-1024": "Original iOS app icon, 1024x1024 PNG, full-bleed square, no rounded corners, no transparency, no text. Tilted top-down grey original city map at dusk (#3D3E40 land, darker blocks, light grey streets). Thick flat purple #A13DF0 GPS route with dark edge sweeping from bottom center to top right ending at yellow #F5D742 destination dot with black ring. White arrowhead player marker black outline at bottom of route. High contrast readable at 60px. Original geometry no game references or logos. Save output image."
+  }
+}

@@ -12,14 +12,14 @@ Jeder Block unten ist ein fertiger Prompt zum Kopieren. Ergebnisse nach `Assets/
 
 ## Stil-Farben
 
-| | Neon City | Wild West | Pixel Quest |
-|---|---|---|---|
-| Akzent / Route | `#A13DF0` | `#C0261F` | `#FFCC33` |
-| Zweitakzent | `#D9AD3A` | `#B8862B` | `#FF6B3D` |
-| Panel | `#000000` 80 % | Papier `#EFE2C0` | Navy `#1A2A6C` + weißer Rahmen |
-| Text | `#FFFFFF` | Tinte `#2E1E10` | `#FFFFFF` |
-| Kontur | `#000000` | `#3A2414` | `#000000` |
-| Kartenhintergrund | `#3D3E40` | `#DCC59A` | Gras `#60A83A` |
+| | Neon City | Wild West | Pixel Quest | Toy Town |
+|---|---|---|---|---|
+| Akzent / Route | `#A13DF0` | `#C0261F` | `#FFCC33` | `#FF7A00` |
+| Zweitakzent | `#D9AD3A` | `#B8862B` | `#FF6B3D` | `#1F6FE0` |
+| Panel | `#000000` 80 % | Papier `#EFE2C0` | Navy `#1A2A6C` + weißer Rahmen | Weiß, Rand `#2F3640` 2,5 pt, Radius 14 |
+| Text | `#FFFFFF` | Tinte `#2E1E10` | `#FFFFFF` | `#2F3640` |
+| Kontur | `#000000` | `#3A2414` | `#000000` | `#2F3640` |
+| Kartenhintergrund | `#3D3E40` | `#DCC59A` | Gras `#60A83A` | Rasen `#8DC63F` |
 
 ---
 
@@ -114,6 +114,15 @@ engraving style. blip-destination is a red (#C0261F) hand-drawn "X" with parchme
 Folder Assets/Generated/Blips/Western/. Preview on #DCC59A.
 ```
 
+### Toy Town
+
+```
+Same list and names as round road-sign style markers for a kids' play-mat map: SVG viewBox 0 0 32 32,
+white outer ring (2px), colored disc (parking #1F6FE0, fuel #F08A2C, food #2FB94A, shop #F5D742,
+charging #33E1C7, hospital #FF5A5A), white bold glyph, thin #2F3640 outline. Destination = checkered
+flag on a pole. Folder Assets/Generated/Blips/Toy/. Preview on #8DC63F.
+```
+
 ### Pixel Quest
 
 ```
@@ -132,9 +141,12 @@ Neon City (SVG, viewBox 0 0 64 64): arrowhead pointing up with notch at bottom,
 fill #E9E9E9, outline 5px #000000. player-neon.svg
 Wild West (SVG): same silhouette, fill #F6EAD0, outline #3A2414, slightly hand-inked edge.
 player-western.svg
-Pixel Quest (PNG pixel art): an original small top-down car, 9x13 px, red body #E8372C,
-light-blue windows, black outline, yellow headlights, no AA. Provide 8 headings
-(N, NE, E, SE, S, SW, W, NW) as player-pixel-<dir>.png plus @4x exports.
+Pixel Quest (PNG pixel art): a chunky pixel arrowhead / bullet shape, 7x10 px pointing up:
+1px black outline, white (#FFFFFF) core, light grey (#DCDCDC) body, darker grey (#A4A4A4)
+shade on the right and bottom edge, flat back end, 1px pointed tip (reference: user sketch).
+No AA. Provide 8 headings (N, NE, E, SE, S, SW, W, NW) as player-pixel-<dir>.png plus @4x.
+Toy Town (SVG, viewBox 0 0 64 64): original toy car seen from above, red body #E8372C,
+light-blue windows, yellow headlights, thick #2F3640 outline, soft drop shadow. player-toy.svg
 Folder Assets/Generated/Player/. Original design, not copied from any game.
 ```
 

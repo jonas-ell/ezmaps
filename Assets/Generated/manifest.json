@@ -1,0 +1,1613 @@
+{
+  "generator": "tools/assets/generate.py",
+  "files": [
+    {
+      "path": "AppIcon/appicon-1024-dark.png",
+      "bytes": 1037004
+    },
+    {
+      "path": "AppIcon/appicon-1024-tinted.png",
+      "bytes": 578537
+    },
+    {
+      "path": "AppIcon/appicon-1024.png",
+      "bytes": 1373198
+    },
+    {
+      "path": "Badges/badge-10-km-bronze.svg",
+      "bytes": 805
+    },
+    {
+      "path": "Badges/badge-10-km-gold.svg",
+      "bytes": 805
+    },
+    {
+      "path": "Badges/badge-10-km-locked.svg",
+      "bytes": 805
+    },
+    {
+      "path": "Badges/badge-10-km-silver.svg",
+      "bytes": 805
+    },
+    {
+      "path": "Badges/badge-100-km-bronze.svg",
+      "bytes": 628
+    },
+    {
+      "path": "Badges/badge-100-km-gold.svg",
+      "bytes": 628
+    },
+    {
+      "path": "Badges/badge-100-km-locked.svg",
+      "bytes": 628
+    },
+    {
+      "path": "Badges/badge-100-km-silver.svg",
+      "bytes": 628
+    },
+    {
+      "path": "Badges/badge-convoy-bronze.svg",
+      "bytes": 1336
+    },
+    {
+      "path": "Badges/badge-convoy-gold.svg",
+      "bytes": 1336
+    },
+    {
+      "path": "Badges/badge-convoy-locked.svg",
+      "bytes": 1336
+    },
+    {
+      "path": "Badges/badge-convoy-silver.svg",
+      "bytes": 1336
+    },
+    {
+      "path": "Badges/badge-early-bird-bronze.svg",
+      "bytes": 871
+    },
+    {
+      "path": "Badges/badge-early-bird-gold.svg",
+      "bytes": 871
+    },
+    {
+      "path": "Badges/badge-early-bird-locked.svg",
+      "bytes": 871
+    },
+    {
+      "path": "Badges/badge-early-bird-silver.svg",
+      "bytes": 871
+    },
+    {
+      "path": "Badges/badge-explorer-100-bronze.svg",
+      "bytes": 837
+    },
+    {
+      "path": "Badges/badge-explorer-100-gold.svg",
+      "bytes": 837
+    },
+    {
+      "path": "Badges/badge-explorer-100-locked.svg",
+      "bytes": 837
+    },
+    {
+      "path": "Badges/badge-explorer-100-silver.svg",
+      "bytes": 837
+    },
+    {
+      "path": "Badges/badge-explorer-25-bronze.svg",
+      "bytes": 743
+    },
+    {
+      "path": "Badges/badge-explorer-25-gold.svg",
+      "bytes": 743
+    },
+    {
+      "path": "Badges/badge-explorer-25-locked.svg",
+      "bytes": 743
+    },
+    {
+      "path": "Badges/badge-explorer-25-silver.svg",
+      "bytes": 743
+    },
+    {
+      "path": "Badges/badge-explorer-50-bronze.svg",
+      "bytes": 790
+    },
+    {
+      "path": "Badges/badge-explorer-50-gold.svg",
+      "bytes": 790
+    },
+    {
+      "path": "Badges/badge-explorer-50-locked.svg",
+      "bytes": 790
+    },
+    {
+      "path": "Badges/badge-explorer-50-silver.svg",
+      "bytes": 790
+    },
+    {
+      "path": "Badges/badge-first-drive-bronze.svg",
+      "bytes": 487
+    },
+    {
+      "path": "Badges/badge-first-drive-gold.svg",
+      "bytes": 487
+    },
+    {
+      "path": "Badges/badge-first-drive-locked.svg",
+      "bytes": 487
+    },
+    {
+      "path": "Badges/badge-first-drive-silver.svg",
+      "bytes": 487
+    },
+    {
+      "path": "Badges/badge-night-owl-bronze.svg",
+      "bytes": 478
+    },
+    {
+      "path": "Badges/badge-night-owl-gold.svg",
+      "bytes": 478
+    },
+    {
+      "path": "Badges/badge-night-owl-locked.svg",
+      "bytes": 478
+    },
+    {
+      "path": "Badges/badge-night-owl-silver.svg",
+      "bytes": 478
+    },
+    {
+      "path": "Badges/badge-old-town-bronze.svg",
+      "bytes": 748
+    },
+    {
+      "path": "Badges/badge-old-town-gold.svg",
+      "bytes": 748
+    },
+    {
+      "path": "Badges/badge-old-town-locked.svg",
+      "bytes": 748
+    },
+    {
+      "path": "Badges/badge-old-town-silver.svg",
+      "bytes": 748
+    },
+    {
+      "path": "Badges/badge-streak-7-bronze.svg",
+      "bytes": 624
+    },
+    {
+      "path": "Badges/badge-streak-7-gold.svg",
+      "bytes": 624
+    },
+    {
+      "path": "Badges/badge-streak-7-locked.svg",
+      "bytes": 624
+    },
+    {
+      "path": "Badges/badge-streak-7-silver.svg",
+      "bytes": 624
+    },
+    {
+      "path": "Badges/badge-weekly-goal-bronze.svg",
+      "bytes": 505
+    },
+    {
+      "path": "Badges/badge-weekly-goal-gold.svg",
+      "bytes": 505
+    },
+    {
+      "path": "Badges/badge-weekly-goal-locked.svg",
+      "bytes": 505
+    },
+    {
+      "path": "Badges/badge-weekly-goal-silver.svg",
+      "bytes": 505
+    },
+    {
+      "path": "Blips/Neon/blip-charging.svg",
+      "bytes": 559
+    },
+    {
+      "path": "Blips/Neon/blip-destination.svg",
+      "bytes": 252
+    },
+    {
+      "path": "Blips/Neon/blip-food.svg",
+      "bytes": 598
+    },
+    {
+      "path": "Blips/Neon/blip-friend.svg",
+      "bytes": 357
+    },
+    {
+      "path": "Blips/Neon/blip-fuel.svg",
+      "bytes": 446
+    },
+    {
+      "path": "Blips/Neon/blip-home.svg",
+      "bytes": 379
+    },
+    {
+      "path": "Blips/Neon/blip-hospital.svg",
+      "bytes": 421
+    },
+    {
+      "path": "Blips/Neon/blip-parking.svg",
+      "bytes": 393
+    },
+    {
+      "path": "Blips/Neon/blip-shop.svg",
+      "bytes": 439
+    },
+    {
+      "path": "Blips/Neon/blip-waypoint.svg",
+      "bytes": 295
+    },
+    {
+      "path": "Blips/Neon/blip-work.svg",
+      "bytes": 370
+    },
+    {
+      "path": "Blips/Pixel/blip-charging.png",
+      "bytes": 136
+    },
+    {
+      "path": "Blips/Pixel/blip-charging@4x.png",
+      "bytes": 216
+    },
+    {
+      "path": "Blips/Pixel/blip-destination.png",
+      "bytes": 143
+    },
+    {
+      "path": "Blips/Pixel/blip-destination@4x.png",
+      "bytes": 211
+    },
+    {
+      "path": "Blips/Pixel/blip-food.png",
+      "bytes": 141
+    },
+    {
+      "path": "Blips/Pixel/blip-food@4x.png",
+      "bytes": 212
+    },
+    {
+      "path": "Blips/Pixel/blip-friend.png",
+      "bytes": 137
+    },
+    {
+      "path": "Blips/Pixel/blip-friend@4x.png",
+      "bytes": 210
+    },
+    {
+      "path": "Blips/Pixel/blip-fuel.png",
+      "bytes": 133
+    },
+    {
+      "path": "Blips/Pixel/blip-fuel@4x.png",
+      "bytes": 208
+    },
+    {
+      "path": "Blips/Pixel/blip-home.png",
+      "bytes": 137
+    },
+    {
+      "path": "Blips/Pixel/blip-home@4x.png",
+      "bytes": 229
+    },
+    {
+      "path": "Blips/Pixel/blip-hospital.png",
+      "bytes": 129
+    },
+    {
+      "path": "Blips/Pixel/blip-hospital@4x.png",
+      "bytes": 201
+    },
+    {
+      "path": "Blips/Pixel/blip-parking.png",
+      "bytes": 135
+    },
+    {
+      "path": "Blips/Pixel/blip-parking@4x.png",
+      "bytes": 203
+    },
+    {
+      "path": "Blips/Pixel/blip-shop.png",
+      "bytes": 125
+    },
+    {
+      "path": "Blips/Pixel/blip-shop@4x.png",
+      "bytes": 190
+    },
+    {
+      "path": "Blips/Pixel/blip-waypoint.png",
+      "bytes": 121
+    },
+    {
+      "path": "Blips/Pixel/blip-waypoint@4x.png",
+      "bytes": 181
+    },
+    {
+      "path": "Blips/Pixel/blip-work.png",
+      "bytes": 108
+    },
+    {
+      "path": "Blips/Pixel/blip-work@4x.png",
+      "bytes": 191
+    },
+    {
+      "path": "Blips/Western/blip-charging.svg",
+      "bytes": 1308
+    },
+    {
+      "path": "Blips/Western/blip-destination.svg",
+      "bytes": 1009
+    },
+    {
+      "path": "Blips/Western/blip-food.svg",
+      "bytes": 1669
+    },
+    {
+      "path": "Blips/Western/blip-friend.svg",
+      "bytes": 705
+    },
+    {
+      "path": "Blips/Western/blip-fuel.svg",
+      "bytes": 1073
+    },
+    {
+      "path": "Blips/Western/blip-home.svg",
+      "bytes": 744
+    },
+    {
+      "path": "Blips/Western/blip-hospital.svg",
+      "bytes": 1019
+    },
+    {
+      "path": "Blips/Western/blip-parking.svg",
+      "bytes": 805
+    },
+    {
+      "path": "Blips/Western/blip-shop.svg",
+      "bytes": 1015
+    },
+    {
+      "path": "Blips/Western/blip-waypoint.svg",
+      "bytes": 519
+    },
+    {
+      "path": "Blips/Western/blip-work.svg",
+      "bytes": 761
+    },
+    {
+      "path": "CarPlay/cp-charging-list.svg",
+      "bytes": 542
+    },
+    {
+      "path": "CarPlay/cp-charging-map.svg",
+      "bytes": 542
+    },
+    {
+      "path": "CarPlay/cp-charging.svg",
+      "bytes": 542
+    },
+    {
+      "path": "CarPlay/cp-favorite-list.svg",
+      "bytes": 356
+    },
+    {
+      "path": "CarPlay/cp-favorite-map.svg",
+      "bytes": 356
+    },
+    {
+      "path": "CarPlay/cp-favorite.svg",
+      "bytes": 356
+    },
+    {
+      "path": "CarPlay/cp-friends-list.svg",
+      "bytes": 456
+    },
+    {
+      "path": "CarPlay/cp-friends-map.svg",
+      "bytes": 456
+    },
+    {
+      "path": "CarPlay/cp-friends.svg",
+      "bytes": 456
+    },
+    {
+      "path": "CarPlay/cp-fuel-list.svg",
+      "bytes": 509
+    },
+    {
+      "path": "CarPlay/cp-fuel-map.svg",
+      "bytes": 509
+    },
+    {
+      "path": "CarPlay/cp-fuel.svg",
+      "bytes": 509
+    },
+    {
+      "path": "CarPlay/cp-history-list.svg",
+      "bytes": 731
+    },
+    {
+      "path": "CarPlay/cp-history-map.svg",
+      "bytes": 731
+    },
+    {
+      "path": "CarPlay/cp-history.svg",
+      "bytes": 731
+    },
+    {
+      "path": "CarPlay/cp-home-list.svg",
+      "bytes": 377
+    },
+    {
+      "path": "CarPlay/cp-home-map.svg",
+      "bytes": 377
+    },
+    {
+      "path": "CarPlay/cp-home.svg",
+      "bytes": 377
+    },
+    {
+      "path": "CarPlay/cp-locate-list.svg",
+      "bytes": 267
+    },
+    {
+      "path": "CarPlay/cp-locate-map.svg",
+      "bytes": 267
+    },
+    {
+      "path": "CarPlay/cp-locate.svg",
+      "bytes": 267
+    },
+    {
+      "path": "CarPlay/cp-parking-list.svg",
+      "bytes": 566
+    },
+    {
+      "path": "CarPlay/cp-parking-map.svg",
+      "bytes": 566
+    },
+    {
+      "path": "CarPlay/cp-parking.svg",
+      "bytes": 566
+    },
+    {
+      "path": "CarPlay/cp-search-list.svg",
+      "bytes": 278
+    },
+    {
+      "path": "CarPlay/cp-search-map.svg",
+      "bytes": 278
+    },
+    {
+      "path": "CarPlay/cp-search.svg",
+      "bytes": 278
+    },
+    {
+      "path": "CarPlay/cp-style-list.svg",
+      "bytes": 405
+    },
+    {
+      "path": "CarPlay/cp-style-map.svg",
+      "bytes": 405
+    },
+    {
+      "path": "CarPlay/cp-style.svg",
+      "bytes": 405
+    },
+    {
+      "path": "CarPlay/cp-work-list.svg",
+      "bytes": 486
+    },
+    {
+      "path": "CarPlay/cp-work-map.svg",
+      "bytes": 486
+    },
+    {
+      "path": "CarPlay/cp-work.svg",
+      "bytes": 486
+    },
+    {
+      "path": "CarPlay/cp-zoom-in-list.svg",
+      "bytes": 386
+    },
+    {
+      "path": "CarPlay/cp-zoom-in-map.svg",
+      "bytes": 386
+    },
+    {
+      "path": "CarPlay/cp-zoom-in.svg",
+      "bytes": 386
+    },
+    {
+      "path": "CarPlay/cp-zoom-out-list.svg",
+      "bytes": 332
+    },
+    {
+      "path": "CarPlay/cp-zoom-out-map.svg",
+      "bytes": 332
+    },
+    {
+      "path": "CarPlay/cp-zoom-out.svg",
+      "bytes": 332
+    },
+    {
+      "path": "Icons/Neon/ic-back.svg",
+      "bytes": 320
+    },
+    {
+      "path": "Icons/Neon/ic-badge.svg",
+      "bytes": 390
+    },
+    {
+      "path": "Icons/Neon/ic-calendar.svg",
+      "bytes": 537
+    },
+    {
+      "path": "Icons/Neon/ic-charging.svg",
+      "bytes": 547
+    },
+    {
+      "path": "Icons/Neon/ic-chevron.svg",
+      "bytes": 265
+    },
+    {
+      "path": "Icons/Neon/ic-clip.svg",
+      "bytes": 397
+    },
+    {
+      "path": "Icons/Neon/ic-close.svg",
+      "bytes": 303
+    },
+    {
+      "path": "Icons/Neon/ic-contact.svg",
+      "bytes": 507
+    },
+    {
+      "path": "Icons/Neon/ic-district.svg",
+      "bytes": 481
+    },
+    {
+      "path": "Icons/Neon/ic-end-route.svg",
+      "bytes": 401
+    },
+    {
+      "path": "Icons/Neon/ic-eye-off.svg",
+      "bytes": 808
+    },
+    {
+      "path": "Icons/Neon/ic-favorite.svg",
+      "bytes": 361
+    },
+    {
+      "path": "Icons/Neon/ic-fog.svg",
+      "bytes": 490
+    },
+    {
+      "path": "Icons/Neon/ic-food.svg",
+      "bytes": 446
+    },
+    {
+      "path": "Icons/Neon/ic-friends.svg",
+      "bytes": 461
+    },
+    {
+      "path": "Icons/Neon/ic-fuel.svg",
+      "bytes": 514
+    },
+    {
+      "path": "Icons/Neon/ic-goal.svg",
+      "bytes": 290
+    },
+    {
+      "path": "Icons/Neon/ic-history.svg",
+      "bytes": 736
+    },
+    {
+      "path": "Icons/Neon/ic-home.svg",
+      "bytes": 382
+    },
+    {
+      "path": "Icons/Neon/ic-layers.svg",
+      "bytes": 410
+    },
+    {
+      "path": "Icons/Neon/ic-locate.svg",
+      "bytes": 272
+    },
+    {
+      "path": "Icons/Neon/ic-location-off.svg",
+      "bytes": 394
+    },
+    {
+      "path": "Icons/Neon/ic-lock.svg",
+      "bytes": 439
+    },
+    {
+      "path": "Icons/Neon/ic-mic.svg",
+      "bytes": 526
+    },
+    {
+      "path": "Icons/Neon/ic-more.svg",
+      "bytes": 355
+    },
+    {
+      "path": "Icons/Neon/ic-north.svg",
+      "bytes": 353
+    },
+    {
+      "path": "Icons/Neon/ic-parking.svg",
+      "bytes": 459
+    },
+    {
+      "path": "Icons/Neon/ic-reroute.svg",
+      "bytes": 413
+    },
+    {
+      "path": "Icons/Neon/ic-route-options.svg",
+      "bytes": 590
+    },
+    {
+      "path": "Icons/Neon/ic-search.svg",
+      "bytes": 283
+    },
+    {
+      "path": "Icons/Neon/ic-settings.svg",
+      "bytes": 483
+    },
+    {
+      "path": "Icons/Neon/ic-share.svg",
+      "bytes": 395
+    },
+    {
+      "path": "Icons/Neon/ic-stats.svg",
+      "bytes": 488
+    },
+    {
+      "path": "Icons/Neon/ic-streak.svg",
+      "bytes": 409
+    },
+    {
+      "path": "Icons/Neon/ic-tab-explore.svg",
+      "bytes": 303
+    },
+    {
+      "path": "Icons/Neon/ic-tab-map.svg",
+      "bytes": 436
+    },
+    {
+      "path": "Icons/Neon/ic-tab-profile.svg",
+      "bytes": 343
+    },
+    {
+      "path": "Icons/Neon/ic-tab-styles.svg",
+      "bytes": 433
+    },
+    {
+      "path": "Icons/Neon/ic-volume-off.svg",
+      "bytes": 407
+    },
+    {
+      "path": "Icons/Neon/ic-volume-on.svg",
+      "bytes": 1128
+    },
+    {
+      "path": "Icons/Neon/ic-work.svg",
+      "bytes": 491
+    },
+    {
+      "path": "Icons/Neon/ic-zoom-in.svg",
+      "bytes": 391
+    },
+    {
+      "path": "Icons/Neon/ic-zoom-out.svg",
+      "bytes": 337
+    },
+    {
+      "path": "Icons/Pixel/ic-back.png",
+      "bytes": 151
+    },
+    {
+      "path": "Icons/Pixel/ic-back@4x.png",
+      "bytes": 278
+    },
+    {
+      "path": "Icons/Pixel/ic-badge.png",
+      "bytes": 176
+    },
+    {
+      "path": "Icons/Pixel/ic-badge@4x.png",
+      "bytes": 309
+    },
+    {
+      "path": "Icons/Pixel/ic-calendar.png",
+      "bytes": 167
+    },
+    {
+      "path": "Icons/Pixel/ic-calendar@4x.png",
+      "bytes": 292
+    },
+    {
+      "path": "Icons/Pixel/ic-charging.png",
+      "bytes": 169
+    },
+    {
+      "path": "Icons/Pixel/ic-charging@4x.png",
+      "bytes": 316
+    },
+    {
+      "path": "Icons/Pixel/ic-chevron.png",
+      "bytes": 146
+    },
+    {
+      "path": "Icons/Pixel/ic-chevron@4x.png",
+      "bytes": 264
+    },
+    {
+      "path": "Icons/Pixel/ic-clip.png",
+      "bytes": 147
+    },
+    {
+      "path": "Icons/Pixel/ic-clip@4x.png",
+      "bytes": 271
+    },
+    {
+      "path": "Icons/Pixel/ic-close.png",
+      "bytes": 147
+    },
+    {
+      "path": "Icons/Pixel/ic-close@4x.png",
+      "bytes": 255
+    },
+    {
+      "path": "Icons/Pixel/ic-contact.png",
+      "bytes": 159
+    },
+    {
+      "path": "Icons/Pixel/ic-contact@4x.png",
+      "bytes": 281
+    },
+    {
+      "path": "Icons/Pixel/ic-district.png",
+      "bytes": 165
+    },
+    {
+      "path": "Icons/Pixel/ic-district@4x.png",
+      "bytes": 302
+    },
+    {
+      "path": "Icons/Pixel/ic-end-route.png",
+      "bytes": 155
+    },
+    {
+      "path": "Icons/Pixel/ic-end-route@4x.png",
+      "bytes": 284
+    },
+    {
+      "path": "Icons/Pixel/ic-eye-off.png",
+      "bytes": 175
+    },
+    {
+      "path": "Icons/Pixel/ic-eye-off@4x.png",
+      "bytes": 320
+    },
+    {
+      "path": "Icons/Pixel/ic-favorite.png",
+      "bytes": 163
+    },
+    {
+      "path": "Icons/Pixel/ic-favorite@4x.png",
+      "bytes": 305
+    },
+    {
+      "path": "Icons/Pixel/ic-fog.png",
+      "bytes": 173
+    },
+    {
+      "path": "Icons/Pixel/ic-fog@4x.png",
+      "bytes": 312
+    },
+    {
+      "path": "Icons/Pixel/ic-food.png",
+      "bytes": 154
+    },
+    {
+      "path": "Icons/Pixel/ic-food@4x.png",
+      "bytes": 292
+    },
+    {
+      "path": "Icons/Pixel/ic-friends.png",
+      "bytes": 178
+    },
+    {
+      "path": "Icons/Pixel/ic-friends@4x.png",
+      "bytes": 303
+    },
+    {
+      "path": "Icons/Pixel/ic-fuel.png",
+      "bytes": 154
+    },
+    {
+      "path": "Icons/Pixel/ic-fuel@4x.png",
+      "bytes": 295
+    },
+    {
+      "path": "Icons/Pixel/ic-goal.png",
+      "bytes": 173
+    },
+    {
+      "path": "Icons/Pixel/ic-goal@4x.png",
+      "bytes": 284
+    },
+    {
+      "path": "Icons/Pixel/ic-history.png",
+      "bytes": 182
+    },
+    {
+      "path": "Icons/Pixel/ic-history@4x.png",
+      "bytes": 336
+    },
+    {
+      "path": "Icons/Pixel/ic-home.png",
+      "bytes": 169
+    },
+    {
+      "path": "Icons/Pixel/ic-home@4x.png",
+      "bytes": 315
+    },
+    {
+      "path": "Icons/Pixel/ic-layers.png",
+      "bytes": 163
+    },
+    {
+      "path": "Icons/Pixel/ic-layers@4x.png",
+      "bytes": 289
+    },
+    {
+      "path": "Icons/Pixel/ic-locate.png",
+      "bytes": 167
+    },
+    {
+      "path": "Icons/Pixel/ic-locate@4x.png",
+      "bytes": 325
+    },
+    {
+      "path": "Icons/Pixel/ic-location-off.png",
+      "bytes": 174
+    },
+    {
+      "path": "Icons/Pixel/ic-location-off@4x.png",
+      "bytes": 323
+    },
+    {
+      "path": "Icons/Pixel/ic-lock.png",
+      "bytes": 164
+    },
+    {
+      "path": "Icons/Pixel/ic-lock@4x.png",
+      "bytes": 304
+    },
+    {
+      "path": "Icons/Pixel/ic-mic.png",
+      "bytes": 162
+    },
+    {
+      "path": "Icons/Pixel/ic-mic@4x.png",
+      "bytes": 292
+    },
+    {
+      "path": "Icons/Pixel/ic-more.png",
+      "bytes": 100
+    },
+    {
+      "path": "Icons/Pixel/ic-more@4x.png",
+      "bytes": 162
+    },
+    {
+      "path": "Icons/Pixel/ic-north.png",
+      "bytes": 157
+    },
+    {
+      "path": "Icons/Pixel/ic-north@4x.png",
+      "bytes": 303
+    },
+    {
+      "path": "Icons/Pixel/ic-parking.png",
+      "bytes": 152
+    },
+    {
+      "path": "Icons/Pixel/ic-parking@4x.png",
+      "bytes": 281
+    },
+    {
+      "path": "Icons/Pixel/ic-reroute.png",
+      "bytes": 159
+    },
+    {
+      "path": "Icons/Pixel/ic-reroute@4x.png",
+      "bytes": 305
+    },
+    {
+      "path": "Icons/Pixel/ic-route-options.png",
+      "bytes": 171
+    },
+    {
+      "path": "Icons/Pixel/ic-route-options@4x.png",
+      "bytes": 310
+    },
+    {
+      "path": "Icons/Pixel/ic-search.png",
+      "bytes": 164
+    },
+    {
+      "path": "Icons/Pixel/ic-search@4x.png",
+      "bytes": 293
+    },
+    {
+      "path": "Icons/Pixel/ic-settings.png",
+      "bytes": 177
+    },
+    {
+      "path": "Icons/Pixel/ic-settings@4x.png",
+      "bytes": 326
+    },
+    {
+      "path": "Icons/Pixel/ic-share.png",
+      "bytes": 158
+    },
+    {
+      "path": "Icons/Pixel/ic-share@4x.png",
+      "bytes": 285
+    },
+    {
+      "path": "Icons/Pixel/ic-stats.png",
+      "bytes": 151
+    },
+    {
+      "path": "Icons/Pixel/ic-stats@4x.png",
+      "bytes": 283
+    },
+    {
+      "path": "Icons/Pixel/ic-streak.png",
+      "bytes": 175
+    },
+    {
+      "path": "Icons/Pixel/ic-streak@4x.png",
+      "bytes": 330
+    },
+    {
+      "path": "Icons/Pixel/ic-tab-explore.png",
+      "bytes": 160
+    },
+    {
+      "path": "Icons/Pixel/ic-tab-explore@4x.png",
+      "bytes": 284
+    },
+    {
+      "path": "Icons/Pixel/ic-tab-map.png",
+      "bytes": 155
+    },
+    {
+      "path": "Icons/Pixel/ic-tab-map@4x.png",
+      "bytes": 290
+    },
+    {
+      "path": "Icons/Pixel/ic-tab-profile.png",
+      "bytes": 163
+    },
+    {
+      "path": "Icons/Pixel/ic-tab-profile@4x.png",
+      "bytes": 300
+    },
+    {
+      "path": "Icons/Pixel/ic-tab-styles.png",
+      "bytes": 172
+    },
+    {
+      "path": "Icons/Pixel/ic-tab-styles@4x.png",
+      "bytes": 333
+    },
+    {
+      "path": "Icons/Pixel/ic-volume-off.png",
+      "bytes": 161
+    },
+    {
+      "path": "Icons/Pixel/ic-volume-off@4x.png",
+      "bytes": 270
+    },
+    {
+      "path": "Icons/Pixel/ic-volume-on.png",
+      "bytes": 163
+    },
+    {
+      "path": "Icons/Pixel/ic-volume-on@4x.png",
+      "bytes": 272
+    },
+    {
+      "path": "Icons/Pixel/ic-work.png",
+      "bytes": 167
+    },
+    {
+      "path": "Icons/Pixel/ic-work@4x.png",
+      "bytes": 309
+    },
+    {
+      "path": "Icons/Pixel/ic-zoom-in.png",
+      "bytes": 160
+    },
+    {
+      "path": "Icons/Pixel/ic-zoom-in@4x.png",
+      "bytes": 295
+    },
+    {
+      "path": "Icons/Pixel/ic-zoom-out.png",
+      "bytes": 164
+    },
+    {
+      "path": "Icons/Pixel/ic-zoom-out@4x.png",
+      "bytes": 293
+    },
+    {
+      "path": "Icons/Western/ic-back.svg",
+      "bytes": 489
+    },
+    {
+      "path": "Icons/Western/ic-badge.svg",
+      "bytes": 547
+    },
+    {
+      "path": "Icons/Western/ic-calendar.svg",
+      "bytes": 965
+    },
+    {
+      "path": "Icons/Western/ic-charging.svg",
+      "bytes": 965
+    },
+    {
+      "path": "Icons/Western/ic-chevron.svg",
+      "bytes": 357
+    },
+    {
+      "path": "Icons/Western/ic-clip.svg",
+      "bytes": 491
+    },
+    {
+      "path": "Icons/Western/ic-close.svg",
+      "bytes": 457
+    },
+    {
+      "path": "Icons/Western/ic-contact.svg",
+      "bytes": 829
+    },
+    {
+      "path": "Icons/Western/ic-district.svg",
+      "bytes": 678
+    },
+    {
+      "path": "Icons/Western/ic-end-route.svg",
+      "bytes": 675
+    },
+    {
+      "path": "Icons/Western/ic-eye-off.svg",
+      "bytes": 1487
+    },
+    {
+      "path": "Icons/Western/ic-favorite.svg",
+      "bytes": 500
+    },
+    {
+      "path": "Icons/Western/ic-fog.svg",
+      "bytes": 749
+    },
+    {
+      "path": "Icons/Western/ic-food.svg",
+      "bytes": 765
+    },
+    {
+      "path": "Icons/Western/ic-friends.svg",
+      "bytes": 712
+    },
+    {
+      "path": "Icons/Western/ic-fuel.svg",
+      "bytes": 822
+    },
+    {
+      "path": "Icons/Western/ic-goal.svg",
+      "bytes": 292
+    },
+    {
+      "path": "Icons/Western/ic-history.svg",
+      "bytes": 1341
+    },
+    {
+      "path": "Icons/Western/ic-home.svg",
+      "bytes": 538
+    },
+    {
+      "path": "Icons/Western/ic-layers.svg",
+      "bytes": 641
+    },
+    {
+      "path": "Icons/Western/ic-locate.svg",
+      "bytes": 321
+    },
+    {
+      "path": "Icons/Western/ic-location-off.svg",
+      "bytes": 637
+    },
+    {
+      "path": "Icons/Western/ic-lock.svg",
+      "bytes": 700
+    },
+    {
+      "path": "Icons/Western/ic-mic.svg",
+      "bytes": 899
+    },
+    {
+      "path": "Icons/Western/ic-more.svg",
+      "bytes": 357
+    },
+    {
+      "path": "Icons/Western/ic-north.svg",
+      "bytes": 506
+    },
+    {
+      "path": "Icons/Western/ic-parking.svg",
+      "bytes": 722
+    },
+    {
+      "path": "Icons/Western/ic-reroute.svg",
+      "bytes": 676
+    },
+    {
+      "path": "Icons/Western/ic-route-options.svg",
+      "bytes": 1125
+    },
+    {
+      "path": "Icons/Western/ic-search.svg",
+      "bytes": 364
+    },
+    {
+      "path": "Icons/Western/ic-settings.svg",
+      "bytes": 713
+    },
+    {
+      "path": "Icons/Western/ic-share.svg",
+      "bytes": 550
+    },
+    {
+      "path": "Icons/Western/ic-stats.svg",
+      "bytes": 719
+    },
+    {
+      "path": "Icons/Western/ic-streak.svg",
+      "bytes": 595
+    },
+    {
+      "path": "Icons/Western/ic-tab-explore.svg",
+      "bytes": 352
+    },
+    {
+      "path": "Icons/Western/ic-tab-map.svg",
+      "bytes": 696
+    },
+    {
+      "path": "Icons/Western/ic-tab-profile.svg",
+      "bytes": 484
+    },
+    {
+      "path": "Icons/Western/ic-tab-styles.svg",
+      "bytes": 689
+    },
+    {
+      "path": "Icons/Western/ic-volume-off.svg",
+      "bytes": 637
+    },
+    {
+      "path": "Icons/Western/ic-volume-on.svg",
+      "bytes": 2078
+    },
+    {
+      "path": "Icons/Western/ic-work.svg",
+      "bytes": 830
+    },
+    {
+      "path": "Icons/Western/ic-zoom-in.svg",
+      "bytes": 622
+    },
+    {
+      "path": "Icons/Western/ic-zoom-out.svg",
+      "bytes": 493
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-destination-left.svg",
+      "bytes": 488
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-destination-right.svg",
+      "bytes": 488
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-destination.svg",
+      "bytes": 346
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-fork-left.svg",
+      "bytes": 395
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-fork-right.svg",
+      "bytes": 395
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-keep-left.svg",
+      "bytes": 356
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-keep-right.svg",
+      "bytes": 356
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-left.svg",
+      "bytes": 340
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-merge-left.svg",
+      "bytes": 411
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-merge-right.svg",
+      "bytes": 411
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-ramp-exit-left.svg",
+      "bytes": 395
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-ramp-exit-right.svg",
+      "bytes": 395
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-right.svg",
+      "bytes": 340
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-roundabout-exit-1.svg",
+      "bytes": 1291
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-roundabout-exit-2.svg",
+      "bytes": 1291
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-roundabout-exit-3.svg",
+      "bytes": 1291
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-roundabout-exit-4.svg",
+      "bytes": 1291
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-roundabout-exit-5.svg",
+      "bytes": 868
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-sharp-left.svg",
+      "bytes": 356
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-sharp-right.svg",
+      "bytes": 356
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-slight-left.svg",
+      "bytes": 340
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-slight-right.svg",
+      "bytes": 340
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-straight.svg",
+      "bytes": 324
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-uturn-left.svg",
+      "bytes": 388
+    },
+    {
+      "path": "Maneuvers/Neon/maneuver-uturn-right.svg",
+      "bytes": 388
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-destination-left.png",
+      "bytes": 205
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-destination-right.png",
+      "bytes": 193
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-destination.png",
+      "bytes": 168
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-fork-left.png",
+      "bytes": 216
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-fork-right.png",
+      "bytes": 214
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-keep-left.png",
+      "bytes": 187
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-keep-right.png",
+      "bytes": 193
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-left.png",
+      "bytes": 178
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-merge-left.png",
+      "bytes": 189
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-merge-right.png",
+      "bytes": 194
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-ramp-exit-left.png",
+      "bytes": 186
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-ramp-exit-right.png",
+      "bytes": 172
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-right.png",
+      "bytes": 159
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-roundabout-exit-1.png",
+      "bytes": 214
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-roundabout-exit-2.png",
+      "bytes": 220
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-roundabout-exit-3.png",
+      "bytes": 229
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-roundabout-exit-4.png",
+      "bytes": 226
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-roundabout-exit-5.png",
+      "bytes": 199
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-sharp-left.png",
+      "bytes": 185
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-sharp-right.png",
+      "bytes": 196
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-slight-left.png",
+      "bytes": 176
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-slight-right.png",
+      "bytes": 167
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-straight.png",
+      "bytes": 142
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-uturn-left.png",
+      "bytes": 187
+    },
+    {
+      "path": "Maneuvers/Pixel/maneuver-uturn-right.png",
+      "bytes": 192
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-destination-left.svg",
+      "bytes": 820
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-destination-right.svg",
+      "bytes": 820
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-destination.svg",
+      "bytes": 488
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-fork-left.svg",
+      "bytes": 663
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-fork-right.svg",
+      "bytes": 663
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-keep-left.svg",
+      "bytes": 561
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-keep-right.svg",
+      "bytes": 561
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-left.svg",
+      "bytes": 529
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-merge-left.svg",
+      "bytes": 695
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-merge-right.svg",
+      "bytes": 695
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-ramp-exit-left.svg",
+      "bytes": 663
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-ramp-exit-right.svg",
+      "bytes": 663
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-right.svg",
+      "bytes": 529
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-roundabout-exit-1.svg",
+      "bytes": 2455
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-roundabout-exit-2.svg",
+      "bytes": 2455
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-roundabout-exit-3.svg",
+      "bytes": 2455
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-roundabout-exit-4.svg",
+      "bytes": 2455
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-roundabout-exit-5.svg",
+      "bytes": 1585
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-sharp-left.svg",
+      "bytes": 561
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-sharp-right.svg",
+      "bytes": 561
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-slight-left.svg",
+      "bytes": 529
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-slight-right.svg",
+      "bytes": 529
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-straight.svg",
+      "bytes": 497
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-uturn-left.svg",
+      "bytes": 625
+    },
+    {
+      "path": "Maneuvers/Western/maneuver-uturn-right.svg",
+      "bytes": 625
+    },
+    {
+      "path": "Player/player-neon.svg",
+      "bytes": 270
+    },
+    {
+      "path": "Player/player-pixel-e.png",
+      "bytes": 139
+    },
+    {
+      "path": "Player/player-pixel-e@4x.png",
+      "bytes": 223
+    },
+    {
+      "path": "Player/player-pixel-n.png",
+      "bytes": 162
+    },
+    {
+      "path": "Player/player-pixel-n@4x.png",
+      "bytes": 248
+    },
+    {
+      "path": "Player/player-pixel-ne.png",
+      "bytes": 224
+    },
+    {
+      "path": "Player/player-pixel-ne@4x.png",
+      "bytes": 397
+    },
+    {
+      "path": "Player/player-pixel-nw.png",
+      "bytes": 224
+    },
+    {
+      "path": "Player/player-pixel-nw@4x.png",
+      "bytes": 404
+    },
+    {
+      "path": "Player/player-pixel-s.png",
+      "bytes": 143
+    },
+    {
+      "path": "Player/player-pixel-s@4x.png",
+      "bytes": 237
+    },
+    {
+      "path": "Player/player-pixel-se.png",
+      "bytes": 219
+    },
+    {
+      "path": "Player/player-pixel-se@4x.png",
+      "bytes": 398
+    },
+    {
+      "path": "Player/player-pixel-sw.png",
+      "bytes": 227
+    },
+    {
+      "path": "Player/player-pixel-sw@4x.png",
+      "bytes": 387
+    },
+    {
+      "path": "Player/player-pixel-w.png",
+      "bytes": 143
+    },
+    {
+      "path": "Player/player-pixel-w@4x.png",
+      "bytes": 224
+    },
+    {
+      "path": "Player/player-western.svg",
+      "bytes": 318
+    },
+    {
+      "path": "Store/store-neon.png",
+      "bytes": 3736734
+    },
+    {
+      "path": "Store/store-pixel.png",
+      "bytes": 2482105
+    },
+    {
+      "path": "Store/store-western.png",
+      "bytes": 5990731
+    }
+  ]
+}

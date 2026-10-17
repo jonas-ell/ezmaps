@@ -12,6 +12,18 @@ xcodebuild -project EzMaps.xcodeproj -scheme EzMaps \
 (cd Core && swift test)   # Logik in EzMapsCore
 ```
 
+## Prototyp im Browser (iPhone + CarPlay, klickbar)
+
+```sh
+python tools/prototype/serve.py      # öffnet http://localhost:8765
+```
+
+- iPhone 16 (393 × 852 pt) und CarPlay nebeneinander, gemeinsamer Zustand.
+- Echtes Routing über OSM-Straßen von Idstein, simulierte Fahrt mit Ansagen (Browser-Sprachausgabe), vier Stile.
+- Pricedown liegt nur lokal in `tools/prototype/fonts/pricedown.otf` (nicht im Repo). Fehlt die Datei, wird Impact verwendet.
+- Bildschirmfotos: `python tools/prototype/shots.py` → `docs/previews/`.
+- Daten neu bauen: Rohdaten per Overpass nach `tools/prototype/raw/` laden (`idstein.json`, `named.json`, `hexen.json`), dann `cd tools/prototype && python prep.py raw/idstein.json raw/named.json raw/hexen.json data/idstein.json`.
+
 ## Aufbau
 
 - `App/` – SwiftUI-App und CarPlay-Szene

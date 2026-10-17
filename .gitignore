@@ -20,7 +20,7 @@ Secrets.xcconfig
 .DS_Store
 Thumbs.db
 
-# Heruntergeladene OSM-Rohdaten und Render-Ausgaben
-tools/preview/data/
-tools/preview/out/
-tools/preview/fonts/
+tools/prototype/fonts/
+
+# OSM-Rohdaten (groß) und lokal lizenzierte Schrift
+tools/prototype/raw/
