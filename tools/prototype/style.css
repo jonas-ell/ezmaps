@@ -227,6 +227,23 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .scalebar.cp { left: 10px; bottom: 66px; }
 .t-western .scalebar, .t-toy .scalebar { color: #2e1e10; text-shadow: 0 0 3px #fff; } .t-western .scalebar i, .t-toy .scalebar i { border-color: #2e1e10; }
 
+/* GM-012 (Teil 2) */
+.phone .ui, .car .ui { pointer-events: none; } .phone .ui > *, .car .ui > * { pointer-events: auto; } /* Klicks/Ziehen erreichen die Karte */
+.phone .ui > .osm, .phone .ui > .scalebar, .car .ui > .cp-attrib, .car .ui > .scalebar, .car .ui > .cp-ours { pointer-events: none; }
+.then { display: inline-block; margin-top: 6px; padding: 4px 8px; font: 600 calc(12px * var(--bs)) var(--body); max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.barlbl { font: 600 calc(10.5px * var(--bs)) var(--body); color: #fff; text-shadow: 0 0 3px #000; }
+.t-western .barlbl, .t-toy .barlbl { color: var(--fg); text-shadow: none; }
+.cp-ours .then { display: block; font-size: calc(11px * var(--bs)); max-width: 300px; }
+.clipbtn { flex: none; margin: 0; height: 58px; padding: 0 16px; gap: 6px; display: flex; align-items: center; background: rgba(127,127,127,.25); color: var(--fg); font: 700 calc(14px * var(--bs)) var(--body); }
+.catrow { display: flex; gap: 6px; flex-wrap: wrap; }
+.sgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sgrid .stylecard { height: 232px; margin: 0; }
+.sgrid .cardfoot { padding: 22px 10px 10px; } .sgrid .cardfoot .cname { font-size: 19px; } .sgrid .cardfoot .sf-pixel.cname { font-size: 11px; } .sgrid .cardfoot small { font-size: 10px; }
+.sgrid .chipman { left: 6px; top: 6px; padding: 4px 7px; font-size: 12px; } .sgrid .dot { width: 14px; height: 14px; }
+/* GM-012 (2.5): eine Knopf-Form pro Stil */
+.t-neon { --btnr: 0px; } .t-western { --btnr: 6px; } .t-pixel { --btnr: 2px; } .t-toy { --btnr: 999px; }
+.phone .endbtn, .phone .cta, .phone .mbtn, .phone .chip, .phone .clipbtn { border-radius: var(--btnr) !important; }
+
 /* Tastatur-Fokus (wie Knopf-Steuerung im Auto) */
 .kfocus { outline: 3px solid #0a84ff !important; outline-offset: 2px; box-shadow: 0 0 0 6px rgba(10,132,255,.35) !important; position: relative; z-index: 3; }
 .car .kfocus { outline-color: #fff !important; box-shadow: 0 0 0 6px rgba(255,255,255,.3) !important; }

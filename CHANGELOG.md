@@ -2,6 +2,27 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-013 – Review Teil 2: Verbesserungen
+
+**Ziel:** Punkte 2.1–2.9 aus `docs/TODO_PROTOTYP_REVIEW.md`.
+
+**Dateien:** `tools/prototype/js/{phone,carplay,app,route}.js`, `tools/prototype/style.css`, `docs/TODO_PROTOTYP_REVIEW.md`, `docs/previews/*`
+
+**Geändert:**
+- 2.1 Unten keine zweite Entfernung mehr, sondern der Schritt danach („danach links abbiegen · Bahnhofstraße“), iPhone und CarPlay
+- 2.2 Nur noch ein Balken, beschriftet („17 % der Strecke“)
+- 2.3 Kein Clip-Knopf während der Fahrt (§ 23 Abs. 1a StVO); „Clip teilen“ im Ankunfts-Blatt, Hinweis auf Siri
+- 2.4 Routen-Vorschau: Fahrzeit-Schild an jeder Linie (gewählte farbig), Tipp auf eine Linie wählt sie, Karte wird über dem tatsächlichen Blatt eingepasst, Ziel-Symbol liegt am Routen-Ende. Nebenbei behoben: Die Bedienebene fing alle Klicks ab – Ziehen und Tippen auf der Karte gingen vorher nicht
+- 2.5 Eine Knopf-Form pro Stil (Neon eckig, Wild West leicht rund, Pixel fast eckig, Toy Town rund)
+- 2.6 Tab Stile als 2×2-Raster, alle vier Stile auf einen Blick
+- 2.7 CarPlay: Straßenname überall in normaler Schreibweise; Einblendung unten links nicht bedienbar (`pointer-events: none`) und frei von Systemteilen
+- 2.8 Suche ohne Eingabe: Kategorie-Knöpfe (Tanken, Parken, Essen, Supermarkt) und „Zuletzt gesucht“
+- 2.9 Profil: Routen-Optionen (Autobahn meiden – wirkt im Routing, Maut meiden), Zuhause/Arbeit bearbeiten (über die Suche), Standard-Stil
+
+**Tatsächlich geprüft:** `shots.py` ohne Konsolenfehler, Bilder angesehen; zusätzlich Kategorie „Essen“, Vorschau mit drei Routen und Schildern (CarPlay), Profil.
+
+**Ungetestet:** „Autobahn meiden“ muss bei der Swift-Umsetzung in `Core/` gespiegelt werden. Prototyp nur in Chromium.
+
 ## GM-011 – Review Teil 0 zusammengeführt: Relief, weiße Symbole, Legende
 
 **Ziel:** Teil 0 parallel vom lokalen Claude und vom Cloud-Claude bearbeitet – zusammenführen. Look-Entscheidungen des Cloud-Claude (GM-010, nach neueren Vorlagebildern) gelten; dazu die Teile, die nur hier gebaut wurden.

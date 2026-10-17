@@ -29,11 +29,13 @@ export function carHud() {
   const n = app.state.nav; if (!n || !n.active || app.state.car.screen !== 'nav') return;
   const m = nextManeuver(), rem = remaining(), eta = new Date(Date.now() + rem.s * 1000);
   const vals = { dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, icon: m.kind, eta: eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0'), rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: limitFor(segSpeed()), prog: n.progress / n.route.length };
+  const ms = n.route.maneuvers, nx = ms[ms.indexOf(m) + 1];
+  vals.then = nx ? (nx.kind === 'destination' ? `danach Ziel` : `danach ${nx.text.toLowerCase()} · ${nx.street}`) : '';
   const k = JSON.stringify(vals); if (k === last) return; last = k;
   const $ = id => root().querySelector(`[data-hud=${id}]`); if (!$('dist')) return;
   $('dist').textContent = vals.dist; $('street').textContent = vals.street; $('icon').innerHTML = manIc(vals.icon, 54, true);
-  $('eta').textContent = vals.eta; $('rem').textContent = vals.rem; $('cur').textContent = vals.cur; $('dist2').textContent = '↑ ' + vals.dist;
-  $('limit').textContent = vals.limit; $('prog').style.width = vals.prog * 100 + '%'; $('time').style.width = (100 - vals.prog * 80) + '%';
+  $('eta').textContent = vals.eta; $('rem').textContent = vals.rem; $('cur').textContent = vals.cur; $('then').textContent = vals.then;
+  $('limit').textContent = vals.limit; $('prog').style.width = vals.prog * 100 + '%';
 }
 
 export function renderCar() {
@@ -84,7 +86,7 @@ function navTpl() {
   return navbar([], [['voice', app.state.voice ? 'volume' : 'mute', ''], ['end', 'close', 'Beenden']]) + mapButtons() +
     `<div class="cp-maneuver"><div data-hud="icon"></div><div style="min-width:0"><div class="b" style="font-size:30px" data-hud="dist"></div><div class="cp-street" data-hud="street"></div></div></div>
     <div class="cp-eta"><b data-hud="eta"></b><span data-hud="rem"></span></div>
-    <div class="cp-ours"><div class="streetbox panel upper" data-hud="cur"></div><div class="row" style="gap:8px;margin-top:6px"><span class="head d2" data-hud="dist2"></span><div class="bar thin" style="width:110px"><i data-hud="prog" style="background:var(--ok)"></i></div><div class="bar thin" style="width:60px"><i data-hud="time" style="background:var(--accent2)"></i></div></div></div>
+    <div class="cp-ours"><div class="streetbox panel" data-hud="cur"></div><div class="then panel" data-hud="then"></div><div class="bar thin" style="width:150px;margin-top:6px"><i data-hud="prog" style="background:var(--ok)"></i></div></div>
     ${app.state.speedLimit ? '<div class="limit cp"><span data-hud="limit"></span></div>' : ''}<div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>`;
 }
 const alertTpl = () => `<div class="cp-alert-bg"><div class="cp-alert"><b>Ziel erreicht</b><span>${app.state.nav.dest.name}</span><button data-act="end">OK</button></div></div>`;

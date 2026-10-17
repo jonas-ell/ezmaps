@@ -23,7 +23,7 @@ export class Router {
   }
 
   // mode: 'fast' (Zeit), 'short' (Strecke), 'explore' (unentdeckte Straßen bevorzugen)
-  route(from, to, mode = 'fast', explored = null) {
+  route(from, to, mode = 'fast', explored = null, opts = {}) {
     const s = this.nearest(from), t = this.nearest(to);
     const n = this.nodes.length, dist = new Float64Array(n).fill(Infinity), prev = new Int32Array(n).fill(-1), via = new Array(n);
     const heap = new MinHeap();
@@ -33,6 +33,7 @@ export class Router {
       if (u === t) break;
       if (d > dist[u]) continue;
       for (const e of this.adj[u]) {
+        if (opts.avoidHighway && e.rank <= 1) continue; // GM-012 (2.9): Autobahn/Schnellstraße meiden
         let w = mode === 'short' ? e.len : e.len / e.speed * 3.6;
         if (mode === 'explore' && explored && !explored.has(edgeKey(u, e.to))) w *= 0.6;
         const nd = d + w;

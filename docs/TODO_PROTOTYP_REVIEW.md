@@ -47,15 +47,15 @@ Aufgaben:
 
 ## Teil 2 – Verbesserungen
 
-- [ ] **2.1 Keine doppelte Entfernung in der Navigation.** „700 m“ steht oben in der Abbiegekarte und unten noch einmal. Unten soll stattdessen der Schritt danach stehen („danach links · Bahnhofstraße“), oder die Zeile fällt weg.
-- [ ] **2.2 Die zwei Balken unten links sind unklar.** Grün und gelb sind nicht beschriftet. Entweder kurz beschriften (z. B. „Strecke“ / „Zeit“) oder auf einen Balken reduzieren.
-- [ ] **2.3 Video-Clip-Knopf (`clip`) während der Fahrt.** Ihn zu tippen ist Handy-Bedienung am Steuer (§ 23 Abs. 1a StVO). Während der Fahrt ausblenden; den Clip nach der Fahrt im Ankunfts-Blatt anbieten, optional per Sprachbefehl.
-- [ ] **2.4 Routen-Vorschau.** Alle drei Routen (Schnellste/Kürzeste/Neues entdecken) gleichzeitig zeichnen, gewählte farbig, Alternativen grau, Fahrzeit als kleines Schild an jeder Linie. Ein Tipp auf eine Linie wählt sie aus. Die Karte so einpassen, dass die ganze Route über dem Blatt zu sehen ist (heute ist unten viel leerer Platz). Prüfen, dass der Ziel-Punkt am Routen-Ende liegt.
-- [ ] **2.5 Einheitliche Knopf-Form.** „Ende“ ist rund, alle anderen Knöpfe sind eckig. Pro Stil eine Form festlegen (Neon eckig, Toy Town rund usw.).
-- [ ] **2.6 Tab Stile.** Toy Town ist abgeschnitten und kaum auffindbar. Ein 2×2-Raster oder kleinere Karten, sodass alle vier Stile auf einen Blick passen.
-- [ ] **2.7 CarPlay: einheitliche Schreibweise.** Der Straßenname steht oben normal und unten in Großbuchstaben. Das soll einheitlich sein. Die Einblendung unten links darf nicht mit Systemteilen kollidieren und muss nicht bedienbar sein (Apple-Vorgaben für Navigations-Apps).
-- [ ] **2.8 Suche ohne Eingabe.** „Zuletzt gesucht“ und Kategorie-Knöpfe (Tanken, Parken, Essen, Supermarkt) zeigen.
-- [ ] **2.9 Profil ergänzen.** Routen-Optionen (Autobahn meiden, Maut meiden), „Zuhause / Arbeit bearbeiten“, Standard-Stil.
+- [x] **2.1 Keine doppelte Entfernung in der Navigation.** „700 m“ steht oben in der Abbiegekarte und unten noch einmal. Unten soll stattdessen der Schritt danach stehen („danach links · Bahnhofstraße“), oder die Zeile fällt weg.
+- [x] **2.2 Die zwei Balken unten links sind unklar.** Grün und gelb sind nicht beschriftet. Entweder kurz beschriften (z. B. „Strecke“ / „Zeit“) oder auf einen Balken reduzieren.
+- [x] **2.3 Video-Clip-Knopf (`clip`) während der Fahrt.** Ihn zu tippen ist Handy-Bedienung am Steuer (§ 23 Abs. 1a StVO). Während der Fahrt ausblenden; den Clip nach der Fahrt im Ankunfts-Blatt anbieten, optional per Sprachbefehl.
+- [x] **2.4 Routen-Vorschau.** Alle drei Routen (Schnellste/Kürzeste/Neues entdecken) gleichzeitig zeichnen, gewählte farbig, Alternativen grau, Fahrzeit als kleines Schild an jeder Linie. Ein Tipp auf eine Linie wählt sie aus. Die Karte so einpassen, dass die ganze Route über dem Blatt zu sehen ist (heute ist unten viel leerer Platz). Prüfen, dass der Ziel-Punkt am Routen-Ende liegt.
+- [x] **2.5 Einheitliche Knopf-Form.** „Ende“ ist rund, alle anderen Knöpfe sind eckig. Pro Stil eine Form festlegen (Neon eckig, Toy Town rund usw.).
+- [x] **2.6 Tab Stile.** Toy Town ist abgeschnitten und kaum auffindbar. Ein 2×2-Raster oder kleinere Karten, sodass alle vier Stile auf einen Blick passen.
+- [x] **2.7 CarPlay: einheitliche Schreibweise.** Der Straßenname steht oben normal und unten in Großbuchstaben. Das soll einheitlich sein. Die Einblendung unten links darf nicht mit Systemteilen kollidieren und muss nicht bedienbar sein (Apple-Vorgaben für Navigations-Apps).
+- [x] **2.8 Suche ohne Eingabe.** „Zuletzt gesucht“ und Kategorie-Knöpfe (Tanken, Parken, Essen, Supermarkt) zeigen.
+- [x] **2.9 Profil ergänzen.** Routen-Optionen (Autobahn meiden, Maut meiden), „Zuhause / Arbeit bearbeiten“, Standard-Stil.
 
 ## Teil 3 – Ideen (erst im Prototyp zeigen, Nutzer fragen)
 

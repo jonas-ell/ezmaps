@@ -16,7 +16,7 @@ export function phoneCamera(view) {
     const r = n.route, pos = pointAt(r.pts, r.cum, n.progress).p;
     return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 3.4, tilt: 58, anchor: [0.5, 0.63] }; // GM-009 (1.4): Pfeil über dem Straßenfeld // GM-006: Nutzerwunsch – nah wie Apple Maps (Pfeil unten, steile Neigung)
   }
-  if (p.overlay === 'preview' && n) return { mode: 'preview', ...fit(n.routes.map(r => r.route.pts).flat(), view, 120, 470) };
+  if (p.overlay === 'preview' && n) return { mode: 'preview', ...fit(n.routes.map(r => r.route.pts).flat(), view, 115, (document.querySelector('#pui .sheet')?.offsetHeight || 420) + 24, 30, 30) };
   if (!p.overlay && p.tab === 'explore') return { mode: 'explore', center: [0, 80], heading: 0, scale: 0.155, tilt: 0, anchor: [0.5, 0.42] };
   const b = s.browse.phone;
   return { mode: 'browse', center: b.center, heading: 0, scale: b.scale, tilt: 0, anchor: [0.5, 0.5] };
@@ -35,13 +35,15 @@ export function phoneHud() {
   const n = app.state.nav; if (!n || !n.active || app.state.phone.overlay !== 'nav') return;
   const m = nextManeuver(), rem = remaining(), sp = segSpeed();
   const eta = new Date(Date.now() + rem.s * 1000), etaStr = eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0');
-  const vals = { dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, text: m.text, eta: etaStr, rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: limitFor(sp), speed: Math.round(sp * 0.92), icon: m.kind, prog: n.progress / n.route.length };
+  const ms = n.route.maneuvers, nx = ms[ms.indexOf(m) + 1];
+  const then = nx ? (nx.kind === 'destination' ? `danach Ziel · ${n.dest.name}` : `danach ${nx.text.toLowerCase()} · ${nx.street}`) : '';
+  const vals = { then, dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, text: m.text, eta: etaStr, rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: limitFor(sp), speed: Math.round(sp * 0.92), icon: m.kind, prog: n.progress / n.route.length };
   const key = JSON.stringify(vals); if (key === lastHud) return; lastHud = key;
   const $ = id => root().querySelector(`[data-hud=${id}]`);
   if (!$('dist')) return;
-  $('dist').textContent = vals.dist; $('dist2').textContent = '↑ ' + vals.dist; $('street').textContent = vals.street; $('text').textContent = vals.text;
+  $('dist').textContent = vals.dist; $('then').textContent = vals.then; $('then').style.display = vals.then ? '' : 'none'; $('street').textContent = vals.street; $('text').textContent = vals.text;
   $('eta').textContent = vals.eta; $('rem').textContent = vals.rem; $('cur').textContent = vals.cur; $('limit').textContent = vals.limit; $('speed').textContent = vals.speed;
-  $('icon').innerHTML = manIc(vals.icon, 64); $('prog').style.width = (vals.prog * 100) + '%'; $('time').style.width = (100 - vals.prog * 80) + '%';
+  $('icon').innerHTML = manIc(vals.icon, 64); $('prog').style.width = (vals.prog * 100) + '%'; $('proglbl').textContent = `${Math.round(vals.prog * 100)} % der Strecke`;
 }
 export const limitFor = sp => sp >= 100 ? 120 : sp >= 70 ? 100 : sp >= 45 ? 50 : sp >= 25 ? 30 : 10;
 
@@ -116,7 +118,7 @@ function legend() {
 }
 
 // ---------------- Suche
-const presetDest = k => ({ home: { name: 'Zuhause', sub: 'Lanaer Straße', p: app.scene.presets.home, icon: 'home' }, work: { name: 'Arbeit', sub: 'Black-und-Decker-Straße', p: app.scene.presets.work, icon: 'work' } })[k];
+const presetDest = k => { const base = ({ home: { name: 'Zuhause', sub: 'Lanaer Straße', p: app.scene.presets.home, icon: 'home' }, work: { name: 'Arbeit', sub: 'Black-und-Decker-Straße', p: app.scene.presets.work, icon: 'work' } })[k]; return { ...base, ...(app.state.places[k] || {}) }; };
 function results(q) {
   q = q.trim().toLowerCase(); if (!q) return [];
   const out = [], seen = new Set();
@@ -125,27 +127,30 @@ function results(q) {
   return out.map(r => ({ ...r, d: Math.hypot(r.p[0] - app.start[0], r.p[1] - app.start[1]) })).sort((a, b) => (b.name.toLowerCase().startsWith(q) - a.name.toLowerCase().startsWith(q)) || a.d - b.d).slice(0, 7);
 }
 const iconFor = k => ({ fuel: 'fuel', parking: 'parking', restaurant: 'food', cafe: 'food', fast_food: 'food', supermarket: 'star', attraction: 'star', station: 'pin' })[k] || 'pin';
+const CAT_TITLE = { fuel: 'Tankstellen', parking: 'Parkplätze', food: 'Essen & Trinken', supermarket: 'Supermärkte' };
+const CAT_KINDS = { food: ['restaurant', 'cafe', 'fast_food', 'bakery', 'ice_cream'] };
 export function category(kind) {
-  return app.scene.search.filter(s => s.kind === kind).map(s => ({ name: s.name, sub: s.label, p: s.p, icon: iconFor(kind), d: Math.hypot(s.p[0] - app.start[0], s.p[1] - app.start[1]) })).sort((a, b) => a.d - b.d).slice(0, 6);
+  const kinds = CAT_KINDS[kind] || [kind];
+  return app.scene.search.filter(s => kinds.includes(s.kind)).map(s => ({ name: s.name, sub: s.label, p: s.p, icon: iconFor(kind), d: Math.hypot(s.p[0] - app.start[0], s.p[1] - app.start[1]) })).sort((a, b) => a.d - b.d).slice(0, 6);
 }
 let lastList = [];
 function row(r, i, sel) { return `<button class="item ${sel ? 'sel' : ''}" data-act="pick:${i}"><span class="row" style="gap:14px"><span class="ricon">${ic(r.icon, 22)}</span><span class="tl">${r.name}<small>${r.sub}${r.d != null ? ' · ' + fmtDist(r.d) : ''}</small></span></span>${ic('chevron', 16)}</button>`; }
 function search() {
   const q = app.state.phone.query, cat = app.state.phone.cat;
   let sections;
-  if (cat) { lastList = category(cat); sections = [[cat === 'fuel' ? 'Tankstellen' : 'Parkplätze', lastList]]; }
+  if (cat) { lastList = category(cat); sections = [[CAT_TITLE[cat], lastList]]; }
   else if (q) { lastList = results(q); sections = [['Treffer', lastList]]; }
   else {
     const fav = [presetDest('home'), presetDest('work')], hex = { name: 'Hexenturm', sub: 'Sehenswürdigkeit', p: app.scene.presets.hexenturm, icon: 'star' };
     const rec = app.state.recents.length ? app.state.recents : [hex];
     lastList = [...fav, ...rec].map(r => ({ ...r, d: Math.hypot(r.p[0] - app.start[0], r.p[1] - app.start[1]) }));
-    sections = [['Favoriten', lastList.slice(0, 2)], ['Zuletzt', lastList.slice(2)]];
+    sections = [['Favoriten', lastList.slice(0, 2)], ['Zuletzt gesucht', lastList.slice(2)]];
   }
   let idx = 0;
   const list = sections.map(([t, items]) => `<div class="menu panel"><div class="mtitle head">${t}</div>${items.length ? items.map(r => row(r, idx++, idx === 1 && (q || cat))).join('') : '<div class="item muted">Nichts gefunden</div>'}</div>`).join('');
   return `<div class="dimmer"></div>
     <div class="searchtop"><div class="sfield">${ic('search', 18)}<input id="q" value="${q.replace(/"/g, '&quot;')}" placeholder="Ort, Adresse oder Kontakt" autocomplete="off"></div><button class="link" data-act="close:search">Abbrechen</button></div>
-    <div class="slist">${list}</div>${keyboard()}`;
+    <div class="slist">${!q && !cat ? `<div class="catrow">${[['fuel', 'fuel', 'Tanken'], ['parking', 'parking', 'Parken'], ['food', 'food', 'Essen'], ['supermarket', 'star', 'Supermarkt']].map(([k, i, t]) => `<button class="chip panel" data-act="cat:${k}">${ic(i, 15)}${t}</button>`).join('')}</div>` : ''}${list}</div>${keyboard()}`;
 }
 function keyboard() {
   const rows = ['qwertzuiopü', 'asdfghjklöä', '⇧yxcvbnm⌫'];
@@ -169,11 +174,11 @@ function nav() {
   if (s.nav?.arrived) return ''; // GM-009 (1.6): bei Ankunft kein Tacho, Tempolimit, Musik-Hinweis
   return `<div class="maneuver panel"><div data-hud="icon" class="micon"></div><div style="min-width:0"><div class="head mdist" data-hud="dist"></div><div class="mstreet upper" data-hud="street"></div><div class="mtext muted" data-hud="text"></div></div></div>
     ${s.speedLimit ? `<div class="limit"><span data-hud="limit"></span></div>` : ''}
-    <div class="lbtns">${btn('voice', s.voice ? 'volume' : 'mute')}${btn('clip', 'clip')}</div>
+    <div class="lbtns">${btn('voice', s.voice ? 'volume' : 'mute')}</div>
     ${s.speaking && s.ducking ? `<div class="duck panel">${ic('volume', 14)} Musik leiser</div>` : ''}
     <div class="navinfo"><div class="streetbox panel upper" data-hud="cur"></div>
-      <div class="row" style="gap:8px;margin-top:8px"><span class="head d2" data-hud="dist2"></span></div>
-      <div class="row" style="gap:5px;margin-top:6px"><div class="bar" style="width:130px"><i data-hud="prog" style="background:var(--ok)"></i></div><div class="bar" style="width:70px"><i data-hud="time" style="background:var(--accent2)"></i></div></div></div>
+      <div class="then panel" data-hud="then"></div>
+      <div class="row" style="gap:8px;margin-top:6px"><div class="bar" style="width:150px"><i data-hud="prog" style="background:var(--ok)"></i></div><span class="barlbl" data-hud="proglbl"></span></div></div>
     <div class="speedo panel"><b data-hud="speed"></b><small>km/h</small></div>
     <div class="navbottom panel"><div><div class="head" style="font-size:34px" data-hud="eta"></div><div class="muted small" data-hud="rem"></div></div>
       <button class="endbtn" data-act="end">Ende</button></div>`;
@@ -183,7 +188,8 @@ function arrival() {
   return `<div class="ios-sheet-bg"><div class="sheet panel arrival">
     <div class="muted upper small">Angekommen</div><div class="head" style="font-size:40px;margin:6px 0 14px">${n.dest.name}</div>
     <div class="stats"><div><b>${fmtDist(n.route.length)}</b><small>gefahren</small></div><div><b>${fmtMin(n.route.seconds)}</b><small>Fahrzeit</small></div><div><b class="gain">${totalPct()} %</b><small>Idstein entdeckt</small></div></div>
-    <div class="row" style="gap:10px;margin-top:16px"><button class="cta go" data-act="end">Fertig</button><button class="mbtn panel" style="width:58px;height:58px" data-act="clip">${ic('share', 22)}</button></div></div></div>`;
+    <div class="row" style="gap:10px;margin-top:16px"><button class="cta go" data-act="end">Fertig</button><button class="cta clipbtn" data-act="clip">${ic('clip', 18)} Clip teilen</button></div>
+    <div class="muted small" style="margin-top:8px">Die letzten 10 Sekunden im Spiel-Look – oder per Siri: „Clip speichern“.</div></div></div>`;
 }
 
 // ---------------- Tabs
@@ -198,16 +204,19 @@ function explore() {
 function styles() {
   return `<div class="page solid"><div class="page-in">
     <div class="head" style="font-size:44px">Stile</div><div class="muted" style="margin:6px 0 16px">Karte, Symbole, Schrift und Stimme – alles neu.</div>
-    ${Object.entries(STYLES).map(([k, v]) => `<button class="stylecard ${app.state.style === k ? 'sel' : ''}" data-act="style:${k}"><div class="mini" data-style="${k}"></div>
+    <div class="sgrid">${Object.entries(STYLES).map(([k, v]) => `<button class="stylecard ${app.state.style === k ? 'sel' : ''}" data-act="style:${k}"><div class="mini" data-style="${k}"></div>
       <div class="chipman st-${k}">${ic('turnLeft', 18, 'stroke-width:3')}<span class="sf-${k}">230 m</span></div>
       <div class="card-osm">© OpenStreetMap</div>
-      <div class="cardfoot"><div><div class="sf-${k} cname">${v.name}</div><small>${k === 'neon' ? 'Gratis · inkl. CarPlay' : app.state.style === k ? 'Aktiv (Vorschau)' : 'Tippen zum Testen'}</small></div><span class="dot" style="background:${v.route}"></span></div></button>`).join('')}
-    <div class="muted small" style="margin:6px 0 120px">Preise folgen. Im Prototyp sind alle Stile frei.</div></div></div>`;
+      <div class="cardfoot"><div><div class="sf-${k} cname">${v.name}</div><small>${k === 'neon' ? 'Gratis · inkl. CarPlay' : app.state.style === k ? 'Aktiv (Vorschau)' : 'Tippen zum Testen'}</small></div><span class="dot" style="background:${v.route}"></span></div></button>`).join('')}</div>
+    <div class="muted small" style="margin:12px 0 120px">Preise folgen. Im Prototyp sind alle Stile frei.</div></div></div>`;
 }
 function profile() {
   const t = (k, label, sub) => `<button class="srow" data-act="toggle:${k}"><span class="tl">${label}${sub ? `<small>${sub}</small>` : ''}</span><span class="switch ${app.state[k] ? 'on' : ''}"><i></i></span></button>`;
   return `<div class="page solid"><div class="page-in">
     <div class="head" style="font-size:44px">Profil</div>
+    <div class="group"><div class="gt">Routen</div>${t('avoidHighway', 'Autobahn meiden')}${t('avoidToll', 'Maut meiden', 'in Deutschland für Pkw kaum relevant')}</div>
+    <div class="group"><div class="gt">Orte</div>${['home', 'work'].map(k => { const d = presetDest(k); return `<button class="srow" data-act="edit:${k}"><span class="tl">${d.name}<small>${d.sub}</small></span><span class="link">Bearbeiten</span></button>`; }).join('')}
+      <button class="srow" data-act="tab:styles"><span class="tl">Standard-Stil<small>${STYLES[app.state.style].name}</small></span>${ic('chevron', 16)}</button></div>
     <div class="group"><div class="gt">Navigation</div>${t('voice', 'Sprachansagen')}${t('ducking', 'Musik bei Ansagen leiser', 'statt sie zu unterbrechen')}${t('speedLimit', 'Tempolimit anzeigen')}</div>
     <div class="group"><div class="gt">Datenschutz</div>${t('friends', 'Freunde sehen meinen Standort', 'nur mit Zustimmung, jederzeit aus')}
       <div class="srow"><span class="tl">Gefahrene Strecken<small>nur auf diesem iPhone gespeichert</small></span><span class="muted">${ic('lock', 18)}</span></div>
@@ -272,12 +281,15 @@ document.getElementById('pui').addEventListener('click', async e => {
     case 'sheet': set({ phone: { sheet: v || null } }); break;
     case 'friends': set({ friends: v === '1', phone: { sheet: null } }); toast(v === '1' ? 'Freunde sehen dich jetzt' : 'Teilen beendet'); break;
     case 'recenter': recenter('phone'); break;
+    case 'edit': set({ phone: { overlay: 'search', query: '', cat: null, pick: v } }); setTimeout(() => document.getElementById('q')?.focus(), 0); break;
     case 'legend': set({ legend: !s.legend, highlight: null }); break;
     case 'hl': set({ highlight: s.highlight === v ? null : v }); break;
     case 'zoom': zoom('phone', v === 'in' ? 1.4 : 1 / 1.4); break;
   }
 });
 function choose(dest) {
+  const pk = app.state.phone.pick;
+  if (pk) { app.state.places[pk] = { sub: dest.name + (dest.sub ? ' · ' + dest.sub : ''), p: dest.p }; set({ phone: { overlay: null, pick: null, tab: 'profile' } }); return toast(`${pk === 'home' ? 'Zuhause' : 'Arbeit'} gespeichert`); }
   planTo(dest);
   if (!app.state.nav) return toast('Keine Route gefunden');
   set({ phone: { overlay: 'preview' } });

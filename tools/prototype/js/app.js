@@ -1,5 +1,5 @@
 // EzMaps – klickbarer Prototyp. Gemeinsamer Zustand für iPhone und CarPlay (wie später ein geteiltes Modell in der App).
-import { Router, pointAt, smoothHeading, edgeKey, fmtDist } from './route.js';
+import { Router, pointAt, smoothHeading, edgeKey, fmtDist, fmtMin as fmtMinShort } from './route.js';
 import { MapView, renderTexture, drawRoute, drawBlips, drawPlayer, drawDestination, drawFriend, drawFog, drawRoads, STYLES } from './map.js';
 import { renderPhone, phoneCamera, phoneHud } from './phone.js';
 import { renderCar, carCamera, carHud } from './carplay.js';
@@ -14,7 +14,7 @@ export const app = {
     phone: { screen: 'splash', tab: 'map', overlay: null, query: '', sheet: null },
     car: { screen: 'map' },
     nav: null,          // { dest, routes, sel, route, progress, active, arrived, spoken }
-    toast: null, speaking: false, loading: null, recents: [],
+    toast: null, speaking: false, loading: null, recents: [], places: {}, avoidHighway: false, avoidToll: false,
     browse: { phone: { center: null, scale: 0.3 }, car: { center: null, scale: 1.1 } }, // GM-010: iPhone weiter raus (Stadtübersicht), CarPlay bleibt Radar (GM-008)
     legend: false, highlight: null,
   },
@@ -105,7 +105,8 @@ export function totalPct() { let t = 0, d = 0; for (const v of Object.values(app
 // ------------------------------------------------------------ Navigation
 export function planTo(dest) {
   const from = app.start, r = app.router;
-  const opts = [['Schnellste', r.route(from, dest.p, 'fast')], ['Kürzeste', r.route(from, dest.p, 'short')], ['Neues entdecken', r.route(from, dest.p, 'explore', app.explored)]]
+  const o = { avoidHighway: app.state.avoidHighway };
+  const opts = [['Schnellste', r.route(from, dest.p, 'fast', null, o)], ['Kürzeste', r.route(from, dest.p, 'short', null, o)], ['Neues entdecken', r.route(from, dest.p, 'explore', app.explored, o)]]
     .filter(([, x]) => x).filter(([, x], i, arr) => arr.findIndex(([, y]) => Math.abs(y.length - x.length) < 15) === i);
   const routes = opts.map(([label, route]) => ({ label, route, gain: newShare(route) }));
   set({ nav: { dest, routes, sel: 0, route: routes[0].route, progress: 0, active: false, arrived: false, spoken: {} } });
@@ -207,17 +208,38 @@ function drawOverlay(u, view, key, mode) {
   if (n) drawRoute(u, view, n.route, n.active && !n.arrived ? n.progress : 0, style);
   drawBlips(u, view, app.scene, style, { size: key === 'car' ? 13 : undefined, avoid: app.uiRects[key], highlight: s.highlight }); // GM-008: große Symbole auf CarPlay
   if (s.friends) { drawFriend(u, view, [app.start[0] + 260, app.start[1] - 420], 'Max', style); drawFriend(u, view, [app.start[0] + 880, app.start[1] - 160], 'Lea', style); }
-  if (n) drawDestination(u, view, n.dest.p, style, key === 'car' ? 7 : 8);
+  if (n) drawDestination(u, view, n.route.pts[n.route.pts.length - 1], style, key === 'car' ? 7 : 8); // GM-012 (2.4): Ziel liegt am Routen-Ende
+  if (n && !n.active) routeLabels(u, view, n);
   if (n && n.active) {
     const p = pointAt(n.route.pts, n.route.cum, n.progress).p;
     drawPlayer(u, view, p, smoothHeading(n.route, n.progress), style, key === 'car' ? 17 : 15);
   } else drawPlayer(u, view, app.start, 0, style, key === 'car' ? 10 : 11);
 }
 
+// GM-012 (2.4): Fahrzeit als kleines Schild an jeder Linie, gewählte farbig
+function routeLabels(u, view, n) {
+  n.routes.forEach((r, i) => {
+    const q = view.project(pointAt(r.route.pts, r.route.cum, r.route.length * (0.32 + 0.18 * i)).p); if (!view.visible(q)) return;
+    const t = fmtMinShort(r.route.seconds), sel = i === n.sel;
+    u.font = '700 12px Inter'; const w = u.measureText(t).width + 14;
+    u.fillStyle = sel ? STYLES[app.state.style].route : 'rgba(40,40,44,.92)'; u.beginPath(); u.roundRect(q[0] - w / 2, q[1] - 24, w, 20, 10); u.fill();
+    u.fillStyle = sel && app.state.style === 'pixel' ? '#1a1a1a' : '#fff'; u.textAlign = 'center'; u.textBaseline = 'middle'; u.fillText(t, q[0], q[1] - 14);
+  });
+}
+// GM-012 (2.4): Tipp auf eine Linie wählt die Route
+function pickRouteAt(view, x, y) {
+  const n = app.state.nav; if (!n || n.active) return;
+  let best = -1, bd = 22;
+  n.routes.forEach((r, i) => { for (const p of r.route.pts) { const q = view.project(p); const d = Math.hypot(q[0] - x, q[1] - y); if (d < bd) { bd = d; best = i; } } });
+  if (best >= 0 && best !== n.sel) selectRoute(best);
+}
+
 // Ziehen und Zoomen in der Kartenansicht (nur wenn nicht navigiert wird)
 function bindGestures(view, key) {
   let drag = null;
-  view.el.addEventListener('pointerdown', e => { if (app.state.nav?.active || e.target.closest('[data-act]')) return; drag = { x: e.clientX, y: e.clientY }; });
+  let down = null;
+  view.el.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY }; if (app.state.nav?.active || e.target.closest('[data-act]')) return; drag = { x: e.clientX, y: e.clientY }; });
+  view.el.addEventListener('pointerup', e => { if (down && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 6) { const r = view.el.getBoundingClientRect(); pickRouteAt(view, e.clientX - r.left, e.clientY - r.top); } down = null; });
   window.addEventListener('pointermove', e => {
     if (!drag) return; const b = app.state.browse[key], s = b.scale, h = view.cam.heading;
     const dx = (e.clientX - drag.x) / s, dy = (e.clientY - drag.y) / s; drag = { x: e.clientX, y: e.clientY };
