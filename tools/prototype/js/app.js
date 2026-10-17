@@ -14,7 +14,7 @@ export const app = {
     car: { screen: 'map' },
     nav: null,          // { dest, routes, sel, route, progress, active, arrived, spoken }
     toast: null, speaking: false, loading: null, recents: [],
-    browse: { phone: { center: null, scale: 0.42 }, car: { center: null, scale: 0.55 } },
+    browse: { phone: { center: null, scale: 0.3 }, car: { center: null, scale: 0.4 } },
   },
   explored: new Set(),
 };
@@ -185,9 +185,16 @@ function loop(now) {
     cams[key] = cams[key] ? lerpCam(cams[key], target, Math.min(1, dt * 6)) : target;
     const u = view.apply(cams[key]);
     drawOverlay(u, view, key, target.mode);
-    hudFn();
+    hudFn(); scaleBar(key, cams[key]);
   }
   requestAnimationFrame(loop);
+}
+// GM-009: Maßstab wie in der Vorlage (Linie mit „0“ und runder Entfernung), passt sich dem Zoom an
+const NICE = [25, 50, 100, 200, 250, 500, 1000, 2000, 5000];
+function scaleBar(key, cam) {
+  const el = document.querySelector(key === 'phone' ? '#pui .scalebar' : '#cui .scalebar'); if (!el) return;
+  const m = NICE.find(v => v * cam.scale >= 60) || NICE[NICE.length - 1];
+  el.style.width = Math.round(m * cam.scale) + 'px'; el.lastElementChild.textContent = m >= 1000 ? m / 1000 + ' km' : m + ' m';
 }
 function lerpCam(a, b, t) {
   const L = (x, y) => x + (y - x) * t;
@@ -221,7 +228,7 @@ function bindGestures(view, key) {
   view.el.addEventListener('wheel', e => { e.preventDefault(); zoom(key, e.deltaY < 0 ? 1.15 : 1 / 1.15); }, { passive: false });
 }
 export function zoom(key, f) { const b = app.state.browse[key]; b.scale = Math.max(key === 'car' ? 0.32 : 0.16, Math.min(1.6, b.scale * f)); }
-export function recenter(key) { app.state.browse[key].center = [...app.start]; app.state.browse[key].scale = key === 'car' ? 0.55 : 0.42; }
+export function recenter(key) { app.state.browse[key].center = [...app.start]; app.state.browse[key].scale = key === 'car' ? 0.4 : 0.3; }
 
 function renderAll() { renderPhone(); renderCar(); }
 

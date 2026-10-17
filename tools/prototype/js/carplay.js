@@ -55,7 +55,7 @@ const mapButtons = () => `<div class="cp-mapbtns">${[['zoom:in', 'plus'], ['zoom
 function mapTpl() {
   const d = 'Altstadt';
   return navbar([['go:dest', 'search', 'Ziele'], ['go:styles', 'layers', 'Stil']], [['friends', 'friends', '']]) + mapButtons() +
-    `<div class="cp-district panel"><div class="row sb"><span class="upper b">Idstein ${d}</span><span class="head">${pct(d)}%</span></div><div class="bar thin"><i style="width:${pct(d)}%;background:var(--ok)"></i></div></div><div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>`;
+    `<div class="scalebar cp"><span>0</span><span></span></div><div class="cp-district panel"><div class="row sb"><span class="upper b">Idstein ${d}</span><span class="head">${pct(d)}%</span></div><div class="bar thin"><i style="width:${pct(d)}%;background:var(--ok)"></i></div></div><div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>`;
 }
 function destItems() {
   const p = app.scene.presets;

@@ -98,6 +98,7 @@ function home() {
   return `<div class="searchbar panel" data-act="open:search">${ic('search', 20)}<span class="head" style="font-size:26px">Wohin?</span><span class="muted" style="margin-left:auto">${ic('mic', 20)}</span></div>
     <div class="chips">${[['home', 'Zuhause', 'dest:home', '#fff'], ['work', 'Arbeit', 'dest:work', '#fff'], ['fuel', 'Tanken', 'cat:fuel', '#f08a2c'], ['parking', 'Parken', 'cat:parking', '#5fb6ff']].map(([i, t, a, c]) => `<button class="chip panel" data-act="${a}"><span style="color:${c}">${ic(i, 16)}</span>${t}</button>`).join('')}</div>
     <div class="rbtns">${btn('tab:styles', 'layers')}${btn('sheet:friends', 'friends')}${btn('recenter', 'locate')}${btn('zoom:in', 'plus')}${btn('zoom:out', 'minus')}</div>
+    <div class="scalebar"><span>0</span><span></span></div>
     <button class="district panel" data-act="tab:explore"><div class="row sb"><span class="upper b">${d}</span><span class="head" style="font-size:30px">${pct(d)}%</span></div>
       <div class="bar"><i style="width:${pct(d)}%;background:var(--ok)"></i></div><div class="muted small">entdeckt · tippe für deine Karte</div></button>
     <div class="attrib">© OpenStreetMap-Mitwirkende</div>`;

@@ -221,6 +221,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .cp-mapbtns button { width: 46px; height: 46px; border-radius: 12px; background: rgba(28,28,30,.88); display: grid; place-items: center; color: #fff; }
 .cp-district { position: absolute; left: 10px; bottom: 10px; width: 240px; padding: 8px 12px; font-size: calc(12px * var(--bs)); }
 .cp-district .head { font-size: calc(22px * var(--hs)); } .cp-district .bar { margin-top: 6px; }
+.scalebar { position: absolute; left: 20px; bottom: 222px; height: 22px; border: 1.5px solid var(--status); border-top: 0; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; transition: width .2s; }
+.scalebar span { font: 500 10px Inter; color: var(--status); transform: translate(-3px, 16px); text-shadow: 0 1px 2px rgba(0,0,0,.6); white-space: nowrap; }
+.scalebar span:last-child { transform: translate(calc(100% - 8px), 16px); }
+.scalebar.cp { left: 14px; bottom: 96px; }
+.t-western .scalebar span, .t-toy .scalebar span { text-shadow: none; }
 .cp-attrib { position: absolute; right: 10px; bottom: 4px; font: 500 9px Inter; color: rgba(255,255,255,.65); }
 .t-western .cp-attrib { color: rgba(46,30,16,.7); } .t-toy .cp-attrib { color: rgba(47,54,64,.75); }
 .cp-list { position: absolute; inset: 0; background: #000; padding: 10px 18px; overflow-y: auto; scrollbar-width: none; font-family: Inter; color: #fff; }
