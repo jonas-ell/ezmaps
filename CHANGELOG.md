@@ -2,6 +2,20 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-008 – CarPlay-Karte flach von oben wie ein Spiel-Radar
+
+**Ziel:** CarPlay-Ansicht nach Nutzervorlage: flach, Fahrtrichtung oben, große Symbole.
+
+**Dateien:** `tools/prototype/js/carplay.js`, `tools/prototype/js/app.js`
+
+**Geändert:**
+- CarPlay-Navigation: keine 3D-Neigung mehr, 1,8 px/m, Pfeil leicht rechts der Mitte
+- CarPlay-Karte (ohne Route): näher (1,1 px/m), Symbole deutlich größer
+
+**Tatsächlich geprüft:** Bildschirmfotos CarPlay-Karte und -Navigation angesehen, keine Konsolenfehler.
+
+**Ungetestet:** Prototyp nur in Chromium; `docs/previews` noch nicht neu erzeugt.
+
 ## GM-007 – Suche repariert, Steuerung per Pfeiltasten überall
 
 **Ziel:** In die Suche tippen können; überall mit Pfeiltasten navigieren wie mit Knopf-/Pfeilsteuerung im Auto.

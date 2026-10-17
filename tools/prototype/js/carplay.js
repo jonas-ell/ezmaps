@@ -15,7 +15,7 @@ export function carCamera(view) {
   const s = app.state, n = s.nav, c = s.car;
   if (n && n.active) {
     const r = n.route, pos = pointAt(r.pts, r.cum, n.progress).p;
-    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 4.6, tilt: 60, anchor: [0.66, 0.84] }; // GM-006: nah wie Apple Maps CarPlay
+    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 1.8, tilt: 0, anchor: [0.62, 0.6] }; // GM-008: Nutzervorlage – flach von oben wie ein Spiel-Radar, nah, Fahrtrichtung oben
   }
   const [W] = view.size();
   if (c.screen === 'preview' && n) return { mode: 'preview', ...fit(n.routes.map(r => r.route.pts).flat(), view, 70, 20, Math.min(330, W * 0.42) + 30, 80) };
