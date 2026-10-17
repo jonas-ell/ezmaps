@@ -1,0 +1,21 @@
+# Xcode / XcodeGen
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+build/
+.build/
+.swiftpm/
+
+# Geheimnisse – nie committen
+*.p8
+*.p12
+*.mobileprovision
+service-account*.json
+GoogleService-Info.plist
+Secrets.xcconfig
+.env
+
+# System
+.DS_Store
+Thumbs.db
