@@ -4,9 +4,36 @@ Für den lokalen Claude. Grundlage: Durchsicht aller Bildschirmfotos in `docs/pr
 
 **Vorgehen**
 - Regeln aus `CLAUDE.md` beachten: Antworten auf Deutsch, Design zuerst im Prototyp (`tools/prototype/`), Routen- und Nebel-Logik in `tools/prototype/js/` und `Core/` gemeinsam ändern, vor Swift-Änderungen `docs/LESSONS_SWIFT.md` lesen.
-- Teil 1 zuerst, dann Teil 2. Teil 3 sind Ideen: erst im Prototyp zeigen und vom Nutzer freigeben lassen.
+- Teil 0 zuerst (Karten-Look), dann Teil 1, dann Teil 2. Teil 3 sind Ideen: erst im Prototyp zeigen und vom Nutzer freigeben lassen.
 - Nach jedem Block: `python tools/prototype/shots.py` laufen lassen, die Bilder in `docs/previews/` ansehen, im `CHANGELOG.md` einen `GM-xxx`-Eintrag schreiben, committen und pushen. Erledigte Punkte hier abhaken (`[x]`).
 - Am Ende dieser Datei steht, was danach auf dem Gerät zu testen ist.
+
+## Teil 0 – Karten-Look „Neon City“ an die Vorlage angleichen (wichtigster Punkt)
+
+Der Nutzer sagt: Die Karte sieht „null“ wie die Vorlage aus. Die Vorlage ist eine dunkle Open-World-Pausenkarte (Stadtübersicht von oben): fast schwarzes Land, dünne hellgraue Straßen, helles Wasser, weiße einfarbige Symbole, Legende rechts, Ortsname-Kasten unten links, Maßstab. **Recht:** Nur den Look nachbauen. Keine Spielnamen, keine Spiel-Symbole 1:1 kopieren, alle Symbole selbst zeichnen.
+
+Was heute anders ist (Farben in `js/map.js:96`, `NEON`, Zeichnen in `drawClassic`, `js/map.js:107`):
+
+| | Heute | Vorlage |
+|---|---|---|
+| Land | mittelgrau `#3d3e40` | fast schwarz, ca. `#1d1e1f`–`#232425`, leichtes Rauschen |
+| Gebäude | `#252628`, dunkler als das Land → schwarze Flecken überall, sie dominieren | in der Übersicht kaum sichtbar (Land + 3–5 % Helligkeit), erst nah deutlicher |
+| Straßen | dick, Breite in Metern → beim Zoomen sehr fett, Kreisel als dicke weiße Ringe | dünn und gleichmäßig in **Bildschirm-Pixeln** (Nebenstraße ca. 1–1,5 pt, Hauptstraße 2 pt, Schnellstraße 3 pt, heller); Rangfolge über Helligkeit, nicht über Dicke |
+| Wasser | dunkelblau `#24313f`, kaum zu sehen | hell blaugrau (ca. `#8fa3b0`), das hellste Element der Karte; Bäche als feine helle Linien |
+| Relief | nur Textur-Overlay | Hügel-Schattierung im freien Gelände; Idstein liegt im Taunus, das lohnt sich |
+| Zoom beim Stöbern | sehr nah (`browse.scale` 0,42 / 0,55 in `js/app.js:17`) | ganze Stadt auf einen Blick |
+| Symbole | bunt (grünes Besteck, blaues P) | einfarbig weiß mit dunkler Kontur, klein (ca. 14 pt), alle gleich; Farbe nur für Ziel, Route und Spieler |
+
+Aufgaben:
+- [ ] **0.1 Neue Palette für `NEON`:** Land fast schwarz, Wohn-/Gewerbe-/Parkflächen nur minimal heller, Gebäude knapp über dem Land, Wasser hell. Wald und Park nicht grün, sondern neutral mit leichtem Relief.
+- [ ] **0.2 Straßenbreiten in Bildschirm-Pixeln** statt in Metern, damit sie beim Zoomen dünn bleiben. Weil die Karte als Textur in Metern gezeichnet wird: Straßen entweder in der Überlagerung (`mv-over`) als Vektor zeichnen oder je Zoomstufe eine passende Textur erzeugen. Kreisel ohne dicken Ring.
+- [ ] **0.3 Hügel-Schattierung:** Höhendaten (z. B. SRTM / Copernicus DEM 30 m, freie Lizenz, Quelle in der App nennen) in `prep.py` zu einem Graustufen-Bild für Idstein verarbeiten und mit `multiply`/`overlay` schwach über das Land legen.
+- [ ] **0.4 Zoom beim Stöbern weiter raus**, sodass Idstein ganz auf den Bildschirm passt (iPhone und CarPlay). Das Hineinzoomen bleibt möglich.
+- [ ] **0.5 Symbole einfarbig weiß** mit dunkler Kontur in einem eigenen, schlichten Glyphen-Satz (Neon-Assets aus `Assets/Generated` anpassen oder neue Codex-Prompts in `docs/ASSETS_CODEX.md`). In der Übersicht weniger Symbole zeigen (nicht jedes Restaurant).
+- [ ] **0.6 Legende rechts** (iPhone: ausklappbar über den Ebenen-Knopf; CarPlay nur, wenn Apple-Vorgaben es erlauben): Liste der Symbole, weißer Text auf schwarzen Kästen, Tippen hebt die Symbole auf der Karte hervor. Eigene deutsche Begriffe (Tanken, Parken, Essen, Supermarkt, Apotheke …).
+- [ ] **0.7 Maßstab** unten links über dem Ortsnamen-Kasten (z. B. „0 ─── 500 m“).
+- [ ] **0.8 Vergleich:** Nach der Umstellung ein Bildschirmfoto der Stadtübersicht neben die Vorlage legen und dem Nutzer zeigen, bevor die anderen Stile angepasst werden. Wild West, Pixel Quest und Toy Town nicht verändern, außer bei 0.2 und 0.4, falls die gemeinsam gelten.
+- [ ] **0.9 Swift:** Wenn der Nutzer den Look freigibt, dieselben Werte in die Swift-Karte übernehmen (`Core/Sources/EzMapsCore/MapStyle.swift` und den Kartenstil der App).
 
 ## Teil 1 – Fehler
 
