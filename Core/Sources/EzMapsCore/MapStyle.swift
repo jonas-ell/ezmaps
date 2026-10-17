@@ -4,7 +4,7 @@ import Foundation
 public enum MapStyle: String, CaseIterable, Codable, Sendable {
     case neonCity = "neon-city"
     case wildWest = "wild-west"
-    case pixel8Bit = "pixel-8bit"
+    case pixelQuest = "pixel-quest"
 
     /// Der Stil, der gratis enthalten ist (inkl. CarPlay).
     public static let free: MapStyle = .neonCity
@@ -14,7 +14,7 @@ public enum MapStyle: String, CaseIterable, Codable, Sendable {
         switch self {
         case .neonCity: return "Neon City"
         case .wildWest: return "Wilder Westen"
-        case .pixel8Bit: return "Pixel 8-Bit"
+        case .pixelQuest: return "Pixel Quest"
         }
     }
 

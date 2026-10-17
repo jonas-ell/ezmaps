@@ -2,52 +2,62 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@500;600;700;800&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=block" rel="stylesheet">
 <style>
-  /* Pricedown (Typodermic). Desktop-Lizenz: Vorschaubilder ok. Für die App ist eine App-Lizenz nötig. Datei nicht im Repo. */
-  @font-face { font-family: 'Headline'; src: url('fonts/pricedown.otf') format('opentype'); }
   html, body { margin: 0; background: #111; }
-  #view { position: relative; overflow: hidden; background: #3d3e40; }
+  #view { position: relative; overflow: hidden; }
   #map { position: absolute; left: 0; top: 0; }
   #ui { position: absolute; inset: 0; }
-  .round { border-radius: 50%; }
 </style>
 </head>
 <body>
 <div id="view"><canvas id="map"></canvas><canvas id="ui"></canvas></div>
 <script>
-// Stil "Neon City": graue Open-World-Karte, lila GPS-Linie. Eigene Umsetzung, keine Spiel-Assets.
-const S = {
-  land: '#3d3e40', residential: '#303133', industrial: '#2d2e30', farm: '#424345',
-  park: '#393b3a', forest: '#363837', water: '#24313f', waterLine: '#2b3a4b',
-  building: '#252628',
-  casing: 'rgba(30,30,32,0.55)',
-  road: { 0: '#b4b4b4', 1: '#a6a6a6', 2: '#9c9c9c', 3: '#8f8f8f', 4: '#858585', 5: '#757575', 6: '#686868', 7: '#585858' },
-  rail: '#2a2b2d',
-  route: '#a13df0', routeEdge: '#4b1a73', routeDone: 'rgba(161,61,240,0.25)',
-  dest: '#f5d742',
-};
-const WIDTH = { 0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5 };
-const HEAD = 'Headline, Oswald';
-
+// Kartenrenderer für Stil-Vorschauen. Zeichnet nur Karte, Route, Symbole und Spieler.
+// Oberfläche (HUD) kommt aus ui.html.
 const params = new URLSearchParams(location.search);
-const MODE = params.get('mode') || 'overview';
-const PROGRESS = parseFloat(params.get('progress') || '520');
+const STYLE = params.get('style') || 'neon';
+const MODE = params.get('mode') || 'iphone';
+const PROGRESS = parseFloat(params.get('progress') || '1250');
+const SHOW_ROUTE = params.get('route') !== '0', FOG = params.get('fog') === '1';
 const MODES = {
   overview: { w: 1600, h: 1170, scale: 0.26, tilt: 0, headingUp: false },
-  carplay:  { w: 1920, h: 720,  scale: 1.5, tilt: 46, headingUp: true, ox: 0.62, oy: 0.80 },
-  iphone:   { w: 1179, h: 2556, scale: 2.3, tilt: 44, headingUp: true, ox: 0.5, oy: 0.72 },
-  cluster:  { w: 640,  h: 640,  scale: 0.9,  tilt: 0, headingUp: true, ox: 0.5, oy: 0.55 },
+  carplay:  { w: 1780, h: 720,  scale: 1.5, tilt: 46, headingUp: true, ox: 0.6, oy: 0.80 },
+  iphone:   { w: 1179, h: 2556, scale: 2.3, tilt: 44, headingUp: true, ox: 0.5, oy: 0.70 },
 };
 const M = { ...MODES[MODE] };
 for (const k of ['w', 'h', 'scale', 'tilt', 'ox', 'oy']) if (params.has(k)) M[k] = parseFloat(params.get(k));
 if (params.has('headingUp')) M.headingUp = params.get('headingUp') === '1';
-const HUD = params.get('hud') !== 'none', SHOW_ROUTE = params.get('route') !== '0', FOG = params.get('fog') === '1';
+
+// ---------------------------------------------------------------- Stile
+const THEMES = {
+  neon: {
+    land: '#3d3e40', residential: '#303133', industrial: '#2d2e30', farm: '#424345', park: '#393b3a', forest: '#363837',
+    water: '#24313f', waterLine: '#2b3a4b', building: '#252628', buildingEdge: null,
+    roadMajor: { casing: 'rgba(30,30,32,0.55)', fill: r => ['#b4b4b4', '#a6a6a6', '#9c9c9c', '#8f8f8f', '#858585', '#757575', '#686868', '#585858'][r] },
+    rail: ['#2a2b2d', null],
+    route: '#a13df0', routeEdge: '#4b1a73', routeDone: 'rgba(161,61,240,0.25)', dest: '#f5d742',
+    player: ['#e9e9e9', '#000'], horizon: [38, 39, 41], texture: 'terrain', blips: 'outline',
+  },
+  western: {
+    land: '#dcc59a', residential: '#d4bb8a', industrial: '#ccb07f', farm: '#e3cfa2', park: '#d6c18c', forest: '#cdb782',
+    water: '#a3b7ae', waterLine: '#6d8d88', building: '#9b7a50', buildingEdge: '#5e4127',
+    roadMajor: { casing: '#4a3220', fill: r => r <= 4 ? '#f2e4bf' : '#7a5a38' },
+    rail: ['#4a3220', '#4a3220'],
+    route: '#c0261f', routeEdge: '#4a0d0a', routeDone: 'rgba(192,38,31,0.22)', dest: '#c0261f',
+    player: ['#f6ead0', '#3a2414'], horizon: [196, 172, 128], texture: 'paper', blips: 'ink', trees: '#6b4f2e',
+  },
+  pixel: { pixel: true, route: '#ffcc33', dest: '#ffcc33', horizon: [27, 42, 90], blips: 'sprite' },
+};
+const T = THEMES[STYLE];
+const WIDTH = { 0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5 };
+
 const view = document.getElementById('view'), map = document.getElementById('map'), ui = document.getElementById('ui');
 view.style.width = M.w + 'px'; view.style.height = M.h + 'px';
-if (MODE === 'cluster') view.classList.add('round');
+view.style.background = `rgb(${T.horizon})`;
 ui.width = M.w; ui.height = M.h;
 
+// ---------------------------------------------------------------- Hilfen
 function pointAt(route, d) {
   let acc = 0;
   for (let i = 1; i < route.length; i++) {
@@ -58,20 +68,11 @@ function pointAt(route, d) {
   const a = route[route.length - 2], b = route[route.length - 1];
   return { p: b, i: route.length - 1, heading: Math.atan2(b[0] - a[0], -(b[1] - a[1])) };
 }
-function smoothHeading(route, d) {
-  const a = pointAt(route, d).p, b = pointAt(route, d + 40).p;
-  return Math.atan2(b[0] - a[0], -(b[1] - a[1]));
-}
-function poly(ctx, pts, close) {
-  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
-  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
-  if (close) ctx.closePath();
-}
-function rrect(u, x, y, w, h, r) { u.beginPath(); u.roundRect(x, y, w, h, r); }
-function fmtDist(m) { return m >= 1000 ? (m / 1000).toFixed(2).replace('.', ',') + ' km' : (Math.round(m / 10) * 10) + ' m'; }
-
-// Wolkige Gelände-Textur (wie schattiertes Relief), reproduzierbar
+function smoothHeading(route, d) { const a = pointAt(route, d).p, b = pointAt(route, d + 40).p; return Math.atan2(b[0] - a[0], -(b[1] - a[1])); }
+function poly(ctx, pts, close) { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); if (close) ctx.closePath(); }
 let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const hash = (x, y) => { let h = (x * 374761393 + y * 668265263) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+
 function terrainTexture(size) {
   const c = document.createElement('canvas'); c.width = c.height = size; const g = c.getContext('2d');
   for (let i = 0; i < 260; i++) {
@@ -82,308 +83,312 @@ function terrainTexture(size) {
   }
   const n = g.getImageData(0, 0, size, size);
   for (let i = 0; i < n.data.length; i += 4) { const v = (rnd() - 0.5) * 10; n.data[i] += v; n.data[i + 1] += v; n.data[i + 2] += v; n.data[i + 3] = Math.max(n.data[i + 3], 10); }
+  g.putImageData(n, 0, 0); return c;
+}
+function paperTexture(size) {
+  const c = document.createElement('canvas'); c.width = c.height = size; const g = c.getContext('2d');
+  g.fillStyle = '#808080'; g.fillRect(0, 0, size, size);
+  for (let i = 0; i < 120; i++) { // Flecken
+    const x = rnd() * size, y = rnd() * size, r = 30 + rnd() * 160;
+    const grad = g.createRadialGradient(x, y, 0, x, y, r);
+    grad.addColorStop(0, `rgba(90,60,30,${0.05 + rnd() * 0.08})`); grad.addColorStop(1, 'rgba(90,60,30,0)');
+    g.fillStyle = grad; g.fillRect(x - r, y - r, 2 * r, 2 * r);
+  }
+  const n = g.getImageData(0, 0, size, size);
+  for (let i = 0; i < n.data.length; i += 4) { const v = (rnd() - 0.5) * 26; n.data[i] += v; n.data[i + 1] += v; n.data[i + 2] += v; }
   g.putImageData(n, 0, 0);
+  g.strokeStyle = 'rgba(80,55,30,0.10)'; g.lineWidth = 1; // Fasern
+  for (let i = 0; i < 400; i++) { const x = rnd() * size, y = rnd() * size, a = rnd() * 6.28, l = 6 + rnd() * 18; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke(); }
+  return c;
+}
+function treePattern(ink) {
+  // kleine Tinten-Bäumchen wie auf alten Landkarten
+  const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+  g.strokeStyle = ink; g.lineWidth = 1.6; g.lineCap = 'round';
+  for (const [x, y] of [[12, 14], [44, 10], [28, 34], [54, 42], [10, 52], [38, 58]]) {
+    g.beginPath(); g.arc(x, y, 5, Math.PI, 0); g.lineTo(x + 5, y + 2); g.moveTo(x - 5, y); g.lineTo(x - 5, y + 2); g.moveTo(x, y + 2); g.lineTo(x, y + 7); g.stroke();
+  }
   return c;
 }
 
+// ---------------------------------------------------------------- Pixel-Stil
+const PX = {
+  grass: [[96, 168, 58], [82, 148, 50], [124, 190, 76]],
+  res: [[110, 178, 66]], farmA: [201, 180, 88], farmB: [179, 157, 69],
+  forestFloor: [36, 95, 39], canopy: [47, 125, 50], canopyHi: [79, 166, 63],
+  water: [59, 125, 216], wave: [143, 195, 255], sand: [232, 212, 138],
+  dirt: [216, 184, 120], dirtEdge: [168, 134, 79], stone: [167, 167, 167], stoneHi: [189, 189, 189], stoneEdge: [96, 96, 96],
+  rail: [90, 70, 50], ind: [156, 156, 136], indLine: [130, 130, 112],
+  roofs: [[190, 70, 50], [176, 86, 58], [200, 100, 62], [190, 70, 50], [72, 108, 172], [150, 92, 62]],
+  route: [255, 204, 51], routeEdge: [122, 74, 0],
+};
+function drawPixelMap(ctx, scene, me, cw, ch, setWorld, AP) {
+  const lw = Math.ceil(cw / AP), lh = Math.ceil(ch / AP);
+  const lc = document.createElement('canvas'); lc.width = lw; lc.height = lh; const g = lc.getContext('2d', { willReadFrequently: true });
+  const cls = new Uint8Array(lw * lh); // 0 Gras
+  const pass = (id, draw) => {
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, lw, lh);
+    g.setTransform(setWorld(1 / AP)); g.fillStyle = g.strokeStyle = '#fff'; g.lineCap = 'round'; g.lineJoin = 'round';
+    draw(g);
+    const d = g.getImageData(0, 0, lw, lh).data;
+    for (let i = 0; i < cls.length; i++) if (d[i * 4 + 3] > 110) cls[i] = id;
+  };
+  const areas = k => g => { for (const a of scene.areas) if (a.k === k) { poly(g, a.pts, true); g.fill(); } };
+  const s = 1 / (M.scale / AP); // Meter pro Kunstpixel
+  pass(1, areas('residential')); pass(2, areas('farm')); pass(3, areas('park')); pass(4, areas('industrial'));
+  pass(5, areas('forest'));
+  pass(6, g => { areas('water')(g); for (const l of scene.lines) if (l.k === 'water') { g.lineWidth = Math.max(l.c === 'river' ? 9 : 4, 1.2 * s); poly(g, l.pts); g.stroke(); } });
+  // Gebäude mit eindeutiger Farbe je Haus, damit jedes Dach eine Farbe bekommt
+  const bid = new Uint32Array(lw * lh);
+  {
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, lw, lh); g.setTransform(setWorld(1 / AP));
+    let n = 0;
+    for (const a of scene.areas) if (a.k === 'building') { n++; g.fillStyle = `rgb(${n & 255},${(n >> 8) & 255},${(n >> 16) & 255})`; poly(g, a.pts, true); g.fill(); }
+    const d = g.getImageData(0, 0, lw, lh).data;
+    for (let i = 0; i < cls.length; i++) if (d[i * 4 + 3] > 110) { cls[i] = 7; bid[i] = d[i * 4] | (d[i * 4 + 1] << 8) | (d[i * 4 + 2] << 16); }
+  }
+  pass(8, g => { for (const l of scene.lines) if (l.k === 'road' && l.r >= 5 && l.r <= 7) { g.lineWidth = Math.max(WIDTH[l.r] * 0.9, 2.2 * s); poly(g, l.pts); g.stroke(); } });
+  pass(9, g => { for (const l of scene.lines) if (l.k === 'road' && l.r <= 4) { g.lineWidth = Math.max(WIDTH[l.r] * 1.1, 3.2 * s); poly(g, l.pts); g.stroke(); } });
+  pass(10, g => { for (const l of scene.lines) if (l.k === 'rail' && !l.tunnel) { g.lineWidth = 1.6 * s; poly(g, l.pts); g.stroke(); } });
+  if (SHOW_ROUTE) pass(11, g => {
+    const ahead = [me.p, ...scene.route.slice(me.i)];
+    g.lineWidth = 4.2 * s; g.setLineDash([4 * s, 3 * s]); g.lineCap = 'butt'; poly(g, ahead); g.stroke(); g.setLineDash([]);
+  });
+
+  const img = g.createImageData(lw, lh), o = img.data;
+  const at = (x, y) => (x < 0 || y < 0 || x >= lw || y >= lh) ? 0 : cls[y * lw + x];
+  for (let y = 0; y < lh; y++) for (let x = 0; x < lw; x++) {
+    const c = cls[y * lw + x], h = hash(x, y);
+    let col;
+    const nb = k => at(x - 1, y) === k || at(x + 1, y) === k || at(x, y - 1) === k || at(x, y + 1) === k;
+    switch (c) {
+      case 0: case 1: case 3:
+        col = c === 1 ? PX.res[0] : h < 0.07 ? PX.grass[1] : h > 0.965 ? PX.grass[2] : PX.grass[0];
+        if (c === 3 && h > 0.985) col = h > 0.993 ? [255, 111, 168] : [255, 240, 122];
+        if (nb(6)) col = PX.sand;
+        if (at(x, y - 1) === 7) col = col.map(v => v * 0.68); // Schatten unter Häusern
+        break;
+      case 2: col = (y % 4 < 2) ? PX.farmA : PX.farmB; break;
+      case 4: col = (x % 6 === 0 || y % 6 === 0) ? PX.indLine : PX.ind; if (at(x, y - 1) === 7) col = col.map(v => v * 0.7); break;
+      case 5: {
+        const row = Math.floor(y / 6), lx = (x + (row % 2) * 3) % 6, ly = y % 6;
+        const dx = lx - 2.5, dy = ly - 2.5, d = Math.hypot(dx, dy);
+        col = d < 2.6 ? ((dx + dy < -1.5) ? PX.canopyHi : PX.canopy) : PX.forestFloor; break;
+      }
+      case 6: col = ((x + Math.floor(y / 3) * 3) % 9 === 0 && y % 3 === 0) ? PX.wave : PX.water; break;
+      case 7: {
+        const roof = PX.roofs[Math.floor(hash(bid[y * lw + x], 17) * PX.roofs.length)];
+        col = roof;
+        if (at(x, y - 1) !== 7) col = roof.map(v => Math.min(255, v * 1.3 + 20));      // Kante oben hell
+        else if (at(x, y + 1) !== 7) col = roof.map(v => v * 0.55);                   // Kante unten dunkel
+        else if (y % 3 === 0) col = roof.map(v => v * 0.85);                           // Dachziegel
+        break;
+      }
+      case 8: col = (nb(0) || nb(1) || nb(3) || nb(5) || nb(7)) ? PX.dirtEdge : PX.dirt; break;
+      case 9: col = (nb(0) || nb(1) || nb(3) || nb(5) || nb(7) || nb(8)) ? PX.stoneEdge : ((x + y) % 4 === 0 ? PX.stoneHi : PX.stone); break;
+      case 10: col = (x + y) % 3 === 0 ? [60, 45, 30] : PX.rail; break;
+      case 11: col = (at(x - 1, y) !== 11 || at(x + 1, y) !== 11 || at(x, y - 1) !== 11 || at(x, y + 1) !== 11) ? PX.routeEdge : PX.route; break;
+    }
+    const i = (y * lw + x) * 4; o[i] = col[0]; o[i + 1] = col[1]; o[i + 2] = col[2]; o[i + 3] = 255;
+  }
+  g.setTransform(1, 0, 0, 1, 0, 0); g.putImageData(img, 0, 0);
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false; ctx.drawImage(lc, 0, 0, lw * AP, lh * AP); ctx.restore();
+}
+
+// Pixel-Sprites (eigene Entwürfe). Buchstaben = Farben, '.' = transparent
+const SPR = {
+  car: { pal: { k: '#1a1a1a', r: '#e8372c', R: '#ff7b5c', d: '#9c1f17', w: '#bfe6ff', y: '#ffe066' },
+    rows: ['..kkkkk..', '.krrRrrk.', 'kryrRryrk', 'krrrRrrrk', 'kwwwwwwwk', 'kwwwwwwwk', 'krrrrrrrk', 'krrrrrrrk', 'krrrrrrrk', 'kwwwwwwwk', 'kdrrrrrdk', 'kdddddddk', '.kkkkkkk.'] },
+  P: { pal: { k: '#10204a', b: '#3b6fe0', w: '#ffffff' }, rows: ['kkkkkkkk', 'kbbbbbbk', 'kbwwwbbk', 'kbwbbwbk', 'kbwwwbbk', 'kbwbbbbk', 'kbbbbbbk', 'kkkkkkkk'] },
+  fuel: { pal: { k: '#3a0d08', r: '#e8372c', w: '#ffffff', g: '#9a9a9a' }, rows: ['.kkkkk..', '.kwwwk..', '.kwwwkk.', '.krrrk.k', '.krrrk.k', '.krrrkk.', '.krrrk..', 'kkkkkkk.'] },
+  food: { pal: { k: '#3a1a08', b: '#c8742e', B: '#e8a050', w: '#fff3d6' }, rows: ['...kk...', '..kBBk..', '.kBBbbk.', '.kBbbbk.', '..kbbk..', '...kwk..', '...kwwk.', '....kk..'] },
+  cart: { pal: { k: '#3a2a00', y: '#ffcc33', g: '#555' }, rows: ['k.......', 'kkkkkkkk', '.kyyyyyk', '.kyyyyk.', '..kkkkk.', '..k...k.', '.kgk.kgk', '..k...k.'] },
+  chest: { pal: { k: '#2a1500', b: '#8a4a1c', B: '#b8692c', y: '#ffcc33' }, rows: ['.kkkkkkkk.', 'kBBBBBBBBk', 'kbbbbbbbbk', 'kkkkyykkkk', 'kbbbyybbbk', 'kbbbbbbbbk', 'kbbbbbbbbk', '.kkkkkkkk.'] },
+};
+function sprite(u, spr, cx, cy, size) {
+  const rows = spr.rows, h = rows.length, w = Math.max(...rows.map(r => r.length));
+  const x0 = Math.round(cx - w * size / 2), y0 = Math.round(cy - h * size / 2);
+  for (let y = 0; y < h; y++) for (let x = 0; x < rows[y].length; x++) {
+    const c = rows[y][x]; if (c === '.') continue;
+    u.fillStyle = spr.pal[c]; u.fillRect(x0 + x * size, y0 + y * size, size, size);
+  }
+}
+
+// ---------------------------------------------------------------- Hauptablauf
 async function main() {
-  await Promise.all(['40px Headline', '700 40px Oswald', '500 40px Inter', '600 40px Inter', '700 40px Inter', '800 40px Inter'].map(f => document.fonts.load(f)));
+  await document.fonts.load('800 40px Inter');
   const scene = await (await fetch('out/scene.json')).json();
   const me = pointAt(scene.route, PROGRESS);
   const heading = M.headingUp ? smoothHeading(scene.route, PROGRESS) : 0;
-  const center = (params.has('cx') || MODE === 'overview') ? [Number(params.get('cx') || 300), Number(params.get('cy') || -250)] : me.p;
+  const center = params.has('cx') ? [Number(params.get('cx')), Number(params.get('cy'))] : me.p;
 
   const tiltRad = M.tilt * Math.PI / 180;
-  const cw = M.tilt ? M.w * 2.4 : M.w, ch = M.tilt ? M.h * 3.2 : M.h;
+  const cw = M.tilt ? Math.round(M.w * 2.4) : M.w, ch = M.tilt ? Math.round(M.h * 3.2) : M.h;
   const ox = (M.ox ?? 0.5) * M.w, oy = (M.oy ?? 0.5) * M.h;
   const cox = cw / 2, coy = M.tilt ? ch * 0.82 : ch / 2;
   map.width = cw; map.height = ch;
   map.style.left = (ox - cox) + 'px'; map.style.top = (oy - coy) + 'px';
   const PERSP = M.h * 1.25;
   if (M.tilt) {
-    view.style.perspective = PERSP + 'px';
-    view.style.perspectiveOrigin = `${ox}px ${oy}px`;
-    map.style.transformOrigin = `${cox}px ${coy}px`;
-    map.style.transform = `rotateX(${M.tilt}deg)`;
+    view.style.perspective = PERSP + 'px'; view.style.perspectiveOrigin = `${ox}px ${oy}px`;
+    map.style.transformOrigin = `${cox}px ${coy}px`; map.style.transform = `rotateX(${M.tilt}deg)`;
   }
-
+  const worldMatrix = (k = 1) => new DOMMatrix().scale(k, k).translate(cox, coy).scale(M.scale).rotate(-heading * 180 / Math.PI).translate(-center[0], -center[1]);
   const ctx = map.getContext('2d');
-  ctx.fillStyle = S.land; ctx.fillRect(0, 0, cw, ch);
-  const world = () => { ctx.save(); ctx.translate(cox, coy); ctx.scale(M.scale, M.scale); ctx.rotate(-heading); ctx.translate(-center[0], -center[1]); ctx.__world = ctx.getTransform(); };
+  const world = () => { ctx.save(); ctx.setTransform(worldMatrix()); };
   const px = 1 / M.scale;
 
-  world();
-  for (const k of ['farm', 'park', 'forest', 'residential', 'industrial', 'water']) {
-    ctx.fillStyle = S[k];
-    for (const a of scene.areas) if (a.k === k) { poly(ctx, a.pts, true); ctx.fill(); }
-  }
-  ctx.strokeStyle = S.waterLine; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  for (const l of scene.lines) if (l.k === 'water') { ctx.lineWidth = (l.c === 'river' ? 9 : 3) * px * (MODE === 'overview' ? 0.7 : 1); poly(ctx, l.pts); ctx.stroke(); }
-  ctx.fillStyle = S.building;
-  for (const a of scene.areas) if (a.k === 'building') { poly(ctx, a.pts, true); ctx.fill(); }
-  ctx.restore();
+  if (T.pixel) {
+    const AP = MODE === 'overview' || M.scale < 1 ? 2 : 4;
+    drawPixelMap(ctx, scene, me, cw, ch, worldMatrix, AP);
+  } else {
+    ctx.fillStyle = T.land; ctx.fillRect(0, 0, cw, ch);
+    world();
+    for (const k of ['farm', 'park', 'forest', 'residential', 'industrial', 'water']) {
+      ctx.fillStyle = T[k];
+      for (const a of scene.areas) if (a.k === k) { poly(ctx, a.pts, true); ctx.fill(); }
+    }
+    if (T.trees) {
+      const pat = ctx.createPattern(treePattern(T.trees), 'repeat'); pat.setTransform(new DOMMatrix().scale(px * 1.2));
+      ctx.fillStyle = pat; for (const a of scene.areas) if (a.k === 'forest') { poly(ctx, a.pts, true); ctx.fill(); }
+    }
+    ctx.strokeStyle = T.waterLine; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (const l of scene.lines) if (l.k === 'water') { ctx.lineWidth = (l.c === 'river' ? 9 : 3) * px; poly(ctx, l.pts); ctx.stroke(); }
+    ctx.fillStyle = T.building;
+    if (T.buildingEdge) { ctx.strokeStyle = T.buildingEdge; ctx.lineWidth = 1.2 * px; }
+    for (const a of scene.areas) if (a.k === 'building') { poly(ctx, a.pts, true); ctx.fill(); if (T.buildingEdge) ctx.stroke(); }
+    ctx.restore();
 
-  // Relief-Textur über Flächen und Gebäuden (nicht über Straßen)
-  ctx.save(); ctx.globalCompositeOperation = 'overlay';
-  ctx.fillStyle = ctx.createPattern(terrainTexture(1024), 'repeat'); ctx.fillRect(0, 0, cw, ch);
-  ctx.restore();
+    ctx.save();
+    if (T.texture === 'terrain') { ctx.globalCompositeOperation = 'overlay'; ctx.fillStyle = ctx.createPattern(terrainTexture(1024), 'repeat'); }
+    else { ctx.globalCompositeOperation = 'overlay'; ctx.fillStyle = ctx.createPattern(paperTexture(1024), 'repeat'); }
+    ctx.fillRect(0, 0, cw, ch); ctx.restore();
 
-  world();
-  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  for (const l of scene.lines) if (l.k === 'rail' && !l.tunnel) {
-    ctx.strokeStyle = S.rail; ctx.lineWidth = 3 * px; ctx.setLineDash([10 * px, 6 * px]); poly(ctx, l.pts); ctx.stroke(); ctx.setLineDash([]);
+    world();
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (const l of scene.lines) if (l.k === 'rail' && !l.tunnel) {
+      ctx.strokeStyle = T.rail[0]; ctx.lineWidth = 2.5 * px; ctx.setLineDash(T.rail[1] ? [] : [10 * px, 6 * px]); poly(ctx, l.pts); ctx.stroke();
+      if (T.rail[1]) { ctx.lineWidth = 7 * px; ctx.setLineDash([1.5 * px, 7 * px]); ctx.lineCap = 'butt'; poly(ctx, l.pts); ctx.stroke(); ctx.lineCap = 'round'; }
+      ctx.setLineDash([]);
+    }
+    const zoomF = MODE === 'overview' ? 0.45 : 1;
+    const roads = scene.lines.filter(l => l.k === 'road' && l.r <= 7).sort((a, b) => b.r - a.r);
+    const western = STYLE === 'western';
+    for (const pass of ['casing', 'fill']) for (const l of roads) {
+      const w = WIDTH[l.r] * zoomF * px;
+      if (western && l.r >= 5) { if (pass === 'fill') { ctx.strokeStyle = T.roadMajor.fill(l.r); ctx.lineWidth = w * 0.42; poly(ctx, l.pts); ctx.stroke(); } continue; }
+      ctx.strokeStyle = pass === 'casing' ? T.roadMajor.casing : T.roadMajor.fill(l.r);
+      ctx.lineWidth = pass === 'casing' ? w + (western ? 3.5 : 2) * px : w;
+      poly(ctx, l.pts); ctx.stroke();
+    }
+    ctx.restore();
+    if (FOG) drawFog(ctx, scene, me, cw, ch, worldMatrix());
+    if (SHOW_ROUTE) {
+      world();
+      const ahead = [me.p, ...scene.route.slice(me.i)], done = [...scene.route.slice(0, me.i), me.p];
+      const rw = (MODE === 'overview' || M.scale < 1 ? 9 : 15) * px;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.strokeStyle = T.routeDone; ctx.lineWidth = rw * 0.6; poly(ctx, done); ctx.stroke();
+      ctx.strokeStyle = T.routeEdge; ctx.lineWidth = rw + 4 * px; poly(ctx, ahead); ctx.stroke();
+      ctx.strokeStyle = T.route; ctx.lineWidth = rw; poly(ctx, ahead); ctx.stroke();
+      ctx.restore();
+    }
+    if (STYLE === 'western') { // Vignette wie altes Papier
+      const vg = ctx.createRadialGradient(cw / 2, coy, cw * 0.2, cw / 2, coy, cw * 0.75);
+      vg.addColorStop(0, 'rgba(90,55,25,0)'); vg.addColorStop(1, 'rgba(90,55,25,0.35)');
+      ctx.fillStyle = vg; ctx.fillRect(0, 0, cw, ch);
+    }
   }
-  const zoomF = MODE === 'overview' ? 0.45 : 1;
-  const roads = scene.lines.filter(l => l.k === 'road' && l.r <= (MODE === 'overview' ? 6 : 7)).sort((a, b) => b.r - a.r);
-  for (const pass of ['casing', 'fill']) for (const l of roads) {
-    const w = WIDTH[l.r] * zoomF * px;
-    ctx.strokeStyle = pass === 'casing' ? S.casing : S.road[l.r];
-    ctx.lineWidth = pass === 'casing' ? w + 2 * px : w;
-    poly(ctx, l.pts); ctx.stroke();
-  }
-
-  ctx.restore();
-  if (FOG) drawFog(ctx, scene, me, cw, ch, world);
-  world();
-  // GPS-Linie: kräftig, flach, mit dunkler Kante
-  if (SHOW_ROUTE) {
-  const ahead = [me.p, ...scene.route.slice(me.i)];
-  const done = [...scene.route.slice(0, me.i), me.p];
-  const rw = (MODE === 'overview' ? 9 : 15) * px;
-  ctx.strokeStyle = S.routeDone; ctx.lineWidth = rw * 0.6; poly(ctx, done); ctx.stroke();
-  ctx.strokeStyle = S.routeEdge; ctx.lineWidth = rw + 4 * px; poly(ctx, ahead); ctx.stroke();
-  ctx.strokeStyle = S.route; ctx.lineWidth = rw; poly(ctx, ahead); ctx.stroke();
-  }
-  ctx.restore();
 
   function toScreen(p) {
     const x = p[0] - center[0], y = p[1] - center[1];
     const c = Math.cos(-heading), s = Math.sin(-heading);
     const rx = (x * c - y * s) * M.scale, ry = (x * s + y * c) * M.scale;
     if (!M.tilt) return [ox + rx, oy + ry, 1];
-    const y2 = ry * Math.cos(tiltRad), z = ry * Math.sin(tiltRad);
-    const k = PERSP / (PERSP + z);
+    const y2 = ry * Math.cos(tiltRad), z = ry * Math.sin(tiltRad), k = PERSP / (PERSP + z);
     return [ox + rx * k, oy + y2 * k, k];
   }
   const u = ui.getContext('2d');
-  const inView = q => q[0] > -40 && q[0] < M.w + 40 && q[1] > (M.tilt ? M.h * 0.1 : -40) && q[1] < M.h + 40 && q[2] > 0;
+  const inView = q => q[0] > -40 && q[0] < M.w + 40 && q[1] > (M.tilt ? M.h * 0.12 : -40) && q[1] < M.h + 40 && q[2] > 0;
+  const big = MODE === 'iphone' && M.scale > 1;
 
-  // Blips: freistehende Symbole mit schwarzer Kontur
+  // Symbole
   const placed = [];
   for (const p of scene.pois) {
     const b = BLIP[p.kind]; if (!b) continue;
-    if (MODE !== 'overview' && (p.kind === 'restaurant' || p.kind === 'cafe')) continue;
+    if ((M.scale > 1) && (p.kind === 'restaurant' || p.kind === 'cafe')) continue;
     const q = toScreen(p.p); if (!inView(q)) continue;
-    const r = (MODE === 'overview' ? 11 : MODE === 'cluster' ? 13 : MODE === 'iphone' ? 24 : 17) * Math.max(0.7, Math.min(1.15, q[2]));
-    if (placed.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < r * (MODE === 'overview' ? 2.6 : 4.5))) continue;
-    placed.push(q); blip(u, q[0], q[1], r, b[0], b[1]);
+    const r = (big ? 24 : M.scale > 1 ? 17 : 11) * Math.max(0.7, Math.min(1.15, q[2]));
+    if (placed.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < r * (M.scale > 1 ? 4.5 : 2.6))) continue;
+    placed.push(q);
+    if (T.blips === 'sprite') sprite(u, SPR[b[2]], q[0], q[1], big ? 5 : M.scale > 1 ? 4 : 3);
+    else blip(u, q[0], q[1], r, T.blips === 'ink' ? '#3a2414' : b[0], b[1], T.blips === 'ink' ? '#f2e4bf' : '#000');
   }
   const dq = toScreen(scene.route[scene.route.length - 1]);
   if (SHOW_ROUTE && inView(dq)) {
-    const r = MODE === 'iphone' ? 22 : 15;
-    u.fillStyle = '#000'; u.beginPath(); u.arc(dq[0], dq[1], r + 4, 0, 7); u.fill();
-    u.fillStyle = S.dest; u.beginPath(); u.arc(dq[0], dq[1], r, 0, 7); u.fill();
+    if (T.pixel) sprite(u, SPR.chest, dq[0], dq[1], big ? 6 : 4);
+    else if (STYLE === 'western') { // rotes Kreuz wie auf einer Schatzkarte
+      const r = big ? 22 : 15; u.save(); u.translate(dq[0], dq[1]); u.lineCap = 'round';
+      u.strokeStyle = '#f2e4bf'; u.lineWidth = r * 0.75; u.beginPath(); u.moveTo(-r, -r); u.lineTo(r, r); u.moveTo(r, -r); u.lineTo(-r, r); u.stroke();
+      u.strokeStyle = T.dest; u.lineWidth = r * 0.42; u.stroke(); u.restore();
+    } else {
+      const r = big ? 22 : 15;
+      u.fillStyle = '#000'; u.beginPath(); u.arc(dq[0], dq[1], r + 4, 0, 7); u.fill();
+      u.fillStyle = T.dest; u.beginPath(); u.arc(dq[0], dq[1], r, 0, 7); u.fill();
+    }
   }
 
-  // Ortsnamen nur in der Übersicht
-  if (MODE === 'overview') for (const pl of scene.places) {
-    const q = toScreen(pl.p); if (!inView(q)) continue;
-    const size = pl.kind === 'town' ? 30 : 19;
-    u.font = `600 ${size}px Inter`; u.letterSpacing = size * 0.08 + 'px'; u.textAlign = 'center'; u.textBaseline = 'middle';
-    u.lineWidth = size * 0.22; u.strokeStyle = 'rgba(0,0,0,0.7)'; u.lineJoin = 'round';
-    u.strokeText(pl.name.toUpperCase(), q[0], q[1]); u.fillStyle = '#e8e8e8'; u.fillText(pl.name.toUpperCase(), q[0], q[1]);
-    u.letterSpacing = '0px';
-  }
-
-  // Spielerpfeil: hellgrau, schwarze Kontur
+  // Spieler
   const mq = toScreen(me.p);
-  const pr = MODE === 'iphone' ? 34 : MODE === 'overview' ? 18 : MODE === 'cluster' ? 22 : 24;
-  u.save(); u.translate(mq[0], mq[1]); u.rotate(M.headingUp ? 0 : me.heading);
-  if (M.tilt) u.scale(1, 0.85);
-  u.beginPath(); u.moveTo(0, -pr); u.lineTo(pr * 0.68, pr * 0.75); u.lineTo(0, pr * 0.38); u.lineTo(-pr * 0.68, pr * 0.75); u.closePath();
-  u.lineWidth = pr * 0.22; u.strokeStyle = '#000'; u.lineJoin = 'round'; u.stroke(); u.fillStyle = '#e9e9e9'; u.fill();
-  u.restore();
+  if (T.pixel) {
+    u.save(); u.translate(mq[0], mq[1]); if (!M.headingUp) u.rotate(me.heading);
+    sprite(u, SPR.car, 0, 0, big ? 7 : M.scale > 1 ? 5 : 3); u.restore();
+  } else {
+    const pr = big ? 34 : M.scale > 1 ? 24 : 18;
+    u.save(); u.translate(mq[0], mq[1]); u.rotate(M.headingUp ? 0 : me.heading);
+    if (M.tilt) u.scale(1, 0.85);
+    u.beginPath(); u.moveTo(0, -pr); u.lineTo(pr * 0.68, pr * 0.75); u.lineTo(0, pr * 0.38); u.lineTo(-pr * 0.68, pr * 0.75); u.closePath();
+    u.lineWidth = pr * 0.22; u.strokeStyle = T.player[1]; u.lineJoin = 'round'; u.stroke(); u.fillStyle = T.player[0]; u.fill();
+    u.restore();
+  }
 
-  if (M.tilt) {
-    const g = u.createLinearGradient(0, 0, 0, M.h * 0.35);
-    g.addColorStop(0, 'rgba(38,39,41,1)'); g.addColorStop(1, 'rgba(38,39,41,0)');
+  if (M.tilt) { // Dunst am Horizont
+    const g = u.createLinearGradient(0, 0, 0, M.h * 0.35), c = T.horizon.join(',');
+    g.addColorStop(0, `rgba(${c},1)`); g.addColorStop(1, `rgba(${c},0)`);
     u.fillStyle = g; u.fillRect(0, 0, M.w, M.h * 0.35);
   }
-  if (HUD) hud(u, scene, heading);
   document.title = 'ready';
 }
 
-// "Nebel des Krieges": alles abgedunkelt, nur befahrene Straßen aufgedeckt
-function drawFog(ctx, scene, me, cw, ch, world) {
+function drawFog(ctx, scene, me, cw, ch, matrix) {
   const f = document.createElement('canvas'); f.width = cw; f.height = ch; const g = f.getContext('2d');
   g.fillStyle = 'rgba(14,14,16,0.86)'; g.fillRect(0, 0, cw, ch);
-  g.globalCompositeOperation = 'destination-out';
-  g.save();
+  g.globalCompositeOperation = 'destination-out'; g.setTransform(matrix);
   const paths = [scene.route.slice(0, Math.max(2, me.i + 1))];
-  // zusätzlich "schon gefahrene" Hauptstraßen (deterministische Auswahl)
   scene.lines.filter(l => l.k === 'road' && l.r <= 4).forEach((l, i) => { if (i % 3 === 0) paths.push(l.pts); });
-  const M2 = ctx.__world;
-  g.setTransform(M2);
-  const px = 1 / M2.a;
   g.lineCap = 'round'; g.lineJoin = 'round';
-  for (const [w, a] of [[260, 0.35], [170, 0.6], [110, 1]]) {
-    g.strokeStyle = `rgba(0,0,0,${a})`; g.lineWidth = w;
-    for (const p of paths) { poly(g, p); g.stroke(); }
-  }
-  g.restore();
+  for (const [w, a] of [[260, 0.35], [170, 0.6], [110, 1]]) { g.strokeStyle = `rgba(0,0,0,${a})`; g.lineWidth = w; for (const p of paths) { poly(g, p); g.stroke(); } }
   ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(f, 0, 0); ctx.restore();
 }
 
 const BLIP = {
-  fuel: ['#f08a2c', 'fuel'], parking: ['#5fb6ff', 'P'], fast_food: ['#7ee06a', 'food'], restaurant: ['#7ee06a', 'food'],
-  cafe: ['#7ee06a', 'food'], supermarket: ['#f5d742', 'cart'], hospital: ['#ff5a5a', '+'], police: ['#6d8cff', 'star'],
+  fuel: ['#f08a2c', 'fuel', 'fuel'], parking: ['#5fb6ff', 'P', 'P'], fast_food: ['#7ee06a', 'food', 'food'], restaurant: ['#7ee06a', 'food', 'food'],
+  cafe: ['#7ee06a', 'food', 'food'], supermarket: ['#f5d742', 'cart', 'cart'],
 };
-function glyph(u, r, g) {
-  if (g === 'P' || g === '+') { u.font = `800 ${r * 1.7}px Inter`; u.textAlign = 'center'; u.textBaseline = 'middle'; u.strokeText(g, 0, r * 0.08); u.fillText(g, 0, r * 0.08); return; }
+function glyph(u, r, g, edge) {
+  if (g === 'P') { u.font = `800 ${r * 1.7}px Inter`; u.textAlign = 'center'; u.textBaseline = 'middle'; u.strokeText(g, 0, r * 0.08); u.fillText(g, 0, r * 0.08); return; }
   u.beginPath();
   if (g === 'fuel') { u.rect(-r * 0.6, -r * 0.75, r * 0.8, r * 1.5); u.moveTo(r * 0.2, -r * 0.35); u.lineTo(r * 0.65, -r * 0.1); u.lineTo(r * 0.65, r * 0.55); }
   else if (g === 'food') { u.moveTo(-r * 0.35, -r * 0.75); u.lineTo(-r * 0.35, r * 0.75); u.moveTo(-r * 0.65, -r * 0.75); u.lineTo(-r * 0.65, -r * 0.15); u.lineTo(-r * 0.05, -r * 0.15); u.lineTo(-r * 0.05, -r * 0.75); u.moveTo(r * 0.5, r * 0.75); u.lineTo(r * 0.5, -r * 0.75); u.quadraticCurveTo(r * 0.05, -r * 0.3, r * 0.5, 0); }
   else if (g === 'cart') { u.moveTo(-r * 0.8, -r * 0.55); u.lineTo(-r * 0.5, -r * 0.55); u.lineTo(-r * 0.25, r * 0.3); u.lineTo(r * 0.6, r * 0.3); u.lineTo(r * 0.8, -r * 0.3); u.lineTo(-r * 0.4, -r * 0.3); }
-  else if (g === 'star') { for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 - Math.PI / 2, rr = i % 2 ? r * 0.38 : r * 0.85; u.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } u.closePath(); }
   const color = u.fillStyle;
-  u.lineWidth = r * 0.55; u.strokeStyle = '#000'; u.stroke();
-  if (g === 'star' || g === 'fuel') u.fill(); else { u.lineWidth = r * 0.24; u.strokeStyle = color; u.stroke(); }
+  u.lineWidth = r * 0.55; u.strokeStyle = edge; u.stroke();
+  if (g === 'fuel') u.fill(); else { u.lineWidth = r * 0.24; u.strokeStyle = color; u.stroke(); }
   if (g === 'cart') { u.beginPath(); u.arc(-r * 0.15, r * 0.65, r * 0.16, 0, 7); u.arc(r * 0.5, r * 0.65, r * 0.16, 0, 7); u.fill(); }
 }
-function blip(u, x, y, r, color, g) {
+function blip(u, x, y, r, color, g, edge) {
   u.save(); u.translate(x, y); u.lineCap = 'round'; u.lineJoin = 'round';
-  u.fillStyle = color; u.strokeStyle = '#000'; u.lineWidth = r * 0.3;
-  glyph(u, r, g); u.restore();
-}
-
-// --- HUD ------------------------------------------------------------------
-function arrowGlyph(u, x, y, s, turn, color = '#fff') {
-  u.save(); u.translate(x, y); u.lineCap = 'round'; u.lineJoin = 'round'; u.lineWidth = s * 0.17; u.strokeStyle = color;
-  const dir = turn > 0 ? 1 : -1;
-  u.beginPath(); u.moveTo(0, s * 0.55); u.lineTo(0, -s * 0.05); u.quadraticCurveTo(0, -s * 0.3, dir * s * 0.25, -s * 0.3); u.lineTo(dir * s * 0.45, -s * 0.3); u.stroke();
-  u.beginPath(); u.moveTo(dir * s * 0.3, -s * 0.52); u.lineTo(dir * s * 0.55, -s * 0.3); u.lineTo(dir * s * 0.3, -s * 0.08); u.stroke();
-  u.restore();
-}
-// Distanz mit Pfeil + zwei Balken (grün: Routenfortschritt, gelb: Restzeit)
-function distanceBars(u, x, y, w, size, dist, progress, timeFrac) {
-  u.textAlign = 'left'; u.textBaseline = 'alphabetic'; u.lineWidth = size * 0.14; u.strokeStyle = '#000'; u.lineJoin = 'round'; u.fillStyle = '#fff';
-  u.font = `700 ${size}px Inter`; u.strokeText('↑', x, y); u.fillText('↑', x, y);
-  const aw = u.measureText('↑ ').width;
-  u.font = `${size}px ${HEAD}`; u.strokeText(fmtDist(dist), x + aw, y); u.fillText(fmtDist(dist), x + aw, y);
-  const bh = size * 0.28, by = y + size * 0.3, gap = 8, w1 = w * 0.62, w2 = w - w1 - gap;
-  u.fillStyle = 'rgba(0,0,0,0.6)'; u.fillRect(x - 3, by - 3, w + 6, bh + 6);
-  u.fillStyle = '#1f4a26'; u.fillRect(x, by, w1, bh); u.fillStyle = '#58b05f'; u.fillRect(x, by, w1 * progress, bh);
-  u.fillStyle = '#4a3c12'; u.fillRect(x + w1 + gap, by, w2, bh); u.fillStyle = '#d9ad3a'; u.fillRect(x + w1 + gap, by, w2 * timeFrac, bh);
-}
-function streetBox(u, x, y, size, text) {
-  u.font = `700 ${size}px Inter`; u.letterSpacing = size * 0.04 + 'px';
-  const t = text.toUpperCase(), w = u.measureText(t).width;
-  u.fillStyle = 'rgba(0,0,0,0.78)'; u.fillRect(x, y - size * 1.15, w + size * 0.9, size * 1.6);
-  u.fillStyle = '#fff'; u.textAlign = 'left'; u.textBaseline = 'alphabetic'; u.fillText(t, x + size * 0.45, y);
-  u.letterSpacing = '0px';
-}
-function speedSign(u, x, y, r, v) {
-  u.fillStyle = '#fff'; u.beginPath(); u.arc(x, y, r, 0, 7); u.fill();
-  u.lineWidth = r * 0.2; u.strokeStyle = '#e3001b'; u.beginPath(); u.arc(x, y, r * 0.86, 0, 7); u.stroke();
-  u.fillStyle = '#111'; u.font = `800 ${r * 0.85}px Inter`; u.textAlign = 'center'; u.textBaseline = 'middle'; u.fillText(v, x, y + r * 0.05);
-}
-function outlined(u, text, x, y, font, lw) {
-  u.font = font; u.lineWidth = lw; u.strokeStyle = '#000'; u.lineJoin = 'round';
-  u.strokeText(text, x, y); u.fillText(text, x, y);
-}
-
-function hud(u, scene, heading) {
-  const next = scene.maneuvers.find(m => m.at > PROGRESS + 5) || { at: scene.routeLength, turn: 0, street: 'Ziel' };
-  const dist = next.at - PROGRESS, remain = scene.routeLength - PROGRESS;
-  const mins = Math.max(1, Math.round(remain / 1000 / 32 * 60));
-  const eta = new Date(2026, 9, 17, 16, 48 + mins);
-  const etaStr = eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0');
-  const W = M.w, H = M.h;
-  const curStreet = scene.routeNames[Math.max(0, pointAt(scene.route, PROGRESS).i - 1)] || '';
-  const prog = PROGRESS / scene.routeLength;
-  const attrib = (size, x, y, align) => { u.font = `500 ${size}px Inter`; u.textAlign = align; u.textBaseline = 'bottom'; u.fillStyle = 'rgba(255,255,255,0.6)'; u.fillText('© OpenStreetMap-Mitwirkende', x, y); };
-  const north = (cx, cy, R, r) => {
-    const nx = cx + Math.sin(-heading) * R, ny = cy - Math.cos(-heading) * R;
-    u.fillStyle = 'rgba(0,0,0,0.75)'; u.beginPath(); u.arc(nx, ny, r, 0, 7); u.fill();
-    u.fillStyle = '#fff'; u.font = `700 ${r * 1.15}px Inter`; u.textAlign = 'center'; u.textBaseline = 'middle'; u.fillText('N', nx, ny + 1);
-  };
-
-  if (MODE === 'carplay') {
-    // Von CarPlay gezeichnet (CPMapTemplate), hier nur angedeutet
-    u.fillStyle = 'rgba(28,28,30,0.92)'; rrect(u, 24, 24, 560, 250, 22); u.fill();
-    arrowGlyph(u, 110, 120, 110, next.turn);
-    u.fillStyle = '#fff'; u.textAlign = 'left'; u.textBaseline = 'alphabetic';
-    u.font = '700 64px Inter'; u.fillText(fmtDist(dist), 200, 125);
-    u.font = '600 40px Inter'; u.fillStyle = '#ebebf0'; u.fillText(next.street || 'Weiter', 200, 185);
-    u.fillStyle = 'rgba(60,60,64,0.9)'; rrect(u, 24, 286, 560, 110, 22); u.fill();
-    u.fillStyle = '#fff'; u.font = '700 42px Inter'; u.fillText(etaStr, 56, 355);
-    u.fillStyle = '#c7c7cc'; u.font = '500 34px Inter'; u.fillText(`${mins} Min · ${fmtDist(remain)}`, 200, 353);
-    for (let i = 0; i < 3; i++) { u.fillStyle = 'rgba(28,28,30,0.85)'; rrect(u, W - 120, 160 + i * 112, 96, 96, 24); u.fill(); }
-    u.fillStyle = '#fff'; u.font = '600 52px Inter'; u.textAlign = 'center'; u.textBaseline = 'middle';
-    u.fillText('+', W - 72, 208); u.fillText('−', W - 72, 320); u.font = '700 30px Inter'; u.fillText('N', W - 72, 432);
-    // Unser Teil in der Karte
-    streetBox(u, 640, H - 120, 30, curStreet);
-    distanceBars(u, 640, H - 50, 420, 44, dist, prog, 1 - prog * 0.8);
-    speedSign(u, W - 230, H - 110, 62, 50);
-    attrib(22, W - 24, H - 14, 'right');
-  }
-
-  if (MODE === 'iphone') {
-    const top = 150;
-    u.fillStyle = 'rgba(0,0,0,0.8)'; u.fillRect(40, top, W - 80, 280);
-    u.fillStyle = S.route; u.fillRect(40, top, 16, 280);
-    arrowGlyph(u, 170, top + 140, 150, next.turn);
-    u.textAlign = 'left'; u.textBaseline = 'alphabetic'; u.fillStyle = '#fff';
-    outlined(u, fmtDist(dist), 290, top + 135, `120px ${HEAD}`, 14);
-    u.font = '700 52px Inter'; u.fillStyle = '#d8d8d8'; u.fillText((next.street || 'Weiter').toUpperCase(), 292, top + 220);
-    speedSign(u, W - 130, top + 400, 70, 50);
-    streetBox(u, 60, H - 400, 42, curStreet);
-    distanceBars(u, 60, H - 300, 560, 64, dist, prog, 1 - prog * 0.8);
-    u.textAlign = 'right'; u.fillStyle = '#fff';
-    outlined(u, etaStr, W - 60, H - 300, `96px ${HEAD}`, 12);
-    u.fillStyle = '#e0e0e0'; outlined(u, `${mins} MIN · ${fmtDist(remain)}`, W - 60, H - 230, '700 40px Inter', 8);
-    // Knopfleiste im Stil von Spiel-Hinweisen
-    u.fillStyle = 'rgba(0,0,0,0.75)'; u.fillRect(0, H - 150, W, 150);
-    const hint = (x, key, label) => {
-      u.fillStyle = '#fff'; u.beginPath(); u.arc(x, H - 75, 26, 0, 7); u.fill();
-      u.fillStyle = '#000'; u.font = '800 28px Inter'; u.textAlign = 'center'; u.textBaseline = 'middle'; u.fillText(key, x, H - 74);
-      u.fillStyle = '#fff'; u.font = '600 34px Inter'; u.textAlign = 'left'; u.fillText(label, x + 42, H - 74);
-    };
-    hint(80, '⌕', 'Ziel'); hint(400, '⟲', 'Route'); hint(740, '✕', 'Beenden');
-    attrib(24, W - 40, H - 160, 'right');
-  }
-
-  if (MODE === 'cluster') {
-    u.lineWidth = 14; u.strokeStyle = 'rgba(0,0,0,0.85)'; u.beginPath(); u.arc(W / 2, H / 2, W / 2 - 7, 0, 7); u.stroke();
-    north(W / 2, H / 2, W / 2 - 34, 22);
-    distanceBars(u, W / 2 - 150, H - 130, 300, 40, dist, prog, 1 - prog * 0.8);
-  }
-
-  if (MODE === 'overview') {
-    // Legende rechts
-    const items = [['Tankstelle', '#f08a2c', 'fuel'], ['Parkplatz', '#5fb6ff', 'P'], ['Essen', '#7ee06a', 'food'], ['Supermarkt', '#f5d742', 'cart'], ['Ziel', S.dest, 'dest']];
-    const lx = W - 330, ly = 40;
-    u.fillStyle = '#fff'; u.fillRect(lx, ly, 290, 44);
-    u.fillStyle = '#000'; u.font = '700 24px Inter'; u.textAlign = 'left'; u.textBaseline = 'middle'; u.fillText('Legende', lx + 16, ly + 23);
-    items.forEach(([label, color, g], i) => {
-      const y = ly + 54 + i * 44;
-      u.fillStyle = 'rgba(0,0,0,0.7)'; u.fillRect(lx, y, 290, 40);
-      u.fillStyle = '#fff'; u.font = '600 22px Inter'; u.textAlign = 'right'; u.textBaseline = 'middle'; u.fillText(label, lx + 240, y + 21);
-      u.save(); u.translate(lx + 266, y + 20); u.fillStyle = color; u.strokeStyle = '#000'; u.lineWidth = 3; u.lineCap = 'round'; u.lineJoin = 'round';
-      if (g === 'dest') { u.beginPath(); u.arc(0, 0, 9, 0, 7); u.fill(); } else glyph(u, 10, g);
-      u.restore();
-    });
-    u.textAlign = 'left'; u.textBaseline = 'alphabetic'; u.fillStyle = '#fff';
-    outlined(u, 'EzMaps', 40, 110, `86px ${HEAD}`, 12);
-    // Maßstab + Ortsname unten links, Tastenhinweise unten rechts
-    const len = 500 * M.scale;
-    u.strokeStyle = '#fff'; u.lineWidth = 3; u.beginPath(); u.moveTo(50, H - 120); u.lineTo(50, H - 110); u.lineTo(50 + len, H - 110); u.lineTo(50 + len, H - 120); u.stroke();
-    u.fillStyle = '#fff'; u.font = '600 20px Inter'; u.textAlign = 'left'; u.fillText('0', 46, H - 128); u.textAlign = 'right'; u.fillText('500 m', 50 + len + 20, H - 128);
-    streetBox(u, 40, H - 52, 24, 'Idstein · Taunus');
-    u.fillStyle = 'rgba(0,0,0,0.6)'; u.fillRect(W - 760, H - 56, 740, 40);
-    u.fillStyle = '#fff'; u.font = '600 20px Inter'; u.textAlign = 'right'; u.textBaseline = 'middle';
-    u.fillText('Zoomen  ⊕ ⊖      Ziel wählen  ◉      Orte  ☰      © OpenStreetMap-Mitwirkende', W - 36, H - 35);
-  }
+  u.fillStyle = color; u.strokeStyle = edge; u.lineWidth = r * 0.3; glyph(u, r, g, edge); u.restore();
 }
 main().catch(e => { document.title = 'error: ' + e; console.error(e); });
 </script>
