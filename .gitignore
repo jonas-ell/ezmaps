@@ -24,3 +24,4 @@ tools/prototype/fonts/
 
 # OSM-Rohdaten (groß) und lokal lizenzierte Schrift
 tools/prototype/raw/
+tools/prototype/out/

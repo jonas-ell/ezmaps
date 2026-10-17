@@ -37,13 +37,13 @@ export function phoneHud() {
   const m = nextManeuver(), rem = remaining(), sp = segSpeed();
   const eta = new Date(Date.now() + rem.s * 1000), etaStr = eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0');
   const ms = n.route.maneuvers, nx = ms[ms.indexOf(m) + 1];
-  const then = nx ? (nx.kind === 'destination' ? `danach Ziel · ${n.dest.name}` : `danach ${nx.text.toLowerCase()} · ${nx.street}`) : '';
+  const then = nx ? (nx.kind === 'destination' ? `danach Ziel · ${n.dest.name}` : `danach ${nx.text.toLowerCase()}${nx.street ? ' · ' + nx.street : ''}`) : '';
   const vals = { then, dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, text: m.text, eta: etaStr, rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: currentLimit(), speed: Math.round(sp * 0.92), icon: m.kind, prog: n.progress / n.route.length };
   const key = JSON.stringify(vals); if (key === lastHud) return; lastHud = key;
   const $ = id => root().querySelector(`[data-hud=${id}]`);
   if (!$('dist')) return;
   $('dist').textContent = vals.dist; $('then').textContent = vals.then; $('then').style.display = vals.then ? '' : 'none'; $('street').textContent = vals.street; $('text').textContent = vals.text;
-  $('eta').textContent = vals.eta; $('rem').textContent = vals.rem; $('cur').textContent = vals.cur; $('limit').textContent = vals.limit; $('speed').textContent = vals.speed;
+  $('eta').textContent = vals.eta; $('rem').textContent = vals.rem; $('cur').textContent = vals.cur; $('limit').textContent = vals.limit; $('limit').parentElement.style.visibility = vals.limit === '' ? 'hidden' : ''; $('speed').textContent = vals.speed; // GM-016: kein Schild ohne bekanntes Limit
   $('icon').innerHTML = manIc(vals.icon, 64); $('prog').style.width = (vals.prog * 100) + '%'; $('proglbl').textContent = `${Math.round(vals.prog * 100)} % der Strecke`;
 }
 

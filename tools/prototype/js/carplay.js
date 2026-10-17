@@ -30,12 +30,12 @@ export function carHud() {
   const m = nextManeuver(), rem = remaining(), eta = new Date(Date.now() + rem.s * 1000);
   const vals = { dist: fmtDist(m.at - n.progress), street: m.kind === 'destination' ? n.dest.name : m.street, icon: m.kind, eta: eta.getHours() + ':' + String(eta.getMinutes()).padStart(2, '0'), rem: `${fmtMin(rem.s)} · ${fmtDist(rem.m)}`, cur: currentStreet() || '—', limit: currentLimit(), prog: n.progress / n.route.length };
   const ms = n.route.maneuvers, nx = ms[ms.indexOf(m) + 1];
-  vals.then = nx ? (nx.kind === 'destination' ? `danach Ziel` : `danach ${nx.text.toLowerCase()} · ${nx.street}`) : '';
+  vals.then = nx ? (nx.kind === 'destination' ? `danach Ziel` : `danach ${nx.text.toLowerCase()}${nx.street ? ' · ' + nx.street : ''}`) : '';
   const k = JSON.stringify(vals); if (k === last) return; last = k;
   const $ = id => root().querySelector(`[data-hud=${id}]`); if (!$('dist')) return;
   $('dist').textContent = vals.dist; $('street').textContent = vals.street; $('icon').innerHTML = manIc(vals.icon, 54, true);
   $('eta').textContent = vals.eta; $('rem').textContent = vals.rem; $('cur').textContent = vals.cur; $('then').textContent = vals.then;
-  $('limit').textContent = vals.limit; $('prog').style.width = vals.prog * 100 + '%';
+  $('limit').textContent = vals.limit; $('limit').parentElement.style.visibility = vals.limit === '' ? 'hidden' : ''; $('prog').style.width = vals.prog * 100 + '%'; // GM-016: kein Schild ohne bekanntes Limit
 }
 
 export function renderCar() {

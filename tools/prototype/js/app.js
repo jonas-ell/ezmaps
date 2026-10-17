@@ -41,7 +41,7 @@ async function boot() {
   setupExplore();
   app.tiles = new Worker('js/tileworker.js', { type: 'module' });
   app.tiles.postMessage({ type: 'scene', scene });
-  app.tiles.onmessage = e => { const t = e.data; app.tilePending = false; if (t.style !== app.state.style) return; app.tile = t; for (const v of Object.values(app.views)) v.setDetail(t.bitmap, t.region, t.S, t.style); };
+  app.tiles.onmessage = e => { if (e.data.nooffscreen) { app.tilesMain = true; app.tilePending = false; return; } const t = e.data; app.tilePending = false; if (t.style !== app.state.style) return; app.tile = t; for (const v of Object.values(app.views)) v.setDetail(t.bitmap, t.region, t.S, t.style); };
   app.views.phone = new MapView(document.getElementById('pmap'));
   app.views.car = new MapView(document.getElementById('cmap'));
   initTiles(app); // GM-015: Deutschland-Kacheln laden automatisch im jeweiligen Stil
@@ -128,12 +128,21 @@ export async function planTo(dest) {
   return true;
 }
 // Echte Tempolimits (OSM maxspeed) nachladen – bis dahin geschätzt
-function loadLimits(route) { speedLimits(route).then(l => { route.limits = l; }).catch(e => console.warn('Tempolimits', e)); }
+function loadLimits(route) { speedLimits(route).then(l => { route.limits = fillLimits(l); }).catch(e => console.warn('Tempolimits', e)); }
+// GM-016: Lücken (OSM ohne maxspeed) mit dem letzten bekannten Limit füllen, am Anfang mit dem ersten bekannten – nie aus der Fahrgeschwindigkeit raten
+export function fillLimits(l) {
+  const out = l.slice(); let last = 0;
+  for (let i = 0; i < out.length; i++) { if (out[i]) last = out[i]; else if (last) out[i] = last; }
+  const first = out.find(v => v); for (let i = 0; i < out.length && !out[i]; i++) out[i] = first || 0;
+  return out;
+}
 export function currentLimit() {
   const n = app.state.nav, r = n.route, sp = segSpeed();
   const v = r.limits && r.limits[segIndex(r, n.progress)];
   if (v === -1) return '∞';
-  return v > 0 ? v : (sp >= 100 ? 120 : sp >= 70 ? 100 : sp >= 45 ? 50 : sp >= 25 ? 30 : 10);
+  if (v > 0) return v;
+  if (r.remote) return ''; // GM-016: unbekannt → kein Schild statt falscher Zahl
+  return sp >= 100 ? 120 : sp >= 70 ? 100 : sp >= 45 ? 50 : sp >= 25 ? 30 : 10;
 }
 // GM-015: Abweichen simulieren – nächste Abbiegung verpasst, neue Route ab der aktuellen Position (Valhalla, Abbiegepunkt gesperrt)
 export async function reroute() {
@@ -142,10 +151,14 @@ export async function reroute() {
   n.rerouting = true; say('Route wird neu berechnet.'); toast('Abgewichen – Route wird neu berechnet');
   const pos = pointAt(n.route.pts, n.route.cum, n.progress).p, heading = smoothHeading(n.route, n.progress) * 180 / Math.PI;
   const turn = pointAt(n.route.pts, n.route.cum, m.at).p;
-  try {
-    const [route] = await valhallaRoutes(pos, n.dest.p, { heading, exclude: [turn], alternates: 0, avoidHighway: app.state.avoidHighway, avoidToll: app.state.avoidToll });
-    if (route) { loadLimits(route); set({ nav: { route, routes: [{ label: 'Neue Route', route, gain: null }], sel: 0, progress: 0, spoken: {}, rerouting: false } }); }
-  } catch (e) { console.warn('Neuberechnung', e); toast('Neuberechnung fehlgeschlagen'); }
+  // GM-016: Ausweich-Reihenfolge – erst Abbiegung sperren; gibt es dann keinen Weg (z. B. Sackgasse am Bahnhof), weiter geradeaus gefahren annehmen
+  const o = { alternates: 0, avoidHighway: app.state.avoidHighway, avoidToll: app.state.avoidToll };
+  const past = pointAt(n.route.pts, n.route.cum, Math.min(n.route.length, m.at + 40)).p;
+  const tries = [() => valhallaRoutes(pos, n.dest.p, { ...o, heading, exclude: [turn] }), () => valhallaRoutes(past, n.dest.p, { ...o, heading }), () => valhallaRoutes(pos, n.dest.p, o)];
+  let route = null;
+  for (const t of tries) { try { [route] = await t(); if (route) break; } catch (e) { console.warn('Neuberechnung, nächster Versuch:', e.message); } }
+  if (route) { loadLimits(route); set({ nav: { route, routes: [{ label: 'Neue Route', route, gain: null }], sel: 0, progress: 0, spoken: {}, rerouting: false } }); toast('Neue Route'); }
+  else toast('Neuberechnung fehlgeschlagen');
   n.rerouting = false;
 }
 function newShare(route) { if (!route.edges.length) return null; let l = 0; route.edges.forEach((k, i) => { if (!app.explored.has(k)) l += route.cum[i + 1] - route.cum[i]; }); return Math.round(100 * l / route.length); }
@@ -205,6 +218,11 @@ export function requestTile(n) {
     if (Math.hypot(car[0] - cx, car[1] - cy) < 220) return;
   }
   app.tilePending = true;
+  if (app.tilesMain) { // GM-016: ohne OffscreenCanvas im Worker auf dem Haupt-Thread zeichnen
+    const job = { type: 'tile', id: Date.now(), style: app.state.style, S: TILE_S, region: { x0: ahead[0] - TILE / 2, y0: ahead[1] - TILE / 2, w: TILE, h: TILE } };
+    import('./tilejob.js').then(j => j.runTile(job, app.scene)).then(({ msg }) => app.tiles.onmessage({ data: msg }));
+    return;
+  }
   app.tiles.postMessage({ type: 'tile', id: Date.now(), style: app.state.style, S: TILE_S, region: { x0: ahead[0] - TILE / 2, y0: ahead[1] - TILE / 2, w: TILE, h: TILE } });
 }
 

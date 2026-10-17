@@ -7,6 +7,7 @@ const TILEJSON = 'https://tiles.openfreemap.org/planet';
 const MAX_JOBS = 3, MAX_CACHE = 140, PER_VIEW = 36;
 let app, url = null, workers = [], busy = 0, lastRun = 0;
 const queue = [], pending = new Set(), cache = new Map(), poiTiles = new Map();
+let mainThread = false; // GM-016: true, wenn der Worker kein OffscreenCanvas hat
 const INNER = { x0: TEX.x0 + 300, y0: TEX.y0 + 300, x1: TEX.x0 + TEX.w - 300, y1: TEX.y0 + TEX.h - 300 }; // dort zeichnet die Idstein-Textur
 
 export async function initTiles(a) {
@@ -52,7 +53,8 @@ export function updateTiles(now) {
   queue.sort((a, b) => a.d - b.d);
   while (busy < MAX_JOBS && queue.length) {
     const t = queue.shift(); pending.add(t.key); busy++;
-    workers[busy % MAX_JOBS].postMessage({ type: 'vtile', url, key: t.key, z: t.z, x: t.x, y: t.y, div: t.div, sx: t.sx, sy: t.sy, S: t.S, style: t.style });
+    const job = { type: 'vtile', url, key: t.key, z: t.z, x: t.x, y: t.y, div: t.div, sx: t.sx, sy: t.sy, S: t.S, style: t.style };
+    if (mainThread) import('./tilejob.js').then(j => j.runVtile(job)).then(done); else workers[busy % MAX_JOBS].postMessage(job);
   }
   // Anzeige: alle fertigen Kacheln des Stils im Blickfeld, grobe unten (füllen Lücken, solange feine laden)
   for (const v of Object.values(app.views)) {
@@ -70,6 +72,7 @@ export function updateTiles(now) {
 
 function done(m) {
   busy = Math.max(0, busy - 1); pending.delete(m.key);
+  if (m.nooffscreen) { mainThread = true; lastRun = 0; return; } // Haupt-Thread übernimmt, Kachel wird neu angefordert
   if (m.error || !m.blob) { if (m.error) console.warn('Kachel', m.key, m.error); return; }
   cache.set(m.key, { key: m.key, style: m.style, region: m.region, S: m.S, url: URL.createObjectURL(m.blob), pixelated: m.style === 'pixel' });
   if (m.pois && m.pois.length) {

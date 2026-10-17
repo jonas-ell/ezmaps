@@ -43,7 +43,7 @@ function toRoute(trip) {
     if (m.type === 27) return; // Ausfahrt aus dem Kreisverkehr steckt schon in der Einfahrt
     if (m.type === 20 || m.type === 21) text = `Ausfahrt ${m.sign?.exit_number_elements?.[0]?.text || ''}`.trim() + ' nehmen';
     if (m.type === 18 || m.type === 19) text = 'Auffahrt nehmen';
-    maneuvers.push({ at: cum[m.begin_shape_index], turn: 0, street: street || 'Straße', kind, text });
+    maneuvers.push({ at: cum[m.begin_shape_index], turn: 0, street, kind, text }); // GM-016: kein Platzhalter „Straße“
   });
   if (!maneuvers.length || maneuvers[maneuvers.length - 1].kind !== 'destination') maneuvers.push({ at: cum[n], turn: 0, street: 'Ziel', kind: 'destination', text: 'Ziel erreicht' });
   return { pts, cum, length: cum[n], seconds: trip.summary.time, names, speeds, maneuvers, edges: [], ids: [], remote: true, limits: null };

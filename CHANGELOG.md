@@ -2,6 +2,24 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-016 – Deutschland-Funktionen im Prototyp geprüft und repariert (Chromium + WebKit)
+
+**Ziel:** GM-015 (Kacheln, Suche, Routing, Tempolimits, Neuberechnung) in Chrome- und Safari-Engine prüfen und Fehler beheben.
+
+**Dateien:** `tools/prototype/js/{app,phone,carplay,valhalla,tiles,tileworker}.js`, `tools/prototype/js/tilejob.js` (neu), `tools/prototype/check_germany.py` (neu), `.gitignore`, `docs/previews/*`
+
+**Geändert:**
+- Tempolimit zeigte „10“, wo OSM kein `maxspeed` hat (Ersatzwert kam aus der geschätzten Fahrgeschwindigkeit). Jetzt: Lücken mit dem letzten bekannten Limit füllen, sonst kein Schild statt einer falschen Zahl
+- „Falsch abbiegen“ scheiterte kurz nach dem Start (Valhalla: „No path“, weil die gesperrte Kreuzung der einzige Weg war). Jetzt drei Versuche: Abbiegung sperren → „geradeaus weitergefahren“ → ohne Sperre
+- Tacho war leer (Kommentar hatte im gleichen Commit-Block die Code-Zeile verschluckt) – behoben, iPhone und CarPlay
+- Straßen ohne Namen hießen „STRASSE“ – jetzt kein Platzhalter mehr, auch nicht in „danach …“
+- WebKit-Build ohne `OffscreenCanvas` im Worker: Deutschland-Kacheln und Detail-Kachel blieben leer. Neues gemeinsames Modul `tilejob.js`; fehlt `OffscreenCanvas`, zeichnet der Haupt-Thread
+- `check_germany.py`: automatischer Ablauf (Zoom Deutschland ↔ Idstein, vier Stile in Frankfurt, Suche „Römerberg Frankfurt“, Route, Los, Tempolimit, Falsch abbiegen, CarPlay)
+
+**Tatsächlich geprüft:** `check_germany.py` in Chromium und WebKit (Playwright, Windows): Kacheln laden beim Zoomen, alle vier Stile außerhalb Idsteins, 3 Routen nach Frankfurt (42/44/50 min), Tempolimit 50 auf iPhone und CarPlay, Neuberechnung liefert neue Route. Einzige Konsolenmeldung: der erwartete 400er des ersten Neuberechnungs-Versuchs. `shots.py` mit Pricedown ohne Fehler, Bilder angesehen.
+
+**Ungetestet:** Echtes Safari auf macOS/iOS (nur WebKit-Engine unter Windows getestet). Öffentliche Server (OpenFreeMap, Valhalla FOSSGIS, Photon) können ausfallen oder drosseln.
+
 ## GM-015 – Ganz Deutschland: Karte lädt automatisch im Stil, Suche, Routing, echte Tempolimits, Neuberechnung
 
 **Ziel:** Die Karte soll nicht mehr nur Idstein zeigen, sondern ganz Deutschland – automatisch im gewählten Stil. Dazu Suche, Routing und Tempolimits überall.
