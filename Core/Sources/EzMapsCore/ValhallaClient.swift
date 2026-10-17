@@ -29,10 +29,14 @@ public struct ValhallaClient: Sendable {
             start["heading"] = Int(((h.truncatingRemainder(dividingBy: 360)) + 360).truncatingRemainder(dividingBy: 360).rounded())
             start["heading_tolerance"] = 45
         }
+        // GM-018: gemischte Literale immer mit Typ (LESSONS_SWIFT 1, „heterogeneous collection literal“)
+        let end: [String: Any] = ["lat": to.latitude, "lon": to.longitude]
+        let locations: [[String: Any]] = [start, end]
+        let costing: [String: Any] = ["auto": ["use_highways": options.avoidHighway ? 0 : 1, "use_tolls": options.avoidToll ? 0 : 1]]
         var body: [String: Any] = [
-            "locations": [start, ["lat": to.latitude, "lon": to.longitude]],
+            "locations": locations,
             "costing": "auto",
-            "costing_options": ["auto": ["use_highways": options.avoidHighway ? 0 : 1, "use_tolls": options.avoidToll ? 0 : 1]],
+            "costing_options": costing,
             "directions_options": ["language": "de-DE", "units": "kilometers"],
             "alternates": options.alternates,
         ]
@@ -69,11 +73,9 @@ public struct ValhallaClient: Sendable {
         var idx: [Int] = []
         var i = 0
         while i < route.shape.count && route.cumulative[i] < maxDistance { idx.append(i); i += step }
-        let shape = idx.map { ["lat": route.shape[$0].latitude, "lon": route.shape[$0].longitude] }
-        let body: [String: Any] = [
-            "shape": shape, "costing": "auto", "shape_match": "map_snap",
-            "filters": ["attributes": ["edge.speed_limit", "matched.edge_index"], "action": "include"],
-        ]
+        let shape: [[String: Double]] = idx.map { ["lat": route.shape[$0].latitude, "lon": route.shape[$0].longitude] }
+        let filters: [String: Any] = ["attributes": ["edge.speed_limit", "matched.edge_index"], "action": "include"]
+        let body: [String: Any] = ["shape": shape, "costing": "auto", "shape_match": "map_snap", "filters": filters]
         let data = try await http.send(try request("/trace_attributes", body))
         let response = try Self.decoder.decode(TraceResponse.self, from: data)
         var limits = [Int](repeating: 0, count: route.shape.count - 1)
@@ -211,7 +213,9 @@ public struct ValhallaClient: Sendable {
         init(from decoder: Decoder) throws {
             let c = try decoder.singleValueContainer()
             if let v = try? c.decode(Int.self) { self = .kmh(v) }
-            else if let s = try? c.decode(String.self) { self = s == "unlimited" ? .unlimited : (Int(s).map { .kmh($0) } ?? .unknown) }
+            else if let s = try? c.decode(String.self) {
+                if s == "unlimited" { self = .unlimited } else if let v = Int(s) { self = .kmh(v) } else { self = .unknown }
+            }
             else { self = .unknown }
         }
 

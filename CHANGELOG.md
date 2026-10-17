@@ -2,6 +2,25 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-018 – Mac-Build vorbereitet, Swift-Code vorgeprüft
+
+**Ziel:** Alles so vorbereiten, dass nach der einmaligen Mac-Einrichtung ein einziger Befehl baut und testet.
+
+**Dateien:** `tools/mac_run.sh` (neu), `docs/MAC_EINRICHTEN.md` (neu), `project.yml`, `Core/Sources/EzMapsCore/ValhallaClient.swift`, `CHANGELOG.md`
+
+**Geändert:**
+- `bash tools/mac_run.sh`: prüft den Zugang (`ping`), leert den Projektordner, schickt den letzten Commit per `git archive` (nur App/, Core/, project.yml, Build-Skript – keine Schrift, keine Geheimnisse, LF-Zeilenenden) und baut; `bash tools/mac_run.sh log` holt das Log
+- `docs/MAC_EINRICHTEN.md`: Gate-Skript und `authorized_keys`-Zeile zum Einfügen auf dem Mac, Test-Befehle, Fehlertabelle
+- MapLibre fest auf `6.31.0` (stabil; der Hauptzweig der Distribution zeigt schon auf 7.0-Vorabversionen)
+- Vorbeugend nach `LESSONS_SWIFT.md`: gemischte Wörterbuch-/Array-Literale mit ausdrücklichem Typ; `speed_limit`-Text ohne mehrdeutige Typableitung
+
+**Tatsächlich geprüft:**
+- MapLibre-API-Namen in den Headern von `MapLibre.xcframework` 6.31.0 nachgesehen: `MLNMapView`, `initWithFrame:styleURL:`, `setCenterCoordinate:zoomLevel:animated:`, `logoView`, `attributionButtonPosition`, `MLNOrnamentPositionTopRight`, `isPitchEnabled` vorhanden
+- Swift-Syntax aller 16 Dateien mit tree-sitter: keine Fehler (ersetzt keinen Build)
+- `bash -n` für beide Skripte; `mac_run.sh` meldet fehlenden Zugang sauber; Archiv-Inhalt geprüft (keine privaten Dateien)
+
+**Ungetestet:** Kein Swift-Build, kein `swift test` – Mac-Gate für EzMaps noch nicht eingerichtet. Erwartet: 15 Tests (3 MapStyle, 2 Polyline, 5 Valhalla, 2 Photon, 3 Neuberechnung).
+
 ## GM-017 – Swift: MapLibre-Karte „Neon City“, Valhalla, Photon, Neuberechnung (ungetestet)
 
 **Ziel:** Erste echte Swift-Bausteine nach dem Prototyp: Karte mit MapLibre Native, Routing/Suche/Tempolimits in `Core/`, automatische Neuberechnung.

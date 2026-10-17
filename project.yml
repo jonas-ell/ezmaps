@@ -10,7 +10,7 @@ packages:
     path: Core
   MapLibre:
     url: https://github.com/maplibre/maplibre-gl-native-distribution
-    from: 6.0.0
+    exactVersion: 6.31.0  # GM-018: stabil; main der Distribution zeigt schon auf 7.0-Vorabversionen
 
 targets:
   EzMaps:
