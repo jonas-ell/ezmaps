@@ -2,6 +2,25 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-010 – Review Teil 0: Neon-Karte nach Vorlage
+
+**Ziel:** Punkte 0.1–0.7 aus `docs/TODO_PROTOTYP_REVIEW.md`, Vergleich mit der Vorlage (0.8).
+
+**Dateien:** `tools/prototype/js/{map,app,phone,carplay}.js`, `tools/prototype/style.css`, `tools/prototype/hillshade.py` (neu), `tools/prototype/data/hillshade.png` (neu), `docs/ASSETS_CODEX.md`, `docs/TODO_PROTOTYP_REVIEW.md`, `docs/previews/*`
+
+**Geändert:**
+- 0.1 Neon-Palette: Land `#1E1F20`, Flächen nur minimal heller, Gebäude `#29292B`, Wasser hell `#8FA3B0`, Wald/Park neutral
+- 0.2 Straßen nicht mehr in der Textur, sondern als feine Vektorlinien in Bildschirm-Pixeln (0,9–3 pt, Rang über Helligkeit); Kreisel ohne dicken Ring
+- 0.3 Hügel-Schattierung aus freien Höhendaten (Terrain Tiles/AWS: SRTM, EU-DEM © Copernicus), `hillshade.py` erzeugt `data/hillshade.png`; Quelle im Profil genannt; Texturrand läuft weich aus
+- 0.4 Stöbern weiter raus: ganze Stadt im Blick (iPhone 0,17 px/m, CarPlay 0,26 px/m), Zoom bis 2 px/m
+- 0.5 Neon-Symbole einfarbig weiß mit dunkler Kontur (eigener Glyphen-Satz), Essen in der Übersicht ausgeblendet; Codex-Prompt für passenden Glyphen-Satz ergänzt
+- 0.6 Legende über den Ebenen-Knopf (iPhone), Tippen hebt Symbole hervor; CarPlay ohne Legende (wenig Ablenkung)
+- 0.7 Maßstab unten links über dem Ortsteil-Kasten (iPhone und CarPlay), passt sich dem Zoom an
+
+**Tatsächlich geprüft:** `shots.py` ohne Konsolenfehler, Bilder angesehen; Vergleichsbild Vorlage ↔ CarPlay-Übersicht erstellt (nicht im Repo, Vorlage ist fremdes Bildmaterial).
+
+**Ungetestet:** Prototyp nur in Chromium. Swift-Karte (0.9) erst nach Freigabe. Zeichenaufwand der Vektorstraßen auf schwachen Geräten nicht gemessen.
+
 ## GM-009 – Review Teil 1: Fehler behoben
 
 **Ziel:** Punkte 1.1–1.7 aus `docs/TODO_PROTOTYP_REVIEW.md`.

@@ -11,7 +11,7 @@ export const TEX = { x0: -1800, y0: -1500, w: 3600, h: 3000 };
 const WIDTH = { 0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5 };
 
 export const STYLES = {
-  neon:    { name: 'Neon City', route: '#a13df0', routeEdge: '#4b1a73', alt: 'rgba(200,200,205,0.55)', bg: '#26272a', haze: [38, 39, 41] },
+  neon:    { name: 'Neon City', route: '#a13df0', routeEdge: '#4b1a73', alt: 'rgba(200,200,205,0.55)', bg: '#1e1f20', haze: [30, 31, 32] },
   western: { name: 'Wild West', route: '#c0261f', routeEdge: '#4a0d0a', alt: 'rgba(90,60,30,0.45)', bg: '#c4ac80', haze: [196, 172, 128] },
   pixel:   { name: 'Pixel Quest', route: '#ffcc33', routeEdge: '#7a4a00', alt: 'rgba(255,255,255,0.6)', bg: '#1b2a5a', haze: [27, 42, 90], pixelated: true },
   toy:     { name: 'Toy Town', route: '#ff7a00', routeEdge: '#ffffff', alt: 'rgba(255,255,255,0.75)', bg: '#8dc63f', haze: [196, 230, 255] },
@@ -93,10 +93,16 @@ export async function renderTexture(scene, style) {
   return { url: URL.createObjectURL(blob), S, pixelated: pixel };
 }
 
+// GM-010 (Teil 0): Look nach Vorlage – fast schwarzes Land, Gebäude kaum sichtbar, helles Wasser, Relief.
+// Straßen werden NICHT in die Textur gezeichnet, sondern als feine Vektorlinien in Bildschirm-Pixeln (drawRoads).
 const NEON = {
-  land: '#3d3e40', residential: '#303133', industrial: '#2d2e30', farm: '#424345', park: '#393b3a', forest: '#363837',
-  water: '#24313f', waterLine: '#2b3a4b', building: '#252628', casing: 'rgba(30,30,32,0.55)',
-  road: r => ['#b4b4b4', '#a6a6a6', '#9c9c9c', '#8f8f8f', '#858585', '#757575', '#686868', '#585858'][r], rail: '#2a2b2d', texture: terrainTexture,
+  land: '#1e1f20', residential: '#222324', industrial: '#232425', farm: '#1f2021', park: '#202221', forest: '#1f2120',
+  water: '#8fa3b0', waterLine: '#8fa3b0', building: '#29292b', casing: null,
+  road: () => '#888', rail: '#3b3c3e', texture: terrainTexture, vectorRoads: true, hill: true,
+};
+export const NEON_ROADS = { // Helligkeit statt Dicke zeigt die Rangfolge; Breite in pt
+  color: ['#ececec', '#dcdcdc', '#d2d2d2', '#c2c2c2', '#b4b4b4', '#929292', '#7d7d7d', '#616161'],
+  width: [3, 2.5, 2.2, 2, 1.8, 1.3, 1.1, 0.9],
 };
 const WESTERN = {
   land: '#dcc59a', residential: '#d4bb8a', industrial: '#ccb07f', farm: '#e3cfa2', park: '#d6c18c', forest: '#cdb782',
@@ -116,6 +122,9 @@ function drawClassic(ctx, scene, S, T) {
   }
   ctx.strokeStyle = T.waterLine; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   for (const l of scene.lines) if (l.k === 'water') { ctx.lineWidth = l.c === 'river' ? 9 : 3; poly(ctx, l.pts); ctx.stroke(); }
+  if (T.hill && scene.hill) { // Hügel-Schattierung (Terrain Tiles: SRTM / EU-DEM)
+    ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = 0.95; ctx.drawImage(scene.hill, TEX.x0, TEX.y0, TEX.w, TEX.h); ctx.restore();
+  }
   ctx.fillStyle = T.building; if (T.buildingEdge) { ctx.strokeStyle = T.buildingEdge; ctx.lineWidth = 0.7; }
   for (const a of scene.areas) if (a.k === 'building') { poly(ctx, a.pts, true); ctx.fill(); if (T.buildingEdge) ctx.stroke(); }
   // Struktur (Relief bzw. Papier) als Overlay
@@ -127,12 +136,19 @@ function drawClassic(ctx, scene, S, T) {
     if (T.ties) { ctx.lineWidth = 4; ctx.setLineDash([0.9, 4]); ctx.lineCap = 'butt'; poly(ctx, l.pts); ctx.stroke(); ctx.lineCap = 'round'; }
     ctx.setLineDash([]);
   }
-  const roads = scene.lines.filter(l => l.k === 'road' && l.r <= 7).sort((a, b) => b.r - a.r);
+  const roads = T.vectorRoads ? [] : scene.lines.filter(l => l.k === 'road' && l.r <= 7).sort((a, b) => b.r - a.r);
   for (const pass of ['casing', 'fill']) for (const l of roads) {
     const w = WIDTH[l.r] * 0.75;
     if (T.thinMinor && l.r >= 5) { if (pass === 'fill') { ctx.strokeStyle = T.road(l.r); ctx.lineWidth = w * 0.42; poly(ctx, l.pts); ctx.stroke(); } continue; }
     ctx.strokeStyle = pass === 'casing' ? T.casing : T.road(l.r); ctx.lineWidth = pass === 'casing' ? w + (T.thinMinor ? 2.2 : 1.2) : w;
     poly(ctx, l.pts); ctx.stroke();
+  }
+  if (T.hill && R === TEX) { // GM-010: Rand der Textur weich in die Landfarbe auslaufen lassen (keine sichtbare Kante)
+    const f = 260;
+    for (const [x0, y0, x1, y1, rx, ry, rw, rh] of [[R.x0, 0, R.x0 + f, 0, R.x0, R.y0, f, R.h], [R.x0 + R.w, 0, R.x0 + R.w - f, 0, R.x0 + R.w - f, R.y0, f, R.h], [0, R.y0, 0, R.y0 + f, R.x0, R.y0, R.w, f], [0, R.y0 + R.h, 0, R.y0 + R.h - f, R.x0, R.y0 + R.h - f, R.w, f]]) {
+      const g = ctx.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, T.land); g.addColorStop(1, 'rgba(30,31,32,0)');
+      ctx.fillStyle = g; ctx.fillRect(rx, ry, rw, rh);
+    }
   }
   if (T.vignette) {
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -435,21 +451,27 @@ function strokeDepth(u, pts, w, color) {
   }
 }
 
-const BLIP = { fuel: ['#f08a2c', 'fuel', 'fuel'], parking: ['#5fb6ff', 'P', 'parking'], fast_food: ['#7ee06a', 'food', 'food'], restaurant: ['#7ee06a', 'food', 'food'], cafe: ['#7ee06a', 'food', 'food'], supermarket: ['#f5d742', 'cart', 'shop'] };
+const BLIP = { hospital: ['#ff5a5a', '+', 'hospital'], police: ['#6d8cff', 'star', 'police'], fuel: ['#f08a2c', 'fuel', 'fuel'], parking: ['#5fb6ff', 'P', 'parking'], fast_food: ['#7ee06a', 'food', 'food'], restaurant: ['#7ee06a', 'food', 'food'], cafe: ['#7ee06a', 'food', 'food'], supermarket: ['#f5d742', 'cart', 'shop'] };
 export function drawBlips(u, mv, scene, style, opts = {}) {
   const placed = [], near = mv.cam.scale > 0.45;
   const base = opts.size ?? (near ? Math.min(14, 7 + mv.cam.scale * 1.4) : 6.5);
   for (const p of scene.pois) {
     const b = BLIP[p.kind]; if (!b) continue;
     if (near && (p.kind === 'restaurant' || p.kind === 'cafe') && mv.cam.tilt) continue;
+    if (style === 'neon' && mv.cam.scale < 0.6 && (p.kind === 'restaurant' || p.kind === 'cafe' || p.kind === 'fast_food')) continue; // GM-010 (0.5): Übersicht ruhiger
+    const hl = opts.highlight && (opts.highlight === b[2]);
     const q = mv.project(p.p); if (!mv.visible(q)) continue;
     const r = base * Math.max(0.7, Math.min(1.2, q[2]));
     if (opts.avoid && opts.avoid.some(a => q[0] + r > a[0] && q[0] - r < a[2] && q[1] + r > a[1] && q[1] - r < a[3])) continue; // GM-009 (1.2)
     if (placed.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < r * 3.6)) continue;
-    placed.push(q); blip(u, q[0], q[1], r, b, style);
+    placed.push(q);
+    if (opts.highlight && !hl) u.globalAlpha = 0.25;
+    if (hl) { u.fillStyle = 'rgba(161,61,240,.45)'; u.beginPath(); u.arc(q[0], q[1], r * 2, 0, 7); u.fill(); }
+    blip(u, q[0], q[1], hl ? r * 1.35 : r, b, style); u.globalAlpha = 1;
   }
 }
 function blip(u, x, y, r, [color, g, file], style) {
+  if (style === 'neon') { u.save(); u.translate(x, y); u.lineCap = 'round'; u.lineJoin = 'round'; u.fillStyle = '#f2f2f2'; u.strokeStyle = '#0c0c0d'; glyph(u, r, g, '#0c0c0d'); u.restore(); return; } // GM-010: weiß, dunkle Kontur
   const set = blipSet(style); if (set && set[file]) return drawAsset(u, set[file], x, y, r * 2.6, style === 'pixel');
   if (style === 'pixel') return sprite(u, SPR[g === 'P' ? 'P' : g], x, y, Math.max(2, Math.round(r / 3.4)));
   u.save(); u.translate(x, y); u.lineCap = 'round'; u.lineJoin = 'round';
@@ -462,6 +484,8 @@ function blip(u, x, y, r, [color, g, file], style) {
   u.fillStyle = style === 'western' ? '#3a2414' : color; u.strokeStyle = edge; glyph(u, r, g, edge); u.restore();
 }
 function glyph(u, r, g, edge) {
+  if (g === '+') { const a = r * 0.75, b = r * 0.26; u.beginPath(); u.rect(-b, -a, 2 * b, 2 * a); u.rect(-a, -b, 2 * a, 2 * b); if (edge) { u.lineWidth = r * 0.4; u.stroke(); } u.fill(); return; }
+  if (g === 'star') { u.beginPath(); for (let i = 0; i < 10; i++) { const an = i * Math.PI / 5 - Math.PI / 2, rr = i % 2 ? r * 0.38 : r * 0.85; u.lineTo(Math.cos(an) * rr, Math.sin(an) * rr); } u.closePath(); if (edge) { u.lineWidth = r * 0.4; u.stroke(); } u.fill(); return; }
   if (g === 'P') { u.font = `800 ${r * 1.7}px Inter`; u.textAlign = 'center'; u.textBaseline = 'middle'; if (edge) { u.lineWidth = r * 0.3; u.strokeText(g, 0, r * 0.08); } u.fillText(g, 0, r * 0.08); return; }
   u.beginPath();
   if (g === 'fuel') { u.rect(-r * 0.6, -r * 0.75, r * 0.8, r * 1.5); u.moveTo(r * 0.2, -r * 0.35); u.lineTo(r * 0.65, -r * 0.1); u.lineTo(r * 0.65, r * 0.55); }
@@ -532,4 +556,23 @@ export function drawFog(u, mv, scene, exploredLines) {
     for (const pts of exploredLines) { u.beginPath(); pts.forEach((p, i) => { const q = mv.project(p); i ? u.lineTo(q[0], q[1]) : u.moveTo(q[0], q[1]); }); u.stroke(); }
   }
   u.restore();
+}
+
+// GM-010 (0.2): Straßen als Vektor in Bildschirm-Pixeln (bleiben beim Zoomen fein, Kreisel ohne dicken Ring)
+const bbOf = l => l.bb ??= (() => { let a = Infinity, b = Infinity, c = -Infinity, d = -Infinity; for (const [x, y] of l.pts) { a = Math.min(a, x); b = Math.min(b, y); c = Math.max(c, x); d = Math.max(d, y); } return [a, b, c, d]; })();
+let roadCache = null;
+export function drawRoads(u, mv, scene) {
+  roadCache ??= scene.lines.filter(l => l.k === 'road' && l.r <= 7).sort((a, b) => b.r - a.r);
+  const c = mv.cam, R = Math.max(mv.W, mv.H) / c.scale * (c.tilt ? 2.2 : 0.8), zf = Math.max(1, Math.min(2.4, Math.sqrt(c.scale / 0.5)));
+  u.lineCap = 'round'; u.lineJoin = 'round';
+  for (const l of roadCache) {
+    const [x0, y0, x1, y1] = bbOf(l);
+    if (x1 < c.center[0] - R || x0 > c.center[0] + R || y1 < c.center[1] - R || y0 > c.center[1] + R) continue;
+    if (c.scale < 0.25 && l.r >= 7) continue;
+    u.strokeStyle = NEON_ROADS.color[l.r];
+    let kSum = 0, n = 0; u.beginPath(); let started = false;
+    for (const p of l.pts) { const q = mv.project(p); if (q[2] <= 0) { started = false; continue; } kSum += q[2]; n++; started ? u.lineTo(q[0], q[1]) : u.moveTo(q[0], q[1]); started = true; }
+    if (!n) continue;
+    u.lineWidth = NEON_ROADS.width[l.r] * zf * Math.min(2.5, kSum / n); u.stroke();
+  }
 }

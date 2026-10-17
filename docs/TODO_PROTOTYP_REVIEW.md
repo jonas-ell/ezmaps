@@ -25,14 +25,14 @@ Was heute anders ist (Farben in `js/map.js:96`, `NEON`, Zeichnen in `drawClassic
 | Symbole | bunt (grünes Besteck, blaues P) | einfarbig weiß mit dunkler Kontur, klein (ca. 14 pt), alle gleich; Farbe nur für Ziel, Route und Spieler |
 
 Aufgaben:
-- [ ] **0.1 Neue Palette für `NEON`:** Land fast schwarz, Wohn-/Gewerbe-/Parkflächen nur minimal heller, Gebäude knapp über dem Land, Wasser hell. Wald und Park nicht grün, sondern neutral mit leichtem Relief.
-- [ ] **0.2 Straßenbreiten in Bildschirm-Pixeln** statt in Metern, damit sie beim Zoomen dünn bleiben. Weil die Karte als Textur in Metern gezeichnet wird: Straßen entweder in der Überlagerung (`mv-over`) als Vektor zeichnen oder je Zoomstufe eine passende Textur erzeugen. Kreisel ohne dicken Ring.
-- [ ] **0.3 Hügel-Schattierung:** Höhendaten (z. B. SRTM / Copernicus DEM 30 m, freie Lizenz, Quelle in der App nennen) in `prep.py` zu einem Graustufen-Bild für Idstein verarbeiten und mit `multiply`/`overlay` schwach über das Land legen.
-- [ ] **0.4 Zoom beim Stöbern weiter raus**, sodass Idstein ganz auf den Bildschirm passt (iPhone und CarPlay). Das Hineinzoomen bleibt möglich.
-- [ ] **0.5 Symbole einfarbig weiß** mit dunkler Kontur in einem eigenen, schlichten Glyphen-Satz (Neon-Assets aus `Assets/Generated` anpassen oder neue Codex-Prompts in `docs/ASSETS_CODEX.md`). In der Übersicht weniger Symbole zeigen (nicht jedes Restaurant).
-- [ ] **0.6 Legende rechts** (iPhone: ausklappbar über den Ebenen-Knopf; CarPlay nur, wenn Apple-Vorgaben es erlauben): Liste der Symbole, weißer Text auf schwarzen Kästen, Tippen hebt die Symbole auf der Karte hervor. Eigene deutsche Begriffe (Tanken, Parken, Essen, Supermarkt, Apotheke …).
-- [ ] **0.7 Maßstab** unten links über dem Ortsnamen-Kasten (z. B. „0 ─── 500 m“).
-- [ ] **0.8 Vergleich:** Nach der Umstellung ein Bildschirmfoto der Stadtübersicht neben die Vorlage legen und dem Nutzer zeigen, bevor die anderen Stile angepasst werden. Wild West, Pixel Quest und Toy Town nicht verändern, außer bei 0.2 und 0.4, falls die gemeinsam gelten.
+- [x] **0.1 Neue Palette für `NEON`:** Land fast schwarz, Wohn-/Gewerbe-/Parkflächen nur minimal heller, Gebäude knapp über dem Land, Wasser hell. Wald und Park nicht grün, sondern neutral mit leichtem Relief.
+- [x] **0.2 Straßenbreiten in Bildschirm-Pixeln** statt in Metern, damit sie beim Zoomen dünn bleiben. Weil die Karte als Textur in Metern gezeichnet wird: Straßen entweder in der Überlagerung (`mv-over`) als Vektor zeichnen oder je Zoomstufe eine passende Textur erzeugen. Kreisel ohne dicken Ring.
+- [x] **0.3 Hügel-Schattierung:** Höhendaten (z. B. SRTM / Copernicus DEM 30 m, freie Lizenz, Quelle in der App nennen) in `prep.py` zu einem Graustufen-Bild für Idstein verarbeiten und mit `multiply`/`overlay` schwach über das Land legen.
+- [x] **0.4 Zoom beim Stöbern weiter raus**, sodass Idstein ganz auf den Bildschirm passt (iPhone und CarPlay). Das Hineinzoomen bleibt möglich.
+- [x] **0.5 Symbole einfarbig weiß** mit dunkler Kontur in einem eigenen, schlichten Glyphen-Satz (Neon-Assets aus `Assets/Generated` anpassen oder neue Codex-Prompts in `docs/ASSETS_CODEX.md`). In der Übersicht weniger Symbole zeigen (nicht jedes Restaurant).
+- [x] **0.6 Legende rechts** _(iPhone umgesetzt; CarPlay bewusst ohne Legende – Apple verlangt dort wenig Ablenkung)_ (iPhone: ausklappbar über den Ebenen-Knopf; CarPlay nur, wenn Apple-Vorgaben es erlauben): Liste der Symbole, weißer Text auf schwarzen Kästen, Tippen hebt die Symbole auf der Karte hervor. Eigene deutsche Begriffe (Tanken, Parken, Essen, Supermarkt, Apotheke …).
+- [x] **0.7 Maßstab** unten links über dem Ortsnamen-Kasten (z. B. „0 ─── 500 m“).
+- [ ] **0.8 Vergleich:** _(GM-010: Vergleichsbild erstellt und dem Nutzer gezeigt – Freigabe offen)_ Nach der Umstellung ein Bildschirmfoto der Stadtübersicht neben die Vorlage legen und dem Nutzer zeigen, bevor die anderen Stile angepasst werden. Wild West, Pixel Quest und Toy Town nicht verändern, außer bei 0.2 und 0.4, falls die gemeinsam gelten.
 - [ ] **0.9 Swift:** Wenn der Nutzer den Look freigibt, dieselben Werte in die Swift-Karte übernehmen (`Core/Sources/EzMapsCore/MapStyle.swift` und den Kartenstil der App).
 
 ## Teil 1 – Fehler

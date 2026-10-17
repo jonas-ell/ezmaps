@@ -217,6 +217,16 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .spinner { width: 34px; height: 34px; border: 3px solid rgba(255,255,255,.25); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* GM-010: Legende und Maßstab */
+.legend { position: absolute; right: 70px; top: 172px; width: 150px; z-index: 4; }
+.lg-title { background: #fff; color: #000; font: 700 12px Inter; padding: 6px 10px; }
+.lg-row { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 6px 10px; margin-top: 2px; background: rgba(0,0,0,.82); color: #fff; font: 600 12px Inter; }
+.lg-row.on { background: #fff; color: #000; }
+.scalebar { position: absolute; left: 16px; bottom: 186px; display: flex; align-items: flex-end; gap: 4px; font: 600 10px Inter; color: #fff; text-shadow: 0 0 3px #000; z-index: 3; pointer-events: none; }
+.scalebar i { display: block; height: 6px; border: 1.5px solid #fff; border-top: 0; box-shadow: 0 1px 2px #000; }
+.scalebar.cp { left: 10px; bottom: 66px; }
+.t-western .scalebar, .t-toy .scalebar { color: #2e1e10; text-shadow: 0 0 3px #fff; } .t-western .scalebar i, .t-toy .scalebar i { border-color: #2e1e10; }
+
 /* Tastatur-Fokus (wie Knopf-Steuerung im Auto) */
 .kfocus { outline: 3px solid #0a84ff !important; outline-offset: 2px; box-shadow: 0 0 0 6px rgba(10,132,255,.35) !important; position: relative; z-index: 3; }
 .car .kfocus { outline-color: #fff !important; box-shadow: 0 0 0 6px rgba(255,255,255,.3) !important; }

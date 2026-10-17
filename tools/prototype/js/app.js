@@ -1,6 +1,6 @@
 // EzMaps – klickbarer Prototyp. Gemeinsamer Zustand für iPhone und CarPlay (wie später ein geteiltes Modell in der App).
 import { Router, pointAt, smoothHeading, edgeKey, fmtDist } from './route.js';
-import { MapView, renderTexture, drawRoute, drawBlips, drawPlayer, drawDestination, drawFriend, drawFog, STYLES } from './map.js';
+import { MapView, renderTexture, drawRoute, drawBlips, drawPlayer, drawDestination, drawFriend, drawFog, drawRoads, STYLES } from './map.js';
 import { renderPhone, phoneCamera, phoneHud } from './phone.js';
 import { renderCar, carCamera, carHud } from './carplay.js';
 import { loadAssets } from './assets.js';
@@ -15,7 +15,7 @@ export const app = {
     car: { screen: 'map' },
     nav: null,          // { dest, routes, sel, route, progress, active, arrived, spoken }
     toast: null, speaking: false, loading: null, recents: [],
-    browse: { phone: { center: null, scale: 0.42 }, car: { center: null, scale: 1.1 } },
+    browse: { phone: { center: null, scale: 0.17 }, car: { center: null, scale: 0.26 } }, legend: false, highlight: null,
   },
   explored: new Set(),
 };
@@ -31,9 +31,10 @@ async function boot() {
   // GM-009 (1.7): Version immer = neueste GM-Nummer im Changelog
   try { app.version = ((await (await fetch('../../CHANGELOG.md')).text()).match(/^## (GM-\d+\w*)/m) || [])[1] || '?'; } catch { app.version = '?'; }
   const scene = await (await fetch('data/idstein.json')).json();
+  try { scene.hill = await createImageBitmap(await (await fetch('data/hillshade.png')).blob()); } catch { scene.hill = null; } // GM-010 (0.3)
   app.scene = scene; app.router = new Router(scene.graph);
   app.start = scene.presets.start;
-  app.state.browse.phone.center = [...app.start]; app.state.browse.car.center = [...app.start];
+  app.state.browse.phone.center = [80, 120]; app.state.browse.car.center = [0, 60]; // GM-010 (0.4): ganze Stadt im Blick
   setupExplore();
   app.tiles = new Worker('js/tileworker.js', { type: 'module' });
   app.tiles.postMessage({ type: 'scene', scene });
@@ -189,6 +190,7 @@ function loop(now) {
     const u = view.apply(cams[key]);
     drawOverlay(u, view, key, target.mode);
     hudFn();
+    scaleBar(view, key);
   }
   requestAnimationFrame(loop);
 }
@@ -201,8 +203,9 @@ function drawOverlay(u, view, key, mode) {
   const s = app.state, n = s.nav, style = s.style;
   if (mode === 'explore') { drawFog(u, view, app.scene, exploredLines()); drawPlayer(u, view, app.start, 0, style, 9); return; }
   if (n && !n.active) n.routes.forEach((r, i) => i !== n.sel && drawRoute(u, view, r.route, 0, style, { alt: true }));
+  if (style === 'neon' && mode !== 'explore') drawRoads(u, view, app.scene); // GM-010 (0.2)
   if (n) drawRoute(u, view, n.route, n.active && !n.arrived ? n.progress : 0, style);
-  drawBlips(u, view, app.scene, style, { size: key === 'car' ? 13 : undefined, avoid: app.uiRects[key] }); // GM-008: große Symbole auf CarPlay
+  drawBlips(u, view, app.scene, style, { size: key === 'car' ? 13 : undefined, avoid: app.uiRects[key], highlight: s.highlight }); // GM-008: große Symbole auf CarPlay
   if (s.friends) { drawFriend(u, view, [app.start[0] + 260, app.start[1] - 420], 'Max', style); drawFriend(u, view, [app.start[0] + 880, app.start[1] - 160], 'Lea', style); }
   if (n) drawDestination(u, view, n.dest.p, style, key === 'car' ? 7 : 8);
   if (n && n.active) {
@@ -223,8 +226,8 @@ function bindGestures(view, key) {
   window.addEventListener('pointerup', () => drag = null);
   view.el.addEventListener('wheel', e => { e.preventDefault(); zoom(key, e.deltaY < 0 ? 1.15 : 1 / 1.15); }, { passive: false });
 }
-export function zoom(key, f) { const b = app.state.browse[key]; b.scale = Math.max(key === 'car' ? 0.32 : 0.16, Math.min(1.6, b.scale * f)); }
-export function recenter(key) { app.state.browse[key].center = [...app.start]; app.state.browse[key].scale = key === 'car' ? 1.1 : 0.42; }
+export function zoom(key, f) { const b = app.state.browse[key]; b.scale = Math.max(0.1, Math.min(2, b.scale * f)); }
+export function recenter(key) { app.state.browse[key].center = [...app.start]; app.state.browse[key].scale = key === 'car' ? 0.26 : 0.17; }
 
 function renderAll() { renderPhone(); renderCar(); restoreFocus(); requestAnimationFrame(collectRects); }
 // GM-009 (1.2): Bereiche der Bedienelemente merken – dort keine Kartensymbole zeichnen (Leisten/Panels sind teils durchsichtig)
@@ -250,3 +253,12 @@ document.addEventListener('click', e => {
 export function applyCarSize() { const [w, h] = app.state.carSize.split('x').map(Number); const c = document.getElementById('car'); c.style.width = w + 'px'; c.style.height = h + 'px'; }
 applyCarSize();
 boot().catch(e => { document.title = 'error: ' + e; console.error(e); document.body.insertAdjacentHTML('beforeend', `<pre style="color:#f66">${e.stack}</pre>`); });
+
+// GM-010 (0.7): Maßstab – runde Länge, die 60–140 px lang ist
+const NICE = [25, 50, 100, 200, 250, 500, 1000, 2000];
+function scaleBar(view, key) {
+  const el = document.querySelector(`#${key === 'car' ? 'cui' : 'pui'} [data-scale]`); if (!el) return;
+  const s = view.cam.scale, m = NICE.find(v => v * s >= 60) || 2000, w = Math.round(m * s);
+  if (el.dataset.w == w) return; el.dataset.w = w;
+  el.innerHTML = `<span>0</span><i style="width:${w}px"></i><span>${m >= 1000 ? m / 1000 + ' km' : m + ' m'}</span>`;
+}

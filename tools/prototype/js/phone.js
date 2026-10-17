@@ -100,12 +100,20 @@ function home() {
   const d = districtHere();
   return `<div class="searchbar panel" data-act="open:search">${ic('search', 20)}<span class="head" style="font-size:26px">Wohin?</span><span class="muted" style="margin-left:auto">${ic('mic', 20)}</span></div>
     <div class="chips">${[['home', 'Zuhause', 'dest:home', '#fff'], ['work', 'Arbeit', 'dest:work', '#fff'], ['fuel', 'Tanken', 'cat:fuel', '#f08a2c'], ['parking', 'Parken', 'cat:parking', '#5fb6ff']].map(([i, t, a, c]) => `<button class="chip panel" data-act="${a}"><span style="color:${c}">${ic(i, 16)}</span>${t}</button>`).join('')}</div>
-    <div class="rbtns">${btn('tab:styles', 'layers')}${btn('sheet:friends', 'friends')}${btn('recenter', 'locate')}${btn('zoom:in', 'plus')}${btn('zoom:out', 'minus')}</div>
+    <div class="rbtns">${btn('legend', 'layers')}${btn('sheet:friends', 'friends')}${btn('recenter', 'locate')}${btn('zoom:in', 'plus')}${btn('zoom:out', 'minus')}</div>
+    ${app.state.legend ? legend() : ''}
+    <div class="scalebar" data-scale></div>
     <button class="district panel" data-act="tab:explore"><div class="row sb"><span class="upper b">${d}</span><span class="head" style="font-size:30px">${pct(d)}%</span></div>
       <div class="bar"><i style="width:${pct(d)}%;background:var(--ok)"></i></div><div class="muted small">entdeckt · tippe für deine Karte</div></button>
 `;
 }
 function districtHere() { const e = [...app.edgeInfo.values()].reduce((b, e) => { const n = app.scene.graph.nodes[e.a], d = Math.hypot(n[0] - app.start[0], n[1] - app.start[1]); return d < b[0] ? [d, e.d] : b; }, [1e9, 'Altstadt']); return e[1]; }
+
+// GM-010 (0.6): Legende rechts – weißer Text auf schwarzen Kästen, Tippen hebt Symbole hervor
+const LEGEND = [['fuel', 'Tanken', 'fuel'], ['parking', 'Parken', 'parking'], ['shop', 'Supermarkt', 'star'], ['food', 'Essen', 'food'], ['hospital', 'Krankenhaus', 'info'], ['police', 'Polizei', 'shield']];
+function legend() {
+  return `<div class="legend"><div class="lg-title">Legende</div>${LEGEND.map(([k, t, i]) => `<button class="lg-row ${app.state.highlight === k ? 'on' : ''}" data-act="hl:${k}"><span>${t}</span>${ic(i, 15)}</button>`).join('')}</div>`;
+}
 
 // ---------------- Suche
 const presetDest = k => ({ home: { name: 'Zuhause', sub: 'Lanaer Straße', p: app.scene.presets.home, icon: 'home' }, work: { name: 'Arbeit', sub: 'Black-und-Decker-Straße', p: app.scene.presets.work, icon: 'work' } })[k];
@@ -204,7 +212,7 @@ function profile() {
     <div class="group"><div class="gt">Datenschutz</div>${t('friends', 'Freunde sehen meinen Standort', 'nur mit Zustimmung, jederzeit aus')}
       <div class="srow"><span class="tl">Gefahrene Strecken<small>nur auf diesem iPhone gespeichert</small></span><span class="muted">${ic('lock', 18)}</span></div>
       <button class="srow" data-act="toast:Im Prototyp nicht aktiv"><span class="tl" style="color:#ff453a">Entdeckte Karte zurücksetzen</span></button></div>
-    <div class="group"><div class="gt">Über</div><div class="srow"><span class="tl">Kartendaten<small>© OpenStreetMap-Mitwirkende (ODbL)</small></span></div><div class="srow"><span class="tl">Version<small>Prototyp ${app.version}</small></span></div></div>
+    <div class="group"><div class="gt">Über</div><div class="srow"><span class="tl">Kartendaten<small>© OpenStreetMap-Mitwirkende (ODbL)</small></span></div><div class="srow"><span class="tl">Höhendaten (Relief)<small>Terrain Tiles (AWS Open Data) · SRTM (NASA) · EU-DEM © Copernicus</small></span></div><div class="srow"><span class="tl">Version<small>Prototyp ${app.version}</small></span></div></div>
     <div style="height:120px"></div></div></div>`;
 }
 function friendsSheet() {
@@ -264,6 +272,8 @@ document.getElementById('pui').addEventListener('click', async e => {
     case 'sheet': set({ phone: { sheet: v || null } }); break;
     case 'friends': set({ friends: v === '1', phone: { sheet: null } }); toast(v === '1' ? 'Freunde sehen dich jetzt' : 'Teilen beendet'); break;
     case 'recenter': recenter('phone'); break;
+    case 'legend': set({ legend: !s.legend, highlight: null }); break;
+    case 'hl': set({ highlight: s.highlight === v ? null : v }); break;
     case 'zoom': zoom('phone', v === 'in' ? 1.4 : 1 / 1.4); break;
   }
 });
