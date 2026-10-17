@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=block" rel="stylesheet">
+<style>
+  @font-face { font-family: 'Headline'; src: url('fonts/pricedown.otf') format('opentype'); }
+  :root { --purple: #a13df0; --bg: rgba(0,0,0,0.78); --line: rgba(255,255,255,0.12); --muted: #a9a9ad; --gold: #d9ad3a; --green: #58b05f; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: #111; font-family: Inter, sans-serif; color: #fff; }
+  .screen { position: relative; overflow: hidden; background: #3d3e40 center/cover no-repeat; }
+  .phone { width: 1179px; height: 2556px; }
+  .car { width: 1920px; height: 720px; display: flex; }
+  .head { font-family: Headline; font-weight: 400; letter-spacing: 1px; -webkit-text-stroke: 0; text-shadow: -4px -4px 0 #000, 4px -4px 0 #000, -4px 4px 0 #000, 4px 4px 0 #000, 0 5px 0 #000, 0 -5px 0 #000, 5px 0 0 #000, -5px 0 0 #000; }
+  .box { background: var(--bg); }
+  .abs { position: absolute; }
+  .row { display: flex; align-items: center; }
+  .upper { text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* iOS-Statusleiste */
+  .status { position: absolute; top: 0; left: 0; right: 0; height: 150px; padding: 58px 90px 0; display: flex; justify-content: space-between; font: 700 50px Inter; z-index: 5; }
+  .status .r { display: flex; gap: 18px; align-items: center; }
+  .bat { width: 74px; height: 36px; border: 4px solid #fff; border-radius: 10px; padding: 3px; } .bat i { display: block; height: 100%; width: 75%; background: #fff; border-radius: 4px; }
+
+  /* Menü-Liste im Spielmenü-Stil: ausgewählte Zeile weiß */
+  .menu .item { display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 128px; font: 600 46px Inter; border-bottom: 2px solid var(--line); background: rgba(0,0,0,0.72); }
+  .menu .item.sel { background: #fff; color: #000; }
+  .menu .item small { font: 500 34px Inter; color: var(--muted); }
+  .menu .item.sel small { color: #444; }
+  .menu .title { background: var(--purple); height: 110px; padding: 0 40px; display: flex; align-items: center; font-size: 76px; }
+
+  .hints { position: absolute; left: 0; right: 0; bottom: 0; height: 170px; background: rgba(0,0,0,0.82); display: flex; gap: 70px; align-items: center; padding: 0 60px 30px; font: 600 38px Inter; }
+  .hints span { display: flex; align-items: center; gap: 18px; }
+  .hints b { width: 58px; height: 58px; border-radius: 50%; background: #fff; color: #000; display: grid; place-items: center; font: 800 30px Inter; }
+
+  .blip { width: 64px; height: 64px; display: grid; place-items: center; font: 800 46px Inter; -webkit-text-stroke: 3px #000; paint-order: stroke fill; }
+  .bar { height: 22px; background: rgba(255,255,255,0.12); outline: 4px solid rgba(0,0,0,0.6); } .bar i { display: block; height: 100%; }
+
+  /* Tab-Leiste */
+  .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 200px; background: rgba(0,0,0,0.88); display: flex; justify-content: space-around; padding: 26px 30px 60px; font: 700 30px Inter; }
+  .tabs div { display: flex; flex-direction: column; align-items: center; gap: 12px; color: #8e8e93; }
+  .tabs div.on { color: #fff; } .tabs div.on .ic { background: var(--purple); }
+  .tabs .ic { width: 84px; height: 64px; border-radius: 16px; display: grid; place-items: center; font-size: 40px; }
+
+  /* CarPlay-Systemteile (werden später von iOS gezeichnet) */
+  .dock { width: 140px; background: #000; display: flex; flex-direction: column; align-items: center; padding: 26px 0; gap: 26px; font: 700 30px Inter; flex: none; }
+  .dock .app { width: 96px; height: 96px; border-radius: 22px; }
+  .carmain { position: relative; flex: 1; background: #3d3e40 center/cover no-repeat; overflow: hidden; }
+  .sys { background: rgba(28,28,30,0.94); border-radius: 22px; }
+  .sysbtn { background: rgba(28,28,30,0.88); border-radius: 22px; display: grid; place-items: center; font: 600 34px Inter; }
+  .navbar { position: absolute; top: 0; left: 0; right: 0; height: 86px; display: flex; justify-content: space-between; padding: 14px 20px; }
+  .navbar div { display: flex; gap: 14px; } .navbar span { background: rgba(28,28,30,0.9); border-radius: 18px; padding: 0 28px; display: grid; place-items: center; font: 600 32px Inter; height: 60px; }
+  .tag { position: absolute; font: 600 18px Inter; color: #ffd23f; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 6px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const P = new URLSearchParams(location.search);
+const screen = P.get('screen');
+const bg = n => `url('out/bg-${n}.png')`;
+const status = `<div class="status"><span>16:48</span><span class="r">▂▄▆ &nbsp;<span class="bat"><i></i></span></span></div>`;
+const tabs = on => `<div class="tabs">${[['⌖', 'Karte'], ['◐', 'Entdecken'], ['◆', 'Stile'], ['☺', 'Profil']].map(([i, t]) => `<div class="${t === on ? 'on' : ''}"><span class="ic">${i}</span>${t}</div>`).join('')}</div>`;
+const blip = (c, g) => `<span class="blip" style="color:${c}">${g}</span>`;
+const dock = `<div class="dock"><div>16:48</div><div class="app" style="background:linear-gradient(135deg,#a13df0,#3a1066);display:grid;place-items:center;font:56px Headline;color:#fff">Ez</div><div class="app" style="background:#1db954"></div><div class="app" style="background:#2fb94a"></div><div style="margin-top:auto;width:70px;height:70px;border-radius:16px;background:#333"></div></div>`;
+const tag = (x, y, t) => `<div class="tag" style="left:${x}px;top:${y}px">${t}</div>`;
+
+const S = {
+  // ---------------- iPhone ----------------
+  'phone-home': () => `<div class="screen phone" style="background-image:${bg('phone-home')}">${status}
+    <div class="abs box row" style="top:170px;left:50px;right:50px;height:150px;padding:0 44px;gap:30px;border-left:16px solid var(--purple)">
+      <span style="font:800 60px Inter">⌕</span><span class="head" style="font-size:84px">Wohin?</span></div>
+    <div class="abs row" style="top:350px;left:50px;gap:22px;font:700 36px Inter">
+      ${[['⌂', 'Zuhause', '#fff'], ['▣', 'Arbeit', '#fff'], ['⛽', 'Tanken', '#f08a2c'], ['P', 'Parken', '#5fb6ff']].map(([i, t, c]) => `<span class="box row" style="height:96px;padding:0 34px;gap:16px"><b style="color:${c}">${i}</b>${t}</span>`).join('')}</div>
+    <div class="abs" style="right:50px;top:520px;display:flex;flex-direction:column;gap:22px">
+      ${['◆', '☺', '➤'].map(i => `<div class="box" style="width:130px;height:130px;display:grid;place-items:center;font:700 56px Inter">${i}</div>`).join('')}</div>
+    <div class="abs box" style="left:50px;right:50px;bottom:250px;padding:36px 44px">
+      <div class="row" style="justify-content:space-between"><span class="upper" style="font:700 40px Inter">Idstein-Mitte</span><span class="head" style="font-size:80px">64%</span></div>
+      <div class="bar" style="margin:20px 0 18px"><i style="width:64%;background:var(--green)"></i></div>
+      <div style="font:500 34px Inter;color:var(--muted)">entdeckt · noch 11 Straßen bis zum Abzeichen „Altstadt-Kenner“</div></div>
+    ${tabs('Karte')}</div>`,
+
+  'phone-search': () => `<div class="screen phone" style="background-image:${bg('phone-home')}">
+    <div class="abs" style="inset:0;background:rgba(10,10,12,0.72)"></div>${status}
+    <div class="abs" style="top:170px;left:50px;right:50px">
+      <div class="box row" style="height:150px;padding:0 44px;gap:30px;border-left:16px solid var(--purple);background:#fff;color:#000">
+        <span style="font:800 60px Inter">⌕</span><span style="font:600 56px Inter">Hexen|</span></div>
+      <div class="menu" style="margin-top:40px">
+        <div class="title head">Treffer</div>
+        <div class="item sel"><span class="row" style="gap:28px">${blip('#f5d742', '●')}<span>Hexenturm<br><small>Am Hexenturm · 2,1 km</small></span></span><span>›</span></div>
+        <div class="item"><span class="row" style="gap:28px">${blip('#7ee06a', 'Y')}<span>Café am Hexenturm<br><small>Gastronomie · 2,0 km</small></span></span><span>›</span></div>
+        <div class="item"><span class="row" style="gap:28px">${blip('#5fb6ff', 'P')}<span>Parkplatz Hexenturm<br><small>Parken · 1,9 km</small></span></span><span>›</span></div>
+      </div>
+      <div class="menu" style="margin-top:40px">
+        <div class="title head" style="background:#222">Zuletzt</div>
+        <div class="item"><span class="row" style="gap:28px">${blip('#fff', '⌂')}<span>Zuhause<br><small>Lanaer Straße · 3,3 km</small></span></span><span>›</span></div>
+        <div class="item"><span class="row" style="gap:28px">${blip('#f08a2c', '▮')}<span>Tankstelle Wiesbadener Str.<br><small>Tanken · 0,4 km</small></span></span><span>›</span></div>
+        <div class="item"><span class="row" style="gap:28px">${blip('#fff', '☺')}<span>Max (Kontakt)<br><small>Escher Straße · 2,6 km</small></span></span><span>›</span></div>
+      </div></div>
+    <div class="hints"><span><b>A</b>Auswählen</span><span><b>B</b>Zurück</span><span><b>🎙</b>Siri</span></div></div>`,
+
+  'phone-preview': () => `<div class="screen phone" style="background-image:${bg('phone-preview')}">${status}
+    <div class="abs box row" style="top:170px;left:50px;right:50px;height:120px;padding:0 40px;gap:24px;font:600 40px Inter">
+      <span style="font:800 48px Inter">‹</span><span>Aktueller Standort → <b>Hexenturm</b></span></div>
+    <div class="abs" style="left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);padding:46px 50px 80px">
+      <div class="head" style="font-size:110px">Hexenturm</div>
+      <div style="font:500 38px Inter;color:var(--muted);margin:6px 0 36px">Am Hexenturm, 65510 Idstein</div>
+      <div class="menu">
+        <div class="item sel"><span>Schnellste <small>· über Limburger Str.</small></span><span class="head" style="font-size:64px;color:#000;text-shadow:none">7 Min</span></div>
+        <div class="item"><span>Kürzeste <small>· 2,9 km</small></span><span style="font:700 46px Inter">8 Min</span></div>
+        <div class="item"><span>Neue Straßen entdecken <small style="color:var(--green)">+14 %</small></span><span style="font:700 46px Inter">11 Min</span></div>
+      </div>
+      <div class="row" style="gap:30px;margin-top:44px">
+        <div style="flex:1;height:170px;background:var(--purple);display:grid;place-items:center" class="head"><span style="font-size:110px">Los</span></div>
+        <div class="box" style="width:170px;height:170px;display:grid;place-items:center;font:700 60px Inter;background:#222">⋯</div></div>
+    </div></div>`,
+
+  'phone-nav': () => `<div class="screen phone" style="background-image:url('out/neon-iphone.png')">${status}</div>`,
+
+  'phone-explore': () => `<div class="screen phone" style="background-image:${bg('phone-fog')}">${status}
+    <div class="abs" style="top:170px;left:50px;right:50px">
+      <div class="box" style="padding:36px 44px;border-left:16px solid var(--purple)">
+        <div class="upper" style="font:700 36px Inter;color:var(--muted)">Idstein</div>
+        <div class="row" style="justify-content:space-between"><span class="head" style="font-size:150px">38%</span><span style="font:600 40px Inter;text-align:right">entdeckt<br><span style="color:var(--muted)">142 von 371 km</span></span></div>
+      </div></div>
+    <div class="abs" style="left:0;right:0;bottom:200px;background:rgba(0,0,0,0.9);padding:40px 50px">
+      <div class="head" style="font-size:80px;margin-bottom:24px">Stadtteile</div>
+      ${[['Mitte', 64], ['Wörsdorf', 31], ['Walsdorf', 12], ['Oberrod', 0]].map(([n, v]) => `
+        <div style="margin-bottom:30px"><div class="row" style="justify-content:space-between;font:600 42px Inter;margin-bottom:12px"><span>${n}</span><span>${v}%</span></div>
+        <div class="bar"><i style="width:${v}%;background:${v ? 'var(--green)' : 'transparent'}"></i></div></div>`).join('')}
+      <div class="row" style="gap:24px;margin-top:40px">
+        <div class="box" style="flex:1;padding:30px;background:#1b1b1d"><div style="font:600 32px Inter;color:var(--muted)">Wochenziel</div><div class="head" style="font-size:70px">8 / 10 km</div><div class="bar" style="margin-top:14px"><i style="width:80%;background:var(--gold)"></i></div></div>
+        <div class="box" style="flex:1;padding:30px;background:#1b1b1d"><div style="font:600 32px Inter;color:var(--muted)">Abzeichen</div><div style="font:60px Inter;margin-top:10px">🏰 🌙 🛣️ <span style="opacity:.3">⛰️</span></div></div>
+      </div></div>
+    ${tabs('Entdecken')}</div>`,
+
+  'phone-styles': () => `<div class="screen phone" style="background:#141416">${status}
+    <div class="abs" style="top:170px;left:50px;right:50px">
+      <div class="head" style="font-size:120px">Stile</div>
+      <div style="font:500 38px Inter;color:var(--muted);margin:6px 0 40px">Jeder Stil ändert Karte, Symbole und Stimme.</div>
+      ${[['Neon City', 'Aktiv · Gratis inkl. CarPlay', '', true], ['Wild West', 'Bald verfügbar', 'sepia(1) saturate(1.6) hue-rotate(-12deg) brightness(1.05)', false], ['Pixel 8-Bit', 'Bald verfügbar', 'contrast(1.4) saturate(2) hue-rotate(80deg)', false]].map(([n, s, f, on]) => `
+        <div style="position:relative;height:560px;margin-bottom:40px;background:url('out/bg-phone-home.png') center 60%/cover;filter:${f || 'none'};outline:${on ? '8px solid #fff' : 'none'}">
+          <div class="abs" style="left:0;right:0;bottom:0;padding:30px 40px;background:linear-gradient(transparent,rgba(0,0,0,.9))">
+            <div class="head" style="font-size:90px">${n}</div><div style="font:600 36px Inter;color:${on ? 'var(--green)' : 'var(--muted)'}">${s}</div></div></div>`).join('')}
+    </div>${tabs('Stile')}</div>`,
+
+  // ---------------- CarPlay ----------------
+  'car-browse': () => `<div class="screen car">${dock}<div class="carmain" style="background-image:${bg('car-browse')}">
+    <div class="navbar"><div><span>⌕ Ziele</span><span>◆ Stil</span></div><div><span>☺ Freunde</span></div></div>
+    <div class="abs" style="right:20px;top:180px;display:flex;flex-direction:column;gap:16px">${['+', '−', '➤'].map(t => `<div class="sysbtn" style="width:96px;height:96px">${t}</div>`).join('')}</div>
+    <div class="abs box" style="left:24px;bottom:24px;padding:20px 28px;width:520px">
+      <div class="row" style="justify-content:space-between"><span class="upper" style="font:700 28px Inter">Idstein-Mitte</span><span class="head" style="font-size:54px">64%</span></div>
+      <div class="bar" style="margin-top:12px;height:14px"><i style="width:64%;background:var(--green)"></i></div></div>
+    <div class="abs" style="right:24px;bottom:14px;font:500 20px Inter;color:rgba(255,255,255,.6)">© OpenStreetMap-Mitwirkende</div>
+    ${tag(30, 96, 'CarPlay-System: Leiste & Tasten')}</div></div>`,
+
+  'car-list': () => `<div class="screen car">${dock}<div class="carmain" style="background:#000;padding:30px 50px">
+    <div class="row" style="justify-content:space-between;margin-bottom:20px"><span style="font:600 34px Inter;color:#0a84ff">‹ Karte</span><span style="font:700 40px Inter">Ziele</span><span style="font:600 34px Inter;color:#0a84ff">⌕</span></div>
+    ${[['⌂', 'Zuhause', 'Lanaer Straße · 9 Min', '#fff'], ['▣', 'Arbeit', 'Wiesbaden · 24 Min', '#fff'], ['●', 'Hexenturm', 'Zuletzt · 7 Min', '#f5d742'], ['▮', 'Tankstelle in der Nähe', '0,4 km', '#f08a2c']].map(([i, t, s, c]) => `
+      <div class="row" style="height:118px;gap:30px;border-bottom:2px solid #222"><span style="width:76px;height:76px;border-radius:50%;background:#1c1c1e;display:grid;place-items:center;font:700 40px Inter;color:${c}">${i}</span>
+      <span style="font:600 38px Inter">${t}<br><span style="font:500 28px Inter;color:#8e8e93">${s}</span></span><span style="margin-left:auto;color:#555;font-size:44px">›</span></div>`).join('')}
+    ${tag(1300, 650, 'CPListTemplate – Systemliste, nur Inhalte von uns')}</div></div>`,
+
+  'car-preview': () => `<div class="screen car">${dock}<div class="carmain" style="background-image:${bg('car-preview')}">
+    <div class="abs sys" style="left:24px;top:24px;width:560px;padding:30px 34px">
+      <div style="font:700 44px Inter">Hexenturm</div><div style="font:500 28px Inter;color:#8e8e93;margin-bottom:26px">Am Hexenturm, Idstein</div>
+      ${[['Schnellste', '7 Min · 3,3 km', true], ['Kürzeste', '8 Min · 2,9 km', false]].map(([n, s, on]) => `<div class="row" style="justify-content:space-between;height:84px;padding:0 22px;border-radius:16px;background:${on ? '#3a3a3c' : 'transparent'};font:600 32px Inter"><span>${n}</span><span style="color:#c7c7cc">${s}</span></div>`).join('')}
+      <div style="margin-top:26px;height:100px;border-radius:20px;background:#30d158;display:grid;place-items:center;font:700 42px Inter;color:#000">Los</div></div>
+    <div class="abs" style="right:24px;bottom:14px;font:500 20px Inter;color:rgba(255,255,255,.6)">© OpenStreetMap-Mitwirkende</div>
+    ${tag(600, 30, 'CPTripPreview – vom System gezeichnet')}</div></div>`,
+
+  'car-nav': () => `<div class="screen car">${dock}<div class="carmain" style="background-image:${bg('car-nav')}">
+    ${tag(30, 420, 'Abbiegekarte & Tasten: CarPlay-System')}${tag(1080, 640, 'Unser Teil: Karte, Straße, Balken, Tempolimit')}</div></div>`,
+};
+document.getElementById('root').innerHTML = S[screen]();
+Promise.all(['40px Headline', '600 40px Inter', '700 40px Inter', '800 40px Inter', '500 40px Inter'].map(f => document.fonts.load(f)))
+  .then(() => Promise.all([...document.images].map(i => i.decode().catch(() => {}))))
+  .then(() => setTimeout(() => document.title = 'ready', 300));
+</script>
+</body>
+</html>

@@ -118,6 +118,6 @@ third for a headline. Fully original, no game references.
 
 ## Nicht von Codex – bitte so beschaffen
 
-- **Schriften:** *Oswald* (Überschriften, Abstände) und *Inter* (Text) – beide Google Fonts, Lizenz SIL OFL 1.1, dürfen in die App eingebettet werden. `OFL.txt` mit ins Bundle.
+- **Schriften:** Überschriften/Zahlen in **Pricedown** (Typodermic). Die kostenlose Desktop-Lizenz erlaubt nur Bilder/Videos/Grafiken – **für die App muss vor Release eine App-/Embedding-Lizenz bei Typodermic gekauft werden** (typodermicfonts.com). Bis dahin liegt die Datei nur lokal (`tools/preview/fonts/`, nicht in Git). Fließtext in *Inter* (SIL OFL 1.1, frei einbettbar).
 - **Navi-Stimme:** zum Start Apples `AVSpeechSynthesizer` (keine Lizenzkosten). Eigene Sprecher später z. B. über ElevenLabs mit kommerziellem Abo.
 - **Kartendaten:** OpenStreetMap (ODbL) – Hinweis „© OpenStreetMap-Mitwirkende“ immer sichtbar.

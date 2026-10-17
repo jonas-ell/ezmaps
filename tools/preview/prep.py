@@ -162,7 +162,7 @@ for i in range(1, len(route) - 1):
 acc = cum[-2]
 total = acc + math.dist(route[-2], route[-1])
 
-json.dump({"origin": [LAT0, LON0], "areas": areas, "lines": lines, "pois": pois, "places": places,
+json.dump({"origin": [LAT0, LON0], "routeNames": names, "areas": areas, "lines": lines, "pois": pois, "places": places,
            "route": route, "routeLength": round(total), "maneuvers": maneuvers},
           open(dst, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
 print(f"{len(areas)} Flächen, {len(lines)} Linien, {len(pois)} POIs, Route {total:.0f} m, "

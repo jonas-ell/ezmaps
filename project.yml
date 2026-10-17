@@ -1,6 +1,6 @@
 name: EzMaps
 options:
-  bundleIdPrefix: com.jonaselfounti
+  bundleIdPrefix: com.game
   deploymentTarget:
     iOS: "17.0"
   developmentLanguage: de
@@ -20,7 +20,7 @@ targets:
       - sdk: CarPlay.framework
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.jonaselfounti.ezmaps
+        PRODUCT_BUNDLE_IDENTIFIER: com.game.ezmaps
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
         TARGETED_DEVICE_FAMILY: "1"
