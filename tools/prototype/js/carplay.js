@@ -60,7 +60,7 @@ function mapTpl() {
   // Verschiebe-Modus wie CPMapTemplate.showPanningInterface: vier Pfeile, Pfeiltasten bewegen die Karte
   if (app.state.car.pan) return navbar([], [['pan:off', 'check', 'Fertig']]) + `<div class="cp-pan">${[['move:0,-1', 'up', 'top'], ['move:0,1', 'down', 'bottom'], ['move:-1,0', 'left', 'left'], ['move:1,0', 'right', 'right']].map(([a, i, c]) => `<button class="${c}" data-act="${a}">${ic(i, 26)}</button>`).join('')}</div><div class="cp-cross"></div><div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>`;
   return navbar([['go:dest', 'search', 'Ziele'], ['go:styles', 'layers', 'Stil']], [['friends', 'friends', '']]) + mapButtons(true) +
-    `<div class="scalebar cp"><span>0</span><span></span></div><div class="cp-district panel"><div class="row sb"><span class="upper b">Idstein ${d}</span><span class="head">${pct(d)}%</span></div><div class="bar thin"><i style="width:${pct(d)}%;background:var(--ok)"></i></div></div><div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>`;
+    `<div class="scalebar cp" data-scale></div><div class="cp-district panel"><div class="row sb"><span class="upper b">Idstein ${d}</span><span class="head">${pct(d)}%</span></div><div class="bar thin"><i style="width:${pct(d)}%;background:var(--ok)"></i></div></div><div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>`;
 }
 function destItems() {
   const p = app.scene.presets;

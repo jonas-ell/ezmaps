@@ -93,6 +93,10 @@ export async function renderTexture(scene, style) {
   return { url: URL.createObjectURL(blob), S, pixelated: pixel };
 }
 
+export const NEON_ROADS = { // für drawRoads (Vektorstraßen), derzeit nicht aktiv – Straßen bleiben breit in der Textur (Entscheidung Cloud-Claude GM-010)
+  color: ['#ececec', '#dcdcdc', '#d2d2d2', '#c2c2c2', '#b4b4b4', '#929292', '#7d7d7d', '#616161'],
+  width: [3, 2.5, 2.2, 2, 1.8, 1.3, 1.1, 0.9],
+};
 // GM-010: Look nach Vorlage (dunkle Open-World-Übersicht): fast schwarzes Land, Stadt als dunkelgraue Blöcke,
 // breite hellgraue Straßen ohne Rand, Gebäude nur knapp heller als der Block, Wasser grau und hell
 const NEON = {
@@ -100,6 +104,7 @@ const NEON = {
   water: '#4b4e4d', waterLine: '#4b4e4d', building: '#373738', buildingEdge: '#424243', casing: null,
   urban: '#2c2c2d', urbanReach: 46, widen: 1.5,
   road: r => r <= 2 ? '#b0b0b0' : r <= 6 ? '#a3a3a3' : '#8e8e8e', rail: '#3a3a3b', texture: terrainTexture,
+  hill: true, // GM-011: Hügel-Schattierung (lokaler Claude, Teil 0.3)
 };
 const WESTERN = {
   land: '#dcc59a', residential: '#d4bb8a', industrial: '#ccb07f', farm: '#e3cfa2', park: '#d6c18c', forest: '#cdb782',
@@ -123,6 +128,9 @@ function drawClassic(ctx, scene, S, T) {
   }
   ctx.strokeStyle = T.waterLine; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   for (const l of scene.lines) if (l.k === 'water') { ctx.lineWidth = l.c === 'river' ? 9 : 3; poly(ctx, l.pts); ctx.stroke(); }
+  if (T.hill && scene.hill) { // Hügel-Schattierung (Terrain Tiles: SRTM / EU-DEM)
+    ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = 0.95; ctx.drawImage(scene.hill, TEX.x0, TEX.y0, TEX.w, TEX.h); ctx.restore();
+  }
   ctx.fillStyle = T.building; if (T.buildingEdge) { ctx.strokeStyle = T.buildingEdge; ctx.lineWidth = 0.7; }
   for (const a of scene.areas) if (a.k === 'building') { poly(ctx, a.pts, true); ctx.fill(); if (T.buildingEdge) ctx.stroke(); }
   // Struktur (Relief bzw. Papier) als Overlay
@@ -140,6 +148,13 @@ function drawClassic(ctx, scene, S, T) {
     if (T.thinMinor && l.r >= 5) { if (pass === 'fill') { ctx.strokeStyle = T.road(l.r); ctx.lineWidth = w * 0.42; poly(ctx, l.pts); ctx.stroke(); } continue; }
     ctx.strokeStyle = pass === 'casing' ? T.casing : T.road(l.r); ctx.lineWidth = pass === 'casing' ? w + (T.thinMinor ? 2.2 : 1.2) : w;
     poly(ctx, l.pts); ctx.stroke();
+  }
+  if (T.hill && R === TEX) { // GM-010: Rand der Textur weich in die Landfarbe auslaufen lassen (keine sichtbare Kante)
+    const f = 260;
+    for (const [x0, y0, x1, y1, rx, ry, rw, rh] of [[R.x0, 0, R.x0 + f, 0, R.x0, R.y0, f, R.h], [R.x0 + R.w, 0, R.x0 + R.w - f, 0, R.x0 + R.w - f, R.y0, f, R.h], [0, R.y0, 0, R.y0 + f, R.x0, R.y0, R.w, f], [0, R.y0 + R.h, 0, R.y0 + R.h - f, R.x0, R.y0 + R.h - f, R.w, f]]) {
+      const g = ctx.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, T.land); g.addColorStop(1, 'rgba(30,31,32,0)');
+      ctx.fillStyle = g; ctx.fillRect(rx, ry, rw, rh);
+    }
   }
   if (T.vignette) {
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -451,9 +466,9 @@ function strokeDepth(u, pts, w, color) {
   }
 }
 
-const BLIP = { fuel: ['#f08a2c', 'fuel', 'fuel'], parking: ['#5fb6ff', 'P', 'parking'], fast_food: ['#7ee06a', 'food', 'food'], restaurant: ['#7ee06a', 'food', 'food'], cafe: ['#7ee06a', 'food', 'food'], supermarket: ['#f5d742', 'cart', 'shop'] };
+const BLIP = { hospital: ['#ff5a5a', '+', 'hospital'], police: ['#6d8cff', 'star', 'police'], fuel: ['#f08a2c', 'fuel', 'fuel'], parking: ['#5fb6ff', 'P', 'parking'], fast_food: ['#7ee06a', 'food', 'food'], restaurant: ['#7ee06a', 'food', 'food'], cafe: ['#7ee06a', 'food', 'food'], supermarket: ['#f5d742', 'cart', 'shop'] };
 
-// GM-011: Kartensymbole nach Vorlage – kleine Glyphen (24er-Raster), weiß oder farbig mit dunkler Kontur, eigene Zeichnung.
+// GM-012: Kartensymbole nach Vorlage – kleine Glyphen (24er-Raster), weiß oder farbig mit dunkler Kontur, eigene Zeichnung.
 // Op-Listen: f = Fläche, l = Linie [Pfad, Breite], c = Aussparung in Konturfarbe, t = Text
 const G = {
   car:   [['f', 'M2.5 16 L2.5 12.5 L6 11.3 L8.6 7.5 L15.6 7.5 L18.6 11.3 L21.5 12.5 L21.5 16 Z'], ['f', 'M4.6 16.5a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0 -4.8 0 M14.6 16.5a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0 -4.8 0'], ['c', 'M9.6 9 L14.6 9 L16.4 11.2 L7.9 11.2 Z']],
@@ -470,6 +485,7 @@ const G = {
   scissors: [['l', 'M3.6 17.5a2.9 2.9 0 1 0 5.8 0a2.9 2.9 0 1 0 -5.8 0 M14.6 17.5a2.9 2.9 0 1 0 5.8 0a2.9 2.9 0 1 0 -5.8 0', 2], ['l', 'M8.4 15.3 L17.2 2.8 M15.6 15.3 L6.8 2.8', 2.3]],
   bed:   [['f', 'M1.8 18.5 V6.5 h2.6 v6.3 h17.8 v5.7 h-2.6 v-2.2 h-15.2 v2.2 Z'], ['f', 'M5.4 8.8 h5 v3.5 h-5Z M11.4 9.2 h8.4 a2.3 2.3 0 0 1 2.3 2.3 v1.3 h-10.7Z']],
   glass: [['f', 'M3.5 3.5 h17 l-7.2 8.4 v6.3 h4.2 v2.6 h-11 v-2.6 h4.2 v-6.3 Z']],
+  star:  [['f', 'M12 2 L14.6 8.6 L21.6 8.9 L16.2 13.4 L18 20.3 L12 16.4 L6 20.3 L7.8 13.4 L2.4 8.9 L9.4 8.6 Z']],
   euro:  [['t', '€']],
   P:     [['t', 'P']],
 };
@@ -479,7 +495,7 @@ const KINDS = {
   fuel: ['fuel', '#fff', '#000'], parking: ['P', '#5fb6ff', '#000'], bicycle: ['bike', '#fff', '#000'], supermarket: ['basket', '#fff', '#000'],
   pharmacy: ['cross', '#52d273', '#000'], restaurant: ['food', '#fff', '#000'], fast_food: ['food', '#fff', '#000'], cafe: ['cup', '#fff', '#000'],
   bar: ['glass', '#7ee06a', '#000'], pub: ['glass', '#7ee06a', '#000'], clothes: ['shirt', '#000', '#fff'], hairdresser: ['scissors', '#fff', '#000'],
-  hotel: ['bed', '#fff', '#000'], bank: ['euro', '#fff', '#000'],
+  hotel: ['bed', '#fff', '#000'], bank: ['euro', '#fff', '#000'], hospital: ['cross', '#ff5a5a', '#000'], police: ['star', '#6d8cff', '#000'],
 };
 const P2 = {}; const path = d => P2[d] || (P2[d] = new Path2D(d));
 function drawGlyph(u, x, y, size, name, fill, edge) {
@@ -502,7 +518,7 @@ function blipList(scene) {
   for (const p of all) if (!list.some(o => o.kind === p.kind && Math.hypot(o.p[0] - p.p[0], o.p[1] - p.p[1]) < 30)) list.push(p);
   blipCache = { scene, list }; return list;
 }
-export const LEGEND = [['car', 'Autohaus'], ['car_repair', 'Werkstatt'], ['car_wash', 'Waschanlage'], ['fuel', 'Tankstelle'], ['parking', 'Parken'], ['bicycle', 'Fahrradladen'], ['supermarket', 'Supermarkt'], ['pharmacy', 'Apotheke'], ['restaurant', 'Essen'], ['cafe', 'Café'], ['bar', 'Bar'], ['clothes', 'Kleidung'], ['hairdresser', 'Friseur'], ['hotel', 'Hotel'], ['bank', 'Bank']];
+export const LEGEND = [['car', 'Autohaus'], ['car_repair', 'Werkstatt'], ['car_wash', 'Waschanlage'], ['fuel', 'Tankstelle'], ['parking', 'Parken'], ['bicycle', 'Fahrradladen'], ['supermarket', 'Supermarkt'], ['pharmacy', 'Apotheke'], ['restaurant', 'Essen'], ['cafe', 'Café'], ['bar', 'Bar'], ['clothes', 'Kleidung'], ['hairdresser', 'Friseur'], ['hotel', 'Hotel'], ['bank', 'Bank'], ['hospital', 'Krankenhaus'], ['police', 'Polizei']];
 export const LEGEND_KINDS = { restaurant: ['restaurant', 'fast_food'], bar: ['bar', 'pub'] };
 const legendCache = {};
 export function legendSrc(kind, size = 20) {
@@ -515,19 +531,26 @@ export function legendSrc(kind, size = 20) {
 export function drawBlips(u, mv, scene, style, opts = {}) {
   const placed = [], near = mv.cam.scale > 0.45, glyphs = style === 'neon';
   const base = opts.size ?? (near ? Math.min(14, 7 + mv.cam.scale * 1.4) : 6.5);
+  const hk = opts.highlight ? LEGEND_KINDS[opts.highlight] || [opts.highlight] : null; // GM-012: Legende hebt hervor
   for (const p of glyphs ? blipList(scene) : scene.pois) {
     const b = glyphs ? KINDS[p.kind] : BLIP[p.kind]; if (!b) continue;
-    if (near && (p.kind === 'restaurant' || p.kind === 'cafe' || p.kind === 'fast_food') && mv.cam.tilt) continue;
-    if (opts.only && !opts.only.includes(p.kind)) continue;
+    const hl = hk && (hk.includes(p.kind) || hk.includes(b[2]));
+    if (near && (p.kind === 'restaurant' || p.kind === 'cafe' || p.kind === 'fast_food') && mv.cam.tilt && !hl) continue;
+    if (glyphs && mv.cam.scale < 0.6 && !hl && (p.kind === 'restaurant' || p.kind === 'cafe' || p.kind === 'fast_food')) continue; // GM-010 (0.5): Übersicht ruhiger
     const q = mv.project(p.p); if (!mv.visible(q)) continue;
     const r = base * Math.max(0.7, Math.min(1.2, q[2]));
     if (opts.avoid && opts.avoid.some(a => q[0] + r > a[0] && q[0] - r < a[2] && q[1] + r > a[1] && q[1] - r < a[3])) continue; // GM-009 (1.2)
     if (placed.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < r * 3.2)) continue;
     placed.push(q);
-    if (glyphs) drawGlyph(u, q[0], q[1], r * 2.9, b[0], b[1], b[2]); else blip(u, q[0], q[1], r, b, style);
+    if (hk && !hl) u.globalAlpha = 0.25;
+    if (hl) { u.fillStyle = 'rgba(161,61,240,.45)'; u.beginPath(); u.arc(q[0], q[1], r * 2, 0, 7); u.fill(); }
+    const rr = hl ? r * 1.35 : r;
+    if (glyphs) drawGlyph(u, q[0], q[1], rr * 2.9, b[0], b[1], b[2]); else blip(u, q[0], q[1], rr, b, style);
+    u.globalAlpha = 1;
   }
 }
 function blip(u, x, y, r, [color, g, file], style) {
+  if (style === 'neon') { u.save(); u.translate(x, y); u.lineCap = 'round'; u.lineJoin = 'round'; u.fillStyle = '#f2f2f2'; u.strokeStyle = '#0c0c0d'; glyph(u, r, g, '#0c0c0d'); u.restore(); return; } // GM-010: weiß, dunkle Kontur
   const set = blipSet(style); if (set && set[file]) return drawAsset(u, set[file], x, y, r * 2.6, style === 'pixel');
   if (style === 'pixel') return sprite(u, SPR[g === 'P' ? 'P' : g], x, y, Math.max(2, Math.round(r / 3.4)));
   u.save(); u.translate(x, y); u.lineCap = 'round'; u.lineJoin = 'round';
@@ -540,6 +563,8 @@ function blip(u, x, y, r, [color, g, file], style) {
   u.fillStyle = style === 'western' ? '#3a2414' : color; u.strokeStyle = edge; glyph(u, r, g, edge); u.restore();
 }
 function glyph(u, r, g, edge) {
+  if (g === '+') { const a = r * 0.75, b = r * 0.26; u.beginPath(); u.rect(-b, -a, 2 * b, 2 * a); u.rect(-a, -b, 2 * a, 2 * b); if (edge) { u.lineWidth = r * 0.4; u.stroke(); } u.fill(); return; }
+  if (g === 'star') { u.beginPath(); for (let i = 0; i < 10; i++) { const an = i * Math.PI / 5 - Math.PI / 2, rr = i % 2 ? r * 0.38 : r * 0.85; u.lineTo(Math.cos(an) * rr, Math.sin(an) * rr); } u.closePath(); if (edge) { u.lineWidth = r * 0.4; u.stroke(); } u.fill(); return; }
   if (g === 'P') { u.font = `800 ${r * 1.7}px Inter`; u.textAlign = 'center'; u.textBaseline = 'middle'; if (edge) { u.lineWidth = r * 0.3; u.strokeText(g, 0, r * 0.08); } u.fillText(g, 0, r * 0.08); return; }
   u.beginPath();
   if (g === 'fuel') { u.rect(-r * 0.6, -r * 0.75, r * 0.8, r * 1.5); u.moveTo(r * 0.2, -r * 0.35); u.lineTo(r * 0.65, -r * 0.1); u.lineTo(r * 0.65, r * 0.55); }
@@ -610,4 +635,23 @@ export function drawFog(u, mv, scene, exploredLines) {
     for (const pts of exploredLines) { u.beginPath(); pts.forEach((p, i) => { const q = mv.project(p); i ? u.lineTo(q[0], q[1]) : u.moveTo(q[0], q[1]); }); u.stroke(); }
   }
   u.restore();
+}
+
+// GM-010 (0.2): Straßen als Vektor in Bildschirm-Pixeln (bleiben beim Zoomen fein, Kreisel ohne dicken Ring)
+const bbOf = l => l.bb ??= (() => { let a = Infinity, b = Infinity, c = -Infinity, d = -Infinity; for (const [x, y] of l.pts) { a = Math.min(a, x); b = Math.min(b, y); c = Math.max(c, x); d = Math.max(d, y); } return [a, b, c, d]; })();
+let roadCache = null;
+export function drawRoads(u, mv, scene) {
+  roadCache ??= scene.lines.filter(l => l.k === 'road' && l.r <= 7).sort((a, b) => b.r - a.r);
+  const c = mv.cam, R = Math.max(mv.W, mv.H) / c.scale * (c.tilt ? 2.2 : 0.8), zf = Math.max(1, Math.min(2.4, Math.sqrt(c.scale / 0.5)));
+  u.lineCap = 'round'; u.lineJoin = 'round';
+  for (const l of roadCache) {
+    const [x0, y0, x1, y1] = bbOf(l);
+    if (x1 < c.center[0] - R || x0 > c.center[0] + R || y1 < c.center[1] - R || y0 > c.center[1] + R) continue;
+    if (c.scale < 0.25 && l.r >= 7) continue;
+    u.strokeStyle = NEON_ROADS.color[l.r];
+    let kSum = 0, n = 0; u.beginPath(); let started = false;
+    for (const p of l.pts) { const q = mv.project(p); if (q[2] <= 0) { started = false; continue; } kSum += q[2]; n++; started ? u.lineTo(q[0], q[1]) : u.moveTo(q[0], q[1]); started = true; }
+    if (!n) continue;
+    u.lineWidth = NEON_ROADS.width[l.r] * zf * Math.min(2.5, kSum / n); u.stroke();
+  }
 }

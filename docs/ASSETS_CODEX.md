@@ -105,6 +105,18 @@ blip-destination #F5D742 (solid circle with 3px black ring), blip-waypoint #A13D
 Simple, readable at 18px on #3D3E40. index.html preview.
 ```
 
+### Neon City – einfarbiger Glyphen-Satz (neu, ersetzt die bunten Neon-Blips)
+
+```
+Original monochrome map glyphs for a dark open-world style city map, SVG viewBox 0 0 32 32,
+fill #F2F2F2 with a 3px #0C0C0D outline (paint-order stroke), no background shape, no color,
+all glyphs the same visual weight, readable at 14pt on #1E1F20. Files in Assets/Generated/Blips/NeonMono/:
+blip-fuel (pump), blip-parking (bold "P"), blip-food (fork and knife), blip-shop (cart),
+blip-charging (plug with bolt), blip-hospital (cross), blip-police (star), blip-pharmacy (pill),
+blip-home (house), blip-work (briefcase). Only destination (yellow #F5D742) and friends (#FF4FD8)
+keep a color. Fully original geometry, not copied from any game. index.html preview.
+```
+
 ### Wild West
 
 ```

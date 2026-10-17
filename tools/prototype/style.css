@@ -109,10 +109,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .t-toy .searchbar, .t-western .searchbar, .t-pixel .searchbar { border-left: var(--edge); }
 .chips { position: absolute; top: 121px; left: 16px; right: 16px; display: flex; gap: 6px; }
 .chip { display: flex; align-items: center; gap: 5px; height: 34px; padding: 0 10px; font: 600 calc(12.5px * var(--bs)) var(--body); white-space: nowrap; }
-.legend { position: absolute; right: 70px; top: 172px; max-height: 470px; overflow-y: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; scrollbar-width: none; z-index: 1; }
-.lrow { display: flex; align-items: center; gap: 8px; padding: 4px 6px 4px 10px; background: rgba(0,0,0,.82); color: #fff; font: 500 13px Inter; white-space: nowrap; }
-.lrow img { width: 20px; height: 20px; }
-.lrow.on { background: #fff; color: #000; }
 .rbtns { position: absolute; right: 16px; top: 172px; display: flex; flex-direction: column; gap: 8px; }
 .mbtn { width: 46px; height: 46px; display: grid; place-items: center; }
 .t-western .mbtn, .t-toy .mbtn { border-radius: 12px; }
@@ -221,6 +217,17 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .spinner { width: 34px; height: 34px; border: 3px solid rgba(255,255,255,.25); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* GM-010: Legende und Maßstab */
+.legend { position: absolute; right: 70px; top: 172px; width: 150px; max-height: 480px; overflow-y: auto; scrollbar-width: none; z-index: 4; }
+.lg-row img { width: 18px; height: 18px; }
+.lg-title { background: #fff; color: #000; font: 700 12px Inter; padding: 6px 10px; }
+.lg-row { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 6px 10px; margin-top: 2px; background: rgba(0,0,0,.82); color: #fff; font: 600 12px Inter; }
+.lg-row.on { background: #fff; color: #000; }
+.scalebar { position: absolute; left: 16px; bottom: 186px; display: flex; align-items: flex-end; gap: 4px; font: 600 10px Inter; color: #fff; text-shadow: 0 0 3px #000; z-index: 3; pointer-events: none; }
+.scalebar i { display: block; height: 6px; border: 1.5px solid #fff; border-top: 0; box-shadow: 0 1px 2px #000; }
+.scalebar.cp { left: 10px; bottom: 66px; }
+.t-western .scalebar, .t-toy .scalebar { color: #2e1e10; text-shadow: 0 0 3px #fff; } .t-western .scalebar i, .t-toy .scalebar i { border-color: #2e1e10; }
+
 /* Tastatur-Fokus (wie Knopf-Steuerung im Auto) */
 .kfocus { outline: 3px solid #0a84ff !important; outline-offset: 2px; box-shadow: 0 0 0 6px rgba(10,132,255,.35) !important; position: relative; z-index: 3; }
 .car .kfocus { outline-color: #fff !important; box-shadow: 0 0 0 6px rgba(255,255,255,.3) !important; }
@@ -249,11 +256,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .cp-mapbtns button { width: 46px; height: 46px; border-radius: 12px; background: rgba(28,28,30,.88); display: grid; place-items: center; color: #fff; }
 .cp-district { position: absolute; left: 10px; bottom: 10px; width: 240px; padding: 8px 12px; font-size: calc(12px * var(--bs)); }
 .cp-district .head { font-size: calc(22px * var(--hs)); } .cp-district .bar { margin-top: 6px; }
-.scalebar { position: absolute; left: 20px; bottom: 222px; height: 22px; border: 1.5px solid var(--status); border-top: 0; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; transition: width .2s; }
-.scalebar span { font: 500 10px Inter; color: var(--status); transform: translate(-3px, 16px); text-shadow: 0 1px 2px rgba(0,0,0,.6); white-space: nowrap; }
-.scalebar span:last-child { transform: translate(calc(100% - 8px), 16px); }
-.scalebar.cp { left: 14px; bottom: 96px; }
-.t-western .scalebar span, .t-toy .scalebar span { text-shadow: none; }
 .cp-attrib { position: absolute; right: 10px; bottom: 4px; font: 500 9px Inter; color: rgba(255,255,255,.65); }
 .t-western .cp-attrib { color: rgba(46,30,16,.7); } .t-toy .cp-attrib { color: rgba(47,54,64,.75); }
 .cp-list { position: absolute; inset: 0; background: #000; padding: 10px 18px; overflow-y: auto; scrollbar-width: none; font-family: Inter; color: #fff; }

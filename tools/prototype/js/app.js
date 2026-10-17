@@ -1,6 +1,6 @@
 // EzMaps – klickbarer Prototyp. Gemeinsamer Zustand für iPhone und CarPlay (wie später ein geteiltes Modell in der App).
 import { Router, pointAt, smoothHeading, edgeKey, fmtDist } from './route.js';
-import { MapView, renderTexture, drawRoute, drawBlips, drawPlayer, drawDestination, drawFriend, drawFog, STYLES, LEGEND_KINDS } from './map.js';
+import { MapView, renderTexture, drawRoute, drawBlips, drawPlayer, drawDestination, drawFriend, drawFog, drawRoads, STYLES } from './map.js';
 import { renderPhone, phoneCamera, phoneHud } from './phone.js';
 import { renderCar, carCamera, carHud } from './carplay.js';
 import { loadAssets } from './assets.js';
@@ -16,6 +16,7 @@ export const app = {
     nav: null,          // { dest, routes, sel, route, progress, active, arrived, spoken }
     toast: null, speaking: false, loading: null, recents: [],
     browse: { phone: { center: null, scale: 0.3 }, car: { center: null, scale: 1.1 } }, // GM-010: iPhone weiter raus (Stadtübersicht), CarPlay bleibt Radar (GM-008)
+    legend: false, highlight: null,
   },
   explored: new Set(),
 };
@@ -31,9 +32,10 @@ async function boot() {
   // GM-009 (1.7): Version immer = neueste GM-Nummer im Changelog
   try { app.version = ((await (await fetch('../../CHANGELOG.md')).text()).match(/^## (GM-\d+\w*)/m) || [])[1] || '?'; } catch { app.version = '?'; }
   const scene = await (await fetch('data/idstein.json')).json();
+  try { scene.hill = await createImageBitmap(await (await fetch('data/hillshade.png')).blob()); } catch { scene.hill = null; } // GM-010 (0.3)
   app.scene = scene; app.router = new Router(scene.graph);
   app.start = scene.presets.start;
-  app.state.browse.phone.center = [...app.start]; app.state.browse.car.center = [...app.start];
+  app.state.browse.phone.center = [80, 120]; app.state.browse.car.center = [0, 60]; // GM-010 (0.4): ganze Stadt im Blick
   setupExplore();
   app.tiles = new Worker('js/tileworker.js', { type: 'module' });
   app.tiles.postMessage({ type: 'scene', scene });
@@ -188,16 +190,10 @@ function loop(now) {
     cams[key] = cams[key] ? lerpCam(cams[key], target, Math.min(1, dt * 6)) : target;
     const u = view.apply(cams[key]);
     drawOverlay(u, view, key, target.mode);
-    hudFn(); scaleBar(key, cams[key]);
+    hudFn();
+    scaleBar(view, key);
   }
   requestAnimationFrame(loop);
-}
-// GM-010: Maßstab wie in der Vorlage (Linie mit „0“ und runder Entfernung), passt sich dem Zoom an
-const NICE = [25, 50, 100, 200, 250, 500, 1000, 2000, 5000];
-function scaleBar(key, cam) {
-  const el = document.querySelector(key === 'phone' ? '#pui .scalebar' : '#cui .scalebar'); if (!el) return;
-  const m = NICE.find(v => v * cam.scale >= 60) || NICE[NICE.length - 1];
-  el.style.width = Math.round(m * cam.scale) + 'px'; el.lastElementChild.textContent = m >= 1000 ? m / 1000 + ' km' : m + ' m';
 }
 function lerpCam(a, b, t) {
   const L = (x, y) => x + (y - x) * t;
@@ -209,8 +205,7 @@ function drawOverlay(u, view, key, mode) {
   if (mode === 'explore') { drawFog(u, view, app.scene, exploredLines()); drawPlayer(u, view, app.start, 0, style, 9); return; }
   if (n && !n.active) n.routes.forEach((r, i) => i !== n.sel && drawRoute(u, view, r.route, 0, style, { alt: true }));
   if (n) drawRoute(u, view, n.route, n.active && !n.arrived ? n.progress : 0, style);
-  const sel = key === 'phone' && s.phone.legend && s.phone.legendSel; // GM-011: Legende filtert
-  drawBlips(u, view, app.scene, style, { size: key === 'car' ? 13 : undefined, avoid: app.uiRects[key], only: sel ? LEGEND_KINDS[sel] || [sel] : null }); // GM-008: große Symbole auf CarPlay
+  drawBlips(u, view, app.scene, style, { size: key === 'car' ? 13 : undefined, avoid: app.uiRects[key], highlight: s.highlight }); // GM-008: große Symbole auf CarPlay
   if (s.friends) { drawFriend(u, view, [app.start[0] + 260, app.start[1] - 420], 'Max', style); drawFriend(u, view, [app.start[0] + 880, app.start[1] - 160], 'Lea', style); }
   if (n) drawDestination(u, view, n.dest.p, style, key === 'car' ? 7 : 8);
   if (n && n.active) {
@@ -258,3 +253,12 @@ document.addEventListener('click', e => {
 export function applyCarSize() { const [w, h] = app.state.carSize.split('x').map(Number); const c = document.getElementById('car'); c.style.width = w + 'px'; c.style.height = h + 'px'; }
 applyCarSize();
 boot().catch(e => { document.title = 'error: ' + e; console.error(e); document.body.insertAdjacentHTML('beforeend', `<pre style="color:#f66">${e.stack}</pre>`); });
+
+// GM-010 (0.7): Maßstab – runde Länge, die 60–140 px lang ist
+const NICE = [25, 50, 100, 200, 250, 500, 1000, 2000];
+function scaleBar(view, key) {
+  const el = document.querySelector(`#${key === 'car' ? 'cui' : 'pui'} [data-scale]`); if (!el) return;
+  const s = view.cam.scale, m = NICE.find(v => v * s >= 60) || 2000, w = Math.round(m * s);
+  if (el.dataset.w == w) return; el.dataset.w = w;
+  el.innerHTML = `<span>0</span><i style="width:${w}px"></i><span>${m >= 1000 ? m / 1000 + ' km' : m + ' m'}</span>`;
+}
