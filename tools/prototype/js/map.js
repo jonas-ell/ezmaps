@@ -467,22 +467,86 @@ function strokeDepth(u, pts, w, color) {
 }
 
 const BLIP = { hospital: ['#ff5a5a', '+', 'hospital'], police: ['#6d8cff', 'star', 'police'], fuel: ['#f08a2c', 'fuel', 'fuel'], parking: ['#5fb6ff', 'P', 'parking'], fast_food: ['#7ee06a', 'food', 'food'], restaurant: ['#7ee06a', 'food', 'food'], cafe: ['#7ee06a', 'food', 'food'], supermarket: ['#f5d742', 'cart', 'shop'] };
+
+// GM-012: Kartensymbole nach Vorlage – kleine Glyphen (24er-Raster), weiß oder farbig mit dunkler Kontur, eigene Zeichnung.
+// Op-Listen: f = Fläche, l = Linie [Pfad, Breite], c = Aussparung in Konturfarbe, t = Text
+const G = {
+  car:   [['f', 'M2.5 16 L2.5 12.5 L6 11.3 L8.6 7.5 L15.6 7.5 L18.6 11.3 L21.5 12.5 L21.5 16 Z'], ['f', 'M4.6 16.5a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0 -4.8 0 M14.6 16.5a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0 -4.8 0'], ['c', 'M9.6 9 L14.6 9 L16.4 11.2 L7.9 11.2 Z']],
+  wash:  [['f', 'M2.5 19 L2.5 16 L6 15 L8.2 12 L15.8 12 L18 15 L21.5 16 L21.5 19 Z'], ['f', 'M5 19.6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0 M15 19.6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0'], ['f', 'M6.5 2.5 Q4.6 5.6 6.5 7 Q8.4 5.6 6.5 2.5Z M12 1.5 Q10.1 4.6 12 6 Q13.9 4.6 12 1.5Z M17.5 2.5 Q15.6 5.6 17.5 7 Q19.4 5.6 17.5 2.5Z']],
+  wrench:[['l', 'M5 19.5 L13.5 11', 3.8], ['f', 'M11.4 8.6a4.8 4.8 0 1 0 9.6 0a4.8 4.8 0 1 0 -9.6 0'], ['c', 'M15.2 7.4 L19.4 3.2 L21.8 5.6 L17.6 9.8 Z']],
+  moto:  [['l', 'M2.6 16a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0 M14.6 16a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0', 2.1], ['l', 'M6 16 L9.5 11 L15.5 11 L18 16 M8.5 9.3 L13.5 9.3 M15.5 11 L16.8 7.6 L19.3 7.6', 2.4]],
+  bike:  [['l', 'M2.2 16a3.8 3.8 0 1 0 7.6 0a3.8 3.8 0 1 0 -7.6 0 M14.2 16a3.8 3.8 0 1 0 7.6 0a3.8 3.8 0 1 0 -7.6 0', 1.8], ['l', 'M6 16 L9.6 10 L16 10 L18 16 M9.6 10 L12.4 16 L16 10 M8.4 8 L11 8 M16 10 L15.4 7.4 L17.6 7.4', 1.9]],
+  fuel:  [['f', 'M4.5 3.5 h9.5 v17.5 h-9.5 Z'], ['c', 'M6.6 5.8 h5.3 v4.4 h-5.3 Z'], ['l', 'M14 8 L18.2 10.4 L18.2 18.2', 2.1]],
+  basket:[['f', 'M2.5 10 h19 l-2.6 10.5 h-13.8 Z'], ['l', 'M7 9.5 L10 3.8 M17 9.5 L14 3.8', 2.1], ['c', 'M7.6 12.6h1.7v5.2h-1.7Z M11.15 12.6h1.7v5.2h-1.7Z M14.7 12.6h1.7v5.2h-1.7Z']],
+  food:  [['l', 'M7.8 3 L7.8 21', 2.3], ['l', 'M5.2 3 L5.2 8 Q7.8 10.6 10.4 8 L10.4 3', 1.7], ['f', 'M14.8 21 L14.8 2.8 Q19.8 6 18.4 13.2 L16.9 13.2 L16.9 21 Z']],
+  cup:   [['f', 'M3.5 7.5 h12.5 v6 a5.2 5.2 0 0 1 -5.2 5.2 h-2.1 a5.2 5.2 0 0 1 -5.2 -5.2 Z'], ['l', 'M16 9.6 h2.1 a2.5 2.5 0 0 1 0 5 h-2.1 M2.5 21.2 h16', 1.8]],
+  cross: [['f', 'M9.4 2.8 h5.2 v6.6 h6.6 v5.2 h-6.6 v6.6 h-5.2 v-6.6 h-6.6 v-5.2 h6.6 Z']],
+  shirt: [['f', 'M8 3 L4 5 L1.5 10 L5.2 11.6 L6.2 9.6 L6.2 21 L17.8 21 L17.8 9.6 L18.8 11.6 L22.5 10 L20 5 L16 3 Q12 6.2 8 3 Z']],
+  scissors: [['l', 'M3.6 17.5a2.9 2.9 0 1 0 5.8 0a2.9 2.9 0 1 0 -5.8 0 M14.6 17.5a2.9 2.9 0 1 0 5.8 0a2.9 2.9 0 1 0 -5.8 0', 2], ['l', 'M8.4 15.3 L17.2 2.8 M15.6 15.3 L6.8 2.8', 2.3]],
+  bed:   [['f', 'M1.8 18.5 V6.5 h2.6 v6.3 h17.8 v5.7 h-2.6 v-2.2 h-15.2 v2.2 Z'], ['f', 'M5.4 8.8 h5 v3.5 h-5Z M11.4 9.2 h8.4 a2.3 2.3 0 0 1 2.3 2.3 v1.3 h-10.7Z']],
+  glass: [['f', 'M3.5 3.5 h17 l-7.2 8.4 v6.3 h4.2 v2.6 h-11 v-2.6 h4.2 v-6.3 Z']],
+  star:  [['f', 'M12 2 L14.6 8.6 L21.6 8.9 L16.2 13.4 L18 20.3 L12 16.4 L6 20.3 L7.8 13.4 L2.4 8.9 L9.4 8.6 Z']],
+  euro:  [['t', '€']],
+  P:     [['t', 'P']],
+};
+// OSM-Art → [Glyphe, Füllung, Kontur]; Reihenfolge = Vorrang beim Platzieren (Auto-Themen zuerst)
+const KINDS = {
+  car: ['car', '#45d9e8', '#000'], car_repair: ['wrench', '#fff', '#000'], car_wash: ['wash', '#fff', '#000'], motorcycle: ['moto', '#fff', '#000'],
+  fuel: ['fuel', '#fff', '#000'], parking: ['P', '#5fb6ff', '#000'], bicycle: ['bike', '#fff', '#000'], supermarket: ['basket', '#fff', '#000'],
+  pharmacy: ['cross', '#52d273', '#000'], restaurant: ['food', '#fff', '#000'], fast_food: ['food', '#fff', '#000'], cafe: ['cup', '#fff', '#000'],
+  bar: ['glass', '#7ee06a', '#000'], pub: ['glass', '#7ee06a', '#000'], clothes: ['shirt', '#000', '#fff'], hairdresser: ['scissors', '#fff', '#000'],
+  hotel: ['bed', '#fff', '#000'], bank: ['euro', '#fff', '#000'], hospital: ['cross', '#ff5a5a', '#000'], police: ['star', '#6d8cff', '#000'],
+};
+const P2 = {}; const path = d => P2[d] || (P2[d] = new Path2D(d));
+function drawGlyph(u, x, y, size, name, fill, edge) {
+  const ops = G[name], k = size / 24, ew = 3.2;
+  u.save(); u.translate(x - size / 2, y - size / 2); u.scale(k, k); u.lineCap = u.lineJoin = 'round';
+  for (const pass of [0, 1]) for (const [t, d, w] of ops) {
+    if (t === 't') { u.font = `800 21px Inter, sans-serif`; u.textAlign = 'center'; u.textBaseline = 'middle'; if (!pass) { u.lineWidth = ew * 1.3; u.strokeStyle = edge; u.strokeText(d, 12, 13); } else { u.fillStyle = fill; u.fillText(d, 12, 13); } continue; }
+    const pp = path(d);
+    if (!pass) { u.strokeStyle = edge; u.lineWidth = (t === 'l' ? w : 0) + ew; if (t !== 'c') { u.stroke(pp); if (t === 'f') { u.fillStyle = edge; u.fill(pp); } } continue; }
+    if (t === 'f') { u.fillStyle = fill; u.fill(pp); } else if (t === 'l') { u.strokeStyle = fill; u.lineWidth = w; u.stroke(pp); } else { u.fillStyle = edge; u.fill(pp); }
+  }
+  u.restore();
+}
+// Symbole aus Kartenpunkten und Suchorten zusammenführen (Suchorte haben Autohäuser, Werkstätten, Apotheken …)
+let blipCache = null;
+function blipList(scene) {
+  if (blipCache && blipCache.scene === scene) return blipCache.list;
+  const order = Object.keys(KINDS), all = [...scene.pois, ...scene.search].filter(p => KINDS[p.kind]), list = [];
+  all.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+  for (const p of all) if (!list.some(o => o.kind === p.kind && Math.hypot(o.p[0] - p.p[0], o.p[1] - p.p[1]) < 30)) list.push(p);
+  blipCache = { scene, list }; return list;
+}
+export const LEGEND = [['car', 'Autohaus'], ['car_repair', 'Werkstatt'], ['car_wash', 'Waschanlage'], ['fuel', 'Tankstelle'], ['parking', 'Parken'], ['bicycle', 'Fahrradladen'], ['supermarket', 'Supermarkt'], ['pharmacy', 'Apotheke'], ['restaurant', 'Essen'], ['cafe', 'Café'], ['bar', 'Bar'], ['clothes', 'Kleidung'], ['hairdresser', 'Friseur'], ['hotel', 'Hotel'], ['bank', 'Bank'], ['hospital', 'Krankenhaus'], ['police', 'Polizei']];
+export const LEGEND_KINDS = { restaurant: ['restaurant', 'fast_food'], bar: ['bar', 'pub'] };
+const legendCache = {};
+export function legendSrc(kind, size = 20) {
+  if (legendCache[kind]) return legendCache[kind];
+  const c = document.createElement('canvas'), dpr = 3; c.width = c.height = size * dpr;
+  const u = c.getContext('2d'); u.scale(dpr, dpr); const [g, f, e] = KINDS[kind]; drawGlyph(u, size / 2, size / 2, size * 0.86, g, f, e);
+  return (legendCache[kind] = c.toDataURL());
+}
+
 export function drawBlips(u, mv, scene, style, opts = {}) {
-  const placed = [], near = mv.cam.scale > 0.45;
+  const placed = [], near = mv.cam.scale > 0.45, glyphs = style === 'neon';
   const base = opts.size ?? (near ? Math.min(14, 7 + mv.cam.scale * 1.4) : 6.5);
-  for (const p of scene.pois) {
-    const b = BLIP[p.kind]; if (!b) continue;
-    if (near && (p.kind === 'restaurant' || p.kind === 'cafe') && mv.cam.tilt) continue;
-    if (style === 'neon' && mv.cam.scale < 0.6 && (p.kind === 'restaurant' || p.kind === 'cafe' || p.kind === 'fast_food')) continue; // GM-010 (0.5): Übersicht ruhiger
-    const hl = opts.highlight && (opts.highlight === b[2]);
+  const hk = opts.highlight ? LEGEND_KINDS[opts.highlight] || [opts.highlight] : null; // GM-012: Legende hebt hervor
+  for (const p of glyphs ? blipList(scene) : scene.pois) {
+    const b = glyphs ? KINDS[p.kind] : BLIP[p.kind]; if (!b) continue;
+    const hl = hk && (hk.includes(p.kind) || hk.includes(b[2]));
+    if (near && (p.kind === 'restaurant' || p.kind === 'cafe' || p.kind === 'fast_food') && mv.cam.tilt && !hl) continue;
+    if (glyphs && mv.cam.scale < 0.6 && !hl && (p.kind === 'restaurant' || p.kind === 'cafe' || p.kind === 'fast_food')) continue; // GM-010 (0.5): Übersicht ruhiger
     const q = mv.project(p.p); if (!mv.visible(q)) continue;
     const r = base * Math.max(0.7, Math.min(1.2, q[2]));
     if (opts.avoid && opts.avoid.some(a => q[0] + r > a[0] && q[0] - r < a[2] && q[1] + r > a[1] && q[1] - r < a[3])) continue; // GM-009 (1.2)
-    if (placed.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < r * 3.6)) continue;
+    if (placed.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < r * 3.2)) continue;
     placed.push(q);
-    if (opts.highlight && !hl) u.globalAlpha = 0.25;
+    if (hk && !hl) u.globalAlpha = 0.25;
     if (hl) { u.fillStyle = 'rgba(161,61,240,.45)'; u.beginPath(); u.arc(q[0], q[1], r * 2, 0, 7); u.fill(); }
-    blip(u, q[0], q[1], hl ? r * 1.35 : r, b, style); u.globalAlpha = 1;
+    const rr = hl ? r * 1.35 : r;
+    if (glyphs) drawGlyph(u, q[0], q[1], rr * 2.9, b[0], b[1], b[2]); else blip(u, q[0], q[1], rr, b, style);
+    u.globalAlpha = 1;
   }
 }
 function blip(u, x, y, r, [color, g, file], style) {

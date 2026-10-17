@@ -23,6 +23,20 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Ungetestet:** „Autobahn meiden“ muss bei der Swift-Umsetzung in `Core/` gespiegelt werden. Prototyp nur in Chromium.
 
+## GM-012 – Kartensymbole nach Vorlage (Autohaus, Werkstatt …) und Legende
+
+**Ziel:** Orte wie Autohäuser, Werkstätten und Waschanlagen sollen auf der Neon-Karte als kleine Symbole wie in der Vorlage erscheinen.
+
+**Dateien:** `tools/prototype/js/map.js`, `tools/prototype/js/phone.js`, `tools/prototype/js/app.js`, `tools/prototype/style.css`, `docs/TODO_PROTOTYP_REVIEW.md`
+
+**Geändert:**
+- Eigener Symbolsatz (selbst gezeichnet, 24er-Raster, Path2D): Glyphe mit dunkler Kontur, meist weiß, einzelne farbig – Autohaus (türkis), Werkstatt, Waschanlage, Motorrad, Fahrrad, Tankstelle, Parken (blau), Supermarkt, Apotheke (grün), Essen, Café, Bar (grün), Kleidung (schwarz mit weißer Kontur), Friseur, Hotel, Bank
+- Neon nutzt diese Symbole statt der Codex-Blips; Quelle sind jetzt Kartenpunkte **und** Suchorte (dort stehen Autohäuser, Werkstätten, Apotheken), doppelte werden zusammengelegt; Auto-Themen haben Vorrang beim Platzieren
+- Zusammengeführt mit GM-011 des lokalen Claude: dessen Legende (Ebenen-Knopf, Hervorheben per Tippen), Maßstab und Relief bleiben; die Legende zeigt jetzt die neuen Symbole und Kategorien (inkl. Krankenhaus, Polizei); Essen bleibt in der Übersicht ausgeblendet, außer es ist hervorgehoben
+
+**Tatsächlich geprüft:** Nach dem Zusammenführen Playwright (Chromium) ohne Skriptfehler; Bildschirmfotos angesehen: iPhone-Karte bei den Autohäusern, Legende offen, „Autohaus“ hervorgehoben, CarPlay-Karte.
+
+**Ungetestet:** Swift nicht angepasst. Wild West, Pixel Quest und Toy Town zeichnen weiter die alten Blips (Legende zeigt dort trotzdem die Neon-Symbole). `docs/previews/` nicht neu erzeugt (Pricedown fehlt in der Cloud).
 ## GM-011 – Review Teil 0 zusammengeführt: Relief, weiße Symbole, Legende
 
 **Ziel:** Teil 0 parallel vom lokalen Claude und vom Cloud-Claude bearbeitet – zusammenführen. Look-Entscheidungen des Cloud-Claude (GM-010, nach neueren Vorlagebildern) gelten; dazu die Teile, die nur hier gebaut wurden.

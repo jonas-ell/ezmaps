@@ -3,7 +3,7 @@ import { app, set, toast, useStyle, ensureTextures, planTo, selectRoute, startNa
 import { ic, manIc } from './icons.js';
 import { badgeUrl, appIconUrl } from './assets.js';
 import { fmtDist, fmtMin, smoothHeading, pointAt } from './route.js';
-import { MapView, STYLES, drawRoute, drawPlayer, drawBlips, drawDestination } from './map.js';
+import { MapView, STYLES, drawRoute, drawPlayer, drawBlips, drawDestination, LEGEND, legendSrc } from './map.js';
 
 const root = () => document.getElementById('pui');
 const H = 852, W = 393;
@@ -111,10 +111,9 @@ function home() {
 }
 function districtHere() { const e = [...app.edgeInfo.values()].reduce((b, e) => { const n = app.scene.graph.nodes[e.a], d = Math.hypot(n[0] - app.start[0], n[1] - app.start[1]); return d < b[0] ? [d, e.d] : b; }, [1e9, 'Altstadt']); return e[1]; }
 
-// GM-010 (0.6): Legende rechts – weißer Text auf schwarzen Kästen, Tippen hebt Symbole hervor
-const LEGEND = [['fuel', 'Tanken', 'fuel'], ['parking', 'Parken', 'parking'], ['shop', 'Supermarkt', 'star'], ['food', 'Essen', 'food'], ['hospital', 'Krankenhaus', 'info'], ['police', 'Polizei', 'shield']];
+// GM-010 (0.6) / GM-012: Legende rechts – weißer Text auf schwarzen Kästen, Symbole wie auf der Karte, Tippen hebt hervor
 function legend() {
-  return `<div class="legend"><div class="lg-title">Legende</div>${LEGEND.map(([k, t, i]) => `<button class="lg-row ${app.state.highlight === k ? 'on' : ''}" data-act="hl:${k}"><span>${t}</span>${ic(i, 15)}</button>`).join('')}</div>`;
+  return `<div class="legend"><div class="lg-title">Legende</div>${LEGEND.map(([k, t]) => `<button class="lg-row ${app.state.highlight === k ? 'on' : ''}" data-act="hl:${k}"><span>${t}</span><img src="${legendSrc(k)}" alt=""></button>`).join('')}</div>`;
 }
 
 // ---------------- Suche
