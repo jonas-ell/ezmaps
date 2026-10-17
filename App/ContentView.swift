@@ -1,25 +1,27 @@
 import SwiftUI
 import EzMapsCore
 
-/// Platzhalter, bis die MapLibre-Karte kommt.
+/// Erste echte Karte: Neon City über MapLibre (GM-017). Suche, Route und Navigation folgen auf Basis von EzMapsCore.
 struct ContentView: View {
-    @State private var style: MapStyle = .free
-
     var body: some View {
-        VStack(spacing: 16) {
-            Text(L("Karte kommt bald"))
-                .font(.title2.bold())
-            Picker(L("Stil"), selection: $style) {
-                ForEach(MapStyle.allCases, id: \.self) { style in
-                    Text(L(style.titleKey)).tag(style)
-                }
-            }
-            .pickerStyle(.segmented)
-            Text(L("© OpenStreetMap-Mitwirkende"))
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+        ZStack(alignment: .bottomTrailing) {
+            NeonMapView()
+                .ignoresSafeArea()
+            OSMAttribution()
+                .padding(.trailing, 12)
+                .padding(.bottom, 8)
         }
-        .padding()
+        .overlay(alignment: .topLeading) {
+            Text(L(MapStyle.neonCity.titleKey))
+                .font(.headline)
+                .foregroundStyle(.white)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(.black.opacity(0.75))
+                .padding(.leading, 16)
+                .padding(.top, 8)
+        }
+        .preferredColorScheme(.dark)
     }
 }
 

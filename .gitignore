@@ -25,3 +25,6 @@ tools/prototype/fonts/
 # OSM-Rohdaten (groß) und lokal lizenzierte Schrift
 tools/prototype/raw/
 tools/prototype/out/
+
+# Mac-Zugangsbeschreibung (Team-/Key-IDs, nicht öffentlich)
+App/MAC_ZUGANG_NEUE_APP.md

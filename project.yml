@@ -8,6 +8,9 @@ options:
 packages:
   EzMapsCore:
     path: Core
+  MapLibre:
+    url: https://github.com/maplibre/maplibre-gl-native-distribution
+    from: 6.0.0
 
 targets:
   EzMaps:
@@ -17,6 +20,8 @@ targets:
       - path: App
     dependencies:
       - package: EzMapsCore
+      - package: MapLibre
+        product: MapLibre
       - sdk: CarPlay.framework
     settings:
       base:

@@ -7,4 +7,7 @@
 - Geheimnisse (`*.p8`, Service-Accounts, API-Keys) nie committen. `tools/prototype/fonts/` (Pricedown, nur Desktop-Lizenz) nie committen.
 - Recht: keine Spielnamen/-inhalte, Hinweis „© OpenStreetMap-Mitwirkende“ immer sichtbar, keine Blitzer-Warnungen (§ 23 Abs. 1c StVO).
 - Design zuerst im **Prototyp** (`tools/prototype/`, Start: `python tools/prototype/serve.py`) zeigen, dann in Swift bauen. Routen-/Nebel-Logik in `tools/prototype/js/` und `Core/` gemeinsam ändern.
-- Mac-Build: `ssh jonaselfounti@100.102.233.78 build-ezmaps` (nur freigegebene Befehle).
+- Mac-Build über eigenes Gate (Schlüssel `~/.ssh/ezmaps_mac`, Host `mac-ezmaps`, nur `ping/clean/extract/build/log`):
+  `ssh mac-ezmaps clean && git archive HEAD | ssh mac-ezmaps extract && ssh mac-ezmaps build` – führt `tools/mac_build.sh` aus (xcodegen, xcodebuild Simulator, `swift test`).
+  Den alten Schlüssel `id_ed25519` **nicht** benutzen – sein Gate baut die andere App („slop app appstore“) und würde sie überschreiben.
+- Swift-Kartenstil: `python tools/maplibre/build_style.py` erzeugt `App/MapStyles/style-neon-city.json` aus den Prototyp-Werten – nie von Hand ändern.

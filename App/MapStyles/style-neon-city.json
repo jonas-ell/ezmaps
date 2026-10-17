@@ -1,0 +1,1119 @@
+{
+ "version": 8,
+ "name": "EzMaps Neon City",
+ "metadata": {
+  "ezmaps:source": "tools/maplibre/build_style.py – Werte aus tools/prototype/js/map.js (NEON)"
+ },
+ "sources": {
+  "openmaptiles": {
+   "type": "vector",
+   "url": "https://tiles.openfreemap.org/planet",
+   "attribution": "© OpenStreetMap-Mitwirkende"
+  }
+ },
+ "layers": [
+  {
+   "id": "land",
+   "type": "background",
+   "paint": {
+    "background-color": "#1c1c1d"
+   }
+  },
+  {
+   "id": "farm",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landcover",
+   "paint": {
+    "fill-color": "#1d1d1e",
+    "fill-antialias": true
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "farmland"
+   ]
+  },
+  {
+   "id": "forest",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landcover",
+   "paint": {
+    "fill-color": "#1e1f1f",
+    "fill-antialias": true
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "wood"
+   ]
+  },
+  {
+   "id": "grass",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landcover",
+   "paint": {
+    "fill-color": "#202121",
+    "fill-antialias": true
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "grass"
+   ]
+  },
+  {
+   "id": "park",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "park",
+   "paint": {
+    "fill-color": "#202121",
+    "fill-antialias": true
+   }
+  },
+  {
+   "id": "urban-buildings",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#2c2c2d",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     0.015,
+     5,
+     0.03,
+     6,
+     0.059,
+     7,
+     0.118,
+     8,
+     0.237,
+     9,
+     0.473,
+     10,
+     0.946,
+     11,
+     1.892,
+     12,
+     3.784,
+     13,
+     7.569,
+     14,
+     15.138,
+     15,
+     30.276,
+     16,
+     60.551,
+     17,
+     121.103,
+     18,
+     242.205,
+     19,
+     484.41,
+     20,
+     968.821,
+     21,
+     1937.642,
+     22,
+     3875.283
+    ]
+   }
+  },
+  {
+   "id": "urban-minor",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#2c2c2d",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     0.015,
+     5,
+     0.03,
+     6,
+     0.059,
+     7,
+     0.118,
+     8,
+     0.237,
+     9,
+     0.473,
+     10,
+     0.946,
+     11,
+     1.892,
+     12,
+     3.784,
+     13,
+     7.569,
+     14,
+     15.138,
+     15,
+     30.276,
+     16,
+     60.551,
+     17,
+     121.103,
+     18,
+     242.205,
+     19,
+     484.41,
+     20,
+     968.821,
+     21,
+     1937.642,
+     22,
+     3875.283
+    ]
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "minor",
+      "service"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "residential",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#2c2c2d",
+    "fill-antialias": true
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "residential",
+      "suburb",
+      "neighbourhood"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "industrial",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#2c2c2d",
+    "fill-antialias": true
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "industrial",
+      "commercial",
+      "retail",
+      "railway",
+      "garages"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "landuse-green",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#202121",
+    "fill-antialias": true
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "cemetery",
+      "pitch",
+      "playground",
+      "park",
+      "zoo"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "water",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "water",
+   "paint": {
+    "fill-color": "#4b4e4d",
+    "fill-antialias": true
+   },
+   "filter": [
+    "!=",
+    [
+     "get",
+     "class"
+    ],
+    "swimming_pool"
+   ]
+  },
+  {
+   "id": "river",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "waterway",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#4b4e4d",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     1,
+     5,
+     1,
+     6,
+     1,
+     7,
+     1,
+     8,
+     1,
+     9,
+     1,
+     10,
+     1,
+     11,
+     1,
+     12,
+     1,
+     13,
+     1.481,
+     14,
+     2.962,
+     15,
+     5.923,
+     16,
+     11.847,
+     17,
+     23.694,
+     18,
+     47.388,
+     19,
+     94.776,
+     20,
+     189.552,
+     21,
+     379.104,
+     22,
+     758.208
+    ]
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "river",
+      "canal"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "stream",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "waterway",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#4b4e4d",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     0.6,
+     5,
+     0.6,
+     6,
+     0.6,
+     7,
+     0.6,
+     8,
+     0.6,
+     9,
+     0.6,
+     10,
+     0.6,
+     11,
+     0.6,
+     12,
+     0.6,
+     13,
+     0.6,
+     14,
+     0.987,
+     15,
+     1.974,
+     16,
+     3.949,
+     17,
+     7.898,
+     18,
+     15.796,
+     19,
+     31.592,
+     20,
+     63.184,
+     21,
+     126.368,
+     22,
+     252.736
+    ]
+   },
+   "filter": [
+    "!",
+    [
+     "in",
+     [
+      "get",
+      "class"
+     ],
+     [
+      "literal",
+      [
+       "river",
+       "canal"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "building",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "paint": {
+    "fill-color": "#373738",
+    "fill-antialias": true,
+    "fill-outline-color": "#424243"
+   }
+  },
+  {
+   "id": "rail",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "butt",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#3a3a3b",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     1,
+     5,
+     1,
+     6,
+     1,
+     7,
+     1,
+     8,
+     1,
+     9,
+     1,
+     10,
+     1,
+     11,
+     1,
+     12,
+     1,
+     13,
+     1,
+     14,
+     1,
+     15,
+     1,
+     16,
+     1.974,
+     17,
+     3.949,
+     18,
+     7.898,
+     19,
+     15.796,
+     20,
+     31.592,
+     21,
+     63.184,
+     22,
+     126.368
+    ]
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "rail",
+      "transit"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "road-service",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#8e8e8e",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     1,
+     5,
+     1,
+     6,
+     1,
+     7,
+     1,
+     8,
+     1,
+     9,
+     1,
+     10,
+     1,
+     11,
+     1,
+     12,
+     1,
+     13,
+     1,
+     14,
+     1.296,
+     15,
+     2.592,
+     16,
+     5.183,
+     17,
+     10.366,
+     18,
+     20.732,
+     19,
+     41.464,
+     20,
+     82.929,
+     21,
+     165.858,
+     22,
+     331.716
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "service"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  },
+  {
+   "id": "road-minor",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#a3a3a3",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     1.4,
+     5,
+     1.4,
+     6,
+     1.4,
+     7,
+     1.4,
+     8,
+     1.4,
+     9,
+     1.4,
+     10,
+     1.4,
+     11,
+     1.4,
+     12,
+     1.4,
+     13,
+     1.4,
+     14,
+     2.592,
+     15,
+     5.183,
+     16,
+     10.366,
+     17,
+     20.732,
+     18,
+     41.464,
+     19,
+     82.929,
+     20,
+     165.858,
+     21,
+     331.716,
+     22,
+     663.432
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "minor"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  },
+  {
+   "id": "road-tertiary",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#a3a3a3",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     2,
+     5,
+     2,
+     6,
+     2,
+     7,
+     2,
+     8,
+     2,
+     9,
+     2,
+     10,
+     2,
+     11,
+     2,
+     12,
+     2,
+     13,
+     2,
+     14,
+     3.332,
+     15,
+     6.664,
+     16,
+     13.328,
+     17,
+     26.656,
+     18,
+     53.311,
+     19,
+     106.623,
+     20,
+     213.246,
+     21,
+     426.492,
+     22,
+     852.984
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "tertiary"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  },
+  {
+   "id": "road-secondary",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#a3a3a3",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     2.4,
+     5,
+     2.4,
+     6,
+     2.4,
+     7,
+     2.4,
+     8,
+     2.4,
+     9,
+     2.4,
+     10,
+     2.4,
+     11,
+     2.4,
+     12,
+     2.4,
+     13,
+     2.4,
+     14,
+     3.702,
+     15,
+     7.404,
+     16,
+     14.809,
+     17,
+     29.617,
+     18,
+     59.235,
+     19,
+     118.47,
+     20,
+     236.94,
+     21,
+     473.88,
+     22,
+     947.76
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "secondary"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  },
+  {
+   "id": "road-primary",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#b0b0b0",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     3,
+     5,
+     3,
+     6,
+     3,
+     7,
+     3,
+     8,
+     3,
+     9,
+     3,
+     10,
+     3,
+     11,
+     3,
+     12,
+     3,
+     13,
+     3,
+     14,
+     4.443,
+     15,
+     8.885,
+     16,
+     17.77,
+     17,
+     35.541,
+     18,
+     71.082,
+     19,
+     142.164,
+     20,
+     284.328,
+     21,
+     568.656,
+     22,
+     1137.311
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "primary"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  },
+  {
+   "id": "road-trunk",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#b0b0b0",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     3.6,
+     5,
+     3.6,
+     6,
+     3.6,
+     7,
+     3.6,
+     8,
+     3.6,
+     9,
+     3.6,
+     10,
+     3.6,
+     11,
+     3.6,
+     12,
+     3.6,
+     13,
+     3.6,
+     14,
+     4.813,
+     15,
+     9.626,
+     16,
+     19.251,
+     17,
+     38.503,
+     18,
+     77.005,
+     19,
+     154.011,
+     20,
+     308.022,
+     21,
+     616.044,
+     22,
+     1232.087
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "trunk"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  },
+  {
+   "id": "road-motorway",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#b0b0b0",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     4.4,
+     5,
+     4.4,
+     6,
+     4.4,
+     7,
+     4.4,
+     8,
+     4.4,
+     9,
+     4.4,
+     10,
+     4.4,
+     11,
+     4.4,
+     12,
+     4.4,
+     13,
+     4.4,
+     14,
+     5.923,
+     15,
+     11.847,
+     16,
+     23.694,
+     17,
+     47.388,
+     18,
+     94.776,
+     19,
+     189.552,
+     20,
+     379.104,
+     21,
+     758.208,
+     22,
+     1516.415
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "motorway"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  }
+ ]
+}
