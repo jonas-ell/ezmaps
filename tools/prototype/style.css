@@ -52,8 +52,21 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .bar.thin { height: 6px; }
 .t-toy .bar { border-radius: 4px; overflow: hidden; outline: 2px solid #2f3640; background: #e5e7eb; }
 .gain { color: var(--ok); }
-.attrib { position: absolute; right: 12px; bottom: 92px; font: 500 9px Inter; color: color-mix(in srgb, var(--status) 70%, transparent); z-index: 2; }
-.attrib.nav { bottom: 132px; }
+/* GM-009 (1.1): OSM-Hinweis immer sichtbar, über Blättern */
+.osm { position: absolute; right: 12px; z-index: 46; font: 500 9px Inter; color: var(--status); opacity: .78; pointer-events: none; text-shadow: 0 0 3px var(--osmshadow, rgba(0,0,0,.8)); }
+.t-western, .t-toy { --osmshadow: rgba(255,255,255,.8); }
+.osm-tabs { bottom: 89px; } .osm-nav { bottom: 132px; } .osm-kb { bottom: 296px; color: #333; text-shadow: none; } .osm-sheet { bottom: 18px; }
+.card-osm { position: absolute; right: 8px; top: 8px; z-index: 3; font: 500 8px Inter; color: #fff; text-shadow: 0 0 3px #000; opacity: .85; }
+.cp-list-osm { margin-top: 10px; font: 500 10px Inter; color: #666; }
+/* GM-009 (1.2): Statusleiste mit Verlauf, Tab-Leiste deckend */
+.status::before { content: ''; position: absolute; inset: 0; background: linear-gradient(var(--statusbg, rgba(0,0,0,.55)), transparent); }
+.t-western { --statusbg: rgba(239,226,192,.8); } .t-pixel { --statusbg: rgba(16,26,72,.7); } .t-toy { --statusbg: rgba(255,255,255,.7); }
+.status .time, .status .sicons { z-index: 1; }
+.phone .map { z-index: 0; isolation: isolate; overflow: hidden; }
+.t-neon .tabs { background: #0b0b0d !important; }
+.stylecard { isolation: isolate; }
+/* GM-009 (1.3): Fahrzeit lesbar */
+.rtime { font: 700 calc(16px * var(--bs)) var(--body); white-space: nowrap; } .rtime.big { font-size: calc(21px * var(--bs)); font-weight: 800; }
 .ic { flex: none; display: block; }
 
 /* Start */
@@ -115,7 +128,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .searchtop { position: absolute; top: 59px; left: 16px; right: 16px; display: flex; gap: 10px; align-items: center; }
 .sfield { flex: 1; height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: #fff; color: #000; border-left: 6px solid var(--accent); border-radius: var(--radius); }
 .sfield input { flex: 1; border: 0; outline: 0; font: 500 17px Inter; background: none; min-width: 0; }
-.link { color: var(--accent); font: 600 calc(16px * var(--bs)) var(--body); }
+.link { color: var(--accent); font: 600 calc(16px * var(--bs)) var(--body); flex: none; white-space: nowrap; }
+.sfield { min-width: 0; }
 .t-neon .link { color: #fff; }
 .slist { position: absolute; top: 113px; left: 16px; right: 16px; bottom: 300px; overflow-y: auto; scrollbar-width: none; display: flex; flex-direction: column; gap: 12px; }
 .menu { overflow: hidden; }
@@ -250,7 +264,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .cp-eta b { color: #fff; font-size: 17px; }
 .cp-ours { position: absolute; left: 10px; bottom: 12px; }
 .cp-ours .streetbox { font-size: calc(12px * var(--bs)); } .cp-ours .d2 { font-size: calc(20px * var(--hs)); }
-.cp-alert-bg { position: absolute; inset: 0; background: rgba(0,0,0,.45); display: grid; place-items: center; }
+.cp-alert-bg { position: absolute; inset: 0; background: rgba(0,0,0,.45); display: grid; place-items: center; z-index: 10; }
+.cp-attrib { z-index: 20; }
 .cp-alert { width: 300px; background: rgba(40,40,42,.97); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 6px; text-align: center; font-family: Inter; color: #fff; }
 .cp-alert span { color: #c7c7cc; } .cp-alert button { margin-top: 8px; height: 42px; border-radius: 10px; background: #3a3a3c; text-align: center; font-weight: 600; }
 .car .row.sb .head { font-size: calc(22px * var(--hs)); }

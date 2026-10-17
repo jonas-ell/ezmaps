@@ -13,6 +13,7 @@ let list = [];
 
 export function carCamera(view) {
   const s = app.state, n = s.nav, c = s.car;
+  if (n && n.active && n.arrived) return { mode: 'arrived', ...fit(n.route.pts, view, 60, 30, 30, 80) };
   if (n && n.active) {
     const r = n.route, pos = pointAt(r.pts, r.cum, n.progress).p;
     return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 1.8, tilt: 0, anchor: [0.62, 0.6] }; // GM-008: Nutzervorlage – flach von oben wie ein Spiel-Radar, nah, Fahrtrichtung oben
@@ -45,7 +46,8 @@ export function renderCar() {
   else if (c.screen === 'cat') h = listTpl(c.title, list, 'dest');
   else if (c.screen === 'styles') h = listTpl('Stil', Object.entries(STYLES).map(([k, v]) => ({ name: v.name, sub: k === 'neon' ? 'Gratis' : 'Vorschau', icon: s.style === k ? 'check' : 'style', act: `style:${k}` })), 'map');
   else if (c.screen === 'preview' && s.nav) h = previewTpl();
-  else if ((c.screen === 'nav' || c.screen === 'arrival') && s.nav) h = navTpl() + (c.screen === 'arrival' ? alertTpl() : '');
+  else if (c.screen === 'arrival' && s.nav) h = navbar([], [['end', 'close', 'Beenden']]) + alertTpl() + '<div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>'; // GM-009 (1.6)
+  else if (c.screen === 'nav' && s.nav) h = navTpl();
   else h = mapTpl();
   h = h.replace(/class="head([^"]*)" style="font-size:(\d+)px/g, (m, c, n) => `class="head${c}" style="font-size:calc(${n}px * var(--hs))`);
   root().innerHTML = h;
@@ -70,7 +72,7 @@ function destItems() {
 function listTpl(title, items, back) {
   list = items;
   return `<div class="cp-list"><div class="cp-lhead"><button data-act="go:${back}">${ic('back', 20)}<span>${back === 'map' ? 'Karte' : 'Zurück'}</span></button><b>${title}</b><span></span></div>
-    ${items.map((r, i) => `<button class="cp-row" data-act="${r.act || 'pick:' + i}"><span class="cp-ricon">${ic(r.icon, 22)}</span><span class="tl">${r.name}<small>${r.sub || ''}${r.p ? ' · ' + fmtDist(Math.hypot(r.p[0] - app.start[0], r.p[1] - app.start[1])) : ''}</small></span>${ic('chevron', 16)}</button>`).join('')}</div>`;
+    ${items.map((r, i) => `<button class="cp-row" data-act="${r.act || 'pick:' + i}"><span class="cp-ricon">${ic(r.icon, 22)}</span><span class="tl">${r.name}<small>${r.sub || ''}${r.p ? ' · ' + fmtDist(Math.hypot(r.p[0] - app.start[0], r.p[1] - app.start[1])) : ''}</small></span>${ic('chevron', 16)}</button>`).join('')}<div class="cp-list-osm">Ortsdaten © OpenStreetMap-Mitwirkende</div></div>`;
 }
 function previewTpl() {
   const n = app.state.nav;

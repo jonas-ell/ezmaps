@@ -2,6 +2,25 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-009 – Review Teil 1: Fehler behoben
+
+**Ziel:** Punkte 1.1–1.7 aus `docs/TODO_PROTOTYP_REVIEW.md`.
+
+**Dateien:** `tools/prototype/js/{phone,carplay,app,map}.js`, `tools/prototype/style.css`, `tools/prototype/prep.py`, `tools/prototype/data/idstein.json`, `docs/TODO_PROTOTYP_REVIEW.md`, `docs/previews/*`
+
+**Geändert:**
+- 1.1 „© OpenStreetMap-Mitwirkende“ zentral auf jedem iPhone-Screen (über Tab-Leiste, über der Tastatur, in Blättern), in jeder Stil-Karte („© OpenStreetMap“), in den CarPlay-Listen und über dem CarPlay-Ankunftshinweis
+- 1.2 Ursache: Leisten und Panels sind halbdurchsichtig, Symbole schienen durch. Jetzt werden Kartensymbole unter allen Bedienelementen und der Statusleiste gar nicht gezeichnet; Tab-Leiste (Neon) deckend, Statusleiste mit Verlauf, Karte und Stil-Karten isoliert
+- 1.3 Fahrzeit in der Routen-Vorschau in lesbarer Textschrift statt Titelschrift mit Kontur
+- 1.4 Spieler-Pfeil auf dem iPhone höher (Kamera-Anker 0,63), nicht mehr unter dem Straßenfeld; CarPlay geprüft (frei)
+- 1.5 „Abbrechen“ nicht mehr abgeschnitten; alle Suchkategorien deutsch (z. B. „Buchhandlung“, „Tierarzt“, „Waschanlage“), Unbekanntes heißt „Ort“
+- 1.6 Bei Ankunft verschwinden Abbiegekarte, Tacho, Tempolimit, Musik-Hinweis und untere Leiste; Karte zeigt Übersicht der gefahrenen Strecke (iPhone und CarPlay)
+- 1.7 Versionsanzeige im Profil liest die neueste GM-Nummer aus `CHANGELOG.md`
+
+**Tatsächlich geprüft:** `shots.py` ohne Konsolenfehler; alle 22 Bilder angesehen (OSM-Hinweis überall, keine Symbole über Leisten, Fahrzeit lesbar, Pfeil frei, Ankunft ohne Navi-Teile).
+
+**Ungetestet:** Prototyp nur in Chromium. Keine Swift-Änderungen.
+
 ## GM-008 – CarPlay-Karte flach von oben wie ein Spiel-Radar
 
 **Ziel:** CarPlay-Ansicht nach Nutzervorlage: flach, Fahrtrichtung oben, große Symbole.

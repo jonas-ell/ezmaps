@@ -444,6 +444,7 @@ export function drawBlips(u, mv, scene, style, opts = {}) {
     if (near && (p.kind === 'restaurant' || p.kind === 'cafe') && mv.cam.tilt) continue;
     const q = mv.project(p.p); if (!mv.visible(q)) continue;
     const r = base * Math.max(0.7, Math.min(1.2, q[2]));
+    if (opts.avoid && opts.avoid.some(a => q[0] + r > a[0] && q[0] - r < a[2] && q[1] + r > a[1] && q[1] - r < a[3])) continue; // GM-009 (1.2)
     if (placed.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < r * 3.6)) continue;
     placed.push(q); blip(u, q[0], q[1], r, b, style);
   }

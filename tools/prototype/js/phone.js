@@ -11,9 +11,10 @@ const H = 852, W = 393;
 // ------------------------------------------------------------ Kamera
 export function phoneCamera(view) {
   const s = app.state, n = s.nav, p = s.phone;
+  if (n && n.active && n.arrived) return { mode: 'arrived', ...fit(n.route.pts, view, 70, 330) }; // GM-009 (1.6): Übersicht der gefahrenen Strecke
   if (n && n.active) {
     const r = n.route, pos = pointAt(r.pts, r.cum, n.progress).p;
-    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 3.4, tilt: 58, anchor: [0.5, 0.76] }; // GM-006: Nutzerwunsch – nah wie Apple Maps (Pfeil unten, steile Neigung)
+    return { mode: 'nav', center: pos, heading: smoothHeading(r, n.progress), scale: 3.4, tilt: 58, anchor: [0.5, 0.63] }; // GM-009 (1.4): Pfeil über dem Straßenfeld // GM-006: Nutzerwunsch – nah wie Apple Maps (Pfeil unten, steile Neigung)
   }
   if (p.overlay === 'preview' && n) return { mode: 'preview', ...fit(n.routes.map(r => r.route.pts).flat(), view, 120, 470) };
   if (!p.overlay && p.tab === 'explore') return { mode: 'explore', center: [0, 80], heading: 0, scale: 0.155, tilt: 0, anchor: [0.5, 0.42] };
@@ -60,6 +61,7 @@ export function renderPhone() {
     if (p.sheet === 'arrival') html += arrival();
     if (p.sheet === 'friends') html += friendsSheet();
   }
+  html += osm();
   if (s.toast) html += `<div class="toast panel">${s.toast}</div>`;
   if (s.loading) html += `<div class="loading"><div class="spinner"></div>${s.loading}</div>`;
   // GM-007: in der Suche bleibt der Cursor immer im Feld (auch nach Bildschirm-Tasten und Neuzeichnen)
@@ -101,7 +103,7 @@ function home() {
     <div class="rbtns">${btn('tab:styles', 'layers')}${btn('sheet:friends', 'friends')}${btn('recenter', 'locate')}${btn('zoom:in', 'plus')}${btn('zoom:out', 'minus')}</div>
     <button class="district panel" data-act="tab:explore"><div class="row sb"><span class="upper b">${d}</span><span class="head" style="font-size:30px">${pct(d)}%</span></div>
       <div class="bar"><i style="width:${pct(d)}%;background:var(--ok)"></i></div><div class="muted small">entdeckt · tippe für deine Karte</div></button>
-    <div class="attrib">© OpenStreetMap-Mitwirkende</div>`;
+`;
 }
 function districtHere() { const e = [...app.edgeInfo.values()].reduce((b, e) => { const n = app.scene.graph.nodes[e.a], d = Math.hypot(n[0] - app.start[0], n[1] - app.start[1]); return d < b[0] ? [d, e.d] : b; }, [1e9, 'Altstadt']); return e[1]; }
 
@@ -149,13 +151,14 @@ function preview() {
   return `<div class="topbar panel"><button data-act="close:preview">${ic('back', 20)}</button><span>Mein Standort → <b>${n.dest.name}</b></span></div>
     <div class="sheet panel">
       <div class="head" style="font-size:38px">${n.dest.name}</div><div class="muted" style="margin:4px 0 12px">${n.dest.sub || ''}</div>
-      <div class="menu">${n.routes.map((r, i) => `<button class="item ${i === n.sel ? 'sel' : ''}" data-act="route:${i}"><span class="tl">${r.label}<small>${fmtDist(r.route.length)}${r.gain ? ` · <span class="gain">+${r.gain} % neue Straßen</span>` : ''}</small></span><span class="${i === n.sel ? 'head' : 'b'}" style="font-size:${i === n.sel ? 24 : 16}px">${fmtMin(r.route.seconds)}</span></button>`).join('')}</div>
+      <div class="menu">${n.routes.map((r, i) => `<button class="item ${i === n.sel ? 'sel' : ''}" data-act="route:${i}"><span class="tl">${r.label}<small>${fmtDist(r.route.length)}${r.gain ? ` · <span class="gain">+${r.gain} % neue Straßen</span>` : ''}</small></span><span class="rtime ${i === n.sel ? 'big' : ''}">${fmtMin(r.route.seconds)}</span></button>`).join('')}</div>
       <div class="row" style="gap:10px;margin-top:14px"><button class="cta go" data-act="start">Los</button><button class="mbtn panel" style="width:58px;height:58px" data-act="toast:Teilen, Abfahrt planen, Stopps – kommt später">${ic('more', 22)}</button></div></div>`;
 }
 
 // ---------------- Navigation
 function nav() {
   const s = app.state;
+  if (s.nav?.arrived) return ''; // GM-009 (1.6): bei Ankunft kein Tacho, Tempolimit, Musik-Hinweis
   return `<div class="maneuver panel"><div data-hud="icon" class="micon"></div><div style="min-width:0"><div class="head mdist" data-hud="dist"></div><div class="mstreet upper" data-hud="street"></div><div class="mtext muted" data-hud="text"></div></div></div>
     ${s.speedLimit ? `<div class="limit"><span data-hud="limit"></span></div>` : ''}
     <div class="lbtns">${btn('voice', s.voice ? 'volume' : 'mute')}${btn('clip', 'clip')}</div>
@@ -165,8 +168,7 @@ function nav() {
       <div class="row" style="gap:5px;margin-top:6px"><div class="bar" style="width:130px"><i data-hud="prog" style="background:var(--ok)"></i></div><div class="bar" style="width:70px"><i data-hud="time" style="background:var(--accent2)"></i></div></div></div>
     <div class="speedo panel"><b data-hud="speed"></b><small>km/h</small></div>
     <div class="navbottom panel"><div><div class="head" style="font-size:34px" data-hud="eta"></div><div class="muted small" data-hud="rem"></div></div>
-      <button class="endbtn" data-act="end">Ende</button></div>
-    <div class="attrib nav">© OpenStreetMap-Mitwirkende</div>`;
+      <button class="endbtn" data-act="end">Ende</button></div>`;
 }
 function arrival() {
   const n = app.state.nav;
@@ -190,6 +192,7 @@ function styles() {
     <div class="head" style="font-size:44px">Stile</div><div class="muted" style="margin:6px 0 16px">Karte, Symbole, Schrift und Stimme – alles neu.</div>
     ${Object.entries(STYLES).map(([k, v]) => `<button class="stylecard ${app.state.style === k ? 'sel' : ''}" data-act="style:${k}"><div class="mini" data-style="${k}"></div>
       <div class="chipman st-${k}">${ic('turnLeft', 18, 'stroke-width:3')}<span class="sf-${k}">230 m</span></div>
+      <div class="card-osm">© OpenStreetMap</div>
       <div class="cardfoot"><div><div class="sf-${k} cname">${v.name}</div><small>${k === 'neon' ? 'Gratis · inkl. CarPlay' : app.state.style === k ? 'Aktiv (Vorschau)' : 'Tippen zum Testen'}</small></div><span class="dot" style="background:${v.route}"></span></div></button>`).join('')}
     <div class="muted small" style="margin:6px 0 120px">Preise folgen. Im Prototyp sind alle Stile frei.</div></div></div>`;
 }
@@ -201,7 +204,7 @@ function profile() {
     <div class="group"><div class="gt">Datenschutz</div>${t('friends', 'Freunde sehen meinen Standort', 'nur mit Zustimmung, jederzeit aus')}
       <div class="srow"><span class="tl">Gefahrene Strecken<small>nur auf diesem iPhone gespeichert</small></span><span class="muted">${ic('lock', 18)}</span></div>
       <button class="srow" data-act="toast:Im Prototyp nicht aktiv"><span class="tl" style="color:#ff453a">Entdeckte Karte zurücksetzen</span></button></div>
-    <div class="group"><div class="gt">Über</div><div class="srow"><span class="tl">Kartendaten<small>© OpenStreetMap-Mitwirkende (ODbL)</small></span></div><div class="srow"><span class="tl">Version<small>Prototyp GM-005</small></span></div></div>
+    <div class="group"><div class="gt">Über</div><div class="srow"><span class="tl">Kartendaten<small>© OpenStreetMap-Mitwirkende (ODbL)</small></span></div><div class="srow"><span class="tl">Version<small>Prototyp ${app.version}</small></span></div></div>
     <div style="height:120px"></div></div></div>`;
 }
 function friendsSheet() {
@@ -268,4 +271,19 @@ function choose(dest) {
   planTo(dest);
   if (!app.state.nav) return toast('Keine Route gefunden');
   set({ phone: { overlay: 'preview' } });
+}
+
+// GM-009 (1.1): „© OpenStreetMap-Mitwirkende“ auf jedem Screen, Lage je nach Bildschirm (über Tab-Leiste, Tastatur oder im Blatt)
+function osm() {
+  const p = app.state.phone, n = app.state.nav;
+  if (p.screen === 'splash') return '';
+  let pos = 'sheet';
+  if (p.screen === 'main') {
+    if (p.sheet) pos = 'sheet';
+    else if (p.overlay === 'search') pos = 'kb';
+    else if (p.overlay === 'preview') pos = 'sheet';
+    else if (p.overlay === 'nav') pos = n?.arrived ? 'sheet' : 'nav';
+    else pos = 'tabs';
+  }
+  return `<div class="osm osm-${pos}">© OpenStreetMap-Mitwirkende</div>`;
 }
