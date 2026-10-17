@@ -62,7 +62,8 @@ export function renderPhone() {
   }
   if (s.toast) html += `<div class="toast panel">${s.toast}</div>`;
   if (s.loading) html += `<div class="loading"><div class="spinner"></div>${s.loading}</div>`;
-  const keepInput = document.activeElement?.id === 'q';
+  // GM-007: in der Suche bleibt der Cursor immer im Feld (auch nach Bildschirm-Tasten und Neuzeichnen)
+  const keepInput = app.state.phone.overlay === 'search' && !app.state.phone.cat;
   html = html.replace(/class="head([^"]*)" style="font-size:(\d+)px/g, (m, c, n) => `class="head${c}" style="font-size:calc(${n}px * var(--hs))`);
   root().innerHTML = html;
   if (keepInput) { const q = document.getElementById('q'); q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
@@ -230,7 +231,7 @@ async function drawStyleMinis() {
 
 // ------------------------------------------------------------ Bedienung
 document.addEventListener('input', e => { if (e.target.id === 'q') { app.state.phone.query = e.target.value; app.state.phone.cat = null; renderPhone(); } });
-document.addEventListener('keydown', e => { if (e.target.id === 'q' && e.key === 'Enter' && lastList[0]) choose(lastList[0]); });
+document.addEventListener('keydown', e => { if (e.target.id === 'q' && e.key === 'Enter' && lastList[0] && !document.querySelector('#pui .kfocus')) choose(lastList[0]); });
 document.getElementById('pui').addEventListener('click', async e => {
   const b = e.target.closest('[data-act]'); if (!b) return;
   const [a, v = ''] = b.dataset.act.split(/:(.*)/s);

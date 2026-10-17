@@ -5,6 +5,7 @@ import { renderPhone, phoneCamera, phoneHud } from './phone.js';
 import { renderCar, carCamera, carHud } from './carplay.js';
 import { loadAssets } from './assets.js';
 import { setIconStyle } from './icons.js';
+import { restoreFocus } from './keys.js';
 
 export const app = {
   scene: null, router: null, textures: {}, views: {},
@@ -223,7 +224,7 @@ function bindGestures(view, key) {
 export function zoom(key, f) { const b = app.state.browse[key]; b.scale = Math.max(key === 'car' ? 0.32 : 0.16, Math.min(1.6, b.scale * f)); }
 export function recenter(key) { app.state.browse[key].center = [...app.start]; app.state.browse[key].scale = key === 'car' ? 0.55 : 0.42; }
 
-function renderAll() { renderPhone(); renderCar(); }
+function renderAll() { renderPhone(); renderCar(); restoreFocus(); }
 
 // Steuerleiste der Seite
 document.addEventListener('click', e => {
