@@ -26,7 +26,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.game.ezmaps
-        MARKETING_VERSION: "0.1.0"
+        MARKETING_VERSION: "1.0.0"  # GM-020: erste Version für den App Store
         CURRENT_PROJECT_VERSION: "1"
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_ENTITLEMENTS: App/EzMaps.entitlements
@@ -41,6 +41,11 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIBackgroundModes: [location, audio]
+        ITSAppUsesNonExemptEncryption: false  # GM-020: nur HTTPS (Ausnahme) – keine Export-Fragen bei jedem Upload
+        # GM-020: Server-Adressen – vor dem Start auf eigene Server umstellen (docs/VEROEFFENTLICHUNG.md)
+        EZValhallaURL: "https://valhalla1.openstreetmap.de"
+        EZPhotonURL: "https://photon.komoot.io"
+        EZLegalURL: "https://jonas-ell.github.io/ezmaps/legal/"
         NSLocationWhenInUseUsageDescription: "EzMaps braucht deinen Standort, um dich zu navigieren und die Karte aufzudecken."
         NSLocationAlwaysAndWhenInUseUsageDescription: "Damit die Navigation weiterläuft, wenn die App im Hintergrund ist."
         UIApplicationSceneManifest:

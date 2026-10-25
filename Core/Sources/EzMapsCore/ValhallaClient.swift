@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking // GM-020: Linux (swift test in der Cloud); auf Apple-Systemen ohne Wirkung
+#endif
 
 /// Routing über Valhalla (OSM). Prototyp und erste Tests: öffentlicher FOSSGIS-Server; für die App ein eigener Server
 /// (siehe docs/KARTENDATEN.md). Mirror in tools/prototype/js/valhalla.js – change both.

@@ -10,4 +10,5 @@
 - Mac-Build über eigenes Gate (Schlüssel `~/.ssh/ezmaps_mac`, Host `mac-ezmaps`, nur `ping/clean/extract/build/log`):
   `ssh mac-ezmaps clean && git archive HEAD | ssh mac-ezmaps extract && ssh mac-ezmaps build` – führt `tools/mac_build.sh` aus (xcodegen, xcodebuild Simulator, `swift test`).
   Den alten Schlüssel `id_ed25519` **nicht** benutzen – sein Gate baut die andere App („slop app appstore“) und würde sie überschreiben.
+- In der Cloud (Linux) lässt sich `Core/` mit der Swift-Toolchain von swift.org testen (`cd Core && swift test`); die App selbst nur auf dem Mac.
 - Swift-Kartenstil: `python tools/maplibre/build_style.py` erzeugt `App/MapStyles/style-neon-city.json` aus den Prototyp-Werten – nie von Hand ändern.

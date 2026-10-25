@@ -1,13 +1,24 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking // GM-020: Linux (swift test in der Cloud); auf Apple-Systemen ohne Wirkung
+#endif
 
 /// Ortssuche über Photon (OSM). Prototyp: photon.komoot.io; für die App eigener Server oder MapKit (docs/KARTENDATEN.md).
 /// Mirror in tools/prototype/js/phone.js (remote) – change both.
 public struct PhotonClient: Sendable {
-    public struct Place: Equatable, Sendable {
+    public struct Place: Codable, Hashable, Sendable {
         public var name: String
         public var subtitle: String
         public var coordinate: Coordinate
         public var kind: String
+
+        // GM-020: öffentlich, damit die App Favoriten/Zuletzt-Ziele anlegen kann
+        public init(name: String, subtitle: String, coordinate: Coordinate, kind: String) {
+            self.name = name
+            self.subtitle = subtitle
+            self.coordinate = coordinate
+            self.kind = kind
+        }
     }
 
     public let baseURL: URL

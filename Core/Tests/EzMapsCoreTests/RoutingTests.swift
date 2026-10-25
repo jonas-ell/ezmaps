@@ -1,4 +1,8 @@
 import XCTest
+import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking // GM-020: Linux
+#endif
 @testable import EzMapsCore
 
 /// Netzwerk-Attrappe: liefert vorbereitete Antworten je Pfad und merkt sich die Anfragen.

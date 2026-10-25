@@ -75,12 +75,12 @@ Aufgaben:
 - [x] **4.5 Suche Deutschland** _(GM-015, Prototyp: Photon)_ – App: eigener Photon oder MapKit _(GM-017/019: `PhotonClient` in Core, Tests bestanden – noch nicht in der App benutzt)_
 - [x] **4.6 Echte Tempolimits** _(GM-015, OSM maxspeed über Valhalla)_
 - [x] **4.7 Neuberechnung bei Abweichung** _(GM-015, im Prototyp per Knopf „Falsch abbiegen“; GM-016 Ausweich-Versuche)_ – App: automatisch bei > 30 m Abstand zur Route _(GM-017: `RerouteMonitor` in Core; GM-019: auf dem Mac gebaut, Tests bestanden – in der App noch nicht angeschlossen)_
-- [ ] **4.8 Navigation im Hintergrund, Live-Aktivität, Dynamic Island** – nur in Swift
-- [ ] **4.9 GPS einrasten (Map-Matching), Tunnel** – nur in Swift
+- [ ] **4.8 Navigation im Hintergrund, Live-Aktivität, Dynamic Island** – nur in Swift _(GM-020: Hintergrund-Standort während der Navigation gebaut, ungetestet; Live-Aktivität offen)_
+- [x] **4.9 GPS einrasten (Map-Matching), Tunnel** _(GM-020: `NavigationSession` in Core – Position auf die Route setzen, kleine Rücksprünge ignorieren, Sprung nach Tunnel; 12 Tests)_
 - [ ] **4.10 Spritpreise (Tankerkönig-API, Schlüssel nötig), E-Ladesäulen (Open Charge Map)**
 - [ ] **4.11 Zwischenstopps, Abfahrt planen**
 - [ ] **4.12 Siri / Kurzbefehle, Links aus anderen Apps öffnen** – nur in Swift
-- [ ] **4.13 Datenschutzerklärung, Impressum, App-Store-Angaben, Pricedown-App-Lizenz** – Nutzer
+- [ ] **4.13 Datenschutzerklärung, Impressum, App-Store-Angaben** – Nutzer _(GM-020: Vorlagen `docs/legal/index.md`, `docs/APPSTORE_TEXTE.md`, Fahrplan `docs/VEROEFFENTLICHUNG.md`; Pricedown wird in der App nicht benutzt)_
 - [ ] **4.14 In-App-Käufe für Stile, Freunde-Server** – später
 
 ## Danach auf dem Gerät testen
