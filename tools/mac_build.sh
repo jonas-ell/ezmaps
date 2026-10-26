@@ -104,10 +104,12 @@ tell application "System Events" to tell process "Simulator"
   set w to first window whose name contains "CarPlay"
   set {px, py} to position of w
   set {ww, wh} to size of w
-  set top to 28
-  click at {px + (ww * 0.25), py + top + ((wh - top) * 0.58)}
+  -- Bildinhalt 800 × 480, unten im Fenster (oben Titelleiste); EzMaps-Symbol in der linken Leiste bei (52, 200)
+  set k to ww / 800
+  set top to wh - 480 * k
+  click at {px + 52 * k, py + top + 200 * k}
 end tell
-return "ok"
+return "Fenster " & px & "," & py & " " & ww & "x" & wh
 OSA
     sleep "$WAIT"
     xcrun simctl io "$SID" screenshot --display=external --type=png "$OUT/carplay-$NAME.png" >/dev/null 2>&1 \
