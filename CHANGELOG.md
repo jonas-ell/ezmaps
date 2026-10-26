@@ -2,6 +2,22 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-026 – Straßennamen und Kartensymbole wie Vorlage, Neon-Pfeil V2 von Codex
+
+**Ziel:** Straßennamen auch in der Fahrt sichtbar, weiße Symbole wie im Foto, neuer Pfeil.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-neon-city.json`, `App/{NeonMapView,FollowCamera,CarPlaySceneDelegate}.swift`, `App/Assets.xcassets/{PlayerNeon,PlayerNeonGlow}.imageset` (neu), `Assets/Generated/Player/NeonV2/*` (Codex), `tools/mac_build.sh`, `docs/store/*`
+
+**Geändert:**
+- Straßennamen ab Zoom 13,5 (vorher 15, die CarPlay-Fahrkamera lag darüber), auch Nebenwege
+- Weiße Kartensymbole mit schwarzem Rand (Einkauf, Kreuz, Tanken, Parken, Essen, Laden) ab Zoom 14,5; Bilder zeichnet die App beim Laden
+- Pfeil V2 von Codex als Asset; während der Navigation mit lila Leuchten
+- (i)-Knopf in der Fahrt aus; CarPlay-Screenshot-Lauf: Fenster nur einschalten, wenn es fehlt, Klick zweimal mit Pause, Bildschirm wecken
+
+**Tatsächlich geprüft:** Mac: BUILD SUCCEEDED, 27/27 Tests; iPhone-Screenshots neu angesehen; CarPlay „frei“ mit Straßennamen und neuem Pfeil angesehen.
+
+**Ungetestet:** Letzter CarPlay-Lauf: AppleScript kam nicht an das Simulator-Fenster (vermutlich Mac gesperrt) – CarPlay-Bilder vom vorherigen Lauf behalten.
+
 ## GM-025 – Pfeil gleitet weich, CarPlay ohne Route als Hauptmodus, Prüflauf mit Screenshots
 
 **Ziel:** Ruckelnden Pfeil beheben; CarPlay soll auch ohne Route gut aussehen (Pfeil mittig); nach jeder Änderung Screenshots.

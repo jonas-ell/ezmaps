@@ -76,6 +76,7 @@ if [ -f tools/.do_carscreens ]; then
   xcrun simctl install "$SID" "$APPDIR" || exit 1
   xcrun simctl privacy "$SID" grant location "$BID"
   xcrun simctl location "$SID" set 50.21712,8.25734
+  caffeinate -u -t 3   # GM-026: Bildschirm wecken (gesperrter Mac: AppleScript kommt nicht an die Fenster)
   open -a Simulator --args -CurrentDeviceUDID "$SID"; sleep 6
   osascript <<'OSA' 2>&1 | sed 's/^/AppleScript: /'
 tell application "Simulator" to activate
