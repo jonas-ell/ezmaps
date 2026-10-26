@@ -95,6 +95,20 @@ OSA
     NAME=${ENTRY%%:*}; WAIT=${ENTRY##*:}
     xcrun simctl terminate "$SID" "$BID" 2>/dev/null
     xcrun simctl launch "$SID" "$BID" -EZShot "$NAME" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
+    sleep 3
+    # GM-024: EzMaps im CarPlay-Fenster antippen (Startbildschirm: Icon unter „Nachrichten“, bei 25 % / 58 % des Bildes)
+    osascript <<'OSA' 2>&1 | sed 's/^/Antippen: /'
+tell application "Simulator" to activate
+delay 0.5
+tell application "System Events" to tell process "Simulator"
+  set w to first window whose name contains "CarPlay"
+  set {px, py} to position of w
+  set {ww, wh} to size of w
+  set top to 28
+  click at {px + (ww * 0.25), py + top + ((wh - top) * 0.58)}
+end tell
+return "ok"
+OSA
     sleep "$WAIT"
     xcrun simctl io "$SID" screenshot --display=external --type=png "$OUT/carplay-$NAME.png" >/dev/null 2>&1 \
       && echo "Bild: carplay-$NAME" || echo "kein externes Display für $NAME"
