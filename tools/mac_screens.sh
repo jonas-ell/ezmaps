@@ -1,6 +1,7 @@
 #!/bin/bash
 # App-Store-Screenshots aus der echten App (Simulator auf dem Mac) holen – vom Windows-PC (Git Bash):
 #   bash tools/mac_screens.sh           → iPhone 6,9″
+#   bash tools/mac_screens.sh tests     → kleines iPhone, Englisch, Standort verweigert (docs/store/tests/)
 #   bash tools/mac_screens.sh carplay   → CarPlay-Fenster (braucht Bedienungshilfen-Freigabe, s. mac_build.sh)
 # Ergebnis: docs/store/iphone-69/<zustand>.png (1320 × 2868). Ablauf in tools/mac_build.sh (Marker .do_screens).
 set -u
@@ -10,6 +11,7 @@ OUTDIR=docs/store/iphone-69
 MARK=.do_screens
 if [ "${1:-}" = "carplay" ]; then OUTDIR=docs/store/carplay; MARK=.do_carscreens; fi  # GM-023
 if [ "${1:-}" = "freigabe" ]; then MARK=.do_open_privacy; fi  # GM-024: Einstellungen am Mac öffnen
+if [ "${1:-}" = "tests" ]; then OUTDIR=docs/store/tests; MARK=.do_testshots; fi  # GM-029: kleines iPhone, Englisch, Standort verweigert
 TMP=$(mktemp -d)
 RAW="$TMP/ausgabe.txt"
 

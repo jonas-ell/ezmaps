@@ -23,9 +23,8 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
 
     /// GM-024: CarPlay zeigt die Einheit so, wie wir sie geben – ab 1 km in Kilometern (eine Nachkommastelle), sonst gerundete Meter
     static func distance(_ meters: Double) -> Measurement<UnitLength> {
-        if meters >= 1000 { return Measurement(value: (meters / 100).rounded() / 10, unit: .kilometers) }
-        let step: Double = meters >= 100 ? 50 : 10
-        return Measurement(value: max(0, (meters / step).rounded() * step), unit: .meters)
+        let d = Formatting.carPlayDistance(meters) // GM-029: Logik in Core, getestet
+        return Measurement(value: d.value, unit: d.kilometers ? .kilometers : .meters)
     }
 
     func templateApplicationScene(

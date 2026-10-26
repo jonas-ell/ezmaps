@@ -59,6 +59,47 @@ if [ -f tools/.do_open_privacy ]; then
   exit 0
 fi
 
+# GM-029: Test-Screenshots (Marker tools/.do_testshots): kleines iPhone (wie die iPad-Prüfung von Apple, 375 × 667),
+# Englisch, Standort verweigert. Ergebnis landet in docs/store/tests/ (nicht für den Store).
+if [ -f tools/.do_testshots ]; then
+  rm -f tools/.do_testshots
+  xcodegen generate >/dev/null || exit 1
+  OUT=/tmp/eztests; rm -rf "$OUT"; mkdir -p "$OUT"
+  shoot() { # Gerät-ID, Name, Zustand, Sprache, Wartezeit
+    xcrun simctl terminate "$1" "$BID" 2>/dev/null
+    xcrun simctl launch "$1" "$BID" -EZShot "$3" -AppleLanguages "($4)" -AppleLocale "$4" >/dev/null
+    sleep "$5"
+    xcrun simctl io "$1" screenshot --type=png "$OUT/$2.png" >/dev/null 2>&1 && echo "Bild: $2"
+  }
+  prep() { # Gerät-ID → bauen, installieren, Standort
+    xcrun simctl boot "$1" 2>/dev/null; xcrun simctl bootstatus "$1" -b >/dev/null
+    xcodebuild -project EzMaps.xcodeproj -scheme EzMaps -destination "id=$1" -configuration Debug \
+      -derivedDataPath build/dd build > /tmp/ezmaps_tests_build.log 2>&1 || { grep -E "error:" /tmp/ezmaps_tests_build.log | head -20; return 1; }
+    APPDIR=build/dd/Build/Products/Debug-iphonesimulator/EzMaps.app
+    BID=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$APPDIR/Info.plist")
+    xcrun simctl uninstall "$1" "$BID" 2>/dev/null; xcrun simctl install "$1" "$APPDIR"
+    xcrun simctl privacy "$1" grant location "$BID"
+    xcrun simctl location "$1" set 50.21712,8.25734
+    xcrun simctl status_bar "$1" override --time 9:41 2>/dev/null
+  }
+  idof() { xcrun simctl list devices available | grep -E "$1" | head -1 | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}'; }
+  SMALL=$(idof "^ +iPhone SE"); [ -n "$SMALL" ] || SMALL=$(idof "^ +iPhone 1[6-9]e")
+  BIG=$(idof "^ +iPhone 1[6-9] Pro Max")
+  if [ -n "$SMALL" ]; then
+    echo "Kleines Gerät: $(xcrun simctl list devices available | grep "$SMALL" | sed 's/^ *//')"
+    prep "$SMALL" && for E in karte:10 suche:9 vorschau:14 navigation:26 einstellungen:6; do shoot "$SMALL" "klein-${E%%:*}" "${E%%:*}" de "${E##*:}"; done
+  else echo "Kein kleines iPhone im Simulator"; fi
+  if [ -n "$BIG" ]; then
+    prep "$BIG" && for E in karte:10 vorschau:14 navigation:26 einstellungen:6; do shoot "$BIG" "en-${E%%:*}" "${E%%:*}" en "${E##*:}"; done
+    xcrun simctl privacy "$BIG" revoke location "$BID"
+    shoot "$BIG" "verweigert-karte" karte de 8
+    xcrun simctl privacy "$BIG" grant location "$BID"
+  fi
+  for F in "$OUT"/*.png; do [ -s "$F" ] || continue; echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="; done
+  echo "TESTBILDER FERTIG"
+  exit 0
+fi
+
 # GM-023: CarPlay-Screenshots (Marker tools/.do_carscreens). Simulator-App öffnen, per AppleScript
 # I/O → External Displays → CarPlay einschalten, dann das externe Display fotografieren.
 # Braucht einmalig: Systemeinstellungen → Datenschutz → Bedienungshilfen → „sshd-keygen-wrapper“/Terminal erlauben.
