@@ -43,7 +43,11 @@ struct ContentView: View {
         .sheet(isPresented: $showSettings) { SettingsScreen(model: model) }
         .preferredColorScheme(.dark)
         .tint(Color(uiColor: NeonColors.route))
-        .onAppear { model.onAppear() }
+        .onAppear {
+            model.onAppear()
+            ScreenshotMode.run(model) // GM-021: nur mit Startargument -EZShot (Store-Screenshots)
+            if ScreenshotMode.state == "einstellungen" { showSettings = true }
+        }
     }
 }
 

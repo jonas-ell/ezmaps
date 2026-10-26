@@ -39,7 +39,7 @@ Umstellen ohne Codeänderung: `EZValhallaURL`, `EZPhotonURL` in `project.yml`. D
 - [x] Demo-Fahrt für die App-Prüfung (Einstellungen → Demo-Fahrt)
 - [x] Englische Texte für alle Bedienelemente (Ansagen in 1.0 nur Deutsch)
 - [ ] App-Icon in allen Varianten im Archiv (Asset-Katalog ist da – im Archiv prüfen)
-- [ ] Startbildschirm (UILaunchScreen leer → schwarz/Systemfarbe) ansehen
+- [x] Startbildschirm in Neon-Grundfarbe `#1C1C1D` (GM-021, Farbe `LaunchBackground`) – im Simulator ansehen
 
 ## 4. App Store Connect ausfüllen
 
@@ -47,6 +47,14 @@ Texte, Schlüsselwörter, Prüfer-Hinweise und Datenschutz-Antworten: **`docs/AP
 
 Screenshots (Pflicht): iPhone 6,9" (1320 × 2868) – 3 bis 10 Bilder aus dem Simulator „iPhone 16 Pro Max“:
 Karte, Suche, Routen-Vorschau, Navigation mit Tempolimit, Einstellungen. CarPlay-Screenshots sind nicht Pflicht.
+
+**Automatisch (GM-021):** `bash tools/mac_screens.sh` baut im Simulator, startet die App mit `-EZShot karte|suche|vorschau|navigation|einstellungen`
+(Standort Bahnhof Idstein, Deutsch, Statusleiste 9:41) und legt die Bilder unter `docs/store/iphone-69/` ab – echte App, keine Montage (Regel 2.3.4).
+
+## 4b. Archiv und Upload (vorbereitet in GM-021)
+
+- `bash tools/mac_archive.sh` – Archiv bauen und signiert exportieren (Probe, **lädt nicht hoch**). Prüft dabei: App-Icon und `PrivacyInfo` im Paket, keine CarPlay-Berechtigung im Store-Build.
+- `bash tools/mac_archive.sh --upload` – hochladen zu App Store Connect. **Nur auf ausdrückliche Ansage des Nutzers**, erst nach 1.3 (Bundle-ID) und 1.4 (App angelegt). Vor jedem Upload `CURRENT_PROJECT_VERSION` in `project.yml` erhöhen.
 
 ## 5. Ablauf bis zum Start
 

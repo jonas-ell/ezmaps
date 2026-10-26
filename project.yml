@@ -42,7 +42,8 @@ targets:
         CFBundleDisplayName: EzMaps
         CFBundleDevelopmentRegion: de
         CFBundleLocalizations: [de, en]
-        UILaunchScreen: {}
+        UILaunchScreen:  # GM-021: Start in Neon-Grundfarbe statt weißem Blitz
+          UIColorName: LaunchBackground
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIBackgroundModes: [location, audio]
         ITSAppUsesNonExemptEncryption: false  # GM-020: nur HTTPS (Ausnahme) – keine Export-Fragen bei jedem Upload

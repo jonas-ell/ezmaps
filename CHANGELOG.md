@@ -2,6 +2,22 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-021 – Release vorbereitet: Store-Screenshots automatisch, Archiv/Upload, Startbildschirm
+
+**Ziel:** App fertig für die Einreichung machen, soweit es ohne Mac geht; Screenshots und Archiv mit je einem Befehl.
+
+**Dateien:** `App/ScreenshotMode.swift` (neu), `App/ContentView.swift`, `App/Assets.xcassets/LaunchBackground.colorset` (neu), `project.yml`, `tools/mac_build.sh`, `tools/mac_screens.sh` (neu), `tools/mac_archive.sh` (neu), `docs/VEROEFFENTLICHUNG.md`; vorher zusammengeführt: Cloud-GM-020 (Navigation/CarPlay in Swift, Datenschutz-Manifest, Store-Texte) mit lokalem GM-020 (Signieren)
+
+**Geändert:**
+- Screenshot-Modus: Start mit `-EZShot karte|suche|vorschau|navigation|einstellungen` stellt die App in diesen Zustand (Navigation als Demo-Fahrt Idstein → Römerberg Frankfurt). Ohne das Startargument keine Wirkung
+- `bash tools/mac_screens.sh`: Simulator „iPhone 16+ Pro Max“ (1320 × 2868), Standort-Erlaubnis vorab, Standort Bahnhof Idstein, Deutsch, Statusleiste 9:41; Bilder kommen als base64 über die Build-Ausgabe zurück (Gate bleibt unverändert) → `docs/store/iphone-69/`
+- `bash tools/mac_archive.sh` (Probe-Export) und `--upload` (Hochladen nur auf Ansage); prüft App-Icon, Datenschutz-Manifest und dass die CarPlay-Berechtigung nicht im Store-Build steckt
+- Startbildschirm in `#1C1C1D` statt weißem Blitz
+
+**Tatsächlich geprüft:** `bash -n` für alle drei Skripte; Auspacken der Bilder mit einem Test-PNG; Merge ohne Konflikte. Mac nicht erreichbar (Mullvad VPN blockiert Tailscale: „Local network sharing: block“).
+
+**Ungetestet:** Alles auf dem Mac: Build mit Cloud-GM-020, Screenshot-Lauf, Archiv. Cloud-GM-020 (Navigation, CarPlay-Vorlagen, Sprachausgabe) ist noch nie kompiliert worden.
+
 ## GM-020 – Auf dem Weg in den App Store: iPhone-Navigation und CarPlay in Swift, Navi-Logik getestet, Pflichten für die Veröffentlichung
 
 **Ziel:** Aus der Karten-App eine veröffentlichbare Navi-App machen (Version 1.0: Neon City, ganz Deutschland, iPhone + CarPlay).
