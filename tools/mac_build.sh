@@ -79,8 +79,13 @@ if [ -f tools/.do_carscreens ]; then
   open -a Simulator --args -CurrentDeviceUDID "$SID"; sleep 6
   osascript <<'OSA' 2>&1 | sed 's/^/AppleScript: /'
 tell application "Simulator" to activate
-delay 1
 tell application "System Events" to tell process "Simulator"
+  -- GM-026: warten, bis der Simulator bereit ist; nur einschalten, wenn das CarPlay-Fenster fehlt (Menüpunkt schaltet um)
+  repeat 30 times
+    if exists menu bar 1 then exit repeat
+    delay 1
+  end repeat
+  if exists (first window whose name contains "CarPlay") then return "CarPlay-Fenster war schon offen"
   set m to menu "I/O" of menu bar 1
   click menu item "External Displays" of m
   delay 0.5
