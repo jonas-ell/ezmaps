@@ -1545,7 +1545,7 @@
    "type": "symbol",
    "source": "openmaptiles",
    "source-layer": "transportation_name",
-   "minzoom": 15,
+   "minzoom": 13.5,
    "filter": [
     "in",
     [
@@ -1559,7 +1559,8 @@
       "secondary",
       "tertiary",
       "minor",
-      "trunk"
+      "trunk",
+      "service"
      ]
     ]
    ],
@@ -1587,18 +1588,97 @@
      [
       "zoom"
      ],
-     15,
-     9,
+     13.5,
+     8.5,
+     16,
+     11,
      18,
-     13
+     14
     ],
     "text-transform": "uppercase",
     "text-letter-spacing": 0.08,
     "text-max-angle": 30,
-    "text-padding": 4
+    "text-padding": 2,
+    "symbol-spacing": 220
    },
    "paint": {
     "text-color": "#1d1e20"
+   }
+  },
+  {
+   "id": "poi-icons",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "poi",
+   "minzoom": 14.5,
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "shop",
+      "grocery",
+      "hospital",
+      "pharmacy",
+      "doctors",
+      "fuel",
+      "parking",
+      "restaurant",
+      "fast_food",
+      "cafe",
+      "charging_station"
+     ]
+    ]
+   ],
+   "layout": {
+    "icon-image": [
+     "match",
+     [
+      "get",
+      "class"
+     ],
+     "shop",
+     "ez-poi-shop",
+     "grocery",
+     "ez-poi-shop",
+     "hospital",
+     "ez-poi-cross",
+     "pharmacy",
+     "ez-poi-cross",
+     "doctors",
+     "ez-poi-cross",
+     "fuel",
+     "ez-poi-fuel",
+     "parking",
+     "ez-poi-parking",
+     "restaurant",
+     "ez-poi-food",
+     "fast_food",
+     "ez-poi-food",
+     "cafe",
+     "ez-poi-food",
+     "charging_station",
+     "ez-poi-charge",
+     ""
+    ],
+    "icon-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     14.5,
+     0.55,
+     17,
+     0.8
+    ],
+    "icon-padding": 6
    }
   }
  ]

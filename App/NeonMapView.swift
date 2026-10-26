@@ -53,6 +53,7 @@ final class RouteOverlay {
 
     func styleLoaded(_ style: MLNStyle) {
         styleReady = true
+        for (name, image) in RouteOverlay.poiImages() { style.setImage(image, forName: name) } // GM-026
         let empty = MLNShapeCollectionFeature(shapes: [])
         let alt = MLNShapeSource(identifier: "ez-alt", shape: empty, options: nil)
         let main = MLNShapeSource(identifier: "ez-route", shape: empty, options: nil)
@@ -160,6 +161,29 @@ final class RouteOverlay {
         let center = CLLocationCoordinate2D(latitude: c.latitude, longitude: c.longitude)
         let cam = MLNMapCamera(lookingAtCenter: center, altitude: altitude, pitch: pitch, heading: heading)
         map.setCamera(cam, withDuration: 0.5, animationTimingFunction: CAMediaTimingFunction(name: .linear))
+    }
+
+    /// GM-026: Kartensymbole wie in der Vorlage – weißes Symbol mit schwarzem Rand (Namen passen zu build_style.py POI)
+    static func poiImages() -> [String: UIImage] {
+        let symbols = ["ez-poi-shop": "basket.fill", "ez-poi-cross": "cross.fill", "ez-poi-fuel": "fuelpump.fill",
+                       "ez-poi-parking": "parkingsign", "ez-poi-food": "fork.knife", "ez-poi-charge": "bolt.car.fill"]
+        var out: [String: UIImage] = [:]
+        let cfg = UIImage.SymbolConfiguration(pointSize: 30, weight: .heavy)
+        for (name, sym) in symbols {
+            guard let base = UIImage(systemName: sym, withConfiguration: cfg) else { continue }
+            let size = CGSize(width: base.size.width + 10, height: base.size.height + 10)
+            out[name] = UIGraphicsImageRenderer(size: size).image { _ in
+                let black = base.withTintColor(.black, renderingMode: .alwaysOriginal)
+                let white = base.withTintColor(UIColor(white: 0.96, alpha: 1), renderingMode: .alwaysOriginal)
+                for dx in stride(from: -3.0, through: 3.0, by: 1.5) {
+                    for dy in stride(from: -3.0, through: 3.0, by: 1.5) where dx * dx + dy * dy <= 9 {
+                        black.draw(at: CGPoint(x: 5 + dx, y: 5 + dy))
+                    }
+                }
+                white.draw(at: CGPoint(x: 5, y: 5))
+            }
+        }
+        return out
     }
 
     /// Pfeil als Bild (64 × 64 pt), exakt wie Assets/Generated/Player/player-neon.svg (Prototyp):

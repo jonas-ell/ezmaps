@@ -75,14 +75,26 @@ for cls, r in order:
     layers.append(line(f"road-{cls}-casing", "transportation", NEON["casing"], meters(WIDTH[r] * 0.75 * WIDEN + 3, MIN_PX[r] + 1.6), road_filter(cls)))
 for cls, r in order:
     layers.append(line(f"road-{cls}", "transportation", road_color(r), meters(WIDTH[r] * 0.75 * WIDEN, MIN_PX[r]), road_filter(cls)))
-# Straßennamen auf der Straße (Großbuchstaben, dunkel, ab Zoom 15)
+# Straßennamen auf der Straße (Großbuchstaben, dunkel). GM-026: schon ab Zoom 13,5 – die Fahrkamera in CarPlay liegt um 14–15
 layers.append({
-    "id": "road-names", "type": "symbol", "source": "openmaptiles", "source-layer": "transportation_name", "minzoom": 15,
-    "filter": ["in", ["get", "class"], ["literal", ["primary", "secondary", "tertiary", "minor", "trunk"]]],
+    "id": "road-names", "type": "symbol", "source": "openmaptiles", "source-layer": "transportation_name", "minzoom": 13.5,
+    "filter": ["in", ["get", "class"], ["literal", ["primary", "secondary", "tertiary", "minor", "trunk", "service"]]],
     "layout": {"symbol-placement": "line", "text-field": ["coalesce", ["get", "name:de"], ["get", "name"]], "text-font": ["Noto Sans Bold"],
-               "text-size": ["interpolate", ["linear"], ["zoom"], 15, 9, 18, 13], "text-transform": "uppercase", "text-letter-spacing": 0.08,
-               "text-max-angle": 30, "text-padding": 4},
+               "text-size": ["interpolate", ["linear"], ["zoom"], 13.5, 8.5, 16, 11, 18, 14], "text-transform": "uppercase", "text-letter-spacing": 0.08,
+               "text-max-angle": 30, "text-padding": 2, "symbol-spacing": 220},
     "paint": {"text-color": NEON["label"]},
+})
+# GM-026: weiße Kartensymbole mit schwarzem Rand wie in der Vorlage. Bilder zeichnet die App beim Laden (RouteOverlay.poiImages)
+POI = {"shop": "ez-poi-shop", "grocery": "ez-poi-shop", "hospital": "ez-poi-cross", "pharmacy": "ez-poi-cross", "doctors": "ez-poi-cross",
+       "fuel": "ez-poi-fuel", "parking": "ez-poi-parking", "restaurant": "ez-poi-food", "fast_food": "ez-poi-food", "cafe": "ez-poi-food",
+       "charging_station": "ez-poi-charge"}
+match = ["match", ["get", "class"]]
+for k, v in POI.items(): match += [k, v]
+match.append("")
+layers.append({
+    "id": "poi-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": 14.5,
+    "filter": ["in", ["get", "class"], ["literal", list(POI)]],
+    "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.55, 17, 0.8], "icon-padding": 6},
 })
 
 style = {
