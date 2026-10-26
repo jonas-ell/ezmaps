@@ -50,6 +50,7 @@ final class FollowCamera: NSObject {
         map?.userTrackingMode = .none
         map?.showsUserLocation = false
         map?.automaticallyAdjustsContentInset = false
+        map?.compassView.isHidden = true // GM-025: Kompass stört in der Fahrt
     }
 
     func stop() {
@@ -58,6 +59,7 @@ final class FollowCamera: NSObject {
         arrow.isHidden = true
         map?.showsUserLocation = true
         map?.contentInset = .zero
+        map?.compassView.isHidden = false
     }
 
     func zoom(by step: Double) {
@@ -85,15 +87,19 @@ final class FollowCamera: NSObject {
             heading = (heading + dh * kRot + 360).truncatingRemainder(dividingBy: 360)
             altitude += (goalAlt - altitude) * kAlt
         }
-        // Mittelpunkt der Kamera = Pfeil-Position (Inset verschiebt ihn bei Bedarf nach unten)
-        let h = map.bounds.height
-        let shift: CGFloat = (arrowY - 0.5) * h * 2
-        let inset = UIEdgeInsets(top: max(0, shift), left: 0, bottom: max(0, -shift), right: 0)
+        // Mittelpunkt der Kamera = Pfeil-Position: Mitte der freien Fläche (Safe Area – in CarPlay ohne die
+        // Abbiegekarte/Leisten von iOS), senkrecht bei arrowY. Inset nur ändern, wenn nötig.
+        let safe = map.safeAreaInsets
+        let free = map.bounds.inset(by: safe)
+        let ay: CGFloat = free.minY + free.height * arrowY
+        let ax: CGFloat = free.midX
+        let inset = UIEdgeInsets(top: max(0, 2 * ay - map.bounds.height), left: max(0, 2 * ax - map.bounds.width),
+                                 bottom: max(0, map.bounds.height - 2 * ay), right: max(0, map.bounds.width - 2 * ax))
         if map.contentInset != inset { map.contentInset = inset }
         let cam = MLNMapCamera(lookingAtCenter: CLLocationCoordinate2D(latitude: lat, longitude: lon),
                                altitude: altitude, pitch: pitch, heading: heading)
         map.setCamera(cam, animated: false)
-        arrow.center = CGPoint(x: map.bounds.midX, y: h * arrowY)
+        arrow.center = CGPoint(x: ax, y: ay)
         arrow.isHidden = false
         if arrow.superview === map { map.bringSubviewToFront(arrow) }
     }

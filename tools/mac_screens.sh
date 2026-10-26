@@ -28,7 +28,7 @@ echo "Baue im Simulator und mache Bilder (dauert ein paar Minuten) …"
 ssh "$H" build > "$RAW"
 grep -vE '^[A-Za-z0-9+/=]{60,}$' "$RAW" | grep -v "^===" | tail -25
 
-mkdir -p "$OUTDIR"
+rm -rf "$OUTDIR"; mkdir -p "$OUTDIR"   # GM-025: alte Bilder weg, sonst bleiben veraltete Zustände liegen
 python - "$RAW" "$OUTDIR" <<'PY'
 import base64, sys, pathlib
 raw, out = sys.argv[1], pathlib.Path(sys.argv[2])
