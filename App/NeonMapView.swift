@@ -147,6 +147,12 @@ final class RouteOverlay {
         (style.source(withIdentifier: "ez-me") as? MLNShapeSource)?.shape = MLNShapeCollectionFeature(shapes: shapes)
     }
 
+    /// GM-022: Kamerahöhe nach Tempo – in der Stadt nah, auf der Autobahn weit (sonst nur Asphalt im Bild)
+    static func altitude(forKmh kmh: Double) -> Double {
+        let k: Double = min(130, max(30, kmh))
+        return 450 + (k - 30) * 13 // 30 km/h → 450 m, 130 km/h → 1750 m
+    }
+
     /// Kamera hinter dem Auto: nah, geneigt, Fahrtrichtung oben
     static func follow(_ map: MLNMapView, at c: Coordinate, heading: Double, pitch: CGFloat, altitude: Double) {
         map.userTrackingMode = .none
@@ -203,6 +209,7 @@ struct NeonMapView: UIViewRepresentable {
     /// GM-022: Fahrposition (auf der Route) und Richtung – während der Navigation folgt die Kamera dem
     var follow: Coordinate? = nil
     var heading: Double = 0
+    var speedKmh: Double = 50
     /// Platz, den Bedienelemente oben/unten belegen (für das Einpassen der Route)
     var padding: UIEdgeInsets
 
@@ -242,7 +249,7 @@ struct NeonMapView: UIViewRepresentable {
             c.lastFollow = f
             c.recenter = recenterRequest
             c.overlay?.showPosition(f, heading: heading)
-            RouteOverlay.follow(map, at: f, heading: heading, pitch: 55, altitude: 520)
+            RouteOverlay.follow(map, at: f, heading: heading, pitch: 55, altitude: RouteOverlay.altitude(forKmh: speedKmh))
         }
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest

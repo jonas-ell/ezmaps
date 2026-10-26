@@ -49,6 +49,8 @@ final class AppModel {
     /// nicht dem GPS-Punkt von MapLibre (sonst bleibt die Karte bei der Demo-Fahrt stehen)
     private(set) var navCoordinate: Coordinate?
     private(set) var navHeading: Double = 0
+    /// geschätzte Fahrgeschwindigkeit des Teilstücks (km/h) – für die Kamerahöhe, geglättet über die Route statt GPS
+    private(set) var navSpeedKmh: Double = 50
     /// Kurzer Hinweis unten (Fehler, „Route wird neu berechnet“)
     var message: String?
     /// Zählt hoch, wenn die Karte wieder dem Standort folgen soll
@@ -220,6 +222,8 @@ final class AppModel {
         nav = u.state
         navCoordinate = s.route.coordinate(at: u.state.progress) ?? position
         navHeading = s.route.heading(at: u.state.progress)
+        let seg = s.route.segmentIndex(at: u.state.progress)
+        if seg < s.route.segmentSpeeds.count { navSpeedKmh = s.route.segmentSpeeds[seg] }
         if let text = u.announcement, settings.voice { speech.say(text) }
         if u.shouldReroute { reroute(from: position, heading: course) }
         if u.state.arrived && screen == .navigating {

@@ -94,7 +94,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         guard let template = mapTemplate else { return }
         mapController?.show(routes: model.routes, selected: model.selectedRoute, destination: model.destination?.coordinate,
                             revision: model.routeRevision, navigating: model.screen == .navigating, limit: model.settings.showSpeedLimit ? model.nav?.speedLimit : nil,
-                            follow: model.navCoordinate, heading: model.navHeading)
+                            follow: model.navCoordinate, heading: model.navHeading, speedKmh: model.navSpeedKmh)
         switch model.screen {
         case .preview:
             if !model.routes.isEmpty && shownRevision != model.routeRevision, let t = makeTrip() {
@@ -301,7 +301,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     }
 
     func show(routes: [Route], selected: Int, destination: Coordinate?, revision: Int, navigating: Bool, limit: Int?,
-              follow: Coordinate? = nil, heading: Double = 0) {
+              follow: Coordinate? = nil, heading: Double = 0, speedKmh: Double = 50) {
         guard let map = mapView else { return }
         if revision != self.revision || selected != self.selected {
             let isNew = revision != self.revision
@@ -323,11 +323,11 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         if navigating, let f = follow, f != lastFollow {
             lastFollow = f
             overlay?.showPosition(f, heading: heading)
-            RouteOverlay.follow(map, at: f, heading: heading, pitch: 0, altitude: 900)
+            RouteOverlay.follow(map, at: f, heading: heading, pitch: 0, altitude: RouteOverlay.altitude(forKmh: speedKmh) * 1.6)
         }
         if let l = limit {
-            limitLabel.text = l < 0 ? "∞" : String(l)
-            limitLabel.isHidden = !navigating
+            limitLabel.text = String(l)
+            limitLabel.isHidden = !navigating || l < 0 // GM-022: kein „∞“ – ohne Limit kein Schild im Auto
         } else {
             limitLabel.isHidden = true
         }

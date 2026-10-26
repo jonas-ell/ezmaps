@@ -18,6 +18,7 @@ struct ContentView: View {
                 recenterRequest: model.recenterRequest,
                 follow: model.navCoordinate,
                 heading: model.navHeading,
+                speedKmh: model.navSpeedKmh,
                 padding: UIEdgeInsets(top: 120, left: 40, bottom: 360, right: 40)
             )
             .ignoresSafeArea()
@@ -349,18 +350,41 @@ struct NavigationHUD: View {
     }
 }
 
-/// Tempolimit-Schild (roter Ring); „∞“ = Autobahn ohne Limit
+/// Tempolimit-Schild (Zeichen 274, roter Ring). Ohne Limit (Autobahn): Zeichen 282 „Ende aller Streckenverbote“
+/// – weiß mit schwarzen Schrägstreifen (GM-022: vorher „∞“, das gibt es als Verkehrszeichen nicht)
 struct SpeedLimitSign: View {
     let limit: Int
     var body: some View {
-        Text(limit < 0 ? "∞" : String(limit))
-            .font(.system(size: 26, weight: .heavy))
-            .minimumScaleFactor(0.5)
-            .foregroundStyle(.black)
-            .frame(width: 64, height: 64)
-            .background(Circle().fill(.white))
-            .overlay(Circle().stroke(Color.red, lineWidth: 7))
-            .accessibilityLabel(limit < 0 ? L("Kein Tempolimit") : String(format: L("Tempolimit %d"), limit))
+        Group {
+            if limit < 0 {
+                Circle().fill(.white)
+                    .overlay(EndOfLimitsStripes().stroke(Color.black, lineWidth: 2.2).clipShape(Circle()).padding(4))
+                    .overlay(Circle().stroke(Color(white: 0.75), lineWidth: 2))
+            } else {
+                Text(String(limit))
+                    .font(.system(size: 26, weight: .heavy))
+                    .minimumScaleFactor(0.5)
+                    .foregroundStyle(.black)
+                    .frame(width: 64, height: 64)
+                    .background(Circle().fill(.white))
+                    .overlay(Circle().stroke(Color.red, lineWidth: 7))
+            }
+        }
+        .frame(width: 64, height: 64)
+        .accessibilityLabel(limit < 0 ? L("Kein Tempolimit") : String(format: L("Tempolimit %d"), limit))
+    }
+}
+
+/// Fünf parallele Schrägstreifen von unten links nach oben rechts (Zeichen 282)
+struct EndOfLimitsStripes: Shape {
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        for i in -2...2 {
+            let o: CGFloat = CGFloat(i) * rect.width * 0.085
+            p.move(to: CGPoint(x: rect.minX + o, y: rect.maxY + o))
+            p.addLine(to: CGPoint(x: rect.maxX + o, y: rect.minY + o))
+        }
+        return p
     }
 }
 
