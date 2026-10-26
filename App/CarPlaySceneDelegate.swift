@@ -78,6 +78,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
             _ = model.routeRevision
             _ = model.selectedRoute
             _ = model.isRouting
+            _ = model.navCoordinate
         } onChange: { [weak self] in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated {
@@ -92,7 +93,8 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     @MainActor private func sync() {
         guard let template = mapTemplate else { return }
         mapController?.show(routes: model.routes, selected: model.selectedRoute, destination: model.destination?.coordinate,
-                            revision: model.routeRevision, navigating: model.screen == .navigating, limit: model.settings.showSpeedLimit ? model.nav?.speedLimit : nil)
+                            revision: model.routeRevision, navigating: model.screen == .navigating, limit: model.settings.showSpeedLimit ? model.nav?.speedLimit : nil,
+                            follow: model.navCoordinate, heading: model.navHeading)
         switch model.screen {
         case .preview:
             if !model.routes.isEmpty && shownRevision != model.routeRevision, let t = makeTrip() {
@@ -251,6 +253,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     private var revision = -1
     private var selected = -1
     private var navigating = false
+    private var lastFollow: Coordinate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -297,7 +300,8 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         overlay?.styleLoaded(style)
     }
 
-    func show(routes: [Route], selected: Int, destination: Coordinate?, revision: Int, navigating: Bool, limit: Int?) {
+    func show(routes: [Route], selected: Int, destination: Coordinate?, revision: Int, navigating: Bool, limit: Int?,
+              follow: Coordinate? = nil, heading: Double = 0) {
         guard let map = mapView else { return }
         if revision != self.revision || selected != self.selected {
             let isNew = revision != self.revision
@@ -312,7 +316,14 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         }
         if navigating != self.navigating {
             self.navigating = navigating
-            map.userTrackingMode = navigating ? .followWithCourse : .follow
+            map.showsUserLocation = !navigating
+            if !navigating { overlay?.showPosition(nil, heading: 0); map.userTrackingMode = .follow }
+        }
+        // GM-022: Kamera folgt der Fahrposition (auch bei der Demo-Fahrt), flach von oben wie ein Spiel-Radar
+        if navigating, let f = follow, f != lastFollow {
+            lastFollow = f
+            overlay?.showPosition(f, heading: heading)
+            RouteOverlay.follow(map, at: f, heading: heading, pitch: 0, altitude: 900)
         }
         if let l = limit {
             limitLabel.text = l < 0 ? "∞" : String(l)
@@ -328,6 +339,6 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     }
 
     func recenter() {
-        mapView?.userTrackingMode = navigating ? .followWithCourse : .follow
+        if navigating { lastFollow = nil } else { mapView?.userTrackingMode = .follow }
     }
 }

@@ -47,6 +47,7 @@ final class RouteOverlay {
     private weak var map: MLNMapView?
     private var styleReady = false
     private var pending: (routes: [Route], selected: Int, destination: Coordinate?)?
+    private var pendingMe: (Coordinate?, Double)?
 
     init(map: MLNMapView) { self.map = map }
 
@@ -81,13 +82,27 @@ final class RouteOverlay {
         line.lineJoin = NSExpression(forConstantValue: "round")
         style.addLayer(line)
 
+        // GM-022: eigener Positionspfeil (weiß, schwarze Kontur – wie im Prototyp), dreht sich mit der Fahrtrichtung
+        let me = MLNShapeSource(identifier: "ez-me", shape: MLNShapeCollectionFeature(shapes: []), options: nil)
+        style.addSource(me)
+        style.setImage(RouteOverlay.arrowImage(), forName: "ez-arrow")
+        let arrow = MLNSymbolStyleLayer(identifier: "ez-me-arrow", source: me)
+        arrow.iconImageName = NSExpression(forConstantValue: "ez-arrow")
+        arrow.iconRotation = NSExpression(forKeyPath: "heading")
+        arrow.iconRotationAlignment = NSExpression(forConstantValue: "map")
+        arrow.iconPitchAlignment = NSExpression(forConstantValue: "map")
+        arrow.iconAllowsOverlap = NSExpression(forConstantValue: true)
+        arrow.iconIgnoresPlacement = NSExpression(forConstantValue: true)
+
         let dot = MLNCircleStyleLayer(identifier: "ez-dest-dot", source: dest)
         dot.circleColor = NSExpression(forConstantValue: NeonColors.destination)
         dot.circleRadius = NSExpression(forConstantValue: 8)
         dot.circleStrokeColor = NSExpression(forConstantValue: UIColor.black)
         dot.circleStrokeWidth = NSExpression(forConstantValue: 2)
         style.addLayer(dot)
+        style.addLayer(arrow)
 
+        if let p = pendingMe { showPosition(p.0, heading: p.1) }
         if let p = pending { show(routes: p.routes, selected: p.selected, destination: p.destination) }
     }
 
@@ -113,6 +128,50 @@ final class RouteOverlay {
             points.append(p)
         }
         (style.source(withIdentifier: "ez-dest") as? MLNShapeSource)?.shape = MLNShapeCollectionFeature(shapes: points)
+    }
+
+    /// Positionspfeil setzen (nil = ausblenden)
+    func showPosition(_ c: Coordinate?, heading: Double) {
+        guard styleReady, let style = map?.style else {
+            pendingMe = (c, heading)
+            return
+        }
+        pendingMe = nil
+        var shapes: [MLNShape & MLNFeature] = []
+        if let c = c {
+            let p = MLNPointFeature()
+            p.coordinate = CLLocationCoordinate2D(latitude: c.latitude, longitude: c.longitude)
+            p.attributes = ["heading": heading]
+            shapes.append(p)
+        }
+        (style.source(withIdentifier: "ez-me") as? MLNShapeSource)?.shape = MLNShapeCollectionFeature(shapes: shapes)
+    }
+
+    /// Kamera hinter dem Auto: nah, geneigt, Fahrtrichtung oben
+    static func follow(_ map: MLNMapView, at c: Coordinate, heading: Double, pitch: CGFloat, altitude: Double) {
+        map.userTrackingMode = .none
+        let center = CLLocationCoordinate2D(latitude: c.latitude, longitude: c.longitude)
+        let cam = MLNMapCamera(lookingAtCenter: center, altitude: altitude, pitch: pitch, heading: heading)
+        map.setCamera(cam, withDuration: 0.5, animationTimingFunction: CAMediaTimingFunction(name: .linear))
+    }
+
+    /// Pfeil als Bild (48 × 48 pt): Spitze nach oben, Kerbe unten
+    static func arrowImage() -> UIImage {
+        let size = CGSize(width: 48, height: 48)
+        return UIGraphicsImageRenderer(size: size).image { _ in
+            let p = UIBezierPath()
+            p.move(to: CGPoint(x: 24, y: 4))
+            p.addLine(to: CGPoint(x: 42, y: 42))
+            p.addLine(to: CGPoint(x: 24, y: 33))
+            p.addLine(to: CGPoint(x: 6, y: 42))
+            p.close()
+            p.lineJoin = .round
+            p.lineWidth = 4
+            UIColor.black.setStroke()
+            p.stroke()
+            UIColor(white: 0.92, alpha: 1).setFill()
+            p.fill()
+        }
     }
 
     /// Ausschnitt so wählen, dass alle Routen zu sehen sind
@@ -141,6 +200,9 @@ struct NeonMapView: UIViewRepresentable {
     var revision: Int
     var navigating: Bool
     var recenterRequest: Int
+    /// GM-022: Fahrposition (auf der Route) und Richtung – während der Navigation folgt die Kamera dem
+    var follow: Coordinate? = nil
+    var heading: Double = 0
     /// Platz, den Bedienelemente oben/unten belegen (für das Einpassen der Route)
     var padding: UIEdgeInsets
 
@@ -165,21 +227,26 @@ struct NeonMapView: UIViewRepresentable {
         }
         if c.navigating != navigating {
             c.navigating = navigating
+            map.showsUserLocation = !navigating // GM-022: in der Navigation zeigt unser Pfeil die Fahrposition
             if navigating {
-                map.userTrackingMode = .followWithCourse
-                let cam = map.camera
-                cam.pitch = 50
-                map.setCamera(cam, animated: true)
+                c.lastFollow = nil
             } else {
+                c.overlay?.showPosition(nil, heading: 0)
                 let cam = map.camera
                 cam.pitch = 0
                 map.setCamera(cam, animated: true)
                 map.userTrackingMode = .follow
             }
         }
+        if navigating, let f = follow, c.lastFollow != f || c.recenter != recenterRequest {
+            c.lastFollow = f
+            c.recenter = recenterRequest
+            c.overlay?.showPosition(f, heading: heading)
+            RouteOverlay.follow(map, at: f, heading: heading, pitch: 55, altitude: 520)
+        }
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest
-            map.userTrackingMode = navigating ? .followWithCourse : .follow
+            if !navigating { map.userTrackingMode = .follow }
         }
     }
 
@@ -189,6 +256,7 @@ struct NeonMapView: UIViewRepresentable {
         var selected = -1
         var navigating = false
         var recenter = 0
+        var lastFollow: Coordinate?
 
         func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
             overlay?.styleLoaded(style)

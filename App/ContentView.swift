@@ -16,6 +16,8 @@ struct ContentView: View {
                 revision: model.routeRevision,
                 navigating: model.screen == .navigating,
                 recenterRequest: model.recenterRequest,
+                follow: model.navCoordinate,
+                heading: model.navHeading,
                 padding: UIEdgeInsets(top: 120, left: 40, bottom: 360, right: 40)
             )
             .ignoresSafeArea()

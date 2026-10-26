@@ -45,6 +45,10 @@ final class AppModel {
     private(set) var nav: NavigationSession.State?
     private(set) var isSpeaking = false
     private(set) var demoPosition: Coordinate?
+    /// GM-022: Position auf der Route (eingerastet) und Fahrtrichtung in Grad – Kamera und Pfeil folgen dem,
+    /// nicht dem GPS-Punkt von MapLibre (sonst bleibt die Karte bei der Demo-Fahrt stehen)
+    private(set) var navCoordinate: Coordinate?
+    private(set) var navHeading: Double = 0
     /// Kurzer Hinweis unten (Fehler, „Route wird neu berechnet“)
     var message: String?
     /// Zählt hoch, wenn die Karte wieder dem Standort folgen soll
@@ -169,6 +173,8 @@ final class AppModel {
         let s = NavigationSession(route: route, destinationName: dest.name)
         session = s
         nav = nil
+        navCoordinate = route.coordinate(at: 0)
+        navHeading = route.heading(at: 0)
         screen = .navigating
         location.setNavigating(true)
         speech.say(s.startAnnouncement())
@@ -179,6 +185,7 @@ final class AppModel {
     func endNavigation() {
         demoTask?.cancel()
         demoPosition = nil
+        navCoordinate = nil
         speech.stop()
         session = nil
         nav = nil
@@ -211,6 +218,8 @@ final class AppModel {
         let u = s.update(position: position, speed: speed)
         session = s
         nav = u.state
+        navCoordinate = s.route.coordinate(at: u.state.progress) ?? position
+        navHeading = s.route.heading(at: u.state.progress)
         if let text = u.announcement, settings.voice { speech.say(text) }
         if u.shouldReroute { reroute(from: position, heading: course) }
         if u.state.arrived && screen == .navigating {
