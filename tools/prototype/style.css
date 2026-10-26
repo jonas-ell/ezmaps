@@ -167,7 +167,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .limit.cp { top: auto; bottom: 18px; right: 84px; width: 54px; height: 54px; border-width: 6px; font-size: 20px; }
 .lbtns { position: absolute; top: 178px; left: 16px; display: flex; flex-direction: column; gap: 8px; }
 .duck { position: absolute; top: 290px; left: 16px; padding: 6px 10px; display: flex; gap: 6px; align-items: center; font: 600 12px Inter; }
-.navinfo { position: absolute; left: 16px; bottom: 150px; }
+.navinfo { position: absolute; left: 16px; right: 92px; bottom: 150px; } /* GM-023: nie unter den Tacho */
+.navinfo .then { max-width: 100%; }
 .streetbox { display: inline-block; padding: 5px 10px; font: 700 calc(14px * var(--bs)) var(--body); }
 .d2 { font-size: calc(30px * var(--hs)); color: #fff; }
 .t-western .d2, .t-toy .d2 { color: var(--fg); }

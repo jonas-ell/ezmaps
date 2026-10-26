@@ -215,7 +215,7 @@ function announce() {
 // GM-006: scharfe Detail-Kachel (900 × 900 m, 4 px/m) rund um das Auto – wie Kachel-Nachladen in echten Karten-Engines
 const TILE = 900, TILE_S = 4;
 export function requestTile(n) {
-  if (app.state.style === 'pixel' || app.tilePending || !app.tiles) return;
+  if (app.tilePending || !app.tiles) return; // GM-023: Pixel bekommt jetzt auch eine scharfe Detail-Kachel
   const ahead = pointAt(n.route.pts, n.route.cum, n.progress + 150).p, car = pointAt(n.route.pts, n.route.cum, n.progress).p;
   if (!inIdstein(car)) { if (app.tile) { app.tile = null; for (const v of Object.values(app.views)) v.setDetail(null); } return; } // GM-015: außerhalb zeichnen die Deutschland-Kacheln
   const t = app.tile;

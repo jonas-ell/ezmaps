@@ -1,11 +1,14 @@
 #!/bin/bash
 # App-Store-Screenshots aus der echten App (Simulator auf dem Mac) holen – vom Windows-PC (Git Bash):
-#   bash tools/mac_screens.sh
+#   bash tools/mac_screens.sh           → iPhone 6,9″
+#   bash tools/mac_screens.sh carplay   → CarPlay-Fenster (braucht Bedienungshilfen-Freigabe, s. mac_build.sh)
 # Ergebnis: docs/store/iphone-69/<zustand>.png (1320 × 2868). Ablauf in tools/mac_build.sh (Marker .do_screens).
 set -u
 H=mac-ezmaps
 cd "$(dirname "$0")/.."
 OUTDIR=docs/store/iphone-69
+MARK=.do_screens
+if [ "${1:-}" = "carplay" ]; then OUTDIR=docs/store/carplay; MARK=.do_carscreens; fi  # GM-023
 TMP=$(mktemp -d)
 RAW="$TMP/ausgabe.txt"
 
@@ -15,7 +18,7 @@ P=$(ssh -o BatchMode=yes -o ConnectTimeout=10 "$H" ping 2>&1)
 # letzten Commit + Marker schicken (Marker nie im Repo, nie liegen lassen – MAC_ZUGANG Abschnitt 4)
 mkdir -p "$TMP/src"
 git archive --format=tar HEAD App Core project.yml tools/mac_build.sh | tar -x -C "$TMP/src"
-touch "$TMP/src/tools/.do_screens"
+touch "$TMP/src/tools/$MARK"
 ssh "$H" clean >/dev/null || exit 1
 tar -cf - -C "$TMP/src" . | ssh "$H" extract || exit 1
 rm -rf "$TMP/src"

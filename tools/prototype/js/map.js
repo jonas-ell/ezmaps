@@ -376,6 +376,7 @@ export class MapView {
     this.detail.width = bitmap.width; this.detail.height = bitmap.height;
     this.detail.getContext('2d').drawImage(bitmap, 0, 0);
     this.det = { region, S, style }; this.detail.style.display = 'block';
+    this.detail.style.imageRendering = style === 'pixel' ? 'pixelated' : 'auto';
   }
   // GM-015: Kacheln anzeigen – list: [{ key, url, region, S, pixelated }] (grob zuerst, fein oben)
   setTiles(list) {
