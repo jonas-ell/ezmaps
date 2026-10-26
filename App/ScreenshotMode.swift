@@ -44,6 +44,17 @@ enum ScreenshotMode {
                     w += 1
                 }
                 model.startNavigation()
+            case "ankunft":
+                // GM-030: kurz vor dem Ziel starten, damit nach wenigen Sekunden „Ziel erreicht“ kommt
+                model.updateSettings { $0.demoDrive = true }
+                model.demoStartOffset = .greatestFiniteMagnitude
+                model.choose(target)
+                var w = 0
+                while model.routes.isEmpty && w < 80 {
+                    try? await Task.sleep(nanoseconds: 250_000_000)
+                    w += 1
+                }
+                model.startNavigation()
             default:
                 break
             }

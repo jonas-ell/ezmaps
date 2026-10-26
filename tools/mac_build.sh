@@ -59,6 +59,71 @@ if [ -f tools/.do_open_privacy ]; then
   exit 0
 fi
 
+# GM-030: Simulationsfahrt ohne Navigation (Marker tools/.do_freedrive, Wegpunkte in tools/drive.txt):
+# App starten, CarPlay an, Standort fährt die Wegpunkte ab, alle 4 s ein CarPlay- und ein iPhone-Bild (JPEG).
+if [ -f tools/.do_freedrive ]; then
+  rm -f tools/.do_freedrive
+  xcodegen generate >/dev/null || exit 1
+  LINE=$(xcrun simctl list devices available | grep -E "^ +iPhone 1[6-9] Pro Max" | head -1)
+  SID=$(echo "$LINE" | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}' | head -1)
+  xcrun simctl boot "$SID" 2>/dev/null; xcrun simctl bootstatus "$SID" -b >/dev/null
+  xcodebuild -project EzMaps.xcodeproj -scheme EzMaps -destination "id=$SID" -configuration Debug \
+    -derivedDataPath build/dd build > /tmp/ezmaps_drive_build.log 2>&1 || { grep -E "error:" /tmp/ezmaps_drive_build.log | head -20; echo "BUILD FAILED"; exit 1; }
+  APPDIR=build/dd/Build/Products/Debug-iphonesimulator/EzMaps.app
+  BID=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$APPDIR/Info.plist")
+  xcrun simctl install "$SID" "$APPDIR" || exit 1
+  xcrun simctl privacy "$SID" grant location "$BID"
+  WP=$(cat tools/drive.txt); FIRST=${WP%% *}
+  xcrun simctl location "$SID" set "$FIRST"
+  caffeinate -u -t 3; open -a Simulator --args -CurrentDeviceUDID "$SID"; sleep 5
+  osascript <<'OSA' 2>&1 | sed 's/^/CarPlay: /'
+tell application "Simulator" to activate
+tell application "System Events" to tell process "Simulator"
+  repeat 30 times
+    if exists menu bar 1 then exit repeat
+    delay 1
+  end repeat
+  if exists (first window whose name contains "CarPlay") then return "war offen"
+  set m to menu "I/O" of menu bar 1
+  click menu item "External Displays" of m
+  delay 0.5
+  click menu item "CarPlay" of menu 1 of menu item "External Displays" of m
+end tell
+return "an"
+OSA
+  sleep 4
+  xcrun simctl terminate "$SID" "$BID" 2>/dev/null
+  xcrun simctl launch "$SID" "$BID" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
+  sleep 6
+  osascript <<'OSA' 2>&1 | sed 's/^/Antippen: /'
+tell application "System Events" to tell process "Simulator"
+  set w to first window whose name contains "CarPlay"
+  set {px, py} to position of w
+  set {ww, wh} to size of w
+  set k to ww / 800
+  set top to wh - 480 * k
+  click at {px + 52 * k, py + top + 200 * k}
+end tell
+return "ok"
+OSA
+  sleep 4
+  SPEED=${DRIVE_SPEED:-25}   # m/s (25 = 90 km/h, Zeitraffer gegenüber 50 km/h in der Stadt)
+  xcrun simctl location "$SID" start --speed="$SPEED" $WP || { echo "Fahrt konnte nicht starten"; exit 1; }
+  OUT=/tmp/ezdrive; rm -rf "$OUT"; mkdir -p "$OUT"
+  N=0; END=$(( $(date +%s) + ${DRIVE_SECONDS:-360} ))
+  while [ "$(date +%s)" -lt "$END" ]; do
+    F=$(printf "%03d" $N)
+    xcrun simctl io "$SID" screenshot --display=external --type=jpeg "$OUT/car-$F.jpg" >/dev/null 2>&1
+    xcrun simctl io "$SID" screenshot --type=jpeg "$OUT/phone-$F.jpg" >/dev/null 2>&1
+    N=$((N+1)); sleep 4
+  done
+  xcrun simctl location "$SID" clear
+  echo "Bilder: $N"
+  for F in "$OUT"/*.jpg; do [ -s "$F" ] || continue; echo "===SHOT $(basename "$F" .jpg)==="; base64 -i "$F"; echo "===END==="; done
+  echo "FAHRT FERTIG"
+  exit 0
+fi
+
 # GM-029: Test-Screenshots (Marker tools/.do_testshots): kleines iPhone (wie die iPad-Prüfung von Apple, 375 × 667),
 # Englisch, Standort verweigert. Ergebnis landet in docs/store/tests/ (nicht für den Store).
 if [ -f tools/.do_testshots ]; then
@@ -140,11 +205,13 @@ OSA
   OUT=/tmp/ezcar; rm -rf "$OUT"; mkdir -p "$OUT"
   # GM-025: „frei“ = Fahren ohne Route (Hauptzweck im Auto): simulierte Fahrt durch Idstein, ~45 km/h
   xcrun simctl location "$SID" start --speed=12.5 50.21712,8.25734 50.21780,8.25900 50.21930,8.26250 50.22010,8.26520 50.22130,8.26690 50.22230,8.26900 50.22420,8.27100 || echo "Standort-Fahrt nicht möglich"
-  for ENTRY in frei:14 vorschau:16 navigation:28; do
+  # GM-030: mehr CarPlay-Fälle – Ziele-Liste (Knopf „Ziele“ antippen), Ankunft, Fahrt ohne Route nachts nicht nötig
+  for ENTRY in frei:14 vorschau:16 navigation:28 ankunft:30 ziele:8; do
     NAME=${ENTRY%%:*}; WAIT=${ENTRY##*:}
     xcrun simctl terminate "$SID" "$BID" 2>/dev/null
     [ "$NAME" = "vorschau" ] && { xcrun simctl location "$SID" clear; xcrun simctl location "$SID" set 50.21712,8.25734; }
-    xcrun simctl launch "$SID" "$BID" -EZShot "$NAME" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
+    STATE=$NAME; [ "$NAME" = "ziele" ] && STATE=karte; [ "$NAME" = "frei" ] && STATE=frei
+    xcrun simctl launch "$SID" "$BID" -EZShot "$STATE" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
     sleep 6   # GM-026: CarPlay braucht nach dem Neustart der App etwas, sonst geht der Klick ins Leere
     # GM-024: EzMaps im CarPlay-Fenster antippen (Startbildschirm: Icon unter „Nachrichten“, bei 25 % / 58 % des Bildes)
     osascript <<'OSA' 2>&1 | sed 's/^/Antippen: /'
@@ -163,6 +230,19 @@ tell application "System Events" to tell process "Simulator"
 end tell
 return "Fenster " & px & "," & py & " " & ww & "x" & wh
 OSA
+    if [ "$NAME" = "ziele" ]; then
+      osascript <<'OSA' 2>&1 | sed 's/^/Ziele: /'
+tell application "System Events" to tell process "Simulator"
+  set w to first window whose name contains "CarPlay"
+  set {px, py} to position of w
+  set {ww, wh} to size of w
+  set k to ww / 800
+  set top to wh - 480 * k
+  click at {px + 165 * k, py + top + 44 * k}
+end tell
+return "ok"
+OSA
+    fi
     sleep "$WAIT"
     xcrun simctl io "$SID" screenshot --display=external --type=png "$OUT/carplay-$NAME.png" >/dev/null 2>&1 \
       && echo "Bild: carplay-$NAME" || echo "kein externes Display für $NAME"

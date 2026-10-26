@@ -275,7 +275,7 @@ final class AppModel {
     /// Demo-Fahrt: fährt die Route mit den geschätzten Geschwindigkeiten ab (2× Echtzeit)
     private func startDemo(on route: Route) {
         demoTask?.cancel()
-        let offset = min(demoStartOffset, route.length * 0.9)
+        let offset = min(demoStartOffset, max(0, route.length - 120)) // GM-030: bis kurz vors Ziel (Ankunfts-Bild)
         demoTask = Task { [weak self] in
             var d: Double = offset
             while !Task.isCancelled {
