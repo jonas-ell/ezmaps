@@ -165,7 +165,7 @@ final class RouteOverlay {
             p.addLine(to: CGPoint(x: 24, y: 33))
             p.addLine(to: CGPoint(x: 6, y: 42))
             p.close()
-            p.lineJoin = .round
+            p.lineJoinStyle = .round // UIBezierPath: lineJoinStyle (nicht lineJoin)
             p.lineWidth = 4
             UIColor.black.setStroke()
             p.stroke()
