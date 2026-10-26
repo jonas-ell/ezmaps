@@ -1,0 +1,166 @@
+/* GM-022: Ideen-Vorschau – eigene Seite, ändert den klickbaren Prototyp nicht */
+body.vz { background: #0e0e10; color: #ddd; }
+.vz-head { display: flex; gap: 18px; flex-wrap: wrap; align-items: baseline; padding: 14px 24px; border-bottom: 1px solid #222; font-size: 13px; }
+.vz-head span { color: #888; }
+#vz { display: flex; flex-direction: column; gap: 46px; padding: 26px 24px 80px; }
+.sec { display: flex; flex-direction: column; gap: 14px; }
+.sec > h2 { font: 800 22px Inter; color: #fff; }
+.sec > p { color: #9a9aa0; font-size: 13.5px; line-height: 1.5; max-width: 900px; }
+.vrow { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
+.cap { color: #8a8a90; font-size: 12px; margin-top: 8px; max-width: 420px; line-height: 1.45; }
+
+/* Geräte */
+.vphone { position: relative; width: 393px; height: 852px; border-radius: 55px; overflow: hidden; background: #1c1c1d; box-shadow: 0 0 0 12px #111113, 0 0 0 14px #77746f, 0 30px 80px rgba(0,0,0,.6); margin: 14px; font-family: Inter, sans-serif; }
+.vphone .island { z-index: 40; }
+.vphone .sbar { position: absolute; top: 0; left: 0; right: 0; height: 54px; z-index: 39; color: #fff; font: 600 17px Inter; }
+.vphone .sbar .tm { position: absolute; left: 0; width: 133px; top: 18px; text-align: center; }
+.vphone.light .sbar { color: #111; }
+.vphone .hb { position: absolute; left: 129.5px; bottom: 8px; width: 134px; height: 5px; border-radius: 3px; background: #fff; z-index: 40; }
+.vphone.light .hb { background: #111; }
+.vcar { position: relative; width: 1280px; height: 480px; background: #000; border-radius: 6px; overflow: hidden; box-shadow: 0 0 0 18px #1b1b1d, 0 0 0 20px #333; margin: 20px; font-family: Inter, sans-serif; display: flex; }
+.vcar.small { width: 800px; }
+.vcar .vdock { width: 76px; flex: none; background: #000; display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 10px; color: #fff; font: 600 13px Inter; }
+.vcar .vdock .vapp { width: 52px; height: 52px; border-radius: 12px; background: #2fb94a; }
+.vcar .vdock img.vapp { background: none; object-fit: cover; }
+.vcar .main { position: relative; flex: 1; overflow: hidden; }
+.fill { position: absolute; inset: 0; }
+
+/* CarPlay-Systemteile (zeichnet iOS) */
+.cp-card { position: absolute; background: rgba(40,40,42,.92); color: #fff; border-radius: 12px; }
+.cp-man { left: 12px; top: 12px; width: 300px; padding: 12px 14px; display: flex; gap: 14px; align-items: center; }
+.cp-man b { font: 700 30px Inter; display: block; } .cp-man span { font: 600 15px Inter; }
+.cp-eta { left: 12px; top: 112px; width: 300px; padding: 8px 14px; font: 600 14px Inter; color: #ddd; }
+.cp-eta b { font-size: 17px; color: #fff; margin-right: 8px; }
+.cp-btns { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.cp-btns div { width: 44px; height: 44px; border-radius: 10px; background: rgba(40,40,42,.92); color: #fff; display: grid; place-items: center; font: 700 18px Inter; }
+.cp-end { position: absolute; right: 64px; top: 10px; padding: 0 14px; height: 36px; border-radius: 10px; background: rgba(40,40,42,.92); color: #fff; display: flex; align-items: center; font: 600 14px Inter; }
+
+/* Radar */
+.radar { position: absolute; width: 196px; height: 196px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 4px rgba(0,0,0,.85), 0 0 0 6px rgba(255,255,255,.18), 0 6px 18px rgba(0,0,0,.6); }
+.radar .mv { border-radius: 50%; }
+.radar .ring { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), inset 0 0 28px rgba(0,0,0,.55); }
+.radar .north { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: #111; color: #fff; font: 800 11px Inter; display: grid; place-items: center; box-shadow: 0 0 0 2px rgba(255,255,255,.7); z-index: 2; }
+.radar-wrap { position: absolute; width: 196px; height: 196px; z-index: 3; }
+.radar-wrap .radar { left: 0; top: 0; }
+.t-classic .vosm { color: rgba(0,0,0,.6); text-shadow: 0 0 3px #fff; }
+.t-western .radar { box-shadow: 0 0 0 4px #2e1e10, 0 0 0 7px #e6d3a8, 0 6px 18px rgba(60,35,15,.5); }
+.t-classic .radar { box-shadow: 0 0 0 4px #fff, 0 0 0 5px rgba(0,0,0,.15), 0 6px 18px rgba(0,0,0,.3); }
+.t-classic .radar .north { background: #1a73e8; box-shadow: 0 0 0 2px #fff; }
+
+.vlimit { position: absolute; width: 54px; height: 54px; border-radius: 50%; background: #fff; border: 6px solid #e30613; color: #000; display: grid; place-items: center; font: 800 21px Inter; }
+
+/* Neon-Bedienelemente iPhone */
+.npanel { position: absolute; background: rgba(0,0,0,.86); color: #fff; }
+.nman { left: 16px; right: 16px; top: 58px; padding: 14px 16px; display: flex; gap: 14px; align-items: center; border-left: 5px solid #a13df0; }
+.nman .d { font: 800 40px Inter; letter-spacing: -1px; } .nman .s { font: 700 15px Inter; text-transform: uppercase; } .nman .x { font: 500 13px Inter; color: #a9a9ad; }
+.nbottom { left: 0; right: 0; bottom: 0; height: 96px; padding: 14px 22px 30px; display: flex; justify-content: space-between; align-items: center; }
+.nbottom .eta { font: 800 30px Inter; } .nbottom small { display: block; color: #a9a9ad; font: 500 13px Inter; }
+.nend { background: #ff3b4e; color: #fff; padding: 12px 24px; font: 700 16px Inter; }
+.vosm { position: absolute; right: 10px; font: 500 9px Inter; color: rgba(255,255,255,.75); text-shadow: 0 0 3px #000; }
+.light .vosm { color: rgba(0,0,0,.6); text-shadow: 0 0 3px #fff; }
+
+/* Warnbanner Baustelle */
+.warn { position: absolute; left: 16px; right: 16px; display: flex; gap: 12px; align-items: center; padding: 10px 14px; color: #fff; }
+.warn .ico { width: 34px; height: 34px; flex: none; }
+.warn b { display: block; font: 800 15px Inter; } .warn span { font: 500 12.5px Inter; opacity: .85; }
+.warn.neon { background: repeating-linear-gradient(135deg, rgba(0,0,0,.9) 0 14px, rgba(30,20,0,.9) 14px 28px); border-left: 5px solid #ff9f1c; }
+.warn.western { background: #efe2c0; color: #2e1e10; border: 3px double #4a3220; font-family: Inter; }
+.warn.western b { font-family: Rye, serif; font-weight: 400; }
+.warn.pixel { background: #1a2a6c; border: 2px solid #fff; box-shadow: 0 0 0 2px #000; font-family: VT323; }
+.warn.pixel b { font: 400 12px 'Press Start 2P'; } .warn.pixel span { font: 400 18px VT323; }
+.warn.toy { background: #fff; color: #2f3640; border: 2.5px solid #2f3640; border-radius: 14px; box-shadow: 0 3px 0 #2f3640; }
+.warn.toy b { font-family: Fredoka; font-weight: 700; }
+.warn.classic { background: #fff; color: #1f2933; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.2); border-left: 5px solid #e8710a; }
+
+/* Kacheln */
+.vtile { flex: none; position: relative; width: 300px; height: 300px; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px #2a2a2e; }
+.vtile .lab { position: absolute; left: 10px; top: 10px; padding: 4px 9px; font: 700 12px Inter; background: rgba(0,0,0,.75); color: #fff; border-radius: 6px; z-index: 3; }
+.legend-box { flex: none; background: #151517; border: 1px solid #2a2a2e; border-radius: 14px; padding: 14px 16px; width: 300px; font-size: 13px; line-height: 1.5; }
+.legend-box h4 { color: #fff; margin-bottom: 6px; }
+.legend-box canvas { vertical-align: middle; margin-right: 8px; }
+
+/* iOS-Einstellungen (dunkel) */
+.ios { position: absolute; inset: 0; background: #000; color: #fff; padding: 58px 0 0; overflow: hidden; }
+.ios .nav { display: flex; justify-content: space-between; align-items: center; padding: 8px 18px 6px; font: 600 17px Inter; }
+.ios .nav .bl { color: #a13df0; font-weight: 500; }
+.ios h1 { font: 800 30px Inter; padding: 4px 18px 10px; }
+.ios .gh { font: 500 13px Inter; color: #8e8e93; text-transform: uppercase; padding: 14px 34px 6px; }
+.ios .grp { margin: 0 16px; background: #1c1c1e; border-radius: 12px; overflow: hidden; }
+.ios .it { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-top: .5px solid #38383a; font: 400 16px Inter; min-height: 46px; }
+.ios .it:first-child { border-top: 0; }
+.ios .it .sub { display: block; font-size: 12.5px; color: #8e8e93; }
+.ios .it .grow { flex: 1; }
+.ios .chk { color: #a13df0; font-weight: 700; }
+.ios .play { width: 30px; height: 30px; border-radius: 50%; background: #2c2c2e; display: grid; place-items: center; color: #a13df0; font-size: 12px; }
+.ios .tag { font: 600 11px Inter; color: #000; background: #d9ad3a; border-radius: 5px; padding: 2px 6px; }
+.ios .tag.dl { background: #2c2c2e; color: #8e8e93; }
+.ios .foot { font: 400 12.5px Inter; color: #8e8e93; padding: 8px 34px 0; line-height: 1.4; }
+.slider { flex: 1; height: 4px; background: #3a3a3c; border-radius: 2px; position: relative; } .slider i { position: absolute; left: 0; top: 0; bottom: 0; width: 55%; background: #a13df0; border-radius: 2px; } .slider b { position: absolute; left: 55%; top: -11px; width: 26px; height: 26px; margin-left: -13px; border-radius: 50%; background: #fff; }
+.toggle { width: 51px; height: 31px; border-radius: 16px; background: #34c759; position: relative; } .toggle::after { content: ''; position: absolute; right: 2px; top: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; }
+
+/* Homescreen + Widgets */
+.home { position: absolute; inset: 0; background: radial-gradient(circle at 30% 20%, #3a1f5c, #0d0b14 70%); padding: 70px 22px 0; }
+.wgrid { display: grid; grid-template-columns: 158px 158px; gap: 22px; }
+.wd { position: relative; border-radius: 22px; overflow: hidden; background: #1c1c1d; color: #fff; }
+.wd.s { width: 158px; height: 158px; } .wd.m { grid-column: span 2; height: 158px; }
+.wd .map { position: absolute; inset: 0; }
+.wd .info { position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 12px 10px; background: linear-gradient(transparent, rgba(0,0,0,.9)); }
+.wd .info b { font: 800 22px Inter; display: block; } .wd .info span { font: 600 12px Inter; color: #ccc; }
+.wd .badge { position: absolute; left: 10px; top: 10px; font: 700 11px Inter; background: rgba(0,0,0,.75); padding: 3px 7px; border-radius: 6px; }
+.wd .warnchip { display: inline-block; margin-top: 4px; font: 700 11px Inter; color: #000; background: #ff9f1c; padding: 2px 6px; border-radius: 4px; }
+.wd.m .split { position: absolute; inset: 0; display: flex; } .wd.m .split .map { position: relative; flex: 1; } .wd.m .txt { width: 150px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; background: #0f0f10; }
+.wlabel { font: 500 12px Inter; color: #eee; text-align: center; margin-top: 6px; }
+.apps { display: grid; grid-template-columns: repeat(4, 64px); gap: 26px 21px; margin-top: 26px; } .apps div { width: 64px; height: 64px; border-radius: 15px; background: #2a2a30; }
+.apps img { width: 64px; height: 64px; border-radius: 15px; }
+.lock { position: absolute; inset: 0; background: linear-gradient(#2b1747, #0b0a10); color: #fff; text-align: center; padding-top: 90px; }
+.lock .date { font: 600 20px Inter; opacity: .85; } .lock .clock { font: 700 96px Inter; letter-spacing: -2px; line-height: 1.05; }
+.lockw { display: flex; justify-content: center; gap: 10px; margin-top: 12px; }
+.lockw .r { width: 300px; text-align: left; background: rgba(255,255,255,.12); backdrop-filter: blur(10px); border-radius: 16px; padding: 10px 14px; font: 600 14px Inter; }
+.lockw .r small { display: block; font-weight: 500; opacity: .8; }
+.lockw .c { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,.12); display: grid; place-items: center; font: 800 13px Inter; line-height: 1.1; }
+.siri { position: absolute; left: 12px; right: 12px; bottom: 120px; background: rgba(28,28,30,.96); border-radius: 22px; padding: 14px 16px; color: #fff; }
+.siri .q { font: 600 15px Inter; opacity: .8; } .siri .a { font: 700 18px Inter; margin: 6px 0 10px; }
+.siri .btn { display: inline-block; background: #a13df0; color: #fff; border-radius: 12px; padding: 9px 16px; font: 700 14px Inter; }
+.shortcuts { display: flex; flex-direction: column; gap: 10px; width: 330px; }
+.sc { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 16px; color: #fff; font: 700 15px Inter; }
+.sc small { display: block; font: 500 12px Inter; opacity: .85; }
+.sc .i { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,.2); display: grid; place-items: center; font-size: 18px; }
+
+/* Fotomodus */
+.story { position: relative; width: 270px; height: 480px; border-radius: 16px; overflow: hidden; background: #1c1c1d; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
+.story .map { position: absolute; inset: 0; }
+.story .top { position: absolute; left: 0; right: 0; top: 0; padding: 16px 16px 40px; background: linear-gradient(rgba(0,0,0,.85), transparent); color: #fff; }
+.story .vlogo { font: 400 24px Pricedown, Impact; letter-spacing: .5px; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; }
+.story .ttl { font: 800 17px Inter; margin-top: 6px; } .story .dt { font: 500 11px Inter; opacity: .8; }
+.story .stats { position: absolute; left: 12px; right: 12px; bottom: 26px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.story .stats div { background: rgba(0,0,0,.82); color: #fff; padding: 8px; font: 800 17px Inter; } .story .stats small { display: block; font: 500 10px Inter; color: #bbb; }
+.story .stats .g { color: #58b05f; }
+.story .osm2 { position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; font: 500 8px Inter; color: rgba(255,255,255,.7); }
+.editor { position: absolute; inset: 0; background: #0c0c0d; color: #fff; padding: 60px 0 0; }
+.editor .vbar { display: flex; justify-content: space-between; padding: 6px 18px 12px; font: 600 16px Inter; } .editor .vbar .x { color: #a9a9ad; } .editor .vbar .ok { color: #a13df0; }
+.editor .stage { display: flex; justify-content: center; }
+.vchips { display: flex; gap: 8px; padding: 14px 16px 0; overflow: hidden; }
+.chip2 { padding: 8px 12px; font: 600 13px Inter; background: #1c1c1e; white-space: nowrap; } .chip2.on { background: #fff; color: #000; }
+.share { margin: 14px 16px 0; height: 52px; display: grid; place-items: center; background: #a13df0; font: 800 17px Inter; }
+
+/* Schnell laden */
+.timeline { width: 520px; background: #151517; border: 1px solid #2a2a2e; border-radius: 14px; padding: 16px 18px; font-size: 13px; }
+.timeline h4 { color: #fff; margin: 4px 0 8px; }
+.vtl { position: relative; height: 34px; margin: 6px 0 14px; background: #222226; border-radius: 6px; }
+.vtl i { position: absolute; top: 0; bottom: 0; border-radius: 6px; display: flex; align-items: center; padding-left: 8px; font: 600 11px Inter; color: #fff; white-space: nowrap; overflow: hidden; }
+.axis { display: flex; justify-content: space-between; color: #666; font-size: 11px; }
+.chiploading { position: absolute; left: 50%; transform: translateX(-50%); bottom: 330px; background: rgba(0,0,0,.85); color: #fff; padding: 7px 12px; font: 600 12px Inter; display: flex; gap: 8px; align-items: center; }
+.spin { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #555; border-top-color: #a13df0; }
+
+/* Stile-Seite */
+.stylegrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 14px; }
+.scard { position: relative; height: 196px; border-radius: 12px; overflow: hidden; background: #333; }
+.scard.big { grid-column: span 2; height: 210px; }
+.scard .vmini { position: absolute; inset: 0; }
+.scard .foot { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 10px 9px; background: linear-gradient(transparent, rgba(0,0,0,.88)); color: #fff; }
+.scard .foot b { display: block; font: 800 19px Inter; } .scard .foot small { font: 600 11px Inter; opacity: .9; }
+.scard .pill { position: absolute; right: 8px; top: 8px; font: 800 11px Inter; padding: 4px 8px; border-radius: 6px; z-index: 2; }
+.pill.free { background: #34c759; color: #000; } .pill.pro { background: #d9ad3a; color: #000; } .pill.hot { background: #a13df0; color: #fff; right: auto; left: 8px; }
+.sf-n { font-family: Pricedown, Impact !important; font-weight: 400 !important; font-size: 24px !important; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000; }
+.sf-w { font-family: Rye, serif !important; font-weight: 400 !important; } .sf-p { font-family: 'Press Start 2P' !important; font-size: 11px !important; font-weight: 400 !important; } .sf-t { font-family: Fredoka !important; }
+.buy { margin: 12px 14px 0; padding: 12px 14px; background: #1c1c1e; border-radius: 12px; font: 600 13px Inter; color: #ddd; display: flex; justify-content: space-between; align-items: center; } .buy b { color: #fff; } .buy span { background: #a13df0; color: #fff; padding: 7px 12px; border-radius: 8px; font-weight: 800; }

@@ -93,15 +93,15 @@ function permission() {
 function pickStyle() {
   return `<div class="page solid"><div class="page-in">
     <div class="head" style="font-size:40px">Wähle deinen Stil</div>
-    <div class="muted" style="margin:8px 0 22px">Neon City ist gratis – mit CarPlay. Weitere Stile kannst du später testen.</div>
-    ${Object.entries(STYLES).map(([k, v]) => `<button class="stylepick st-${k} ${app.state.style === k ? 'sel' : ''}" data-act="style:${k}"><span class="sw"></span><span><b class="sf-${k}">${v.name}</b><small>${k === 'neon' ? 'Gratis · inkl. CarPlay' : 'Vorschau verfügbar'}</small></span>${app.state.style === k ? ic('check', 22) : ''}</button>`).join('')}
+    <div class="muted" style="margin:8px 0 22px">Klassik ist gratis – mit CarPlay. Neon City und die anderen Premium-Stile kannst du vorher testen.</div>
+    ${Object.entries(STYLES).map(([k, v]) => `<button class="stylepick st-${k} ${app.state.style === k ? 'sel' : ''}" data-act="style:${k}"><span class="sw"></span><span><b class="sf-${k}">${v.name}</b><small>${v.free ? 'Gratis · inkl. CarPlay' : 'Premium · Vorschau testen'}</small></span>${app.state.style === k ? ic('check', 22) : ''}</button>`).join('')}
     <button class="cta" style="margin-top:24px;width:100%" data-act="go:main">Weiter</button></div></div>`;
 }
 
 function home() {
   const d = districtHere();
   return `<div class="searchbar panel" data-act="open:search">${ic('search', 20)}<span class="head" style="font-size:26px">Wohin?</span><span class="muted" style="margin-left:auto">${ic('mic', 20)}</span></div>
-    <div class="chips">${[['home', 'Zuhause', 'dest:home', '#fff'], ['work', 'Arbeit', 'dest:work', '#fff'], ['fuel', 'Tanken', 'cat:fuel', '#f08a2c'], ['parking', 'Parken', 'cat:parking', '#5fb6ff']].map(([i, t, a, c]) => `<button class="chip panel" data-act="${a}"><span style="color:${c}">${ic(i, 16)}</span>${t}</button>`).join('')}</div>
+    <div class="chips">${[['home', 'Zuhause', 'dest:home', 'var(--fg)'], ['work', 'Arbeit', 'dest:work', 'var(--fg)'], ['fuel', 'Tanken', 'cat:fuel', '#f08a2c'], ['parking', 'Parken', 'cat:parking', '#5fb6ff']].map(([i, t, a, c]) => `<button class="chip panel" data-act="${a}"><span style="color:${c}">${ic(i, 16)}</span>${t}</button>`).join('')}</div>
     <div class="rbtns">${btn('legend', 'layers')}${btn('sheet:friends', 'friends')}${btn('recenter', 'locate')}${btn('zoom:in', 'plus')}${btn('zoom:out', 'minus')}</div>
     ${app.state.legend ? legend() : ''}
     <div class="scalebar" data-scale></div>
@@ -231,7 +231,7 @@ function styles() {
     <div class="sgrid">${Object.entries(STYLES).map(([k, v]) => `<button class="stylecard ${app.state.style === k ? 'sel' : ''}" data-act="style:${k}"><div class="mini" data-style="${k}"></div>
       <div class="chipman st-${k}">${ic('turnLeft', 18, 'stroke-width:3')}<span class="sf-${k}">230 m</span></div>
       <div class="card-osm">© OpenStreetMap</div>
-      <div class="cardfoot"><div><div class="sf-${k} cname">${v.name}</div><small>${k === 'neon' ? 'Gratis · inkl. CarPlay' : app.state.style === k ? 'Aktiv (Vorschau)' : 'Tippen zum Testen'}</small></div><span class="dot" style="background:${v.route}"></span></div></button>`).join('')}</div>
+      <div class="cardfoot"><div><div class="sf-${k} cname">${v.name}</div><small>${v.free ? 'Gratis · inkl. CarPlay' : app.state.style === k ? 'Aktiv (Vorschau)' : 'Premium · Tippen zum Testen'}</small></div><span class="dot" style="background:${v.route}"></span></div></button>`).join('')}</div>
     <div class="muted small" style="margin:12px 0 120px">Preise folgen. Im Prototyp sind alle Stile frei.</div></div></div>`;
 }
 function profile() {
