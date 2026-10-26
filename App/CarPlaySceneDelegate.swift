@@ -21,6 +21,13 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
 
     @MainActor private var model: AppModel { AppModel.shared }
 
+    /// GM-024: CarPlay zeigt die Einheit so, wie wir sie geben – ab 1 km in Kilometern (eine Nachkommastelle), sonst gerundete Meter
+    static func distance(_ meters: Double) -> Measurement<UnitLength> {
+        if meters >= 1000 { return Measurement(value: (meters / 100).rounded() / 10, unit: .kilometers) }
+        let step: Double = meters >= 100 ? 50 : 10
+        return Measurement(value: max(0, (meters / step).rounded() * step), unit: .meters)
+    }
+
     func templateApplicationScene(
         _ templateApplicationScene: CPTemplateApplicationScene,
         didConnect interfaceController: CPInterfaceController,
@@ -150,7 +157,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     @MainActor private func updateGuidance() {
         guard let session = navSession, let state = model.nav, let m = state.maneuver, let t = trip else { return }
         let key = "\(model.routeRevision)-\(Int(m.distance))"
-        let estimates = CPTravelEstimates(distanceRemaining: Measurement(value: state.distanceToManeuver, unit: UnitLength.meters), timeRemaining: 0)
+        let estimates = CPTravelEstimates(distanceRemaining: Self.distance(state.distanceToManeuver), timeRemaining: 0)
         if key != lastManeuverKey {
             lastManeuverKey = key
             let man = CPManeuver()
@@ -162,7 +169,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         } else if let current = session.upcomingManeuvers.first {
             session.updateEstimates(estimates, for: current)
         }
-        let total = CPTravelEstimates(distanceRemaining: Measurement(value: state.remainingDistance, unit: UnitLength.meters), timeRemaining: state.remainingTime)
+        let total = CPTravelEstimates(distanceRemaining: Self.distance(state.remainingDistance), timeRemaining: state.remainingTime)
         mapTemplate?.update(total, for: t, with: .default)
     }
 
@@ -260,6 +267,8 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         view.backgroundColor = NeonColors.background
         let map = NeonMap.make(frame: view.bounds, zoom: 15)
         map.isPitchEnabled = false
+        map.compassView.isHidden = true // GM-024: kein Kompass im Auto (Norden steht ohnehin über die Fahrtrichtung fest)
+        map.attributionButton.isHidden = true // Hinweis steht als Text unten rechts
         map.delegate = self
         map.userTrackingMode = .follow
         view.addSubview(map)
