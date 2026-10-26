@@ -16,9 +16,10 @@ public enum Formatting {
 
     /// CarPlay: Zahl und Einheit getrennt (CarPlay formatiert selbst). Gleiche Rundung wie `distance`.
     public static func carPlayDistance(_ meters: Double) -> (value: Double, kilometers: Bool) {
-        let text = distance(meters)
-        let number: Double = Double(text.split(separator: " ")[0].replacingOccurrences(of: ",", with: ".")) ?? 0
-        return (number, text.hasSuffix("km"))
+        // Einheit wie `distance`, aber in km immer mit einer Nachkommastelle (CarPlay zeigt „14,6 km“)
+        if distance(meters).hasSuffix("km") { return ((meters / 100).rounded() / 10, true) }
+        let step: Double = meters >= 100 ? 50 : 10
+        return (max(0, (meters / step).rounded() * step), false)
     }
 
     /// „3 Min“, mindestens 1; ab 60 Minuten „1 Std 5 Min“
