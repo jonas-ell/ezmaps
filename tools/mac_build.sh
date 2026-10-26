@@ -107,7 +107,7 @@ end tell
 return "ok"
 OSA
   sleep 4
-  SPEED=${DRIVE_SPEED:-25}   # m/s (25 = 90 km/h, Zeitraffer gegenüber 50 km/h in der Stadt)
+  SPEED=${DRIVE_SPEED:-14}   # m/s (14 = 50 km/h, realistisch – die Kamerahöhe hängt vom Tempo ab)
   xcrun simctl location "$SID" start --speed="$SPEED" $WP || { echo "Fahrt konnte nicht starten"; exit 1; }
   OUT=/tmp/ezdrive; rm -rf "$OUT"; mkdir -p "$OUT"
   N=0; END=$(( $(date +%s) + ${DRIVE_SECONDS:-360} ))

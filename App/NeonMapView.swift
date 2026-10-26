@@ -154,7 +154,7 @@ final class RouteOverlay {
     /// GM-022: Kamerahöhe nach Tempo – in der Stadt nah, auf der Autobahn weit (sonst nur Asphalt im Bild)
     static func altitude(forKmh kmh: Double) -> Double {
         let k: Double = min(130, max(30, kmh))
-        return 450 + (k - 30) * 13 // 30 km/h → 450 m, 130 km/h → 1750 m
+        return 320 + (k - 30) * 6 // GM-030: näher wie die Vorlage – 30 km/h → 320 m, 50 → 440 m, 130 → 920 m
     }
 
     /// Kamera hinter dem Auto: nah, geneigt, Fahrtrichtung oben

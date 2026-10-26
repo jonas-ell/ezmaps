@@ -29,6 +29,6 @@ for line in open(sys.argv[1], encoding="utf-8", errors="ignore"):
 print(n, "Bilder in", out)
 PY
 for K in car phone; do
-  ls "$OUTDIR"/$K-*.jpg >/dev/null 2>&1 && ffmpeg -loglevel error -y -framerate 4 -pattern_type glob -i "$OUTDIR/$K-*.jpg" -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -pix_fmt yuv420p "$OUTDIR/$K.mp4" && echo "Video: $OUTDIR/$K.mp4"
+  ls "$OUTDIR"/$K-*.jpg >/dev/null 2>&1 && ffmpeg -loglevel error -y -framerate 4 -i "$OUTDIR/$K-%03d.jpg" -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -pix_fmt yuv420p "$OUTDIR/$K.mp4" && echo "Video: $OUTDIR/$K.mp4"
 done
 rm -rf "$TMP"
