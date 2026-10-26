@@ -23,7 +23,7 @@ fi
 echo "2/4 Projektordner auf dem Mac leeren …"; ssh "$H" clean || exit 1
 # git archive: nur Dateien aus dem Repo (keine Schriften, keine Geheimnisse), Zeilenenden LF laut .gitattributes
 echo "3/4 Commit $(git rev-parse --short HEAD) schicken …"
-git archive --format=tar HEAD App Core project.yml tools/mac_build.sh | ssh "$H" extract || exit 1
+git archive --format=tar HEAD App Core Resources project.yml tools/mac_build.sh | ssh "$H" extract || exit 1
 echo "4/4 Bauen (xcodegen, xcodebuild, swift test) – das dauert beim ersten Mal wegen MapLibre länger …"
 ssh "$H" build
 STATUS=$?
