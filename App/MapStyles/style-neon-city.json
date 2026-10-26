@@ -8,7 +8,7 @@
   "openmaptiles": {
    "type": "vector",
    "url": "https://tiles.openfreemap.org/planet",
-   "attribution": "© OpenStreetMap-Mitwirkende"
+   "attribution": "<a href=\"https://openfreemap.org\">OpenFreeMap</a> · © <a href=\"https://www.openmaptiles.org/\">OpenMapTiles</a> · © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap-Mitwirkende</a>"
   }
  },
  "layers": [

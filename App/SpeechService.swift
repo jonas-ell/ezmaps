@@ -1,0 +1,47 @@
+import AVFoundation
+
+/// Sprachansagen. Musik wird dabei leiser gestellt (Ducking) statt unterbrochen – einstellbar (LESSONS_SWIFT 4).
+/// Nach der Ansage wird die Audio-Sitzung freigegeben, damit andere Apps wieder normal laut spielen.
+@MainActor
+final class SpeechService: NSObject, AVSpeechSynthesizerDelegate {
+    var enabled = true
+    var duckOthers = true
+    var onSpeakingChange: ((Bool) -> Void)?
+    private let synthesizer = AVSpeechSynthesizer()
+
+    override init() {
+        super.init()
+        synthesizer.delegate = self
+    }
+
+    func say(_ text: String) {
+        guard enabled else { return }
+        let session = AVAudioSession.sharedInstance()
+        let options: AVAudioSession.CategoryOptions = duckOthers ? [.duckOthers, .interruptSpokenAudioAndMixWithOthers] : []
+        try? session.setCategory(.playback, mode: .voicePrompt, options: options)
+        try? session.setActive(true)
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: "de-DE")
+        utterance.rate = AVSpeechUtteranceDefaultSpeechRate
+        synthesizer.speak(utterance)
+        onSpeakingChange?(true)
+    }
+
+    func stop() {
+        synthesizer.stopSpeaking(at: .immediate)
+    }
+
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        Task { @MainActor in self.release() }
+    }
+
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        Task { @MainActor in self.release() }
+    }
+
+    private func release() {
+        guard !synthesizer.isSpeaking else { return }
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        onSpeakingChange?(false)
+    }
+}

@@ -193,16 +193,22 @@ export function say(text) {
   u.onstart = () => set({ speaking: true }); u.onend = () => set({ speaking: false });
   speechSynthesis.speak(u);
 }
+// GM-020: wie Core/NavigationSession.swift (announcement) – change both: Schwellen je Tempo, immer die engste Stufe,
+// nur der erste Buchstabe klein, kein „auf“ ohne Straßennamen
+function thresholds(mps) { return mps > 25 ? [[2000, 'far'], [800, 'near'], [120, 'now']] : mps > 14 ? [[800, 'far'], [300, 'near'], [60, 'now']] : [[400, 'far'], [150, 'near'], [30, 'now']]; }
+const lowerFirst = t => t ? t[0].toLowerCase() + t.slice(1) : t;
 function announce() {
   const n = app.state.nav, m = nextManeuver(); if (!m) return;
-  const d = m.at - n.progress, key = Math.round(m.at);
-  for (const [th, tag] of [[400, 'far'], [150, 'near'], [30, 'now']]) {
-    if (d <= th && !n.spoken[key + tag] && (tag !== 'far' || d > 250)) {
-      n.spoken[key + tag] = true;
-      if (m.kind === 'destination') { if (tag !== 'far') say(tag === 'now' ? `Sie haben ${n.dest.name} erreicht.` : `In ${fmtDist(d).replace(' m', ' Metern')} erreichen Sie Ihr Ziel.`); }
-      else say(tag === 'now' ? `Jetzt ${m.text.toLowerCase()} auf ${m.street}.` : `In ${fmtDist(d).replace(' m', ' Metern').replace(' km', ' Kilometern')} ${m.text.toLowerCase()} auf ${m.street}.`);
-      break;
-    }
+  const d = m.at - n.progress, key = Math.round(m.at), steps = thresholds(segSpeed() / 3.6);
+  for (const [th, tag] of [...steps].reverse()) {
+    if (d > th) continue;
+    if (tag === 'far' && d <= steps[1][0] + 50) return;
+    if (n.spoken[key + tag]) return;
+    n.spoken[key + tag] = true;
+    const spoken = fmtDist(d).replace(' km', ' Kilometern').replace(' m', ' Metern'), onto = m.street ? ` auf ${m.street}` : '';
+    if (m.kind === 'destination') { if (tag !== 'now') say(`In ${spoken} erreichen Sie Ihr Ziel.`); else say(`Sie haben ${n.dest.name} erreicht.`); }
+    else say(tag === 'now' ? `Jetzt ${lowerFirst(m.text)}${onto}.` : `In ${spoken} ${lowerFirst(m.text)}${onto}.`);
+    return;
   }
 }
 

@@ -78,7 +78,8 @@ style = {
     "name": "EzMaps Neon City",
     "metadata": {"ezmaps:source": "tools/maplibre/build_style.py – Werte aus tools/prototype/js/map.js (NEON)"},
     "sources": {"openmaptiles": {"type": "vector", "url": "https://tiles.openfreemap.org/planet",
-                                 "attribution": "© OpenStreetMap-Mitwirkende"}},
+                                 # GM-020: OpenFreeMap verlangt den Hinweis auf OpenMapTiles und OpenStreetMap
+                                 "attribution": "<a href=\"https://openfreemap.org\">OpenFreeMap</a> · © <a href=\"https://www.openmaptiles.org/\">OpenMapTiles</a> · © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap-Mitwirkende</a>"}},
     "layers": layers,
 }
 OUT.parent.mkdir(parents=True, exist_ok=True)

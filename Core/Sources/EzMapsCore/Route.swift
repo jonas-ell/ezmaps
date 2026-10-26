@@ -80,6 +80,28 @@ public struct Route: Equatable, Sendable {
         return max(0, lo - 1)
     }
 
+    /// Punkt auf der Route nach `distance` Metern (für die Demo-Fahrt und die verpasste Abbiegung). Mirror: route.js pointAt.
+    public func coordinate(at distance: Double) -> Coordinate? {
+        guard let first = shape.first else { return nil }
+        guard shape.count > 1 else { return first }
+        let i = segmentIndex(at: distance)
+        let a = shape[i], b = shape[i + 1]
+        let len: Double = cumulative[i + 1] - cumulative[i]
+        let t: Double = len > 0 ? min(1, max(0, (min(max(distance, 0), length) - cumulative[i]) / len)) : 0
+        return Coordinate(latitude: a.latitude + (b.latitude - a.latitude) * t, longitude: a.longitude + (b.longitude - a.longitude) * t)
+    }
+
+    /// Fahrtrichtung in Grad (0 = Norden, im Uhrzeigersinn) an der Stelle
+    public func heading(at distance: Double) -> Double {
+        guard shape.count > 1 else { return 0 }
+        let i = segmentIndex(at: distance)
+        let a = shape[i], b = shape[i + 1]
+        let dx: Double = (b.longitude - a.longitude) * cos(a.latitude * .pi / 180)
+        let dy: Double = b.latitude - a.latitude
+        let deg: Double = atan2(dx, dy) * 180 / .pi
+        return (deg + 360).truncatingRemainder(dividingBy: 360)
+    }
+
     /// Tempolimit an der Stelle; nil = unbekannt (dann kein Schild anzeigen), -1 = unbegrenzt.
     public func speedLimit(at progress: Double) -> Int? {
         guard let limits = speedLimits, !limits.isEmpty else { return nil }

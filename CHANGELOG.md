@@ -2,6 +2,29 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-020 – Auf dem Weg in den App Store: iPhone-Navigation und CarPlay in Swift, Navi-Logik getestet, Pflichten für die Veröffentlichung
+
+**Ziel:** Aus der Karten-App eine veröffentlichbare Navi-App machen (Version 1.0: Neon City, ganz Deutschland, iPhone + CarPlay).
+
+**Dateien:** `Core/Sources/EzMapsCore/{NavigationSession,Formatting}.swift` (neu), `Core/Sources/EzMapsCore/{Route,PhotonClient,HTTPClient,ValhallaClient}.swift`, `Core/Tests/EzMapsCoreTests/NavigationTests.swift` (neu), `Core/Tests/EzMapsCoreTests/RoutingTests.swift`, `App/{AppConfig,AppModel,LocationService,SpeechService,SettingsScreen}.swift` (neu), `App/{ContentView,NeonMapView,CarPlaySceneDelegate}.swift`, `App/PrivacyInfo.xcprivacy` (neu), `App/en.lproj/Localizable.strings`, `App/MapStyles/style-neon-city.json` (neu erzeugt), `tools/maplibre/build_style.py`, `tools/prototype/js/app.js`, `project.yml`, `docs/{VEROEFFENTLICHUNG,APPSTORE_TEXTE}.md` (neu), `docs/legal/index.md` (neu), `docs/TODO_PROTOTYP_REVIEW.md`, `CLAUDE.md`
+
+**Geändert:**
+- Core `NavigationSession`: setzt GPS-Positionen auf die Route (Fenster um die aktuelle Stelle, nach Tunnel die ganze Route), ignoriert kleine Rücksprünge, Restweg/-zeit, Straße, Tempolimit, „danach“-Hinweis, Ankunft (25 m), Neuberechnung über `RerouteMonitor`; Ansagen mit Schwellen je Tempo (Stadt 400/150/30 m, Land 800/300/60, Autobahn 2000/800/120)
+- Fehler gefunden und behoben (per Test): die „Jetzt …“-Ansage kam nie, weil eine schon gesprochene „nah“-Stufe die Suche beendete; ein Sprung nach vorn (> 400 m, z. B. nach Tunnel) galt als Abweichung
+- Core `Formatting` (Entfernung, Minuten, Uhrzeit, Ansage-Entfernung), `Route.coordinate(at:)`/`heading(at:)`, `NavigationSession.setSpeedLimits`, `Place` speicherbar; User-Agent für die öffentlichen Dienste; Core baut und testet jetzt auch unter Linux (`FoundationNetworking`)
+- App iPhone: Startkarte mit „Wohin?“, Suche (Photon, Zuletzt-Ziele), Routen-Vorschau (bis 3 Routen, Linien auf der Karte, Ausschnitt eingepasst), Navigation (Abbiegehinweis, danach-Hinweis, Tempolimit-Schild inkl. ∞, Ankunftszeit, Rest, Ende, Zentrieren, „Musik leiser“), Ankunft, Einstellungen (Ansagen, Ducking, Tempolimit, Autobahn/Maut meiden, Demo-Fahrt, Datenschutz, Lizenzen, Version, Sicherheitshinweis)
+- Standort: nur „Beim Verwenden“; während der Navigation genauer und im Hintergrund (`CLBackgroundActivitySession`, blaue Anzeige)
+- Ansagen: `AVSpeechSynthesizer` Deutsch, Audio `.voicePrompt` mit `.duckOthers` (oder unterbrechen), Sitzung danach freigeben
+- Demo-Fahrt: fährt die Route automatisch ab (für Ausprobieren und die App-Prüfung)
+- CarPlay: „Ziele“ (Suchen + Zuletzt), `CPSearchTemplate`, Routen-Vorschau mit `CPTrip`/`CPRouteChoice`, Navigation mit `CPNavigationSession` und `CPManeuver` (Abbiegekarte zeichnet iOS), Restzeit, Zoom-/Zentrieren-Knöpfe, Route und Tempolimit im Kartenfenster; Zustand gemeinsam mit dem iPhone
+- Kartenhinweis jetzt „© OpenMapTiles · © OpenStreetMap-Mitwirkende“ (OpenFreeMap verlangt beide), auch in der Stil-JSON
+- App Store: `PrivacyInfo.xcprivacy`, `ITSAppUsesNonExemptEncryption = NO`, Version 1.0.0, Server-Adressen in `project.yml` umstellbar; Fahrplan `docs/VEROEFFENTLICHUNG.md`, Texte/Prüfer-Hinweise `docs/APPSTORE_TEXTE.md`, Vorlage Impressum + Datenschutz `docs/legal/index.md` (Platzhalter für persönliche Angaben)
+- Prototyp: Ansage-Logik wie in Core (Schwellen je Tempo, engste Stufe, kein „auf“ ohne Straßenname)
+
+**Tatsächlich geprüft:** `swift test` für Core unter Linux (Swift 6.0.3): **27 Tests, 0 Fehler** (davon 12 neu). Alle Swift-Dateien mit `swiftc -parse` ohne Syntaxfehler. Stil-JSON neu erzeugt (nur Attribution geändert). Prototyp-Ablauf (Suche → Route Frankfurt → Navigation → Tempolimit 50 → Falsch abbiegen) in Chromium ohne Fehler. Text-Längen der App-Store-Texte nachgezählt.
+
+**Ungetestet:** **Die App (SwiftUI, MapLibre, CarPlay, CoreLocation, AVFoundation) ist nicht gebaut** – das geht nur auf dem Mac. MapLibre-Namen (`MLNShapeSource`, `MLNPolylineFeature`, `setVisibleCoordinateBounds`), CarPlay-Vorlagen und das Laden von `PrivacyInfo.xcprivacy` ins Paket dort prüfen. Nichts im Simulator oder Auto ausprobiert.
+
 ## GM-019 – Erster Mac-Build über das EzMaps-Gate: alles grün
 
 **Ziel:** GM-017/GM-018 auf dem Mac bauen und testen.
