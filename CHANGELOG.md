@@ -2,6 +2,24 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-025 – Pfeil gleitet weich, CarPlay ohne Route als Hauptmodus, Prüflauf mit Screenshots
+
+**Ziel:** Ruckelnden Pfeil beheben; CarPlay soll auch ohne Route gut aussehen (Pfeil mittig); nach jeder Änderung Screenshots.
+
+**Dateien:** `App/FollowCamera.swift` (neu), `App/{NeonMapView,CarPlaySceneDelegate,AppModel}.swift`, `tools/mac_build.sh`, `tools/mac_screens.sh`, `tools/mac_check.sh` (neu), `docs/ASSETS_CODEX.md`, `docs/store/*`
+
+**Geändert:**
+- Ursache Ruckeln: Pfeil sprang bei jeder Position (Demo 2×/s, GPS 1×/s). Jetzt: fester Pfeil, Kamera gleitet 60×/s weich nach (Position, Richtung, Höhe getrennt geglättet)
+- CarPlay: immer Folgekamera (flach, Fahrtrichtung oben), auch ohne Route; Pfeil in der Mitte der freien Fläche (Safe Area, also neben der Abbiegekarte von iOS); Zoom-Knöpfe ändern die Höhe; nur die Routen-Vorschau zeigt die ganze Strecke
+- iPhone-Navigation: Pfeil im unteren Drittel, Kompass aus
+- CarPlay-Entfernungen in km ab 1 km (vorher „14.602 m“), Kompass und (i) im Auto aus
+- `bash tools/mac_check.sh`: Build + Tests, dann iPhone- und CarPlay-Screenshots (CarPlay-Zustand „frei“ mit simulierter Fahrt durch Idstein), Übersicht `docs/store/uebersicht.png`; alte Bilder werden vorher gelöscht
+- Codex-Prompt für einen neuen Neon-Pfeil (Abschnitt 4b)
+
+**Tatsächlich geprüft:** `mac_check.sh` auf dem Mac: BUILD SUCCEEDED, 27/27 Tests; 5 iPhone- und 3 CarPlay-Bilder aus dem Simulator angesehen (km korrekt, Pfeil mittig ohne Route, neben der Abbiegekarte mit Route).
+
+**Ungetestet:** Glätte der Bewegung nur über Einzelbilder beurteilt, nicht als Video; auf dem echten iPhone im Auto noch nicht gefahren.
+
 ## GM-024 – Neon City nach dem Foto des Nutzers
 
 **Ziel:** Karte auf iPhone und CarPlay wie die Vorlage: mittelgrau, helle Häuser, weiße Straßen mit dunklem Rand, Straßennamen auf der Straße.

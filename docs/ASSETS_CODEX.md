@@ -162,6 +162,36 @@ light-blue windows, yellow headlights, thick #2F3640 outline, soft drop shadow. 
 Folder Assets/Generated/Player/. Original design, not copied from any game.
 ```
 
+## 4b. Neon-City-Spielerpfeil, Neuauflage (GM-025, ersetzt `player-neon.svg`)
+
+Der Pfeil sitzt in der App fest in der Bildmitte, die Karte dreht sich darunter. Er muss auf dunkelgrauer Karte
+(`#3B3C3E`) mit weißen Straßen (`#ECECEC`) sofort ins Auge fallen, bei 40 pt und bei 80 pt scharf sein und darf
+keinem Spiel-Symbol nachgebaut sein.
+
+```
+Design an original, premium navigation player arrow for a dark open-world style car navigation map.
+Deliver as clean SVG (viewBox 0 0 128 128, arrow pointing straight up, centered, 10 px safe margin) plus PNG exports
+@1x 64x64, @2x 128x128, @3x 192x192, transparent background. Folder Assets/Generated/Player/NeonV2/.
+
+Shape: a bold, slightly rounded arrowhead / chevron (not a thin triangle): wide stance, pointed tip, a soft V-notch
+at the back (notch depth about 22% of height), all corners rounded with radius ~4 (no sharp spikes).
+Layers, back to front:
+1. soft drop shadow: #000000 at 45% opacity, offset 0/4, blur 6 (as an SVG filter AND baked into the PNGs)
+2. outer outline: 6 px #0B0B0C, round joins
+3. body: vertical gradient #FFFFFF (top) to #D9D9DD (bottom)
+4. right half slightly darker (#C4C4CA) to suggest a 3D bevel/ridge along the center line
+5. thin inner highlight line 1.5 px #FFFFFF at 70% along the left edge
+6. a small accent: 3 px purple (#A13DF0) stroke inside the notch only, nothing else colored
+
+Must read clearly on both #3B3C3E (dark grey) and #ECECEC (white road) backgrounds.
+Also deliver player-neon-v2-glow.svg: identical, plus an outer glow 10 px #A13DF0 at 35% (used while navigating).
+Provide index.html showing the arrow at 40, 64, 96 px on both backgrounds and rotated 0/45/90/135 degrees.
+Fully original geometry – not copied from any video game, Apple Maps or Google Maps.
+```
+
+Einbau: `RouteOverlay.arrowImage()` in `App/NeonMapView.swift` lädt dann `player-neon-v2@3x.png` aus dem Asset-Katalog
+statt den Pfeil selbst zu zeichnen.
+
 ## 5. CarPlay-Vorlagenbilder
 
 ```
