@@ -99,7 +99,7 @@ match.append("")
 layers.append({
     "id": "poi-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": 14.5,
     "filter": ["in", ["get", "class"], ["literal", list(POI)]],
-    "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.55, 17, 0.8], "icon-padding": 6},
+    "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.5, 17, 0.7], "icon-padding": 22},  # GM-030: weniger dicht (Fahrt-Bilder)
 })
 
 style = {

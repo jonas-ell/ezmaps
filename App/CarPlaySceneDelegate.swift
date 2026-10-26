@@ -361,7 +361,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     }
 
     func recenter() {
-        camera?.altitudeFactor = 1.6
+        camera?.altitudeFactor = 1.0 // GM-030: gleiche Höhe wie beim Start
         camera?.start()
     }
 }
