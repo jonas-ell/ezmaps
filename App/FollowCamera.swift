@@ -32,6 +32,8 @@ final class FollowCamera: NSObject {
     var altitudeFactor: Double = 1
     /// Anteil der Höhe, auf der der Pfeil sitzt (0,5 = Mitte)
     var arrowY: CGFloat = 0.5
+    /// Hinweis-Knopf (i) nach dem Anhalten wieder zeigen? (CarPlay: nein, dort steht der Hinweis als Text)
+    var restoreAttribution = true
 
     init(map: MLNMapView, pitch: CGFloat) {
         self.map = map
@@ -65,7 +67,7 @@ final class FollowCamera: NSObject {
         map?.showsUserLocation = true
         map?.contentInset = .zero
         map?.compassView.isHidden = false
-        map?.attributionButton.isHidden = false
+        map?.attributionButton.isHidden = !restoreAttribution
     }
 
     func zoom(by step: Double) {
@@ -110,5 +112,6 @@ final class FollowCamera: NSObject {
         if arrow.image !== img { arrow.image = img }
         arrow.isHidden = false
         if arrow.superview === map { map.bringSubviewToFront(arrow) }
+        if map.showsUserLocation { map.showsUserLocation = false } // GM-027: kein zweiter (grauer) GPS-Punkt neben dem Pfeil
     }
 }

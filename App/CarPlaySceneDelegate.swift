@@ -277,6 +277,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         cam.altitudeFactor = 1.6
         cam.target = { AppModel.shared.cameraTarget }
         cam.glow = { AppModel.shared.screen == .navigating }
+        cam.restoreAttribution = false
         camera = cam
         cam.start()
         overlay = RouteOverlay(map: map)
@@ -303,11 +304,12 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
 
         NSLayoutConstraint.activate([
             label.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8),
-            label.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -4),
+            // GM-027: oben rechts – unten links verdeckt die Ankunftsbox von iOS den Hinweis
+            label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 6),
             limitLabel.widthAnchor.constraint(equalToConstant: 48),
             limitLabel.heightAnchor.constraint(equalToConstant: 48),
-            limitLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -12),
-            limitLabel.bottomAnchor.constraint(equalTo: label.topAnchor, constant: -8),
+            limitLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -72), // links neben den Kartenknöpfen
+            limitLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
     }
 
@@ -325,8 +327,10 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
             overlay?.show(routes: routes, selected: selected, destination: destination)
             // Platz links für die Routen-Vorschau von CarPlay lassen
             if isNew && !navigating && !routes.isEmpty {
-                let left: CGFloat = min(330, view.bounds.width * 0.42) + 30
-                overlay?.fit(routes: routes, padding: UIEdgeInsets(top: 60, left: left, bottom: 30, right: 60))
+                // GM-027: Routen-Vorschau von iOS belegt links knapp die halbe Breite – Strecke rechts davon einpassen
+                let safe = view.safeAreaInsets
+                let left: CGFloat = safe.left + view.bounds.width * 0.5 + 20
+                overlay?.fit(routes: routes, padding: UIEdgeInsets(top: safe.top + 50, left: left, bottom: safe.bottom + 30, right: safe.right + 80))
             }
         }
         self.navigating = navigating
