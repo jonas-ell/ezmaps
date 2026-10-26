@@ -90,7 +90,8 @@ final class RouteOverlay {
         arrow.iconImageName = NSExpression(forConstantValue: "ez-arrow")
         arrow.iconRotation = NSExpression(forKeyPath: "heading")
         arrow.iconRotationAlignment = NSExpression(forConstantValue: "map")
-        arrow.iconPitchAlignment = NSExpression(forConstantValue: "map")
+        arrow.iconPitchAlignment = NSExpression(forConstantValue: "viewport") // GM-023: steht aufrecht wie im Prototyp, nicht flach gedrückt
+        arrow.iconScale = NSExpression(forConstantValue: 0.8)
         arrow.iconAllowsOverlap = NSExpression(forConstantValue: true)
         arrow.iconIgnoresPlacement = NSExpression(forConstantValue: true)
 
@@ -161,21 +162,24 @@ final class RouteOverlay {
         map.setCamera(cam, withDuration: 0.5, animationTimingFunction: CAMediaTimingFunction(name: .linear))
     }
 
-    /// Pfeil als Bild (48 × 48 pt): Spitze nach oben, Kerbe unten
+    /// Pfeil als Bild (64 × 64 pt), exakt wie Assets/Generated/Player/player-neon.svg (Prototyp):
+    /// Spitze (32,5), Flügel (56,56)/(8,56), Kerbe (32,45); Füllung #E9E9E9, Kontur 5 pt schwarz, weicher Schatten
     static func arrowImage() -> UIImage {
-        let size = CGSize(width: 48, height: 48)
-        return UIGraphicsImageRenderer(size: size).image { _ in
+        let size = CGSize(width: 64, height: 64)
+        return UIGraphicsImageRenderer(size: size).image { ctx in
             let p = UIBezierPath()
-            p.move(to: CGPoint(x: 24, y: 4))
-            p.addLine(to: CGPoint(x: 42, y: 42))
-            p.addLine(to: CGPoint(x: 24, y: 33))
-            p.addLine(to: CGPoint(x: 6, y: 42))
+            p.move(to: CGPoint(x: 32, y: 5))
+            p.addLine(to: CGPoint(x: 56, y: 56))
+            p.addLine(to: CGPoint(x: 32, y: 45))
+            p.addLine(to: CGPoint(x: 8, y: 56))
             p.close()
             p.lineJoinStyle = .round // UIBezierPath: lineJoinStyle (nicht lineJoin)
-            p.lineWidth = 4
+            p.lineWidth = 5
+            ctx.cgContext.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.6).cgColor)
             UIColor.black.setStroke()
             p.stroke()
-            UIColor(white: 0.92, alpha: 1).setFill()
+            ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
+            UIColor(red: 0xE9 / 255.0, green: 0xE9 / 255.0, blue: 0xE9 / 255.0, alpha: 1).setFill()
             p.fill()
         }
     }

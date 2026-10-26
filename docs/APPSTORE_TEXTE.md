@@ -7,16 +7,16 @@ Keine Blitzer-Hinweise. Screenshots nur aus der echten App (Simulator oder Gerä
 
 - **Name (max. 30):** EzMaps: Game Maps
 - **Untertitel (max. 30):** Navi im Open-World-Look
-- **Werbetext (max. 170):** Deine Stadt sieht aus wie eine Spielwelt: dunkle Karte, Neon-Route, klare Ansagen. Echte Navigation für ganz Deutschland – auf dem iPhone und in CarPlay.
+- **Werbetext (max. 170):** Deine Stadt sieht aus wie eine Spielwelt: dunkle Karte, Neon-Route, klare Ansagen. Echte Navigation für ganz Deutschland, auf dem iPhone und in CarPlay.
 - **Schlüsselwörter (max. 100, Komma ohne Leerzeichen):** navi,navigation,carplay,karte,route,stadtplan,tempolimit,neon,spiel,openstreetmap,auto,ansage
 - **Beschreibung:**
 
-  EzMaps macht aus deiner Umgebung eine Open-World-Karte – und navigiert dich trotzdem zuverlässig ans Ziel.
+  EzMaps macht aus deiner Umgebung eine Open-World-Karte und navigiert dich trotzdem zuverlässig ans Ziel.
 
   • Karte „Neon City“: dunkles Land, helle Straßen, lila Route
   • Suche nach Adressen, Orten und Geschäften in ganz Deutschland
   • Bis zu drei Routen zur Auswahl, Autobahn oder Maut meiden
-  • Abbiegehinweise mit Sprachansagen – Musik wird dabei nur leiser
+  • Abbiegehinweise mit Sprachansagen, Musik wird dabei nur leiser
   • Tempolimit-Anzeige aus OpenStreetMap
   • Automatische Neuberechnung, wenn du anders fährst
   • CarPlay: Ziele, Suche, Routen-Vorschau und Navigation im Auto
@@ -28,7 +28,7 @@ Keine Blitzer-Hinweise. Screenshots nur aus der echten App (Simulator oder Gerä
 
 - **Name:** EzMaps: Game Maps
 - **Subtitle:** Navigation, open-world style
-- **Promotional text:** Your city looks like a game world: dark map, neon route, clear voice guidance. Real navigation across Germany – on iPhone and in CarPlay.
+- **Promotional text:** Your city looks like a game world: dark map, neon route, clear voice guidance. Real navigation across Germany, on iPhone and in CarPlay.
 - **Keywords:** navigation,carplay,map,route,directions,speed limit,neon,game,openstreetmap,car,drive
 - **Description:** wie oben, übersetzt (Hinweis: Ansagen sind in Version 1.0 auf Deutsch).
 

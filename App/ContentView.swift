@@ -54,14 +54,19 @@ struct ContentView: View {
     }
 }
 
-// MARK: Bausteine im Neon-Look (schwarze Kästen, eckig – wie Prototyp)
+// MARK: Bausteine im Neon-Look (schwarze Kästen; GM-023: abgerundet statt eckig, Nutzerwunsch)
+
+enum EZShape {
+    static let box = RoundedRectangle(cornerRadius: 16, style: .continuous)
+    static let small = RoundedRectangle(cornerRadius: 10, style: .continuous)
+}
 
 struct Panel<Content: View>: View {
     @ViewBuilder var content: Content
     var body: some View {
         content
             .padding(14)
-            .background(Color.black.opacity(0.85))
+            .background(Color.black.opacity(0.85), in: EZShape.box)
     }
 }
 
@@ -74,7 +79,7 @@ struct SquareButton: View {
             Image(systemName: systemImage)
                 .font(.system(size: 20, weight: .semibold))
                 .frame(width: 48, height: 48)
-                .background(Color.black.opacity(0.85))
+                .background(Color.black.opacity(0.85), in: EZShape.box)
                 .foregroundStyle(.white)
         }
         .accessibilityLabel(label)
@@ -98,8 +103,9 @@ struct MapHome: View {
                 .foregroundStyle(.white)
                 .padding(.horizontal, 16)
                 .frame(height: 52)
-                .background(Color.black.opacity(0.85))
+                .background(Color.black.opacity(0.85), in: EZShape.box)
                 .overlay(alignment: .leading) { Rectangle().fill(Color(uiColor: NeonColors.route)).frame(width: 5) }
+                .clipShape(EZShape.box) // GM-023: runde Ecken, Farbstreifen innen
             }
             .accessibilityLabel(L("Ziel suchen"))
             HStack(alignment: .top) {
@@ -150,7 +156,7 @@ struct SearchScreen: View {
                 }
                 .padding(.horizontal, 12)
                 .frame(height: 46)
-                .background(Color(white: 0.12))
+                .background(Color(white: 0.12), in: EZShape.box)
                 Button(L("Abbrechen")) { model.closeSearch() }
                     .foregroundStyle(.white)
                     .lineLimit(1)
@@ -216,7 +222,7 @@ struct RoutePreview: View {
             .foregroundStyle(.white)
             .padding(.horizontal, 16)
             .frame(height: 52)
-            .background(Color.black.opacity(0.85))
+            .background(Color.black.opacity(0.85), in: EZShape.box)
             .padding(.horizontal, 16)
             .padding(.top, 8)
             Spacer()
@@ -233,7 +239,7 @@ struct RoutePreview: View {
                     }
                     Button { model.startNavigation() } label: {
                         Text(L("Los")).font(.title3.weight(.heavy)).frame(maxWidth: .infinity).frame(height: 54)
-                            .background(Color(uiColor: NeonColors.route)).foregroundStyle(.white)
+                            .background(Color(uiColor: NeonColors.route), in: EZShape.box).foregroundStyle(.white)
                     }
                     .disabled(model.routes.isEmpty)
                 }
@@ -260,7 +266,7 @@ struct RouteOptionRow: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
             .foregroundStyle(selected ? Color.black : Color.white)
-            .background(selected ? Color.white : Color(white: 0.12))
+            .background(selected ? Color.white : Color(white: 0.12), in: EZShape.box)
         }
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
@@ -280,7 +286,7 @@ struct NavigationHUD: View {
                     .font(.system(size: 40, weight: .bold))
                     .frame(width: 56)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(s.map { Formatting.distance($0.distanceToManeuver) } ?? "–")
+                    Text(s.map { Formatting.distance($0.distanceToManeuver) } ?? "…")
                         .font(.system(size: 38, weight: .heavy)).minimumScaleFactor(0.6).lineLimit(1)
                     Text(Self.street(s)).font(.headline).textCase(.uppercase).lineLimit(1).minimumScaleFactor(0.7)
                     Text(s?.maneuver?.text ?? L("Route wird gestartet …")).font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
@@ -289,15 +295,16 @@ struct NavigationHUD: View {
             }
             .foregroundStyle(.white)
             .padding(14)
-            .background(Color.black.opacity(0.88))
+            .background(Color.black.opacity(0.88), in: EZShape.box)
             .overlay(alignment: .leading) { Rectangle().fill(Color(uiColor: NeonColors.route)).frame(width: 5) }
+            .clipShape(EZShape.box) // GM-023: runde Ecken, Farbstreifen innen
             .accessibilityElement(children: .combine)
 
             HStack(alignment: .top) {
                 if let then = s?.thenManeuver, then.kind != .destination {
                     Text(L("danach") + " " + NavigationSession.lowerFirst(then.text) + (then.street.isEmpty ? "" : " · " + then.street))
                         .font(.footnote.weight(.semibold)).foregroundStyle(.white)
-                        .padding(.horizontal, 10).padding(.vertical, 6).background(Color.black.opacity(0.8))
+                        .padding(.horizontal, 10).padding(.vertical, 6).background(Color.black.opacity(0.8), in: EZShape.small)
                 }
                 Spacer()
                 if model.settings.showSpeedLimit, let limit = s?.speedLimit { SpeedLimitSign(limit: limit) }
@@ -306,7 +313,7 @@ struct NavigationHUD: View {
             HStack(alignment: .bottom) {
                 if model.isSpeaking && model.settings.duckMusic {
                     Label(L("Musik leiser"), systemImage: "speaker.wave.1").font(.caption.weight(.semibold))
-                        .padding(.horizontal, 8).padding(.vertical, 5).background(Color.black.opacity(0.8))
+                        .padding(.horizontal, 8).padding(.vertical, 5).background(Color.black.opacity(0.8), in: EZShape.small)
                 }
                 Spacer()
                 SquareButton(systemImage: "location.north.line", label: L("Auf meinen Standort zentrieren")) { model.recenter() }
@@ -314,7 +321,7 @@ struct NavigationHUD: View {
             HStack { Spacer(); OSMAttribution() }
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(s.map { Formatting.clock(Date().addingTimeInterval($0.remainingTime)) } ?? "–")
+                    Text(s.map { Formatting.clock(Date().addingTimeInterval($0.remainingTime)) } ?? "…")
                         .font(.system(size: 30, weight: .heavy))
                     Text(s.map { Formatting.minutes($0.remainingTime) + " · " + Formatting.distance($0.remainingDistance) } ?? "")
                         .font(.subheadline).foregroundStyle(.secondary)
@@ -322,11 +329,11 @@ struct NavigationHUD: View {
                 Spacer()
                 Button { model.endNavigation() } label: {
                     Text(L("Ende")).font(.headline).padding(.horizontal, 26).frame(height: 48)
-                        .background(Color(red: 1, green: 0.23, blue: 0.3)).foregroundStyle(.white)
+                        .background(Color(red: 1, green: 0.23, blue: 0.3), in: EZShape.box).foregroundStyle(.white)
                 }
             }
             .padding(14)
-            .background(Color.black.opacity(0.88))
+            .background(Color.black.opacity(0.88), in: EZShape.box)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
@@ -402,7 +409,7 @@ struct ArrivalSheet: View {
                     Text(model.destination?.name ?? "").font(.title.weight(.bold)).lineLimit(2).minimumScaleFactor(0.7)
                     Button { model.endNavigation() } label: {
                         Text(L("Fertig")).font(.title3.weight(.heavy)).frame(maxWidth: .infinity).frame(height: 54)
-                            .background(Color(uiColor: NeonColors.route)).foregroundStyle(.white)
+                            .background(Color(uiColor: NeonColors.route), in: EZShape.box).foregroundStyle(.white)
                     }
                 }
             }

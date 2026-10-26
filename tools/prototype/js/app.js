@@ -148,7 +148,7 @@ export function currentLimit() {
 export async function reroute() {
   const n = app.state.nav; if (!n || !n.active || n.arrived || n.rerouting) return;
   const m = nextManeuver(); if (!m || m.kind === 'destination') return toast('Keine Abbiegung mehr vor dem Ziel');
-  n.rerouting = true; say('Route wird neu berechnet.'); toast('Abgewichen – Route wird neu berechnet');
+  n.rerouting = true; say('Route wird neu berechnet.'); toast('Abgewichen, Route wird neu berechnet');
   const pos = pointAt(n.route.pts, n.route.cum, n.progress).p, heading = smoothHeading(n.route, n.progress) * 180 / Math.PI;
   const turn = pointAt(n.route.pts, n.route.cum, m.at).p;
   // GM-016: Ausweich-Reihenfolge – erst Abbiegung sperren; gibt es dann keinen Weg (z. B. Sackgasse am Bahnhof), weiter geradeaus gefahren annehmen
