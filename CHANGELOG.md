@@ -2,11 +2,11 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
-## GM-022 – Ideen-Vorschau (Radar, Parkplatz, Baustellen, Stimmen, Widgets, Fotomodus, Route sofort) + neuer Gratis-Stil „Klassik“ – mit Auftrag für Swift
+## GM-025 – Ideen-Vorschau (Parkplatz, Baustellen, Stimmen, Widgets, Fotomodus, Route sofort) + neuer Gratis-Stil „Klassik“ – mit Auftrag für Swift
 
-**Ziel:** Die vom Nutzer gewählten Ideen im Prototyp zeigen und so genau beschreiben, dass der lokale Claude sie in Swift umsetzen kann. Neon City ist der beliebteste Stil und wird deshalb Premium; gratis ist ab jetzt der neue Stil „Klassik“.
+**Ziel:** Die vom Nutzer gewählten Ideen im Prototyp zeigen (die Radar-Minikarte war zuerst dabei und ist auf Wunsch des Nutzers wieder gestrichen) und so genau beschreiben, dass der lokale Claude sie in Swift umsetzen kann. Neon City ist der beliebteste Stil und wird deshalb Premium; gratis ist ab jetzt der neue Stil „Klassik“.
 
-**Dateien:** `tools/prototype/vorschau.html`, `tools/prototype/vorschau.css`, `tools/prototype/js/vorschau.js` (alle neu), `tools/prototype/data/autobahn_a3_idstein.json` (neu, echte Meldungen), `tools/prototype/js/{map,phone,carplay}.js`, `tools/prototype/style.css`, `Assets/Generated/Ideen/*.png` (neu, 15 Symbole), `docs/previews/ideen/*.jpg` (neu, 9 Bilder), `docs/TODO_PROTOTYP_REVIEW.md`
+**Dateien:** `tools/prototype/vorschau.html`, `tools/prototype/vorschau.css`, `tools/prototype/js/vorschau.js` (alle neu), `tools/prototype/data/autobahn_a3_idstein.json` (neu, echte Meldungen), `tools/prototype/js/{map,phone,carplay}.js`, `tools/prototype/style.css`, `Assets/Generated/Ideen/*.png` (neu, 15 Symbole), `docs/previews/ideen/*.jpg` (neu, 7 Bilder), `docs/TODO_PROTOTYP_REVIEW.md`
 
 **Geändert (Prototyp):**
 - Neue Seite **Ideen-Vorschau**: `python tools/prototype/serve.py` → `http://localhost:8765/tools/prototype/vorschau.html`. Alle Bilder mit dem echten Karten-Renderer; Bilder auch in `docs/previews/ideen/`
@@ -14,7 +14,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 - Symbole je Stil als PNG (@3x) für die App: `Assets/Generated/Ideen/parked-car-{classic,neon,western,pixel,toy}@3x.png` (60 × 90 pt), `roadworks-{stil}@3x.png` und `closure-{stil}@3x.png` (40 × 40 pt). Quelle/Spiegel: `drawParkedCar`, `drawWorkIcon` in `tools/prototype/js/vorschau.js`
 - Kleinigkeiten im klickbaren Prototyp: Text der Stilwahl („Klassik ist gratis …“), Symbole von Zuhause/Arbeit in hellen Stilen sichtbar
 
-**Tatsächlich geprüft:** Playwright (Chromium): Vorschau-Seite ohne Skriptfehler, alle 9 Abschnitte als Bild angesehen; klickbarer Prototyp mit Stil „Klassik“ (Stilwahl, Karte iPhone + CarPlay) ohne Fehler. Autobahn-API live abgefragt (CORS offen, JSON wie unten). Routing-Zeiten gemessen: Valhalla FOSSGIS 0,5–1,0 s (mit/ohne Alternativen gleich), Photon 0,6 s.
+**Tatsächlich geprüft:** Playwright (Chromium): Vorschau-Seite ohne Skriptfehler, alle Abschnitte als Bild angesehen; klickbarer Prototyp mit Stil „Klassik“ (Stilwahl, Karte iPhone + CarPlay) ohne Fehler. Autobahn-API live abgefragt (CORS offen, JSON wie unten). Routing-Zeiten gemessen: Valhalla FOSSGIS 0,5–1,0 s (mit/ohne Alternativen gleich), Photon 0,6 s.
 
 **Ungetestet:** Nichts davon ist in Swift gebaut. Auf dem Mac nichts geprüft.
 
@@ -30,47 +30,78 @@ Allgemein: vor jedem Punkt `docs/LESSONS_SWIFT.md`; Logik in `Core/` mit Tests (
 - Stile-Seite wie `docs/previews/ideen/9-gratis-klassik.jpg`: Neon groß zuerst mit „Beliebtester Stil“, Pillen „Gratis“/„Premium“, unten „Alle Stile – Freischalten“
 - `docs/APPSTORE_TEXTE.md` anpassen: Klassik gratis, Neon City & Co. als In-App-Kauf; In-App-Käufe in App Store Connect anlegen
 
-**2. Route ohne Wartezeit** (Bild 8)
+**2. Route ohne Wartezeit** (Bild `8-route-sofort.jpg`)
 - Beim Antippen eines Treffers sofort `.preview` mit Ziel, gestrichelter Luftlinie und Schätzung „≈ x Min“ (Luftlinie × 1,35 / 45 km/h) – kein Vollbild-Ladefenster mehr, nur kleiner Hinweis „Route kommt …“. Route und Alternativen ersetzen die Linie, sobald da
 - Vorab rechnen: Wenn Suchtreffer da sind, Route zum obersten Treffer im Hintergrund holen (Task, bei neuer Eingabe abbrechen; max. 1 Anfrage je 2 s – Fair-Use)
 - Cache: Antworten 5 Min merken (Schlüssel: Ziel + Start auf 50 m gerundet + Optionen). Logik in Core (`RouteCache`) mit Tests
 - Ziel: < 300 ms bis zur Route bei Cache-Treffer, sonst ≤ 1 s. Zeit messen und im Log ausgeben
 
-**3. „Wo hab ich geparkt?“** (Bild 3, Symbole `parked-car-*.png`)
+**3. „Wo hab ich geparkt?“** (Bild `3-parkplatz.jpg`, Symbole `parked-car-*.png`)
 - Merken, wenn sich CarPlay trennt (`didDisconnect`) und die letzte Position < 5 Min alt ist; zusätzlich „Hier geparkt“ von Hand (lange auf den Standort drücken) und „Auto vergessen“
 - Core `ParkedCar` (Koordinate, Zeit, Adresse) Codable, gespeichert in UserDefaults der App-Gruppe (für Widgets); Adresse per Photon `/reverse`
 - Karte: Auto-Symbol des aktiven Stils, **Schnauze nach oben** (nicht mitdrehen), Schild „Dein Auto · seit 14:32“. Karte unten: Adresse, Entfernung, Fußweg (Entfernung / 1,3 m/s), Knöpfe „Zu Fuß hin“ (Apple Karten, `MKLaunchOptionsDirectionsModeWalking`), „Teilen“, „✕“
-- Auch im Radar und im CarPlay-Kartenfenster sichtbar
+- Auch im CarPlay-Kartenfenster sichtbar
 
-**4. Baustellen und Sperrungen (Autobahn GmbH)** (Bild 4, Symbole `roadworks-*`/`closure-*`)
+**4. Baustellen und Sperrungen (Autobahn GmbH)** (Bild `4-baustellen.jpg`, Symbole `roadworks-*`/`closure-*`)
 - API: `GET https://verkehr.autobahn.de/o/autobahn/` (Liste), `…/{Straße}/services/roadworks`, `…/closure`, `…/warning`. Felder: `display_type` (ROADWORKS, SHORT_TERM_ROADWORKS, CLOSURE, WARNING …), `title`, `subtitle` (Richtung), `coordinate {lat, long}` (Text), `geometry` (LineString, lon/lat), `isBlocked` („true“/„false“), `startTimestamp`, `description` (Liste). Beispiel: `tools/prototype/data/autobahn_a3_idstein.json`. **Keine** Blitzer o. Ä. übernehmen (§ 23 StVO); Nutzungsbedingungen der API vor dem Start prüfen und Quelle „Verkehrsdaten: Autobahn GmbH des Bundes“ in den Einstellungen nennen
 - Core `AutobahnClient` (über `HTTPClient`, Tests mit Attrappe) + `IncidentMatcher`: nur Meldungen, deren Linie ≤ 30 m an der Route liegt **und** in Fahrtrichtung (Winkel Meldung ↔ Route < 60°). Straßen aus den Routennamen (`A 3`/`A3`), Abfrage beim Routen und alle 10 Min
 - Karte je Stil (Werte aus `drawWork`): Linie auf der Fahrbahn, Grund + Strichlinie: Klassik weiß/`#e8710a`, Neon `#0b0b0c`/`#ff9f1c` mit Leuchten (Sperrung `#ff2d55`), Western `#f2e4bf`/`#c0261f`, Pixel schwarz/`#ffcc33` eckig, Toy weiß/`#ff6b00`; Sperrung jeweils rot. Symbol (PNG) in der sichtbaren Mitte. MapLibre: `MLNLineStyleLayer` mit `lineDashPattern`, Neon zusätzlich `lineBlur`; `MLNSymbolStyleLayer` mit den PNGs
-- Warnung 2 km vorher (Autobahn), 1 km sonst: Banner unter dem Abbiegehinweis im Stil (Bild 4 rechts) + Ansage „Achtung, Baustelle in 2 Kilometern.“; CarPlay: `CPNavigationAlert` (8 s)
+- Warnung 2 km vorher (Autobahn), 1 km sonst: Banner unter dem Abbiegehinweis im Stil (Bild `4-baustellen.jpg` rechts) + Ansage „Achtung, Baustelle in 2 Kilometern.“; CarPlay: `CPNavigationAlert` (8 s)
 
-**5. Stimmen-Auswahl (allgemein, nicht je Stil)** (Bild 5)
+**5. Stimmen-Auswahl (allgemein, nicht je Stil)** (Bild `5-stimmen.jpg`)
 - Einstellungen → „Stimme“: alle `AVSpeechSynthesisVoice.speechVoices()` mit Sprache `de*`, sortiert Premium > Erweitert > Standard, mit Probehören (Satz „In 300 Metern rechts abbiegen auf Hauptstraße.“), Häkchen, Hinweis wie Premium-Stimmen in iOS geladen werden
 - Sprechtempo-Regler (0,40–0,60, Standard 0,50). `AppSettings.voiceIdentifier`, `speechRate`; `SpeechService` nimmt sie, Ersatz `de-DE`
 
-**6. Radar-Minikarte** (Bild 1 CarPlay, Bild 2 iPhone)
-- Rund, 196 pt (CarPlay: `min(196, Höhe × 0,42)`), unten links 14 pt Abstand im sicheren Bereich; nur während der Navigation; Einstellung „Radar anzeigen“ (an)
-- Zweite `MLNMapView` im selben Stil, flach, Fahrtrichtung oben (`direction = course`), Umkreis ≈ 1,2 km (Zoom ≈ 12 bei 50° N: m/pt = 40 075 016 · cos(Breite) / (512 · 2^z)); keine Gesten; Tippen = Vollbild-Übersicht der Route
-- Inhalt: Route, Baustellen, geparktes Auto, Ortssymbole, Spieler-Pfeil in der Mitte; Rand: Ring (Neon schwarz + heller Haarstrich, Western doppelt braun, Klassik weiß), Nordpunkt „N“ am Rand, dreht mit
-- iPhone: ersetzt das Straßenfeld unten links; Straßenname wandert in den Abbiegehinweis („jetzt: Wiesbadener Str.“)
-- CarPlay-Leistung: `preferredFramesPerSecond` niedrig (Radar ≤ 15 fps), Kamera nur bei > 5 m Bewegung neu setzen
+**6. ~~Radar-Minikarte~~ – gestrichen (Nutzer-Entscheidung), nicht umsetzen.**
 
-**7. Widgets und Kurzbefehle** (Bild 6)
+**7. Widgets und Kurzbefehle** (Bild `6-widgets-kurzbefehle.jpg`)
 - Vorher nötig: „Zuhause“/„Arbeit“ in den Einstellungen festlegen (Suche wiederverwenden)
 - Widget-Erweiterung (WidgetKit, neues Target in `project.yml`, App-Gruppe `group.<Bundle-ID>`): klein „Nach Hause“ (Fahrzeit, Ankunft), klein „Dein Auto“ (Entfernung, Adresse), mittel „Zur Arbeit“ (Fahrzeit, Baustellen-Hinweis, Knopf „Losfahren“ = `ezmaps://route?to=work`), Sperrbildschirm rund + rechteckig. Kartenbild nicht im Widget rendern (Speichergrenze) – die App legt ein Vorschaubild (PNG) in die App-Gruppe; Fahrzeit aus dem letzten Wert, Aktualisierung höchstens alle 15–30 Min
 - App Intents + `AppShortcutsProvider` (Deutsch, mit `\(.applicationName)`): „Navigiere nach Hause“, „Navigiere zur Arbeit“, „Navigiere zu …“ (Ort), „Wo ist mein Auto?“, „Fahrzeit nach Hause“ (Antwort ohne App), „Tankstelle in der Nähe“. Navigation-Intents öffnen die App und starten direkt (auch für CarPlay)
 
-**8. Fotomodus** (Bild 7)
+**8. Fotomodus** (Bild `7-fotomodus.jpg`)
 - Core: `NavigationSession` merkt die gefahrene Spur (Punkt alle 20 m) – Test
 - Knopf „Foto“ im Ankunfts-Blatt (und später „Meine Fahrten“). Editor: Format Story 1080 × 1920 / Quadrat 1080 × 1080 / Breit 1920 × 1080, Stil (eigene Stile; fremde mit Wasserzeichen „Premium“), Schalter Werte/Titel/Datum/„Start und Ziel ausblenden“ (je 300 m abschneiden – Wohnort schützen)
 - Bild: `MLNMapSnapshotter` (Kamera auf die Spur eingepasst) + darüber Route, Start/Ziel, Titel, Werte (km, Min, später „neue Straßen“), Logo als Bild-Asset (**nicht** Pricedown – keine App-Lizenz), Hinweis „© OpenMapTiles · © OpenStreetMap-Mitwirkende“ immer im Bild
 - Teilen über `ShareLink`; „Sichern“ braucht `NSPhotoLibraryAddUsageDescription`
 
 **Danach:** `docs/legal/index.md` um Autobahn GmbH ergänzen (übermittelt: befahrene Autobahnen, IP), `PrivacyInfo.xcprivacy` prüfen (keine neuen Datenarten), `docs/VEROEFFENTLICHUNG.md` (In-App-Käufe, Widget-Target, App-Gruppe) nachziehen.
+## GM-024 – Neon City nach dem Foto des Nutzers
+
+**Ziel:** Karte auf iPhone und CarPlay wie die Vorlage: mittelgrau, helle Häuser, weiße Straßen mit dunklem Rand, Straßennamen auf der Straße.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-neon-city.json`, `tools/prototype/js/map.js`, `tools/mac_build.sh`, `tools/mac_screens.sh`, `docs/store/iphone-69/*`
+
+**Geändert:**
+- Palette: Boden `#3B3C3E`, Häuser `#5B5C5F`, Straßen `#ECECEC`/`#DCDCDC` mit Rand `#151617`, Wasser `#5D6870`; dunkle „Stadtblöcke“ entfernt
+- Straßennamen (Großbuchstaben, dunkel, entlang der Straße, ab Zoom 15) mit Schrift von OpenFreeMap (Noto Sans Bold)
+- Prototyp gespiegelt (gleiche Werte)
+- `bash tools/mac_screens.sh freigabe`: öffnet am Mac die Einstellung „Bedienungshilfen“ und zeigt `sshd-keygen-wrapper` im Finder
+
+**Tatsächlich geprüft:** Stil mit MapLibre GL JS gerendert und mit dem Foto verglichen; Mac-Build BUILD SUCCEEDED, 27/27 Tests; neue iPhone-Store-Screenshots angesehen.
+
+**Ungetestet:** Kartensymbole (Einkaufskorb, Kreuz …) aus dem Foto fehlen noch in der App. CarPlay-Screenshots hängen an der Freigabe am Mac.
+
+## GM-023 – Nutzer-Feedback: keine Gedankenstriche, runde Ecken, Pfeil wie Prototyp, Pixel scharf, CarPlay-Bilder
+
+**Ziel:** Rückmeldungen zur ersten echten App umsetzen.
+
+**Dateien:** `App/{ContentView,NeonMapView,CarPlaySceneDelegate,AppModel,SpeechService,SettingsScreen,ScreenshotMode}.swift`, `App/en.lproj/Localizable.strings`, `tools/prototype/{js/tilejob.js,js/app.js,js/map.js,js/phone.js,index.html,style.css}`, `tools/mac_build.sh`, `tools/mac_screens.sh`, `docs/APPSTORE_TEXTE.md`, `docs/store/iphone-69/*`, `docs/previews/*`
+
+**Geändert:**
+- Keine Gedankenstriche mehr in sichtbaren Texten (App, Prototyp, Store-Texte)
+- Runde Ecken (16/10 pt) statt eckiger Kästen in der App
+- Positionspfeil exakt wie `player-neon.svg` (Prototyp), aufrecht statt flach auf der geneigten Karte, mit Schatten
+- Kamera folgt der Fahrposition (auch Demo-Fahrt), Höhe nach Tempo (Stadt nah, Autobahn weit); CarPlay flach von oben
+- „∞“ ersetzt durch Zeichen 282 „Ende aller Streckenverbote“; in CarPlay ohne Limit kein Schild
+- Ansagen mit der besten installierten deutschen Stimme (Premium/Erweitert, wenn geladen)
+- Prototyp Pixel Quest: Detail-Kachel im Kunstpixel-Raster ohne Glättung hochgerechnet (vorher unscharf), „danach …“ überlappt den Tacho nicht mehr
+- Store-Screenshot der Navigation mitten auf der Strecke; Statusleiste 9:41; iOS-Tastatur-Einführung aus
+- CarPlay-Screenshot-Lauf (`bash tools/mac_screens.sh carplay`) über AppleScript
+
+**Tatsächlich geprüft:** Mac-Build signiert + unsigniert BUILD SUCCEEDED, `swift test` 27/27; 5 iPhone-Store-Screenshots (1320 × 2868) aus der echten App angesehen; Prototyp `shots.py` ohne Fehler, Pixel-Navigation angesehen.
+
+**Ungetestet:** CarPlay-Screenshots: AppleScript scheitert mit Zeitüberschreitung (−1712), macOS will die Freigabe „Bedienungshilfen“ am Mac. Premium-Stimme nur, wenn auf dem Gerät geladen.
 
 ## GM-021 – Release vorbereitet: Store-Screenshots automatisch, Archiv/Upload, Startbildschirm
 

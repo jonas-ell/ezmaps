@@ -47,6 +47,7 @@ final class RouteOverlay {
     private weak var map: MLNMapView?
     private var styleReady = false
     private var pending: (routes: [Route], selected: Int, destination: Coordinate?)?
+    private var pendingMe: (Coordinate?, Double)?
 
     init(map: MLNMapView) { self.map = map }
 
@@ -81,13 +82,28 @@ final class RouteOverlay {
         line.lineJoin = NSExpression(forConstantValue: "round")
         style.addLayer(line)
 
+        // GM-022: eigener Positionspfeil (weiß, schwarze Kontur – wie im Prototyp), dreht sich mit der Fahrtrichtung
+        let me = MLNShapeSource(identifier: "ez-me", shape: MLNShapeCollectionFeature(shapes: []), options: nil)
+        style.addSource(me)
+        style.setImage(RouteOverlay.arrowImage(), forName: "ez-arrow")
+        let arrow = MLNSymbolStyleLayer(identifier: "ez-me-arrow", source: me)
+        arrow.iconImageName = NSExpression(forConstantValue: "ez-arrow")
+        arrow.iconRotation = NSExpression(forKeyPath: "heading")
+        arrow.iconRotationAlignment = NSExpression(forConstantValue: "map")
+        arrow.iconPitchAlignment = NSExpression(forConstantValue: "viewport") // GM-023: steht aufrecht wie im Prototyp, nicht flach gedrückt
+        arrow.iconScale = NSExpression(forConstantValue: 0.8)
+        arrow.iconAllowsOverlap = NSExpression(forConstantValue: true)
+        arrow.iconIgnoresPlacement = NSExpression(forConstantValue: true)
+
         let dot = MLNCircleStyleLayer(identifier: "ez-dest-dot", source: dest)
         dot.circleColor = NSExpression(forConstantValue: NeonColors.destination)
         dot.circleRadius = NSExpression(forConstantValue: 8)
         dot.circleStrokeColor = NSExpression(forConstantValue: UIColor.black)
         dot.circleStrokeWidth = NSExpression(forConstantValue: 2)
         style.addLayer(dot)
+        style.addLayer(arrow)
 
+        if let p = pendingMe { showPosition(p.0, heading: p.1) }
         if let p = pending { show(routes: p.routes, selected: p.selected, destination: p.destination) }
     }
 
@@ -113,6 +129,59 @@ final class RouteOverlay {
             points.append(p)
         }
         (style.source(withIdentifier: "ez-dest") as? MLNShapeSource)?.shape = MLNShapeCollectionFeature(shapes: points)
+    }
+
+    /// Positionspfeil setzen (nil = ausblenden)
+    func showPosition(_ c: Coordinate?, heading: Double) {
+        guard styleReady, let style = map?.style else {
+            pendingMe = (c, heading)
+            return
+        }
+        pendingMe = nil
+        var shapes: [MLNShape & MLNFeature] = []
+        if let c = c {
+            let p = MLNPointFeature()
+            p.coordinate = CLLocationCoordinate2D(latitude: c.latitude, longitude: c.longitude)
+            p.attributes = ["heading": heading]
+            shapes.append(p)
+        }
+        (style.source(withIdentifier: "ez-me") as? MLNShapeSource)?.shape = MLNShapeCollectionFeature(shapes: shapes)
+    }
+
+    /// GM-022: Kamerahöhe nach Tempo – in der Stadt nah, auf der Autobahn weit (sonst nur Asphalt im Bild)
+    static func altitude(forKmh kmh: Double) -> Double {
+        let k: Double = min(130, max(30, kmh))
+        return 450 + (k - 30) * 13 // 30 km/h → 450 m, 130 km/h → 1750 m
+    }
+
+    /// Kamera hinter dem Auto: nah, geneigt, Fahrtrichtung oben
+    static func follow(_ map: MLNMapView, at c: Coordinate, heading: Double, pitch: CGFloat, altitude: Double) {
+        map.userTrackingMode = .none
+        let center = CLLocationCoordinate2D(latitude: c.latitude, longitude: c.longitude)
+        let cam = MLNMapCamera(lookingAtCenter: center, altitude: altitude, pitch: pitch, heading: heading)
+        map.setCamera(cam, withDuration: 0.5, animationTimingFunction: CAMediaTimingFunction(name: .linear))
+    }
+
+    /// Pfeil als Bild (64 × 64 pt), exakt wie Assets/Generated/Player/player-neon.svg (Prototyp):
+    /// Spitze (32,5), Flügel (56,56)/(8,56), Kerbe (32,45); Füllung #E9E9E9, Kontur 5 pt schwarz, weicher Schatten
+    static func arrowImage() -> UIImage {
+        let size = CGSize(width: 64, height: 64)
+        return UIGraphicsImageRenderer(size: size).image { ctx in
+            let p = UIBezierPath()
+            p.move(to: CGPoint(x: 32, y: 5))
+            p.addLine(to: CGPoint(x: 56, y: 56))
+            p.addLine(to: CGPoint(x: 32, y: 45))
+            p.addLine(to: CGPoint(x: 8, y: 56))
+            p.close()
+            p.lineJoinStyle = .round // UIBezierPath: lineJoinStyle (nicht lineJoin)
+            p.lineWidth = 5
+            ctx.cgContext.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.6).cgColor)
+            UIColor.black.setStroke()
+            p.stroke()
+            ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
+            UIColor(red: 0xE9 / 255.0, green: 0xE9 / 255.0, blue: 0xE9 / 255.0, alpha: 1).setFill()
+            p.fill()
+        }
     }
 
     /// Ausschnitt so wählen, dass alle Routen zu sehen sind
@@ -141,6 +210,10 @@ struct NeonMapView: UIViewRepresentable {
     var revision: Int
     var navigating: Bool
     var recenterRequest: Int
+    /// GM-022: Fahrposition (auf der Route) und Richtung – während der Navigation folgt die Kamera dem
+    var follow: Coordinate? = nil
+    var heading: Double = 0
+    var speedKmh: Double = 50
     /// Platz, den Bedienelemente oben/unten belegen (für das Einpassen der Route)
     var padding: UIEdgeInsets
 
@@ -165,21 +238,26 @@ struct NeonMapView: UIViewRepresentable {
         }
         if c.navigating != navigating {
             c.navigating = navigating
+            map.showsUserLocation = !navigating // GM-022: in der Navigation zeigt unser Pfeil die Fahrposition
             if navigating {
-                map.userTrackingMode = .followWithCourse
-                let cam = map.camera
-                cam.pitch = 50
-                map.setCamera(cam, animated: true)
+                c.lastFollow = nil
             } else {
+                c.overlay?.showPosition(nil, heading: 0)
                 let cam = map.camera
                 cam.pitch = 0
                 map.setCamera(cam, animated: true)
                 map.userTrackingMode = .follow
             }
         }
+        if navigating, let f = follow, c.lastFollow != f || c.recenter != recenterRequest {
+            c.lastFollow = f
+            c.recenter = recenterRequest
+            c.overlay?.showPosition(f, heading: heading)
+            RouteOverlay.follow(map, at: f, heading: heading, pitch: 55, altitude: RouteOverlay.altitude(forKmh: speedKmh))
+        }
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest
-            map.userTrackingMode = navigating ? .followWithCourse : .follow
+            if !navigating { map.userTrackingMode = .follow }
         }
     }
 
@@ -189,6 +267,7 @@ struct NeonMapView: UIViewRepresentable {
         var selected = -1
         var navigating = false
         var recenter = 0
+        var lastFollow: Coordinate?
 
         func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
             overlay?.styleLoaded(style)

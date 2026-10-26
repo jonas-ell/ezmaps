@@ -80,7 +80,7 @@ const tabs = on => `<nav class="tabs">${[['map', 'map', 'Karte'], ['explore', 'e
 function splash(dim) {
   return `<div class="splash ${dim ? 'dim' : ''}">
     <img class="logo" src="${appIconUrl}" alt="EzMaps"><div class="head" style="font-size:52px;margin-top:22px">EzMaps</div>
-    <div class="sub">Deine Stadt als Open World.<br>Echte Navigation – iPhone &amp; CarPlay.</div>
+    <div class="sub">Deine Stadt als Open World.<br>Echte Navigation für iPhone &amp; CarPlay.</div>
     ${dim ? '' : `<button class="cta" data-act="go:permission">Los geht's</button><div class="fine">Kartendaten © OpenStreetMap-Mitwirkende</div>`}</div>`;
 }
 function permission() {
@@ -93,7 +93,7 @@ function permission() {
 function pickStyle() {
   return `<div class="page solid"><div class="page-in">
     <div class="head" style="font-size:40px">Wähle deinen Stil</div>
-    <div class="muted" style="margin:8px 0 22px">Klassik ist gratis – mit CarPlay. Neon City und die anderen Premium-Stile kannst du vorher testen.</div>
+    <div class="muted" style="margin:8px 0 22px">Klassik ist gratis, mit CarPlay. Neon City und die anderen Premium-Stile kannst du vorher testen.</div>
     ${Object.entries(STYLES).map(([k, v]) => `<button class="stylepick st-${k} ${app.state.style === k ? 'sel' : ''}" data-act="style:${k}"><span class="sw"></span><span><b class="sf-${k}">${v.name}</b><small>${v.free ? 'Gratis · inkl. CarPlay' : 'Premium · Vorschau testen'}</small></span>${app.state.style === k ? ic('check', 22) : ''}</button>`).join('')}
     <button class="cta" style="margin-top:24px;width:100%" data-act="go:main">Weiter</button></div></div>`;
 }
@@ -189,7 +189,7 @@ function preview() {
     <div class="sheet panel">
       <div class="head" style="font-size:38px">${n.dest.name}</div><div class="muted" style="margin:4px 0 12px">${n.dest.sub || ''}</div>
       <div class="menu">${n.routes.map((r, i) => `<button class="item ${i === n.sel ? 'sel' : ''}" data-act="route:${i}"><span class="tl">${r.label}<small>${fmtDist(r.route.length)}${r.gain ? ` · <span class="gain">+${r.gain} % neue Straßen</span>` : ''}</small></span><span class="rtime ${i === n.sel ? 'big' : ''}">${fmtMin(r.route.seconds)}</span></button>`).join('')}</div>
-      <div class="row" style="gap:10px;margin-top:14px"><button class="cta go" data-act="start">Los</button><button class="mbtn panel" style="width:58px;height:58px" data-act="toast:Teilen, Abfahrt planen, Stopps – kommt später">${ic('more', 22)}</button></div></div>`;
+      <div class="row" style="gap:10px;margin-top:14px"><button class="cta go" data-act="start">Los</button><button class="mbtn panel" style="width:58px;height:58px" data-act="toast:Teilen, Abfahrt planen, Stopps: kommt später">${ic('more', 22)}</button></div></div>`;
 }
 
 // ---------------- Navigation
@@ -213,7 +213,7 @@ function arrival() {
     <div class="muted upper small">Angekommen</div><div class="head" style="font-size:40px;margin:6px 0 14px">${n.dest.name}</div>
     <div class="stats"><div><b>${fmtDist(n.route.length)}</b><small>gefahren</small></div><div><b>${fmtMin(n.route.seconds)}</b><small>Fahrzeit</small></div><div><b class="gain">${totalPct()} %</b><small>Idstein entdeckt</small></div></div>
     <div class="row" style="gap:10px;margin-top:16px"><button class="cta go" data-act="end">Fertig</button><button class="cta clipbtn" data-act="clip">${ic('clip', 18)} Clip teilen</button></div>
-    <div class="muted small" style="margin-top:8px">Die letzten 10 Sekunden im Spiel-Look – oder per Siri: „Clip speichern“.</div></div></div>`;
+    <div class="muted small" style="margin-top:8px">Die letzten 10 Sekunden im Spiel-Look. Oder per Siri: „Clip speichern“.</div></div></div>`;
 }
 
 // ---------------- Tabs
@@ -227,7 +227,7 @@ function explore() {
 }
 function styles() {
   return `<div class="page solid"><div class="page-in">
-    <div class="head" style="font-size:44px">Stile</div><div class="muted" style="margin:6px 0 16px">Karte, Symbole, Schrift und Stimme – alles neu.</div>
+    <div class="head" style="font-size:44px">Stile</div><div class="muted" style="margin:6px 0 16px">Karte, Symbole, Schrift und Stimme: alles neu.</div>
     <div class="sgrid">${Object.entries(STYLES).map(([k, v]) => `<button class="stylecard ${app.state.style === k ? 'sel' : ''}" data-act="style:${k}"><div class="mini" data-style="${k}"></div>
       <div class="chipman st-${k}">${ic('turnLeft', 18, 'stroke-width:3')}<span class="sf-${k}">230 m</span></div>
       <div class="card-osm">© OpenStreetMap</div>
@@ -252,7 +252,7 @@ function friendsSheet() {
   const on = app.state.friends;
   return `<div class="ios-sheet-bg" data-act="sheet:"><div class="sheet panel" onclick="event.stopPropagation()">
     <div class="head" style="font-size:30px">Freunde auf der Karte</div>
-    <div class="muted" style="margin:8px 0 16px">Freunde, die zustimmen, erscheinen als Symbole. Du teilst deinen Standort nur, solange du es erlaubst – und kannst es jederzeit beenden.</div>
+    <div class="muted" style="margin:8px 0 16px">Freunde, die zustimmen, erscheinen als Symbole. Du teilst deinen Standort nur, solange du es erlaubst, und kannst es jederzeit beenden.</div>
     <button class="cta go" data-act="friends:${on ? 0 : 1}" style="width:100%">${on ? 'Teilen beenden' : 'Standort mit Freunden teilen'}</button>
     <button class="link" data-act="sheet:" style="width:100%;margin-top:10px">Nicht jetzt</button></div></div>`;
 }

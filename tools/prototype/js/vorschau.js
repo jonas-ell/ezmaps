@@ -1,5 +1,5 @@
-// GM-022: Ideen-Vorschau – zeichnet Mock-ups mit dem echten Karten-Renderer (map.js) und echten Daten.
-// Nur zum Zeigen; die Umsetzung in Swift steht im CHANGELOG (GM-022, „Auftrag“).
+// GM-025: Ideen-Vorschau – zeichnet Mock-ups mit dem echten Karten-Renderer (map.js) und echten Daten.
+// Nur zum Zeigen; die Umsetzung in Swift steht im CHANGELOG (GM-025, „Auftrag“).
 import { MapView, renderTexture, renderRegion, drawRoute, drawBlips, drawPlayer, drawDestination, STYLES } from './map.js';
 import { Router, pointAt, smoothHeading } from './route.js';
 import { loadAssets, appIconUrl } from './assets.js';
@@ -10,7 +10,7 @@ const main = document.getElementById('vz');
 const tex = {};
 let scene, router, works;
 
-// ------------------------------------------------------------ Zeichen-Bausteine (Spiegel für Swift: siehe CHANGELOG GM-022)
+// ------------------------------------------------------------ Zeichen-Bausteine (Spiegel für Swift: siehe CHANGELOG GM-025)
 
 /** Geparktes Auto von oben, Schnauze nach oben (eigene Zeichnung, nicht aus einem Spiel). size = Länge in px */
 export function drawParkedCar(u, x, y, size, style, rot = 0) {
@@ -127,61 +127,13 @@ function fitCam(pts, el, pad = 30, ax = [0.5, 0.5]) {
 }
 const worksNear = (p, r) => works.filter(w => w.line.some(([lo, la]) => { const q = toLocal(la, lo); return Math.hypot(q[0] - p[0], q[1] - p[1]) < r; }));
 
-/** Radar: runde, flache Minikarte, Fahrtrichtung oben, Route, Baustellen, Auto, Ortssymbole */
-function radar(host, style, at, heading, route, fromD, parked) {
-  const wrap = $(`<div class="radar"><div class="fill"></div><div class="ring"></div><div class="north">N</div></div>`);
-  host.append(wrap);
-  const scale = 0.085, cam = { center: at, heading, scale, tilt: 0, anchor: [0.5, 0.5] };
-  const { v, u } = view(wrap.firstElementChild, style, cam);
-  drawRoute(u, v, route, fromD, style, { width: 5 });
-  for (const w of worksNear(at, 1300)) drawWork(u, v, w, style, 0.6);
-  drawBlips(u, v, scene, style, { size: 5 });
-  if (parked) { const q = v.project(parked); drawParkedCar(u, q[0], q[1], 18, style, -heading); }
-  drawPlayer(u, v, at, heading, style, 10);
-  // Nordpfeil am Rand, dreht mit
-  const rr = 98 - 12, a = -heading;
-  const n = wrap.querySelector('.north'); n.style.left = (98 + Math.sin(a) * rr) + 'px'; n.style.top = (98 - Math.cos(a) * rr) + 'px';
-  return wrap;
-}
 
 // ------------------------------------------------------------ Abschnitte
 
 function section(title, text) { const s = $(`<section class="sec"><h2>${title}</h2><p>${text}</p><div class="vrow"></div></section>`); main.append(s); return s.querySelector('.vrow'); }
 const figure = (el, cap) => { const f = $(`<div></div>`); f.append(el); if (cap) f.append($(`<div class="cap">${cap}</div>`)); return f; };
 
-function carNav(row, style, label, wide = true) {
-  const route = router.route(scene.presets.start, scene.presets.work.map((v, i) => v + (i ? -350 : 120))) || router.route(scene.presets.start, scene.presets.hexenturm);
-  const d = Math.min(route.length * 0.35, 380), at = pointAt(route.pts, route.cum, d).p, hd = smoothHeading(route, d);
-  const car = $(`<div class="vcar ${wide ? '' : 'small'} t-${style}"><div class="vdock"><div>16:48</div><img class="vapp" src="${appIconUrl}"><div class="vapp"></div><div class="vapp" style="background:#2c7be5"></div></div><div class="main"><div class="fill"></div></div></div>`);
-  row.append(figure(car, label));
-  const m = car.querySelector('.main'), mapEl = m.firstElementChild;
-  const { v, u } = view(mapEl, style, { center: at, heading: hd, scale: 4.6, tilt: 60, anchor: [0.62, 0.82] }, true);
-  drawRoute(u, v, route, d, style); drawBlips(u, v, scene, style, { size: 12 }); drawPlayer(u, v, at, hd, style, 18);
-  const nx = route.maneuvers.find(x => x.at > d + 5) || route.maneuvers[0];
-  m.append($(`<div class="cp-card cp-man"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M7 21V10a4 4 0 0 1 4-4h8"/><path d="m15 2 4 4-4 4"/></svg><div><b>${Math.round((nx.at - d) / 10) * 10} m</b><span>${nx.street || 'Weilburger Straße'}</span></div></div>`));
-  m.append($(`<div class="cp-card cp-eta"><b>16:56</b>8 Min · 4,1 km</div>`));
-  m.append($(`<div class="cp-end">✕ Beenden</div>`));
-  m.append($(`<div class="cp-btns" style="top:56px"><div>＋</div><div>－</div></div>`));
-  const l = $(`<div class="vlimit" style="right:16px;bottom:22px">50</div>`); m.append(l);
-  m.append($(`<div class="vosm" style="bottom:4px">© OpenMapTiles · © OpenStreetMap-Mitwirkende</div>`));
-  const rw = $(`<div class="radar-wrap" style="left:14px;bottom:14px"></div>`); m.append(rw);
-  radar(rw, style, at, hd, route, d, [scene.presets.start[0] + 60, scene.presets.start[1] - 40]);
-}
 
-function phoneNav(row, style) {
-  const route = router.route(scene.presets.start, scene.presets.hexenturm), d = 260, at = pointAt(route.pts, route.cum, d).p, hd = smoothHeading(route, d);
-  const ph = $(`<div class="vphone"><div class="fill"></div><div class="island"></div><div class="sbar"><span class="tm">16:48</span></div><div class="hb"></div></div>`);
-  row.append(figure(ph, 'iPhone: Radar unten links (ersetzt das Straßenfeld), Straßenname wandert in den Abbiegehinweis. Tippen auf das Radar = Vollbild-Übersicht.'));
-  const { v, u } = view(ph.firstElementChild, style, { center: at, heading: hd, scale: 3.4, tilt: 58, anchor: [0.5, 0.62] }, true);
-  drawRoute(u, v, route, d, style); drawBlips(u, v, scene, style, { size: 11 }); drawPlayer(u, v, at, hd, style, 16);
-  ph.append($(`<div class="npanel nman"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M7 21V10a4 4 0 0 1 4-4h8"/><path d="m15 2 4 4-4 4"/></svg><div><div class="d">150 m</div><div class="s">Am Bahnhof</div><div class="x">Rechts abbiegen · jetzt: Wiesbadener Str.</div></div></div>`));
-  ph.append($(`<div class="vlimit" style="right:18px;top:196px">50</div>`));
-  const rw = $(`<div class="radar-wrap" style="left:14px;bottom:110px"></div>`); ph.append(rw);
-  radar(rw, style, at, hd, route, d, [scene.presets.start[0] + 60, scene.presets.start[1] - 40]);
-  ph.append($(`<div class="npanel" style="right:16px;bottom:118px;padding:8px 12px;text-align:center"><div style="font:800 24px Inter">46</div><div style="font:500 11px Inter;color:#a9a9ad">km/h</div></div>`));
-  ph.append($(`<div class="vosm" style="bottom:100px">© OpenMapTiles · © OpenStreetMap-Mitwirkende</div>`));
-  ph.append($(`<div class="npanel nbottom"><div><div class="eta">16:53</div><small>5 Min · 1,1 km</small></div><div class="nend">Ende</div></div>`));
-}
 
 function parking(row) {
   const style = 'neon', car = [scene.presets.start[0] + 60, scene.presets.start[1] - 40], me = scene.presets.hexenturm;
@@ -347,17 +299,13 @@ async function boot() {
   for (const st of ['classic', 'neon', 'western', 'pixel', 'toy']) tex[st] = await renderTexture(scene, st);
   await document.fonts.ready;
 
-  carNav(section('1 · Radar-Minikarte in CarPlay', 'Runde, flache Übersicht unten links (Fahrtrichtung oben, Nordpfeil am Rand), ~1,2 km Umkreis: Route, Baustellen, Ortssymbole, dein geparktes Auto. Die große Karte bleibt die 3D-Fahransicht. Abbiegekarte und Ankunftszeit oben links zeichnet iOS (CarPlay-Vorlage) – das Radar liegt in unserem Kartenfenster.'), 'neon', 'CarPlay 1280 × 480 · Neon City');
-  const r1b = main.lastElementChild.querySelector('.vrow'); carNav(r1b, 'classic', 'CarPlay 800 × 480 · Klassik (gratis) – Radar gibt es in jedem Stil', false);
-  carNav(r1b, 'western', 'CarPlay 800 × 480 · Wild West', false);
-  phoneNav(section('2 · Radar auf dem iPhone', 'Gleiches Radar während der Navigation auf dem iPhone.'), 'neon');
-  parking(section('3 · „Wo hab ich geparkt?“', 'Auto-Symbol von oben, richtig herum (Schnauze oben), eigene Zeichnung je Stil.'));
-  roadworks(section('4 · Baustellen und Sperrungen (Autobahn GmbH) – je Stil', 'Echte Meldungen von heute auf der A3 bei Idstein. Markierung direkt auf der Fahrbahn im Stil der Karte, Symbol in der Mitte, Warnung vor der Stelle.'));
-  voices(section('5 · Stimmen-Auswahl (allgemein)', 'Eine Auswahl für alle Stile, in den Einstellungen.'));
-  widgets(section('6 · Widgets und Kurzbefehle', 'Home-Bildschirm, Sperrbildschirm, Siri und die Kurzbefehle-App.'));
-  photo(section('7 · Fotomodus', 'Teilbares Bild der Fahrt im Kartenstil.'));
-  fastLoad(section('8 · Route ohne Wartezeit', 'Statt Ladebildschirm mit Tipps: die Vorschau ist sofort da.'));
-  styleShop(section('9 · Neuer Gratis-Stil, Neon City als Premium', 'Stile-Seite mit Gratis/Premium.'));
+  parking(section('1 · „Wo hab ich geparkt?“', 'Auto-Symbol von oben, richtig herum (Schnauze oben), eigene Zeichnung je Stil.'));
+  roadworks(section('2 · Baustellen und Sperrungen (Autobahn GmbH) – je Stil', 'Echte Meldungen von heute auf der A3 bei Idstein. Markierung direkt auf der Fahrbahn im Stil der Karte, Symbol in der Mitte, Warnung vor der Stelle.'));
+  voices(section('3 · Stimmen-Auswahl (allgemein)', 'Eine Auswahl für alle Stile, in den Einstellungen.'));
+  widgets(section('4 · Widgets und Kurzbefehle', 'Home-Bildschirm, Sperrbildschirm, Siri und die Kurzbefehle-App.'));
+  photo(section('5 · Fotomodus', 'Teilbares Bild der Fahrt im Kartenstil.'));
+  fastLoad(section('6 · Route ohne Wartezeit', 'Statt Ladebildschirm mit Tipps: die Vorschau ist sofort da.'));
+  styleShop(section('7 · Neuer Gratis-Stil, Neon City als Premium', 'Stile-Seite mit Gratis/Premium.'));
   window.__ready = true;
 }
 boot().catch(e => { console.error(e); document.body.insertAdjacentHTML('beforeend', `<pre style="color:#f66">${e.stack}</pre>`); });

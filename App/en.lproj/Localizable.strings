@@ -21,7 +21,7 @@
 "Ende" = "End";
 "EzMaps speichert keine Fahrten auf Servern und hat kein Konto. Für Suche und Route werden Start, Ziel bzw. Suchbegriff an Kartendienste auf Basis von OpenStreetMap geschickt." = "EzMaps does not store trips on servers and has no account. For search and routing, the start, destination or search term is sent to map services based on OpenStreetMap.";
 "Fertig" = "Done";
-"Fährt die Route nach „Los“ automatisch ab – zum Ausprobieren ohne Auto. Nicht während der echten Fahrt benutzen." = "Drives the route automatically after “Go” – to try it without a car. Do not use while actually driving.";
+"Fährt die Route nach „Los“ automatisch ab. Zum Ausprobieren ohne Auto, nicht während der echten Fahrt benutzen." = "Drives the route automatically after “Go”. To try it without a car. Do not use while actually driving.";
 "Karte" = "Map";
 "Kartendaten" = "Map data";
 "Kein Tempolimit" = "No speed limit";

@@ -45,6 +45,12 @@ final class AppModel {
     private(set) var nav: NavigationSession.State?
     private(set) var isSpeaking = false
     private(set) var demoPosition: Coordinate?
+    /// GM-022: Position auf der Route (eingerastet) und Fahrtrichtung in Grad – Kamera und Pfeil folgen dem,
+    /// nicht dem GPS-Punkt von MapLibre (sonst bleibt die Karte bei der Demo-Fahrt stehen)
+    private(set) var navCoordinate: Coordinate?
+    private(set) var navHeading: Double = 0
+    /// geschätzte Fahrgeschwindigkeit des Teilstücks (km/h) – für die Kamerahöhe, geglättet über die Route statt GPS
+    private(set) var navSpeedKmh: Double = 50
     /// Kurzer Hinweis unten (Fehler, „Route wird neu berechnet“)
     var message: String?
     /// Zählt hoch, wenn die Karte wieder dem Standort folgen soll
@@ -169,6 +175,8 @@ final class AppModel {
         let s = NavigationSession(route: route, destinationName: dest.name)
         session = s
         nav = nil
+        navCoordinate = route.coordinate(at: 0)
+        navHeading = route.heading(at: 0)
         screen = .navigating
         location.setNavigating(true)
         speech.say(s.startAnnouncement())
@@ -179,6 +187,7 @@ final class AppModel {
     func endNavigation() {
         demoTask?.cancel()
         demoPosition = nil
+        navCoordinate = nil
         speech.stop()
         session = nil
         nav = nil
@@ -211,6 +220,10 @@ final class AppModel {
         let u = s.update(position: position, speed: speed)
         session = s
         nav = u.state
+        navCoordinate = s.route.coordinate(at: u.state.progress) ?? position
+        navHeading = s.route.heading(at: u.state.progress)
+        let seg = s.route.segmentIndex(at: u.state.progress)
+        if seg < s.route.segmentSpeeds.count { navSpeedKmh = s.route.segmentSpeeds[seg] }
         if let text = u.announcement, settings.voice { speech.say(text) }
         if u.shouldReroute { reroute(from: position, heading: course) }
         if u.state.arrived && screen == .navigating {
@@ -244,15 +257,19 @@ final class AppModel {
         }
     }
 
+    /// Nur Store-Screenshots (ScreenshotMode): Demo-Fahrt startet nach so vielen Metern
+    @ObservationIgnored var demoStartOffset: Double = 0
+
     /// Demo-Fahrt: fährt die Route mit den geschätzten Geschwindigkeiten ab (2× Echtzeit)
     private func startDemo(on route: Route) {
         demoTask?.cancel()
+        let offset = min(demoStartOffset, route.length * 0.9)
         demoTask = Task { [weak self] in
-            var d: Double = 0
+            var d: Double = offset
             while !Task.isCancelled {
                 try? await Task.sleep(nanoseconds: 500_000_000)
                 guard !Task.isCancelled, let self, let current = self.session?.route else { return }
-                if d == 0 || current.shape != route.shape { d = self.session?.progress ?? 0 }
+                if current.shape != route.shape { d = self.session?.progress ?? 0 }
                 let seg = current.segmentIndex(at: d)
                 let kmh: Double = seg < current.segmentSpeeds.count ? current.segmentSpeeds[seg] : 50
                 let mps: Double = kmh / 3.6

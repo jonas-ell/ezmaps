@@ -17,12 +17,15 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 OUT = ROOT / "App" / "MapStyles" / "style-neon-city.json"
 
 # --- aus js/map.js (NEON) ---
-NEON = dict(land="#1c1c1d", residential="#2c2c2d", industrial="#2c2c2d", farm="#1d1d1e", park="#202121", forest="#1e1f1f",
-            water="#4b4e4d", building="#373738", buildingEdge="#424243", urban="#2c2c2d", rail="#3a3a3b")
+# GM-024: nach Foto des Nutzers (CarPlay-Vorlage): mittelgrauer Boden, Häuser heller als der Boden,
+# fast weiße Straßen mit dunklem Rand, Straßennamen dunkel auf der Straße
+NEON = dict(land="#3b3c3e", residential="#3b3c3e", industrial="#3e3f41", farm="#38393b", park="#36383a", forest="#333537",
+            water="#5d6870", building="#5b5c5f", buildingEdge="#4a4b4e", urban="#3b3c3e", rail="#2b2c2e",
+            casing="#151617", label="#1d1e20")
 WIDTH = {0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5}       # Meter
 MIN_PX = {0: 4.4, 1: 3.6, 2: 3, 3: 2.4, 4: 2, 5: 1.4, 6: 1.2, 7: 1}   # Bildpunkte
 WIDEN, URBAN_REACH = 1.5, 46
-road_color = lambda r: "#b0b0b0" if r <= 2 else "#a3a3a3" if r <= 6 else "#8e8e8e"
+road_color = lambda r: "#ececec" if r <= 4 else "#dcdcdc" if r <= 6 else "#c4c4c4"
 CLASS_RANK = {"motorway": 0, "trunk": 1, "primary": 2, "secondary": 3, "tertiary": 4, "minor": 5, "service": 7}  # wie js/vtscene.js
 
 MPP0 = 40075016 * math.cos(math.radians(50.5)) / 512
@@ -56,9 +59,6 @@ layers = [
     fill("forest", "landcover", NEON["forest"], ["==", ["get", "class"], "wood"]),
     fill("grass", "landcover", NEON["park"], ["==", ["get", "class"], "grass"]),
     fill("park", "park", NEON["park"]),
-    # Stadt als dunkelgraue Blöcke: Umkreis um Gebäude und Wohnstraßen (urbanBlocks im Prototyp)
-    line("urban-buildings", "building", NEON["urban"], meters(URBAN_REACH)),
-    line("urban-minor", "transportation", NEON["urban"], meters(URBAN_REACH), ["in", ["get", "class"], ["literal", ["minor", "service"]]]),
     fill("residential", "landuse", NEON["residential"], ["in", ["get", "class"], ["literal", ["residential", "suburb", "neighbourhood"]]]),
     fill("industrial", "landuse", NEON["industrial"], ["in", ["get", "class"], ["literal", ["industrial", "commercial", "retail", "railway", "garages"]]]),
     fill("landuse-green", "landuse", NEON["park"], ["in", ["get", "class"], ["literal", ["cemetery", "pitch", "playground", "park", "zoo"]]]),
@@ -68,10 +68,22 @@ layers = [
     fill("building", "building", NEON["building"], None, {"fill-outline-color": NEON["buildingEdge"]}),
     line("rail", "transportation", NEON["rail"], meters(1.5, 1), ["in", ["get", "class"], ["literal", ["rail", "transit"]]], cap="butt"),
 ]
-# Straßen: kleine zuerst, große obenauf (wie die Sortierung im Prototyp)
-for cls, r in sorted(CLASS_RANK.items(), key=lambda kv: -kv[1]):
-    layers.append(line(f"road-{cls}", "transportation", road_color(r), meters(WIDTH[r] * 0.75 * WIDEN, MIN_PX[r]),
-                       ["all", ["==", ["get", "class"], cls], ["!=", ["get", "brunnel"], "tunnel"]]))
+# Straßen: erst alle dunklen Ränder, dann die hellen Flächen (so verschmelzen Kreuzungen sauber), große obenauf
+order = sorted(CLASS_RANK.items(), key=lambda kv: -kv[1])
+road_filter = lambda cls: ["all", ["==", ["get", "class"], cls], ["!=", ["get", "brunnel"], "tunnel"]]
+for cls, r in order:
+    layers.append(line(f"road-{cls}-casing", "transportation", NEON["casing"], meters(WIDTH[r] * 0.75 * WIDEN + 3, MIN_PX[r] + 1.6), road_filter(cls)))
+for cls, r in order:
+    layers.append(line(f"road-{cls}", "transportation", road_color(r), meters(WIDTH[r] * 0.75 * WIDEN, MIN_PX[r]), road_filter(cls)))
+# Straßennamen auf der Straße (Großbuchstaben, dunkel, ab Zoom 15)
+layers.append({
+    "id": "road-names", "type": "symbol", "source": "openmaptiles", "source-layer": "transportation_name", "minzoom": 15,
+    "filter": ["in", ["get", "class"], ["literal", ["primary", "secondary", "tertiary", "minor", "trunk"]]],
+    "layout": {"symbol-placement": "line", "text-field": ["coalesce", ["get", "name:de"], ["get", "name"]], "text-font": ["Noto Sans Bold"],
+               "text-size": ["interpolate", ["linear"], ["zoom"], 15, 9, 18, 13], "text-transform": "uppercase", "text-letter-spacing": 0.08,
+               "text-max-angle": 30, "text-padding": 4},
+    "paint": {"text-color": NEON["label"]},
+})
 
 style = {
     "version": 8,
@@ -80,6 +92,7 @@ style = {
     "sources": {"openmaptiles": {"type": "vector", "url": "https://tiles.openfreemap.org/planet",
                                  # GM-020: OpenFreeMap verlangt den Hinweis auf OpenMapTiles und OpenStreetMap
                                  "attribution": "<a href=\"https://openfreemap.org\">OpenFreeMap</a> · © <a href=\"https://www.openmaptiles.org/\">OpenMapTiles</a> · © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap-Mitwirkende</a>"}},
+    "glyphs": "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
     "layers": layers,
 }
 OUT.parent.mkdir(parents=True, exist_ok=True)

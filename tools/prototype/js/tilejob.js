@@ -17,9 +17,17 @@ const toBlob = (c, type, quality) => c.convertToBlob ? c.convertToBlob({ type, q
 const toBitmap = c => c.transferToImageBitmap ? c.transferToImageBitmap() : createImageBitmap(c);
 
 export async function runTile(m, scene) {
-  const c = renderRegion(scene, m.style, m.region, m.S);
+  // GM-023: Pixel Quest im Kunstpixel-Raster zeichnen und dann ohne Glättung hochrechnen – sonst wird es
+  // durch die geneigte Kamera (CSS-3D, immer bilinear) unscharf. 1 Kunstpixel = 1,6 m wie die Grobkarte.
+  const pixel = m.style === 'pixel', S = pixel ? 0.625 : m.S;
+  let c = renderRegion(scene, m.style, m.region, S), outS = S;
+  if (pixel) {
+    const k = 6, big = typeof OffscreenCanvas !== 'undefined' ? new OffscreenCanvas(c.width * k, c.height * k) : Object.assign(document.createElement('canvas'), { width: c.width * k, height: c.height * k });
+    const g = big.getContext('2d'); g.imageSmoothingEnabled = false; g.drawImage(c, 0, 0, big.width, big.height);
+    c = big; outS = S * k;
+  }
   const bitmap = await toBitmap(c);
-  return { msg: { id: m.id, style: m.style, region: m.region, S: m.S, bitmap }, transfer: [bitmap] };
+  return { msg: { id: m.id, style: m.style, region: m.region, S: outS, bitmap }, transfer: [bitmap] };
 }
 export async function runVtile(m) {
   try {

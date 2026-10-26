@@ -83,19 +83,19 @@ Aufgaben:
 - [ ] **4.13 Datenschutzerklärung, Impressum, App-Store-Angaben** – Nutzer _(GM-020: Vorlagen `docs/legal/index.md`, `docs/APPSTORE_TEXTE.md`, Fahrplan `docs/VEROEFFENTLICHUNG.md`; Pricedown wird in der App nicht benutzt)_
 - [ ] **4.14 In-App-Käufe für Stile, Freunde-Server** – später
 
-## Teil 5 – Ideen-Runde 2 (GM-022, Vorschau: `tools/prototype/vorschau.html`, Bilder `docs/previews/ideen/`)
+## Teil 5 – Ideen-Runde 2 (GM-025, Vorschau: `tools/prototype/vorschau.html`, Bilder `docs/previews/ideen/`)
 
-Genaue Beschreibung je Punkt: `CHANGELOG.md` → GM-022 → „Auftrag für den lokalen Claude“.
+Genaue Beschreibung je Punkt: `CHANGELOG.md` → GM-025 → „Auftrag für den lokalen Claude“.
 
 - [ ] **5.1 Gratis-Stil „Klassik“, Neon City Premium, StoreKit 2** – vor der Veröffentlichung
 - [ ] **5.2 Route ohne Wartezeit** (sofort Vorschau mit Luftlinie, Vorab-Berechnung, Cache)
 - [ ] **5.3 „Wo hab ich geparkt?“** (Auto-Symbol je Stil, Schnauze oben)
 - [ ] **5.4 Baustellen und Sperrungen** (Autobahn GmbH, je Stil, Warnung 2 km vorher)
 - [ ] **5.5 Stimmen-Auswahl** (allgemein, Sprechtempo)
-- [ ] **5.6 Radar-Minikarte** (CarPlay + iPhone)
+- [x] ~~**5.6 Radar-Minikarte**~~ – gestrichen (Nutzer-Entscheidung)
 - [ ] **5.7 Widgets und Kurzbefehle** (Zuhause/Arbeit, Dein Auto, Siri)
 - [ ] **5.8 Fotomodus** (Story/Quadrat/Breit, Start/Ziel ausblendbar)
-- Nicht umgesetzt (Nutzer-Entscheidung): Stimmen je Stil, Ladetipps
+- Nicht umgesetzt (Nutzer-Entscheidung): Stimmen je Stil, Ladetipps, Radar-Minikarte
 
 ## Danach auf dem Gerät testen
 

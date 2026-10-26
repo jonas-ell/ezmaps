@@ -49,6 +49,61 @@ PLIST
   exit $STATUS
 fi
 
+# GM-024: Freigabe „Bedienungshilfen“ vorbereiten (Marker tools/.do_open_privacy): öffnet auf dem Mac-Bildschirm
+# die Einstellungsseite und zeigt sshd-keygen-wrapper im Finder. Das Häkchen setzt der Nutzer selbst (macOS-Regel).
+if [ -f tools/.do_open_privacy ]; then
+  rm -f tools/.do_open_privacy
+  open "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_Accessibility"     || open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
+  open -R /usr/libexec/sshd-keygen-wrapper
+  echo "Einstellungen und Finder auf dem Mac geöffnet"
+  exit 0
+fi
+
+# GM-023: CarPlay-Screenshots (Marker tools/.do_carscreens). Simulator-App öffnen, per AppleScript
+# I/O → External Displays → CarPlay einschalten, dann das externe Display fotografieren.
+# Braucht einmalig: Systemeinstellungen → Datenschutz → Bedienungshilfen → „sshd-keygen-wrapper“/Terminal erlauben.
+if [ -f tools/.do_carscreens ]; then
+  rm -f tools/.do_carscreens
+  xcodegen generate >/dev/null || exit 1
+  LINE=$(xcrun simctl list devices available | grep -E "^ +iPhone 1[6-9] Pro Max" | head -1)
+  SID=$(echo "$LINE" | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}' | head -1)
+  echo "Simulator: $LINE"
+  xcrun simctl boot "$SID" 2>/dev/null; xcrun simctl bootstatus "$SID" -b >/dev/null
+  xcodebuild -project EzMaps.xcodeproj -scheme EzMaps -destination "id=$SID" -configuration Debug \
+    -derivedDataPath build/dd build > /tmp/ezmaps_shots_build.log 2>&1 || { grep -E "error:" /tmp/ezmaps_shots_build.log | head -20; echo "BUILD FAILED"; exit 1; }
+  APPDIR=build/dd/Build/Products/Debug-iphonesimulator/EzMaps.app
+  BID=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$APPDIR/Info.plist")
+  xcrun simctl install "$SID" "$APPDIR" || exit 1
+  xcrun simctl privacy "$SID" grant location "$BID"
+  xcrun simctl location "$SID" set 50.21712,8.25734
+  open -a Simulator --args -CurrentDeviceUDID "$SID"; sleep 6
+  osascript <<'OSA' 2>&1 | sed 's/^/AppleScript: /'
+tell application "Simulator" to activate
+delay 1
+tell application "System Events" to tell process "Simulator"
+  set m to menu "I/O" of menu bar 1
+  click menu item "External Displays" of m
+  delay 0.5
+  click menu item "CarPlay" of menu 1 of menu item "External Displays" of m
+end tell
+return "CarPlay-Fenster an"
+OSA
+  sleep 6
+  xcrun simctl io "$SID" enumerate 2>&1 | grep -iE "display|carplay|external" | head -8 | sed 's/^/Displays: /'
+  OUT=/tmp/ezcar; rm -rf "$OUT"; mkdir -p "$OUT"
+  for ENTRY in karte:12 vorschau:16 navigation:28; do
+    NAME=${ENTRY%%:*}; WAIT=${ENTRY##*:}
+    xcrun simctl terminate "$SID" "$BID" 2>/dev/null
+    xcrun simctl launch "$SID" "$BID" -EZShot "$NAME" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
+    sleep "$WAIT"
+    xcrun simctl io "$SID" screenshot --display=external --type=png "$OUT/carplay-$NAME.png" >/dev/null 2>&1 \
+      && echo "Bild: carplay-$NAME" || echo "kein externes Display für $NAME"
+  done
+  for F in "$OUT"/*.png; do [ -s "$F" ] || continue; echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="; done
+  echo "CARPLAY FERTIG"
+  exit 0
+fi
+
 # GM-021: App-Store-Screenshots (Marker tools/.do_screens, geschickt von tools/mac_screens.sh).
 # Simulator „iPhone … Pro Max“ (6,9″ = 1320 × 2868), Standort Idstein, Deutsch, Statusleiste 9:41.
 # Die Bilder gehen als base64 zwischen ===SHOT name=== und ===END=== über die Ausgabe zurück (das Gate kann nur Text).
@@ -68,7 +123,11 @@ if [ -f tools/.do_screens ]; then
   xcrun simctl install "$SID" "$APPDIR" || exit 1
   xcrun simctl privacy "$SID" grant location "$BID"
   xcrun simctl location "$SID" set 50.21712,8.25734   # Bahnhof Idstein
-  xcrun simctl status_override "$SID" --time 9:41 --dataNetwork wifi --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100
+  # GM-021: Befehl heißt in Xcode 26 „status_bar … override“
+  xcrun simctl status_bar "$SID" override --time 9:41 --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100 || echo "Statusleiste: Überschreiben nicht möglich"
+  # iOS-Einführung zum Wischen auf der Tastatur („Speed up your typing …“) nicht zeigen
+  xcrun simctl spawn "$SID" defaults write com.apple.Preferences DidShowContinuousPathIntroduction -bool true
+  xcrun simctl spawn "$SID" defaults write com.apple.keyboard.preferences DidShowContinuousPathIntroduction -bool true
   OUT=/tmp/ezshots; rm -rf "$OUT"; mkdir -p "$OUT"
   # Zustand:Wartezeit in Sekunden (Kacheln und Routen kommen aus dem Netz)
   for ENTRY in karte:10 suche:9 vorschau:14 navigation:26 einstellungen:6; do
@@ -78,7 +137,7 @@ if [ -f tools/.do_screens ]; then
     sleep "$WAIT"
     xcrun simctl io "$SID" screenshot --type=png "$OUT/$NAME.png" >/dev/null 2>&1 && echo "Bild: $NAME ($(stat -f%z "$OUT/$NAME.png") Bytes)"
   done
-  xcrun simctl status_override "$SID" clear
+  xcrun simctl status_bar "$SID" clear
   for F in "$OUT"/*.png; do
     echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="
   done

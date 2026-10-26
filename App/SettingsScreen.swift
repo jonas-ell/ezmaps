@@ -29,7 +29,7 @@ struct SettingsScreen: View {
                 Section {
                     Toggle(L("Demo-Fahrt"), isOn: binding(\.demoDrive))
                 } footer: {
-                    Text(L("Fährt die Route nach „Los“ automatisch ab – zum Ausprobieren ohne Auto. Nicht während der echten Fahrt benutzen."))
+                    Text(L("Fährt die Route nach „Los“ automatisch ab. Zum Ausprobieren ohne Auto, nicht während der echten Fahrt benutzen."))
                 }
                 Section(L("Datenschutz")) {
                     Text(L("EzMaps speichert keine Fahrten auf Servern und hat kein Konto. Für Suche und Route werden Start, Ziel bzw. Suchbegriff an Kartendienste auf Basis von OpenStreetMap geschickt."))

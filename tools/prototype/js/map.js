@@ -11,10 +11,10 @@ export const TEX = { x0: -1800, y0: -1500, w: 3600, h: 3000 };
 const WIDTH = { 0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5 };
 const MIN_PX = { 0: 4.4, 1: 3.6, 2: 3, 3: 2.4, 4: 2, 5: 1.4, 6: 1.2, 7: 1 };
 
-// GM-022: „Klassik“ ist der Gratis-Stil (heller Stadtplan); Neon City und die übrigen Stile sind Kauf-Stile (free: false)
+// GM-025: „Klassik“ ist der Gratis-Stil (heller Stadtplan); Neon City und die übrigen Stile sind Kauf-Stile (free: false)
 export const STYLES = {
   classic: { name: 'Klassik', free: true, route: '#1a73e8', routeEdge: '#0b3d91', alt: 'rgba(90,110,140,0.5)', bg: '#f2efe9', haze: [222, 230, 240] },
-  neon:    { name: 'Neon City', route: '#a13df0', routeEdge: '#4b1a73', alt: 'rgba(200,200,205,0.55)', bg: '#1c1c1d', haze: [28, 28, 29] },
+  neon:    { name: 'Neon City', route: '#a13df0', routeEdge: '#4b1a73', alt: 'rgba(200,200,205,0.55)', bg: '#3b3c3e', haze: [59, 60, 62] },
   western: { name: 'Wild West', route: '#c0261f', routeEdge: '#4a0d0a', alt: 'rgba(90,60,30,0.45)', bg: '#c4ac80', haze: [196, 172, 128] },
   pixel:   { name: 'Pixel Quest', route: '#ffcc33', routeEdge: '#7a4a00', alt: 'rgba(255,255,255,0.6)', bg: '#1b2a5a', haze: [27, 42, 90], pixelated: true },
   toy:     { name: 'Toy Town', route: '#ff7a00', routeEdge: '#ffffff', alt: 'rgba(255,255,255,0.75)', bg: '#8dc63f', haze: [196, 230, 255] },
@@ -103,12 +103,11 @@ export const NEON_ROADS = { // für drawRoads (Vektorstraßen), derzeit nicht ak
 };
 // GM-010: Look nach Vorlage (dunkle Open-World-Übersicht): fast schwarzes Land, Stadt als dunkelgraue Blöcke,
 // breite hellgraue Straßen ohne Rand, Gebäude nur knapp heller als der Block, Wasser grau und hell
-const NEON = {
-  land: '#1c1c1d', residential: '#2c2c2d', industrial: '#2c2c2d', farm: '#1d1d1e', park: '#202121', forest: '#1e1f1f',
-  water: '#4b4e4d', waterLine: '#4b4e4d', building: '#373738', buildingEdge: '#424243', casing: null,
-  urban: '#2c2c2d', urbanReach: 46, widen: 1.5,
-  road: r => r <= 2 ? '#b0b0b0' : r <= 6 ? '#a3a3a3' : '#8e8e8e', rail: '#3a3a3b', texture: terrainTexture,
-  hill: true, // GM-011: Hügel-Schattierung (lokaler Claude, Teil 0.3)
+const NEON = { // GM-024: nach Foto des Nutzers – Mirror in tools/maplibre/build_style.py, change both
+  land: '#3b3c3e', residential: '#3b3c3e', industrial: '#3e3f41', farm: '#38393b', park: '#36383a', forest: '#333537',
+  water: '#5d6870', waterLine: '#5d6870', building: '#5b5c5f', buildingEdge: '#4a4b4e', casing: '#151617', widen: 1.5,
+  road: r => r <= 4 ? '#ececec' : r <= 6 ? '#dcdcdc' : '#c4c4c4', rail: '#2b2c2e', texture: terrainTexture,
+  hill: true,
 };
 const WESTERN = {
   land: '#dcc59a', residential: '#d4bb8a', industrial: '#ccb07f', farm: '#e3cfa2', park: '#d6c18c', forest: '#cdb782',
@@ -116,7 +115,7 @@ const WESTERN = {
   road: r => r <= 4 ? '#f2e4bf' : '#7a5a38', thinMinor: true, rail: '#4a3220', ties: true, texture: paperTexture, trees: '#6b4f2e', vignette: true,
 };
 
-// GM-022: Gratis-Stil „Klassik“ – ruhiger, heller Stadtplan (bewusst schlicht, damit sich die Spiel-Stile lohnen)
+// GM-025: Gratis-Stil „Klassik“ – ruhiger, heller Stadtplan (bewusst schlicht, damit sich die Spiel-Stile lohnen)
 const flatTexture = () => noiseCanvas(8, g => { g.fillStyle = '#808080'; g.fillRect(0, 0, 8, 8); }); // „overlay“ mit 50 % Grau = keine Änderung
 const CLASSIC = {
   land: '#f2efe9', residential: '#ece7e0', industrial: '#ebe3e8', farm: '#eef0d6', park: '#d4ebc8', forest: '#c3dfb4',
@@ -387,6 +386,7 @@ export class MapView {
     this.detail.width = bitmap.width; this.detail.height = bitmap.height;
     this.detail.getContext('2d').drawImage(bitmap, 0, 0);
     this.det = { region, S, style }; this.detail.style.display = 'block';
+    this.detail.style.imageRendering = style === 'pixel' ? 'pixelated' : 'auto';
   }
   // GM-015: Kacheln anzeigen – list: [{ key, url, region, S, pixelated }] (grob zuerst, fein oben)
   setTiles(list) {

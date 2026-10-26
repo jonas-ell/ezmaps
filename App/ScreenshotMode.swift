@@ -36,6 +36,7 @@ enum ScreenshotMode {
                 model.choose(target)
             case "navigation":
                 model.updateSettings { $0.demoDrive = true }
+                model.demoStartOffset = 5_200 // mitten auf der Strecke (Landstraße bei Niedernhausen)
                 model.choose(target)
                 var w = 0
                 while model.routes.isEmpty && w < 80 {

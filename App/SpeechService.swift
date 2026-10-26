@@ -21,10 +21,18 @@ final class SpeechService: NSObject, AVSpeechSynthesizerDelegate {
         try? session.setCategory(.playback, mode: .voicePrompt, options: options)
         try? session.setActive(true)
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: "de-DE")
+        utterance.voice = Self.bestGermanVoice
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate
         synthesizer.speak(utterance)
         onSpeakingChange?(true)
+    }
+
+    /// GM-023: beste installierte deutsche Stimme (Premium > Erweitert > Standard). Premium-Stimmen lädt der Nutzer
+    /// in iOS unter Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch.
+    static var bestGermanVoice: AVSpeechSynthesisVoice? {
+        let de = AVSpeechSynthesisVoice.speechVoices().filter { $0.language == "de-DE" }
+        let best = de.max { a, b in a.quality.rawValue < b.quality.rawValue }
+        return best ?? AVSpeechSynthesisVoice(language: "de-DE")
     }
 
     func stop() {
