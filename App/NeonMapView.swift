@@ -28,7 +28,7 @@ enum NeonColors {
 
 /// Gemeinsamer Aufbau für iPhone und CarPlay
 enum NeonMap {
-    static func make(frame: CGRect = .zero, zoom: Double = 13) -> MLNMapView {
+    static func make(frame: CGRect = .zero, zoom: Double = 15) // GM-027: näher, damit der Spiel-Look sichtbar ist -> MLNMapView {
         let map = MLNMapView(frame: frame, styleURL: MapStyleResource.url(for: .neonCity))
         map.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         map.backgroundColor = NeonColors.background
@@ -37,6 +37,7 @@ enum NeonMap {
         map.logoView.isHidden = true
         // Den OSM-Hinweis zeigen wir immer selbst als Text (ODbL), das (i)-Symbol bleibt für Details
         map.attributionButtonPosition = .topRight
+        map.attributionButton.isHidden = true // GM-027: ragte in die Suchleiste; der Hinweis steht als Text auf jedem Bildschirm
         return map
     }
 }

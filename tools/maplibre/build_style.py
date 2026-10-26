@@ -71,10 +71,15 @@ layers = [
 # Straßen: erst alle dunklen Ränder, dann die hellen Flächen (so verschmelzen Kreuzungen sauber), große obenauf
 order = sorted(CLASS_RANK.items(), key=lambda kv: -kv[1])
 road_filter = lambda cls: ["all", ["==", ["get", "class"], cls], ["!=", ["get", "brunnel"], "tunnel"]]
+# GM-027: kleine Straßen erst beim Heranzoomen – sonst wird die Übersicht (Routen-Vorschau) eine weiße Fläche
+MINZOOM = {"motorway": 0, "trunk": 0, "primary": 7, "secondary": 9, "tertiary": 10.5, "minor": 12, "service": 14}
+def with_min(l, cls):
+    if MINZOOM[cls]: l["minzoom"] = MINZOOM[cls]
+    return l
 for cls, r in order:
-    layers.append(line(f"road-{cls}-casing", "transportation", NEON["casing"], meters(WIDTH[r] * 0.75 * WIDEN + 3, MIN_PX[r] + 1.6), road_filter(cls)))
+    layers.append(with_min(line(f"road-{cls}-casing", "transportation", NEON["casing"], meters(WIDTH[r] * 0.75 * WIDEN + 3, MIN_PX[r] + 1.6), road_filter(cls)), cls))
 for cls, r in order:
-    layers.append(line(f"road-{cls}", "transportation", road_color(r), meters(WIDTH[r] * 0.75 * WIDEN, MIN_PX[r]), road_filter(cls)))
+    layers.append(with_min(line(f"road-{cls}", "transportation", road_color(r), meters(WIDTH[r] * 0.75 * WIDEN, MIN_PX[r]), road_filter(cls)), cls))
 # Straßennamen auf der Straße (Großbuchstaben, dunkel). GM-026: schon ab Zoom 13,5 – die Fahrkamera in CarPlay liegt um 14–15
 layers.append({
     "id": "road-names", "type": "symbol", "source": "openmaptiles", "source-layer": "transportation_name", "minzoom": 13.5,

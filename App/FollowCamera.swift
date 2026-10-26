@@ -33,7 +33,7 @@ final class FollowCamera: NSObject {
     /// Anteil der Höhe, auf der der Pfeil sitzt (0,5 = Mitte)
     var arrowY: CGFloat = 0.5
     /// Hinweis-Knopf (i) nach dem Anhalten wieder zeigen? (CarPlay: nein, dort steht der Hinweis als Text)
-    var restoreAttribution = true
+    var restoreAttribution = false
     var restoreUserLocation = true
 
     init(map: MLNMapView, pitch: CGFloat) {

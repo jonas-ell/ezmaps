@@ -19,7 +19,7 @@ struct ContentView: View {
                 follow: model.navCoordinate,
                 heading: model.navHeading,
                 speedKmh: model.navSpeedKmh,
-                padding: UIEdgeInsets(top: 120, left: 40, bottom: 360, right: 40)
+                padding: UIEdgeInsets(top: 130, left: 60, bottom: 380, right: 60)
             )
             .ignoresSafeArea()
 

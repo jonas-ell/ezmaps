@@ -498,7 +498,8 @@
      ],
      "tunnel"
     ]
-   ]
+   ],
+   "minzoom": 14
   },
   {
    "id": "road-minor-casing",
@@ -578,7 +579,8 @@
      ],
      "tunnel"
     ]
-   ]
+   ],
+   "minzoom": 12
   },
   {
    "id": "road-tertiary-casing",
@@ -658,7 +660,8 @@
      ],
      "tunnel"
     ]
-   ]
+   ],
+   "minzoom": 10.5
   },
   {
    "id": "road-secondary-casing",
@@ -738,7 +741,8 @@
      ],
      "tunnel"
     ]
-   ]
+   ],
+   "minzoom": 9
   },
   {
    "id": "road-primary-casing",
@@ -818,7 +822,8 @@
      ],
      "tunnel"
     ]
-   ]
+   ],
+   "minzoom": 7
   },
   {
    "id": "road-trunk-casing",
@@ -1058,7 +1063,8 @@
      ],
      "tunnel"
     ]
-   ]
+   ],
+   "minzoom": 14
   },
   {
    "id": "road-minor",
@@ -1138,7 +1144,8 @@
      ],
      "tunnel"
     ]
-   ]
+   ],
+   "minzoom": 12
   },
   {
    "id": "road-tertiary",
@@ -1218,7 +1225,8 @@
      ],
      "tunnel"
     ]
-   ]
+   ],
+   "minzoom": 10.5
   },
   {
    "id": "road-secondary",
@@ -1298,7 +1306,8 @@
      ],
      "tunnel"
     ]
-   ]
+   ],
+   "minzoom": 9
   },
   {
    "id": "road-primary",
@@ -1378,7 +1387,8 @@
      ],
      "tunnel"
     ]
-   ]
+   ],
+   "minzoom": 7
   },
   {
    "id": "road-trunk",
