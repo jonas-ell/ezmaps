@@ -91,9 +91,12 @@ OSA
   sleep 6
   xcrun simctl io "$SID" enumerate 2>&1 | grep -iE "display|carplay|external" | head -8 | sed 's/^/Displays: /'
   OUT=/tmp/ezcar; rm -rf "$OUT"; mkdir -p "$OUT"
-  for ENTRY in karte:12 vorschau:16 navigation:28; do
+  # GM-025: „frei“ = Fahren ohne Route (Hauptzweck im Auto): simulierte Fahrt durch Idstein, ~45 km/h
+  xcrun simctl location "$SID" start --speed=12.5 50.21712,8.25734 50.21780,8.25900 50.21930,8.26250 50.22010,8.26520 50.22130,8.26690 50.22230,8.26900 50.22420,8.27100 || echo "Standort-Fahrt nicht möglich"
+  for ENTRY in frei:14 vorschau:16 navigation:28; do
     NAME=${ENTRY%%:*}; WAIT=${ENTRY##*:}
     xcrun simctl terminate "$SID" "$BID" 2>/dev/null
+    [ "$NAME" = "vorschau" ] && { xcrun simctl location "$SID" clear; xcrun simctl location "$SID" set 50.21712,8.25734; }
     xcrun simctl launch "$SID" "$BID" -EZShot "$NAME" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
     sleep 3
     # GM-024: EzMaps im CarPlay-Fenster antippen (Startbildschirm: Icon unter „Nachrichten“, bei 25 % / 58 % des Bildes)

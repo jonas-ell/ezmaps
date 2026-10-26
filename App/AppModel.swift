@@ -51,6 +51,9 @@ final class AppModel {
     private(set) var navHeading: Double = 0
     /// geschätzte Fahrgeschwindigkeit des Teilstücks (km/h) – für die Kamerahöhe, geglättet über die Route statt GPS
     private(set) var navSpeedKmh: Double = 50
+    /// GM-025: freie Fahrt (ohne Route): Richtung und Tempo aus dem GPS (Richtung bleibt im Stand stehen)
+    @ObservationIgnored private(set) var driveHeading: Double = 0
+    @ObservationIgnored private(set) var driveKmh: Double = 30
     /// Kurzer Hinweis unten (Fehler, „Route wird neu berechnet“)
     var message: String?
     /// Zählt hoch, wenn die Karte wieder dem Standort folgen soll
@@ -85,6 +88,13 @@ final class AppModel {
         if let d = demoPosition { return d }
         guard let l = location.location else { return nil }
         return Coordinate(latitude: l.coordinate.latitude, longitude: l.coordinate.longitude)
+    }
+
+    /// GM-025: Ziel für die gleitende Kamera – in der Navigation die Position auf der Route, sonst das GPS
+    var cameraTarget: FollowCamera.Target? {
+        if screen == .navigating, let c = navCoordinate { return .init(coordinate: c, heading: navHeading, kmh: navSpeedKmh) }
+        guard let c = currentCoordinate else { return nil }
+        return .init(coordinate: c, heading: driveHeading, kmh: driveKmh)
     }
 
     var selected: Route? { routes.indices.contains(selectedRoute) ? routes[selectedRoute] : nil }
@@ -209,6 +219,8 @@ final class AppModel {
     }
 
     private func handleGPS(_ loc: CLLocation) {
+        if loc.speed > 1.5 && loc.course >= 0 { driveHeading = loc.course }
+        if loc.speed >= 0 { driveKmh = loc.speed * 3.6 }
         guard demoPosition == nil else { return } // Demo-Fahrt hat Vorrang
         let speed: Double? = loc.speed >= 0 ? loc.speed : nil
         let course: Double? = loc.course >= 0 ? loc.course : nil

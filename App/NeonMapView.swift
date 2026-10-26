@@ -239,22 +239,21 @@ struct NeonMapView: UIViewRepresentable {
         if c.navigating != navigating {
             c.navigating = navigating
             map.showsUserLocation = !navigating // GM-022: in der Navigation zeigt unser Pfeil die Fahrposition
-            if navigating {
-                c.lastFollow = nil
-            } else {
-                c.overlay?.showPosition(nil, heading: 0)
+            if !navigating {
                 let cam = map.camera
                 cam.pitch = 0
                 map.setCamera(cam, animated: true)
                 map.userTrackingMode = .follow
             }
         }
-        if navigating, let f = follow, c.lastFollow != f || c.recenter != recenterRequest {
-            c.lastFollow = f
-            c.recenter = recenterRequest
-            c.overlay?.showPosition(f, heading: heading)
-            RouteOverlay.follow(map, at: f, heading: heading, pitch: 55, altitude: RouteOverlay.altitude(forKmh: speedKmh))
+        // GM-025: Navigation – Kamera gleitet weich, fester Pfeil (unteres Drittel)
+        if c.camera == nil {
+            let cam = FollowCamera(map: map, pitch: 55)
+            cam.arrowY = 0.68
+            cam.target = { AppModel.shared.screen == .navigating ? AppModel.shared.cameraTarget : nil }
+            c.camera = cam
         }
+        if navigating { c.camera?.start() } else if c.camera?.isRunning == true { c.camera?.stop() }
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest
             if !navigating { map.userTrackingMode = .follow }
@@ -267,7 +266,7 @@ struct NeonMapView: UIViewRepresentable {
         var selected = -1
         var navigating = false
         var recenter = 0
-        var lastFollow: Coordinate?
+        var camera: FollowCamera?
 
         func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
             overlay?.styleLoaded(style)

@@ -260,7 +260,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     private var revision = -1
     private var selected = -1
     private var navigating = false
-    private var lastFollow: Coordinate?
+    private var camera: FollowCamera?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -273,6 +273,11 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         map.userTrackingMode = .follow
         view.addSubview(map)
         mapView = map
+        let cam = FollowCamera(map: map, pitch: 0)
+        cam.altitudeFactor = 1.6
+        cam.target = { AppModel.shared.cameraTarget }
+        camera = cam
+        cam.start()
         overlay = RouteOverlay(map: map)
 
         let label = UILabel()
@@ -323,17 +328,10 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
                 overlay?.fit(routes: routes, padding: UIEdgeInsets(top: 60, left: left, bottom: 30, right: 60))
             }
         }
-        if navigating != self.navigating {
-            self.navigating = navigating
-            map.showsUserLocation = !navigating
-            if !navigating { overlay?.showPosition(nil, heading: 0); map.userTrackingMode = .follow }
-        }
-        // GM-022: Kamera folgt der Fahrposition (auch bei der Demo-Fahrt), flach von oben wie ein Spiel-Radar
-        if navigating, let f = follow, f != lastFollow {
-            lastFollow = f
-            overlay?.showPosition(f, heading: heading)
-            RouteOverlay.follow(map, at: f, heading: heading, pitch: 0, altitude: RouteOverlay.altitude(forKmh: speedKmh) * 1.6)
-        }
+        self.navigating = navigating
+        // GM-025: CarPlay ist auch ohne Route der Hauptmodus – Karte flach von oben, Pfeil in der Mitte,
+        // Kamera gleitet dem Auto nach. Nur die Routen-Vorschau zeigt die ganze Strecke (eingepasst).
+        if AppModel.shared.screen == .preview { camera?.stop() } else { camera?.start() }
         if let l = limit {
             limitLabel.text = String(l)
             limitLabel.isHidden = !navigating || l < 0 // GM-022: kein „∞“ – ohne Limit kein Schild im Auto
@@ -343,11 +341,13 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     }
 
     func zoom(by step: Double) {
+        if camera?.isRunning == true { camera?.zoom(by: step); return }
         guard let map = mapView else { return }
         map.setZoomLevel(map.zoomLevel + step, animated: true)
     }
 
     func recenter() {
-        if navigating { lastFollow = nil } else { mapView?.userTrackingMode = .follow }
+        camera?.altitudeFactor = 1.6
+        camera?.start()
     }
 }
