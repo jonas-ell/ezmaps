@@ -275,6 +275,7 @@ struct NeonMapView: UIViewRepresentable {
             let cam = FollowCamera(map: map, pitch: 55)
             cam.arrowY = 0.68
             cam.target = { AppModel.shared.screen == .navigating ? AppModel.shared.cameraTarget : nil }
+            cam.glow = { true }
             c.camera = cam
         }
         if navigating { c.camera?.start() } else if c.camera?.isRunning == true { c.camera?.stop() }

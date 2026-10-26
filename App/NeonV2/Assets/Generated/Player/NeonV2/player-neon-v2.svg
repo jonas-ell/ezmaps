@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128" fill="none">
+  <title>Neon V2 player arrow</title>
+  <defs><linearGradient id="body" x1="64" y1="18" x2="64" y2="102" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF"/><stop offset="1" stop-color="#D9D9DD"/></linearGradient>
+    <path id="arrow" d="M 60.42,21.16 Q 64,14 67.58,21.16 L 104.76,95.52 Q 108.34,102.68 100.77,100.08 L 66.60,82.34 Q 64,80.9 61.40,82.34 L 27.23,100.08 Q 19.66,102.68 23.24,95.52 Z"/>
+    <clipPath id="inside"><use xlink:href="#arrow"/></clipPath>
+    <filter id="shadow" x="0" y="0" width="128" height="128" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="6"/><feOffset dy="4" result="soft"/><feFlood flood-color="#000000" flood-opacity="0.45"/><feComposite in2="soft" operator="in"/></filter></defs>
+  <use xlink:href="#arrow" fill="#000000" stroke="#000000" stroke-width="6" filter="url(#shadow)"/>
+  
+  <use xlink:href="#arrow" fill="url(#body)" stroke="#0B0B0C" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M64 14 H112 V108 H64 Z" fill="#C4C4CA" clip-path="url(#inside)"/>
+  <use xlink:href="#arrow" stroke="#0B0B0C" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M60.1 29.5 L30.1 89.5" stroke="#FFFFFF" stroke-opacity="0.7" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M48 85.7 L61.4 77.6 Q64 76.2 66.6 77.6 L80 85.7" stroke="#A13DF0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

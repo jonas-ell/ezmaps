@@ -16,7 +16,11 @@ final class FollowCamera: NSObject {
     }
 
     private weak var map: MLNMapView?
-    private let arrow = UIImageView(image: RouteOverlay.arrowImage())
+    // GM-026: Pfeil von Codex (Assets/Generated/Player/NeonV2), mit lila Leuchten während der Navigation
+    private let plainArrow = UIImage(named: "PlayerNeon") ?? RouteOverlay.arrowImage()
+    private let glowArrow = UIImage(named: "PlayerNeonGlow") ?? RouteOverlay.arrowImage()
+    private lazy var arrow = UIImageView(image: plainArrow)
+    var glow: (() -> Bool)?
     private var link: CADisplayLink?
     private var last: CFTimeInterval = 0
     private var lat = 0.0, lon = 0.0, heading = 0.0, altitude = 600.0
@@ -33,7 +37,7 @@ final class FollowCamera: NSObject {
         self.map = map
         self.pitch = pitch
         super.init()
-        arrow.frame = CGRect(x: 0, y: 0, width: 52, height: 52)
+        arrow.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
         arrow.isHidden = true
         arrow.isUserInteractionEnabled = false
         map.addSubview(arrow)
@@ -100,6 +104,8 @@ final class FollowCamera: NSObject {
                                altitude: altitude, pitch: pitch, heading: heading)
         map.setCamera(cam, animated: false)
         arrow.center = CGPoint(x: ax, y: ay)
+        let img = glow?() == true ? glowArrow : plainArrow
+        if arrow.image !== img { arrow.image = img }
         arrow.isHidden = false
         if arrow.superview === map { map.bringSubviewToFront(arrow) }
     }

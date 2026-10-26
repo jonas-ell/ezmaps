@@ -276,6 +276,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         let cam = FollowCamera(map: map, pitch: 0)
         cam.altitudeFactor = 1.6
         cam.target = { AppModel.shared.cameraTarget }
+        cam.glow = { AppModel.shared.screen == .navigating }
         camera = cam
         cam.start()
         overlay = RouteOverlay(map: map)
