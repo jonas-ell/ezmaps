@@ -2,6 +2,22 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-024 – Neon City nach dem Foto des Nutzers
+
+**Ziel:** Karte auf iPhone und CarPlay wie die Vorlage: mittelgrau, helle Häuser, weiße Straßen mit dunklem Rand, Straßennamen auf der Straße.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-neon-city.json`, `tools/prototype/js/map.js`, `tools/mac_build.sh`, `tools/mac_screens.sh`, `docs/store/iphone-69/*`
+
+**Geändert:**
+- Palette: Boden `#3B3C3E`, Häuser `#5B5C5F`, Straßen `#ECECEC`/`#DCDCDC` mit Rand `#151617`, Wasser `#5D6870`; dunkle „Stadtblöcke“ entfernt
+- Straßennamen (Großbuchstaben, dunkel, entlang der Straße, ab Zoom 15) mit Schrift von OpenFreeMap (Noto Sans Bold)
+- Prototyp gespiegelt (gleiche Werte)
+- `bash tools/mac_screens.sh freigabe`: öffnet am Mac die Einstellung „Bedienungshilfen“ und zeigt `sshd-keygen-wrapper` im Finder
+
+**Tatsächlich geprüft:** Stil mit MapLibre GL JS gerendert und mit dem Foto verglichen; Mac-Build BUILD SUCCEEDED, 27/27 Tests; neue iPhone-Store-Screenshots angesehen.
+
+**Ungetestet:** Kartensymbole (Einkaufskorb, Kreuz …) aus dem Foto fehlen noch in der App. CarPlay-Screenshots hängen an der Freigabe am Mac.
+
 ## GM-023 – Nutzer-Feedback: keine Gedankenstriche, runde Ecken, Pfeil wie Prototyp, Pixel scharf, CarPlay-Bilder
 
 **Ziel:** Rückmeldungen zur ersten echten App umsetzen.
