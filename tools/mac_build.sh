@@ -89,7 +89,7 @@ OSA
     xcrun simctl io "$SID" screenshot --display=external --type=png "$OUT/carplay-$NAME.png" >/dev/null 2>&1 \
       && echo "Bild: carplay-$NAME" || echo "kein externes Display für $NAME"
   done
-  for F in "$OUT"/*.png; do [ -f "$F" ] || continue; echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="; done
+  for F in "$OUT"/*.png; do [ -s "$F" ] || continue; echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="; done
   echo "CARPLAY FERTIG"
   exit 0
 fi

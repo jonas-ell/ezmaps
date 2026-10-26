@@ -2,6 +2,27 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-023 – Nutzer-Feedback: keine Gedankenstriche, runde Ecken, Pfeil wie Prototyp, Pixel scharf, CarPlay-Bilder
+
+**Ziel:** Rückmeldungen zur ersten echten App umsetzen.
+
+**Dateien:** `App/{ContentView,NeonMapView,CarPlaySceneDelegate,AppModel,SpeechService,SettingsScreen,ScreenshotMode}.swift`, `App/en.lproj/Localizable.strings`, `tools/prototype/{js/tilejob.js,js/app.js,js/map.js,js/phone.js,index.html,style.css}`, `tools/mac_build.sh`, `tools/mac_screens.sh`, `docs/APPSTORE_TEXTE.md`, `docs/store/iphone-69/*`, `docs/previews/*`
+
+**Geändert:**
+- Keine Gedankenstriche mehr in sichtbaren Texten (App, Prototyp, Store-Texte)
+- Runde Ecken (16/10 pt) statt eckiger Kästen in der App
+- Positionspfeil exakt wie `player-neon.svg` (Prototyp), aufrecht statt flach auf der geneigten Karte, mit Schatten
+- Kamera folgt der Fahrposition (auch Demo-Fahrt), Höhe nach Tempo (Stadt nah, Autobahn weit); CarPlay flach von oben
+- „∞“ ersetzt durch Zeichen 282 „Ende aller Streckenverbote“; in CarPlay ohne Limit kein Schild
+- Ansagen mit der besten installierten deutschen Stimme (Premium/Erweitert, wenn geladen)
+- Prototyp Pixel Quest: Detail-Kachel im Kunstpixel-Raster ohne Glättung hochgerechnet (vorher unscharf), „danach …“ überlappt den Tacho nicht mehr
+- Store-Screenshot der Navigation mitten auf der Strecke; Statusleiste 9:41; iOS-Tastatur-Einführung aus
+- CarPlay-Screenshot-Lauf (`bash tools/mac_screens.sh carplay`) über AppleScript
+
+**Tatsächlich geprüft:** Mac-Build signiert + unsigniert BUILD SUCCEEDED, `swift test` 27/27; 5 iPhone-Store-Screenshots (1320 × 2868) aus der echten App angesehen; Prototyp `shots.py` ohne Fehler, Pixel-Navigation angesehen.
+
+**Ungetestet:** CarPlay-Screenshots: AppleScript scheitert mit Zeitüberschreitung (−1712), macOS will die Freigabe „Bedienungshilfen“ am Mac. Premium-Stimme nur, wenn auf dem Gerät geladen.
+
 ## GM-021 – Release vorbereitet: Store-Screenshots automatisch, Archiv/Upload, Startbildschirm
 
 **Ziel:** App fertig für die Einreichung machen, soweit es ohne Mac geht; Screenshots und Archiv mit je einem Befehl.
