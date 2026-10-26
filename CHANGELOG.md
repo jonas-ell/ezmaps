@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-027 – Screenshot-Durchsicht: CarPlay-Vorschau, Hinweistext, (i), ruhigere Übersicht
+
+**Ziel:** Alle Screenshots durchsehen und gefundene Fehler beheben.
+
+**Dateien:** `App/{CarPlaySceneDelegate,FollowCamera,NeonMapView,ContentView}.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-neon-city.json`, `docs/store/*`
+
+**Geändert:**
+- CarPlay-Vorschau: Kamera vor dem Einpassen stoppen (überschrieb den Ausschnitt), Strecke rechts neben dem iOS-Fenster, passende Ränder für das ~400 pt breite Fenster
+- CarPlay: OSM-Hinweis oben rechts, zweizeilig, nie unter den iOS-Fenstern; kein GPS-Punkt und kein (i) von MapLibre; Tempolimit links neben den Kartenknöpfen
+- iPhone: (i)-Knopf ganz aus (ragte in Such- und Vorschau-Leiste), Startkarte Zoom 15 statt 13, Routen-Vorschau mit mehr Rand
+- Karte: kleine Straßen erst ab Zoomstufe (Nebenstraßen 12, Zufahrten 14) – die Übersicht war eine weiße Fläche
+- Hinweis: grauer Punkt in der CarPlay-Navigation ist ein Teich (Wasser), kein Fehler
+
+**Tatsächlich geprüft:** `mac_check.sh`: BUILD SUCCEEDED (signiert + unsigniert), 27/27 Tests; alle 5 iPhone- und 3 CarPlay-Bilder angesehen.
+
+**Ungetestet:** Auf echtem iPhone/Auto noch nicht gefahren. Zwei Prüfläufe überschnitten sich zwischendurch auf dem Mac (Fehlermeldung „EzMaps.xcodeproj does not exist“) – das lag an parallel laufenden Läufen, nicht am Code.
+
 ## GM-026 – Straßennamen und Kartensymbole wie Vorlage, Neon-Pfeil V2 von Codex
 
 **Ziel:** Straßennamen auch in der Fahrt sichtbar, weiße Symbole wie im Foto, neuer Pfeil.
