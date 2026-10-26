@@ -253,15 +253,19 @@ final class AppModel {
         }
     }
 
+    /// Nur Store-Screenshots (ScreenshotMode): Demo-Fahrt startet nach so vielen Metern
+    @ObservationIgnored var demoStartOffset: Double = 0
+
     /// Demo-Fahrt: fährt die Route mit den geschätzten Geschwindigkeiten ab (2× Echtzeit)
     private func startDemo(on route: Route) {
         demoTask?.cancel()
+        let offset = min(demoStartOffset, route.length * 0.9)
         demoTask = Task { [weak self] in
-            var d: Double = 0
+            var d: Double = offset
             while !Task.isCancelled {
                 try? await Task.sleep(nanoseconds: 500_000_000)
                 guard !Task.isCancelled, let self, let current = self.session?.route else { return }
-                if d == 0 || current.shape != route.shape { d = self.session?.progress ?? 0 }
+                if current.shape != route.shape { d = self.session?.progress ?? 0 }
                 let seg = current.segmentIndex(at: d)
                 let kmh: Double = seg < current.segmentSpeeds.count ? current.segmentSpeeds[seg] : 50
                 let mps: Double = kmh / 3.6
