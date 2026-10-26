@@ -98,7 +98,7 @@ OSA
     xcrun simctl terminate "$SID" "$BID" 2>/dev/null
     [ "$NAME" = "vorschau" ] && { xcrun simctl location "$SID" clear; xcrun simctl location "$SID" set 50.21712,8.25734; }
     xcrun simctl launch "$SID" "$BID" -EZShot "$NAME" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
-    sleep 3
+    sleep 6   # GM-026: CarPlay braucht nach dem Neustart der App etwas, sonst geht der Klick ins Leere
     # GM-024: EzMaps im CarPlay-Fenster antippen (Startbildschirm: Icon unter „Nachrichten“, bei 25 % / 58 % des Bildes)
     osascript <<'OSA' 2>&1 | sed 's/^/Antippen: /'
 tell application "Simulator" to activate
@@ -110,6 +110,8 @@ tell application "System Events" to tell process "Simulator"
   -- Bildinhalt 800 × 480, unten im Fenster (oben Titelleiste); EzMaps-Symbol in der linken Leiste bei (52, 200)
   set k to ww / 800
   set top to wh - 480 * k
+  click at {px + 52 * k, py + top + 200 * k}
+  delay 2
   click at {px + 52 * k, py + top + 200 * k}
 end tell
 return "Fenster " & px & "," & py & " " & ww & "x" & wh

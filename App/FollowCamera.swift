@@ -55,6 +55,7 @@ final class FollowCamera: NSObject {
         map?.showsUserLocation = false
         map?.automaticallyAdjustsContentInset = false
         map?.compassView.isHidden = true // GM-025: Kompass stört in der Fahrt
+        map?.attributionButton.isHidden = true // Hinweis steht als Text darunter (GM-026)
     }
 
     func stop() {
@@ -64,6 +65,7 @@ final class FollowCamera: NSObject {
         map?.showsUserLocation = true
         map?.contentInset = .zero
         map?.compassView.isHidden = false
+        map?.attributionButton.isHidden = false
     }
 
     func zoom(by step: Double) {
