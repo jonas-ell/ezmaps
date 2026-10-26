@@ -68,7 +68,11 @@ if [ -f tools/.do_screens ]; then
   xcrun simctl install "$SID" "$APPDIR" || exit 1
   xcrun simctl privacy "$SID" grant location "$BID"
   xcrun simctl location "$SID" set 50.21712,8.25734   # Bahnhof Idstein
-  xcrun simctl status_override "$SID" --time 9:41 --dataNetwork wifi --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100
+  # GM-021: Befehl heißt in Xcode 26 „status_bar … override“
+  xcrun simctl status_bar "$SID" override --time 9:41 --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100 || echo "Statusleiste: Überschreiben nicht möglich"
+  # iOS-Einführung zum Wischen auf der Tastatur („Speed up your typing …“) nicht zeigen
+  xcrun simctl spawn "$SID" defaults write com.apple.Preferences DidShowContinuousPathIntroduction -bool true
+  xcrun simctl spawn "$SID" defaults write com.apple.keyboard.preferences DidShowContinuousPathIntroduction -bool true
   OUT=/tmp/ezshots; rm -rf "$OUT"; mkdir -p "$OUT"
   # Zustand:Wartezeit in Sekunden (Kacheln und Routen kommen aus dem Netz)
   for ENTRY in karte:10 suche:9 vorschau:14 navigation:26 einstellungen:6; do
@@ -78,7 +82,7 @@ if [ -f tools/.do_screens ]; then
     sleep "$WAIT"
     xcrun simctl io "$SID" screenshot --type=png "$OUT/$NAME.png" >/dev/null 2>&1 && echo "Bild: $NAME ($(stat -f%z "$OUT/$NAME.png") Bytes)"
   done
-  xcrun simctl status_override "$SID" clear
+  xcrun simctl status_bar "$SID" clear
   for F in "$OUT"/*.png; do
     echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="
   done
