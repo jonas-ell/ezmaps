@@ -278,6 +278,8 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         cam.target = { AppModel.shared.cameraTarget }
         cam.glow = { AppModel.shared.screen == .navigating }
         cam.restoreAttribution = false
+        cam.maxFPS = 30
+        map.preferredFramesPerSecond = .lowPower // GM-028: 30 Bilder/s im Auto
         cam.restoreUserLocation = false // GM-027: im Auto nie den GPS-Punkt von MapLibre
         camera = cam
         cam.start()

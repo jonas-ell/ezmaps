@@ -242,6 +242,8 @@ struct NeonMapView: UIViewRepresentable {
     var speedKmh: Double = 50
     /// Platz, den Bedienelemente oben/unten belegen (für das Einpassen der Route)
     var padding: UIEdgeInsets
+    /// GM-028: false, wenn die iPhone-Oberfläche nicht zu sehen ist (gesperrt, Hintergrund, nur CarPlay) – dann nicht zeichnen
+    var visible: Bool = true
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -280,7 +282,11 @@ struct NeonMapView: UIViewRepresentable {
             cam.glow = { true }
             c.camera = cam
         }
-        if navigating { c.camera?.start() } else if c.camera?.isRunning == true { c.camera?.stop() }
+        if navigating && visible { c.camera?.start() } else if c.camera?.isRunning == true { c.camera?.stop() }
+        if map.isHidden == visible {
+            map.isHidden = !visible
+            map.preferredFramesPerSecond = visible ? .default : .lowPower
+        }
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest
             if !navigating { map.userTrackingMode = .follow }

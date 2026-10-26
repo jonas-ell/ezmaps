@@ -84,8 +84,8 @@ for cls, r in order:
 layers.append({
     "id": "road-names", "type": "symbol", "source": "openmaptiles", "source-layer": "transportation_name", "minzoom": 13.5,
     "filter": ["in", ["get", "class"], ["literal", ["primary", "secondary", "tertiary", "minor", "trunk", "service"]]],
-    "layout": {"symbol-placement": "line", "text-field": ["coalesce", ["get", "name:de"], ["get", "name"]], "text-font": ["Noto Sans Bold"],
-               "text-size": ["interpolate", ["linear"], ["zoom"], 13.5, 8.5, 16, 11, 18, 14], "text-transform": "uppercase", "text-letter-spacing": 0.08,
+    "layout": {"symbol-placement": "line", "text-field": ["coalesce", ["get", "name:de"], ["get", "name"]], "text-font": ["Barlow Condensed SemiBold"],  # GM-028: schmale fette Schrift wie die Vorlage (eigene Glyphen, OFL)
+               "text-size": ["interpolate", ["linear"], ["zoom"], 13.5, 10, 16, 13, 18, 16], "text-transform": "uppercase", "text-letter-spacing": 0.12,
                "text-max-angle": 30, "text-padding": 2, "symbol-spacing": 220},
     "paint": {"text-color": NEON["label"]},
 })
@@ -109,7 +109,8 @@ style = {
     "sources": {"openmaptiles": {"type": "vector", "url": "https://tiles.openfreemap.org/planet",
                                  # GM-020: OpenFreeMap verlangt den Hinweis auf OpenMapTiles und OpenStreetMap
                                  "attribution": "<a href=\"https://openfreemap.org\">OpenFreeMap</a> · © <a href=\"https://www.openmaptiles.org/\">OpenMapTiles</a> · © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap-Mitwirkende</a>"}},
-    "glyphs": "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
+    # GM-028: Glyphen liegen in der App (Resources/Glyphs, erzeugt von build_glyphs.py) – asset:// = App-Bundle
+    "glyphs": "asset://Glyphs/{fontstack}/{range}.pbf",
     "layers": layers,
 }
 OUT.parent.mkdir(parents=True, exist_ok=True)

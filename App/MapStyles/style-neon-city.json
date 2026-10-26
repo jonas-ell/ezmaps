@@ -11,7 +11,7 @@
    "attribution": "<a href=\"https://openfreemap.org\">OpenFreeMap</a> · © <a href=\"https://www.openmaptiles.org/\">OpenMapTiles</a> · © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap-Mitwirkende</a>"
   }
  },
- "glyphs": "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
+ "glyphs": "asset://Glyphs/{fontstack}/{range}.pbf",
  "layers": [
   {
    "id": "land",
@@ -1588,7 +1588,7 @@
      ]
     ],
     "text-font": [
-     "Noto Sans Bold"
+     "Barlow Condensed SemiBold"
     ],
     "text-size": [
      "interpolate",
@@ -1599,14 +1599,14 @@
       "zoom"
      ],
      13.5,
-     8.5,
+     10,
      16,
-     11,
+     13,
      18,
-     14
+     16
     ],
     "text-transform": "uppercase",
-    "text-letter-spacing": 0.08,
+    "text-letter-spacing": 0.12,
     "text-max-angle": 30,
     "text-padding": 2,
     "symbol-spacing": 220

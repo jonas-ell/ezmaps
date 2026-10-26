@@ -35,6 +35,9 @@ final class FollowCamera: NSObject {
     /// Hinweis-Knopf (i) nach dem Anhalten wieder zeigen? (CarPlay: nein, dort steht der Hinweis als Text)
     var restoreAttribution = false
     var restoreUserLocation = true
+    /// GM-028: höchste Bildrate (CarPlay 30 – Autoradios zeigen meist nicht mehr, halbiert die Arbeit)
+    var maxFPS: Float = 60
+    private var lastSet: (Double, Double, Double, Double, CGPoint)?
 
     init(map: MLNMapView, pitch: CGFloat) {
         self.map = map
@@ -52,6 +55,8 @@ final class FollowCamera: NSObject {
         guard link == nil else { return }
         hasState = false
         let l = CADisplayLink(target: self, selector: #selector(tick(_:)))
+        l.preferredFrameRateRange = CAFrameRateRange(minimum: min(15, maxFPS), maximum: maxFPS, preferred: maxFPS)
+        lastSet = nil
         l.add(to: .main, forMode: .common)
         link = l
         map?.userTrackingMode = .none
@@ -105,6 +110,11 @@ final class FollowCamera: NSObject {
         let inset = UIEdgeInsets(top: max(0, 2 * ay - map.bounds.height), left: max(0, 2 * ax - map.bounds.width),
                                  bottom: max(0, map.bounds.height - 2 * ay), right: max(0, map.bounds.width - 2 * ax))
         if map.contentInset != inset { map.contentInset = inset }
+        // GM-028: im Stand nichts neu setzen – spart Rechenzeit (Kamera und Pfeil sind schon richtig)
+        if let p = lastSet, abs(p.0 - lat) < 1e-7, abs(p.1 - lon) < 1e-7, abs(p.2 - heading) < 0.05, abs(p.3 - altitude) < 0.5, p.4 == CGPoint(x: ax, y: ay) {
+            return
+        }
+        lastSet = (lat, lon, heading, altitude, CGPoint(x: ax, y: ay))
         let cam = MLNMapCamera(lookingAtCenter: CLLocationCoordinate2D(latitude: lat, longitude: lon),
                                altitude: altitude, pitch: pitch, heading: heading)
         map.setCamera(cam, animated: false)

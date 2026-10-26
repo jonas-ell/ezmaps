@@ -18,6 +18,10 @@ targets:
     platform: iOS
     sources:
       - path: App
+      # GM-028: Kartenschrift (Barlow Condensed, OFL) als Ordner im App-Bundle – Stil lädt asset://Glyphs/…
+      - path: Resources/Glyphs
+        type: folder
+        buildPhase: resources
     dependencies:
       - package: EzMapsCore
       - package: MapLibre

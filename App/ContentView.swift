@@ -6,6 +6,7 @@ import EzMapsCore
 struct ContentView: View {
     @State private var model = AppModel.shared
     @State private var showSettings = false
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         ZStack {
@@ -19,7 +20,8 @@ struct ContentView: View {
                 follow: model.navCoordinate,
                 heading: model.navHeading,
                 speedKmh: model.navSpeedKmh,
-                padding: UIEdgeInsets(top: 130, left: 60, bottom: 380, right: 60)
+                padding: UIEdgeInsets(top: 130, left: 60, bottom: 380, right: 60),
+                visible: scenePhase == .active
             )
             .ignoresSafeArea()
 
