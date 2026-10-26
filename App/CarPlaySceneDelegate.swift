@@ -326,6 +326,8 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     func show(routes: [Route], selected: Int, destination: Coordinate?, revision: Int, navigating: Bool, limit: Int?,
               follow: Coordinate? = nil, heading: Double = 0, speedKmh: Double = 50) {
         guard let map = mapView else { return }
+        // GM-027: Kamera zuerst umschalten – sonst überschreibt sie den gerade eingepassten Vorschau-Ausschnitt
+        if AppModel.shared.screen == .preview { camera?.stop() } else { camera?.start() }
         if revision != self.revision || selected != self.selected {
             let isNew = revision != self.revision
             self.revision = revision
@@ -342,7 +344,6 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         self.navigating = navigating
         // GM-025: CarPlay ist auch ohne Route der Hauptmodus – Karte flach von oben, Pfeil in der Mitte,
         // Kamera gleitet dem Auto nach. Nur die Routen-Vorschau zeigt die ganze Strecke (eingepasst).
-        if AppModel.shared.screen == .preview { camera?.stop() } else { camera?.start() }
         if let l = limit {
             limitLabel.text = String(l)
             limitLabel.isHidden = !navigating || l < 0 // GM-022: kein „∞“ – ohne Limit kein Schild im Auto
