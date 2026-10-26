@@ -34,6 +34,7 @@ final class FollowCamera: NSObject {
     var arrowY: CGFloat = 0.5
     /// Hinweis-Knopf (i) nach dem Anhalten wieder zeigen? (CarPlay: nein, dort steht der Hinweis als Text)
     var restoreAttribution = true
+    var restoreUserLocation = true
 
     init(map: MLNMapView, pitch: CGFloat) {
         self.map = map
@@ -64,7 +65,7 @@ final class FollowCamera: NSObject {
         link?.invalidate()
         link = nil
         arrow.isHidden = true
-        map?.showsUserLocation = true
+        map?.showsUserLocation = restoreUserLocation
         map?.contentInset = .zero
         map?.compassView.isHidden = false
         map?.attributionButton.isHidden = !restoreAttribution

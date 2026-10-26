@@ -278,6 +278,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         cam.target = { AppModel.shared.cameraTarget }
         cam.glow = { AppModel.shared.screen == .navigating }
         cam.restoreAttribution = false
+        cam.restoreUserLocation = false // GM-027: im Auto nie den GPS-Punkt von MapLibre
         camera = cam
         cam.start()
         overlay = RouteOverlay(map: map)
@@ -286,6 +287,8 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         label.text = "© OpenMapTiles\n" + L("© OpenStreetMap-Mitwirkende") // GM-027: zweizeilig, schmal genug für die Ecke
         label.numberOfLines = 2
         label.textAlignment = .right
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.6
         label.font = .systemFont(ofSize: 10, weight: .medium)
         label.textColor = UIColor.white.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -308,6 +311,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
             label.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8),
             // GM-027: oben rechts – unten links verdeckt die Ankunftsbox von iOS den Hinweis
             label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 6),
+            label.leadingAnchor.constraint(greaterThanOrEqualTo: view.centerXAnchor, constant: 40), // nie unter die iOS-Fenster links
             limitLabel.widthAnchor.constraint(equalToConstant: 48),
             limitLabel.heightAnchor.constraint(equalToConstant: 48),
             limitLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -72), // links neben den Kartenknöpfen
