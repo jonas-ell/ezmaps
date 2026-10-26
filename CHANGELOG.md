@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-028 – Straßennamen in schmaler Fettschrift, weniger Rechenlast
+
+**Ziel:** Straßennamen wie im Foto des Nutzers; Ruckeln verringern.
+
+**Dateien:** `tools/maplibre/build_glyphs.py` (neu), `Resources/Glyphs/Barlow Condensed SemiBold/*.pbf` (neu), `Resources/Glyphs/OFL-BarlowCondensed.txt`, `tools/maplibre/build_style.py`, `App/MapStyles/style-neon-city.json`, `App/{FollowCamera,NeonMapView,ContentView,CarPlaySceneDelegate}.swift`, `project.yml`, `tools/mac_{run,screens,archive}.sh`, `docs/store/*`
+
+**Geändert:**
+- Straßennamen in Barlow Condensed SemiBold (SIL OFL 1.1), Großbuchstaben, größer, mehr Buchstabenabstand. Kartenschrift (SDF-Glyphen) selbst erzeugt und in der App gebündelt (`asset://Glyphs/…`) – OpenFreeMap hat nur Noto Sans
+- CarPlay: Karte und Kamera mit 30 statt 60 Bildern/s
+- Kamera setzt im Stand nichts neu
+- iPhone-Karte pausiert, wenn die App nicht aktiv ist (gesperrt, Hintergrund, nur CarPlay)
+- Übertragungs-Skripte schicken `Resources/` mit
+
+**Tatsächlich geprüft:** Glyphen mit MapLibre GL JS im Browser gerendert; Mac: BUILD SUCCEEDED, 27/27 Tests; iPhone- und CarPlay-Screenshots angesehen (neue Schrift sichtbar).
+
+**Ungetestet:** Flüssigkeit auf echtem iPhone und Autoradio (Simulator ist dafür ungeeignet).
+
 ## GM-027 – Screenshot-Durchsicht: CarPlay-Vorschau, Hinweistext, (i), ruhigere Übersicht
 
 **Ziel:** Alle Screenshots durchsehen und gefundene Fehler beheben.
