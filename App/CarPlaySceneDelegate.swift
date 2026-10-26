@@ -283,8 +283,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         overlay = RouteOverlay(map: map)
 
         let label = UILabel()
-        label.text = "© OpenMapTiles
-" + L("© OpenStreetMap-Mitwirkende") // GM-027: zweizeilig, schmal genug für die Ecke
+        label.text = "© OpenMapTiles\n" + L("© OpenStreetMap-Mitwirkende") // GM-027: zweizeilig, schmal genug für die Ecke
         label.numberOfLines = 2
         label.textAlignment = .right
         label.font = .systemFont(ofSize: 10, weight: .medium)
