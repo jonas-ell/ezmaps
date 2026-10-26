@@ -28,7 +28,8 @@ enum NeonColors {
 
 /// Gemeinsamer Aufbau für iPhone und CarPlay
 enum NeonMap {
-    static func make(frame: CGRect = .zero, zoom: Double = 15) // GM-027: näher, damit der Spiel-Look sichtbar ist -> MLNMapView {
+    // GM-027: Startzoom 15 (vorher 13), damit der Spiel-Look sichtbar ist
+    static func make(frame: CGRect = .zero, zoom: Double = 15) -> MLNMapView {
         let map = MLNMapView(frame: frame, styleURL: MapStyleResource.url(for: .neonCity))
         map.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         map.backgroundColor = NeonColors.background
