@@ -51,7 +51,10 @@ struct ContentView: View {
         .onAppear {
             model.onAppear()
             ScreenshotMode.run(model) // GM-021: nur mit Startargument -EZShot (Store-Screenshots)
-            if ScreenshotMode.state == "einstellungen" { showSettings = true }
+            if ScreenshotMode.state == "einstellungen" {
+                // GM-030: erst nach dem ersten Bild öffnen – direkt beim Start ging das Blatt auf frischen Geräten verloren
+                Task { try? await Task.sleep(nanoseconds: 1_500_000_000); showSettings = true }
+            }
         }
     }
 }
@@ -244,6 +247,7 @@ struct RoutePreview: View {
                             .background(Color(uiColor: NeonColors.route), in: EZShape.box).foregroundStyle(.white)
                     }
                     .disabled(model.routes.isEmpty)
+                    .opacity(model.routes.isEmpty ? 0.4 : 1) // GM-030: sichtbar aus, solange die Route berechnet wird
                 }
             }
         }

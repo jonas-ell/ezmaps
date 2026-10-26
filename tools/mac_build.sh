@@ -135,6 +135,8 @@ if [ -f tools/.do_testshots ]; then
     xcrun simctl launch "$1" "$BID" -EZShot "$3" -AppleLanguages "($4)" -AppleLocale "$4" >/dev/null
     sleep "$5"
     xcrun simctl io "$1" screenshot --type=png "$OUT/$2.png" >/dev/null 2>&1 && echo "Bild: $2"
+    # GM-030: läuft die App noch? Sonst Absturz melden
+    xcrun simctl spawn "$1" launchctl list 2>/dev/null | grep -q "$BID" || echo "ACHTUNG: App läuft nach $2 nicht (Absturz?)"
   }
   prep() { # Gerät-ID → bauen, installieren, Standort
     xcrun simctl boot "$1" 2>/dev/null; xcrun simctl bootstatus "$1" -b >/dev/null
@@ -146,20 +148,26 @@ if [ -f tools/.do_testshots ]; then
     xcrun simctl privacy "$1" grant location "$BID"
     xcrun simctl location "$1" set 50.21712,8.25734
     xcrun simctl status_bar "$1" override --time 9:41 2>/dev/null
+    # GM-030: Aufwärmen – erster Start auf frischem Gerät lädt Kacheln und Schrift, danach sind die Bilder vergleichbar
+    xcrun simctl launch "$1" "$BID" >/dev/null 2>&1; sleep 20; xcrun simctl terminate "$1" "$BID" 2>/dev/null
   }
   idof() { xcrun simctl list devices available | grep -E "$1" | head -1 | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}'; }
   SMALL=$(idof "^ +iPhone SE"); [ -n "$SMALL" ] || SMALL=$(idof "^ +iPhone 1[6-9]e")
   BIG=$(idof "^ +iPhone 1[6-9] Pro Max")
   if [ -n "$SMALL" ]; then
     echo "Kleines Gerät: $(xcrun simctl list devices available | grep "$SMALL" | sed 's/^ *//')"
-    prep "$SMALL" && for E in karte:10 suche:9 vorschau:14 navigation:26 einstellungen:6; do shoot "$SMALL" "klein-${E%%:*}" "${E%%:*}" de "${E##*:}"; done
+    prep "$SMALL" && for E in karte:12 suche:10 vorschau:16 navigation:28 einstellungen:8; do shoot "$SMALL" "klein-${E%%:*}" "${E%%:*}" de "${E##*:}"; done
   else echo "Kein kleines iPhone im Simulator"; fi
   if [ -n "$BIG" ]; then
-    prep "$BIG" && for E in karte:10 vorschau:14 navigation:26 einstellungen:6; do shoot "$BIG" "en-${E%%:*}" "${E%%:*}" en "${E##*:}"; done
+    prep "$BIG" && for E in karte:12 vorschau:16 navigation:28 einstellungen:8; do shoot "$BIG" "en-${E%%:*}" "${E%%:*}" en "${E##*:}"; done
     xcrun simctl privacy "$BIG" revoke location "$BID"
     shoot "$BIG" "verweigert-karte" karte de 8
     xcrun simctl privacy "$BIG" grant location "$BID"
   fi
+  # GM-030: Absturzberichte der letzten Stunde
+  find "$HOME/Library/Logs/DiagnosticReports" -name "EzMaps*" -mmin -60 2>/dev/null | while read -r R; do
+    echo "ABSTURZ: $(basename "$R")"; grep -m5 -E '"exception"|Termination|crashed|EXC_' "$R" | head -5
+  done
   for F in "$OUT"/*.png; do [ -s "$F" ] || continue; echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="; done
   echo "TESTBILDER FERTIG"
   exit 0

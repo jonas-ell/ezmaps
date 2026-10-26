@@ -28,7 +28,7 @@ rm -rf "$TMP/src"
 
 echo "Baue im Simulator und mache Bilder (dauert ein paar Minuten) …"
 ssh "$H" build > "$RAW"
-grep -vE '^[A-Za-z0-9+/=]{60,}$' "$RAW" | grep -v "^===" | tail -25
+grep -vE '^[A-Za-z0-9+/=]{60,}$' "$RAW" | grep -v "^===" | tail -40
 
 rm -rf "$OUTDIR"; mkdir -p "$OUTDIR"   # GM-025: alte Bilder weg, sonst bleiben veraltete Zustände liegen
 python - "$RAW" "$OUTDIR" <<'PY'
