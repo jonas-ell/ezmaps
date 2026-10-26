@@ -9,6 +9,7 @@ cd "$(dirname "$0")/.."
 OUTDIR=docs/store/iphone-69
 MARK=.do_screens
 if [ "${1:-}" = "carplay" ]; then OUTDIR=docs/store/carplay; MARK=.do_carscreens; fi  # GM-023
+if [ "${1:-}" = "freigabe" ]; then MARK=.do_open_privacy; fi  # GM-024: Einstellungen am Mac öffnen
 TMP=$(mktemp -d)
 RAW="$TMP/ausgabe.txt"
 

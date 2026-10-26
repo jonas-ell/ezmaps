@@ -12,7 +12,7 @@ const WIDTH = { 0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5 };
 const MIN_PX = { 0: 4.4, 1: 3.6, 2: 3, 3: 2.4, 4: 2, 5: 1.4, 6: 1.2, 7: 1 };
 
 export const STYLES = {
-  neon:    { name: 'Neon City', route: '#a13df0', routeEdge: '#4b1a73', alt: 'rgba(200,200,205,0.55)', bg: '#1c1c1d', haze: [28, 28, 29] },
+  neon:    { name: 'Neon City', route: '#a13df0', routeEdge: '#4b1a73', alt: 'rgba(200,200,205,0.55)', bg: '#3b3c3e', haze: [59, 60, 62] },
   western: { name: 'Wild West', route: '#c0261f', routeEdge: '#4a0d0a', alt: 'rgba(90,60,30,0.45)', bg: '#c4ac80', haze: [196, 172, 128] },
   pixel:   { name: 'Pixel Quest', route: '#ffcc33', routeEdge: '#7a4a00', alt: 'rgba(255,255,255,0.6)', bg: '#1b2a5a', haze: [27, 42, 90], pixelated: true },
   toy:     { name: 'Toy Town', route: '#ff7a00', routeEdge: '#ffffff', alt: 'rgba(255,255,255,0.75)', bg: '#8dc63f', haze: [196, 230, 255] },
@@ -100,12 +100,11 @@ export const NEON_ROADS = { // für drawRoads (Vektorstraßen), derzeit nicht ak
 };
 // GM-010: Look nach Vorlage (dunkle Open-World-Übersicht): fast schwarzes Land, Stadt als dunkelgraue Blöcke,
 // breite hellgraue Straßen ohne Rand, Gebäude nur knapp heller als der Block, Wasser grau und hell
-const NEON = {
-  land: '#1c1c1d', residential: '#2c2c2d', industrial: '#2c2c2d', farm: '#1d1d1e', park: '#202121', forest: '#1e1f1f',
-  water: '#4b4e4d', waterLine: '#4b4e4d', building: '#373738', buildingEdge: '#424243', casing: null,
-  urban: '#2c2c2d', urbanReach: 46, widen: 1.5,
-  road: r => r <= 2 ? '#b0b0b0' : r <= 6 ? '#a3a3a3' : '#8e8e8e', rail: '#3a3a3b', texture: terrainTexture,
-  hill: true, // GM-011: Hügel-Schattierung (lokaler Claude, Teil 0.3)
+const NEON = { // GM-024: nach Foto des Nutzers – Mirror in tools/maplibre/build_style.py, change both
+  land: '#3b3c3e', residential: '#3b3c3e', industrial: '#3e3f41', farm: '#38393b', park: '#36383a', forest: '#333537',
+  water: '#5d6870', waterLine: '#5d6870', building: '#5b5c5f', buildingEdge: '#4a4b4e', casing: '#151617', widen: 1.5,
+  road: r => r <= 4 ? '#ececec' : r <= 6 ? '#dcdcdc' : '#c4c4c4', rail: '#2b2c2e', texture: terrainTexture,
+  hill: true,
 };
 const WESTERN = {
   land: '#dcc59a', residential: '#d4bb8a', industrial: '#ccb07f', farm: '#e3cfa2', park: '#d6c18c', forest: '#cdb782',

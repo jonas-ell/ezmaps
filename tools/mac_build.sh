@@ -49,6 +49,16 @@ PLIST
   exit $STATUS
 fi
 
+# GM-024: Freigabe „Bedienungshilfen“ vorbereiten (Marker tools/.do_open_privacy): öffnet auf dem Mac-Bildschirm
+# die Einstellungsseite und zeigt sshd-keygen-wrapper im Finder. Das Häkchen setzt der Nutzer selbst (macOS-Regel).
+if [ -f tools/.do_open_privacy ]; then
+  rm -f tools/.do_open_privacy
+  open "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_Accessibility"     || open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
+  open -R /usr/libexec/sshd-keygen-wrapper
+  echo "Einstellungen und Finder auf dem Mac geöffnet"
+  exit 0
+fi
+
 # GM-023: CarPlay-Screenshots (Marker tools/.do_carscreens). Simulator-App öffnen, per AppleScript
 # I/O → External Displays → CarPlay einschalten, dann das externe Display fotografieren.
 # Braucht einmalig: Systemeinstellungen → Datenschutz → Bedienungshilfen → „sshd-keygen-wrapper“/Terminal erlauben.
