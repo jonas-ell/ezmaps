@@ -337,8 +337,9 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
             if isNew && !navigating && !routes.isEmpty {
                 // GM-027: Routen-Vorschau von iOS belegt links knapp die halbe Breite – Strecke rechts davon einpassen
                 let safe = view.safeAreaInsets
-                let left: CGFloat = safe.left + view.bounds.width * 0.58 + 30
-                overlay?.fit(routes: routes, padding: UIEdgeInsets(top: safe.top + 50, left: left, bottom: safe.bottom + 30, right: safe.right + 80))
+                // Fenster ist nur ~400 pt breit: knapp rechts vom iOS-Fenster (endet bei ~55 %) bis vor die Kartenknöpfe
+                let left: CGFloat = safe.left + view.bounds.width * 0.56 + 10
+                overlay?.fit(routes: routes, padding: UIEdgeInsets(top: safe.top + 24, left: left, bottom: safe.bottom + 14, right: safe.right + 58))
             }
         }
         self.navigating = navigating
