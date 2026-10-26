@@ -283,7 +283,10 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         overlay = RouteOverlay(map: map)
 
         let label = UILabel()
-        label.text = L("© OpenMapTiles · © OpenStreetMap-Mitwirkende")
+        label.text = "© OpenMapTiles
+" + L("© OpenStreetMap-Mitwirkende") // GM-027: zweizeilig, schmal genug für die Ecke
+        label.numberOfLines = 2
+        label.textAlignment = .right
         label.font = .systemFont(ofSize: 10, weight: .medium)
         label.textColor = UIColor.white.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -329,7 +332,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
             if isNew && !navigating && !routes.isEmpty {
                 // GM-027: Routen-Vorschau von iOS belegt links knapp die halbe Breite – Strecke rechts davon einpassen
                 let safe = view.safeAreaInsets
-                let left: CGFloat = safe.left + view.bounds.width * 0.5 + 20
+                let left: CGFloat = safe.left + view.bounds.width * 0.58 + 30
                 overlay?.fit(routes: routes, padding: UIEdgeInsets(top: safe.top + 50, left: left, bottom: safe.bottom + 30, right: safe.right + 80))
             }
         }
