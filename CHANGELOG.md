@@ -22,6 +22,8 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
   - Neon-City-Name: Code suchte „Pricedown“, die Datei heißt „Pricedown-Black“ – darum immer Ersatzschrift. `mac_device.sh`/`mac_screens.sh` schicken die lokale Datei mit (nie Git); Store-Build ohne, bis die App-Lizenz gekauft ist.
   - Neon City aus der Entfernung nach Vorlage (Pausenkarte eines Open-World-Spiels): Boden fast schwarz, Orte etwas heller, dünne graue Straßen ohne Rand; ab Zoom 14,5 wie bisher. Farbige Kartensymbole (blau, rot, grün) ab Zoom 13,5.
   - Codex-Auftrag `docs/ASSETS_CODEX.md` Abschnitt 9: neue Kartenknöpfe (HUD) und Stil-Bilder.
+  - Codex-Lieferung eingebaut: 14 HUD-Knöpfe (`Assets/Generated/Icons/HUD`, als PNG 1×/2×/3× gerechnet, weil Xcode SVG-Schatten nicht zeichnet) in `GlassRoundButton` (Zuordnung SF-Symbol → HUD) und als CarPlay-Kartenknöpfe; 5 Stil-Bilder (`Assets/Generated/StyleTiles`, in der App 200 pt als JPEG ohne die eingebauten Ecken, zusammen 730 KB) in `StyleSwatch`.
+  - iPhone-Navigation flach von oben (vorher 55° schräg), wie CarPlay und das Foto des Nutzers.
 
 **Tatsächlich geprüft:**
 - Geräte-Build für iPhone 15 „jonas“: GERÄTE-BUILD OK, installiert und gestartet (`com.game.ezmaps`).
