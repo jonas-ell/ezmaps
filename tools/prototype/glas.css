@@ -1,0 +1,24 @@
+/* GM-033: weitere Screens im Glas-Design (Ergänzung zu designs.css / onboarding.css, Richtung B) */
+.B .f .price { font: 800 15px Inter; padding: 8px 12px; border-radius: 12px; background: rgba(255,255,255,.1); white-space: nowrap; }
+.B .f .price.own { background: rgba(88,176,95,.22); color: #7fd287; }
+.B .f .hero { position: relative; height: 230px; border-radius: 22px; overflow: hidden; }
+.B .f .hero .m { position: absolute; inset: 0; }
+.B .f .hero .t { position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 14px 12px; background: linear-gradient(transparent, rgba(0,0,0,.85)); }
+.B .f .hero .t b { font: 800 24px Inter; display: block; } .B .f .hero .t small { font: 600 12px Inter; opacity: .85; }
+.B .f .badge { position: absolute; left: 10px; top: 10px; font: 800 11px Inter; padding: 4px 9px; border-radius: 9px; background: #b44dff; }
+.B .f .srow { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: .5px solid rgba(255,255,255,.1); }
+.B .f .srow:first-child { border-top: 0; }
+.B .f .thumb { width: 54px; height: 54px; border-radius: 14px; overflow: hidden; position: relative; flex: none; }
+.B .f .thumb .m { position: absolute; inset: 0; }
+.B .f .srow b { font: 700 15px Inter; display: block; } .B .f .srow small { font: 500 12.5px Inter; color: #a9a9b2; }
+.B .f .fine { font: 500 11px/1.4 Inter; color: #8e8e96; text-align: center; margin-top: 8px; }
+.B .f .link { font: 600 13px Inter; color: #c27bff; text-align: center; margin-top: 8px; }
+.B .f .banner { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 18px; }
+.B .f .banner b { font: 800 15px Inter; display: block; } .B .f .banner small { font: 500 12.5px Inter; opacity: .85; }
+.B .f .warn { background: rgba(255,159,28,.82); color: #1a1000; }
+.B .f .err { background: rgba(255,59,78,.8); }
+.B .f .info { background: rgba(124,40,200,.78); }
+.B .f .confetti { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 30%, rgba(180,77,255,.35), transparent 55%); }
+.B .f .day { font: 700 12px Inter; letter-spacing: 1.5px; text-transform: uppercase; color: #8e8e96; margin: 14px 0 6px; }
+.B .f .sum { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.B .f .sum div { padding: 10px; border-radius: 14px; background: rgba(28,28,32,.62); border: .5px solid rgba(255,255,255,.16); font: 800 19px Inter; } .B .f .sum small { display: block; font: 500 11px Inter; color: #a9a9b2; }

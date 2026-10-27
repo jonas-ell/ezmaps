@@ -33,16 +33,16 @@ const SCREENS = [
   ['2 Standort (vor der iOS-Frage)', 'Erklärt erst den Nutzen, dann kommt die iOS-Abfrage. Hintergrund nur „Beim Verwenden“, Hintergrund erst bei der ersten Fahrt.', ph => {
     browse(ph.querySelector('.fill'), 'neon', 0.9);
     ph.append($(`<div class="f"><div class="dim" style="background:rgba(0,0,0,.72)"></div>${steps(1)}<div class="kick">Schritt 1 von 3</div>
-      <div class="h1">Wo bist du gerade?</div><div class="sub">Damit EzMaps dich navigiert und deine Stadt aufdeckt. Dein Standort bleibt auf dem iPhone.</div>
+      <div class="h1">Wo bist du gerade?</div><div class="sub">Damit EzMaps dich navigiert und deine Stadt aufdeckt.</div>
       <div class="grow" style="display:grid;place-items:center"><div class="bigicon" style="color:var(--acc)">${icon(I.pin, 110, 'currentColor', 1.6)}</div></div>
-      <div class="card"><div class="li"><span class="ic">${icon(I.loc, 18)}</span><span>Karte zeigt dich<small>Nur während die App offen ist</small></span></div><div class="li"><span class="ic">${icon(I.lock, 18)}</span><span>Kein Konto, kein Tracking<small>Keine Fahrten auf Servern</small></span></div></div>
+      <div class="card"><div class="li"><span class="ic">${icon(I.loc, 18)}</span><span>Karte zeigt dich<small>Nur während die App offen ist</small></span></div><div class="li"><span class="ic">${icon(I.vol, 18)}</span><span>Ansagen laufen weiter<small>Auch bei gesperrtem iPhone, nur während einer Fahrt</small></span></div></div>
       <div class="btn">Standort erlauben</div><div class="btn2">Später</div></div>`));
   }],
   ['3 Stil wählen', 'Echte Karten-Vorschau je Stil. Klassik gratis, Premium mit „Testen“.', ph => {
     ph.querySelector('.fill').style.background = '#0b0b0d';
     const f = $(`<div class="f">${steps(2)}<div class="kick">Schritt 2 von 3</div><div class="h1">Wie soll deine Welt aussehen?</div><div class="sub">Du kannst jederzeit wechseln.</div>
-      <div class="grid2" style="margin-top:16px">${['classic', 'neon', 'western', 'pixel'].map((s, i) => `<div class="tile ${s === 'neon' ? 'sel' : ''}"><div class="m" data-s="${s}"></div><span class="pill ${STYLES[s].free ? '' : 'pro'}">${STYLES[s].free ? 'GRATIS' : 'PREMIUM'}</span><div class="t">${STYLES[s].name}<small>${STYLES[s].free ? 'Inklusive' : 'Kostenlos testen'}</small></div></div>`).join('')}</div>
-      <div class="grow"></div><div class="btn">Weiter mit Neon City</div></div>`);
+      <div class="grid2" style="margin-top:16px">${['classic', 'neon', 'western', 'pixel'].map((s, i) => `<div class="tile ${s === 'classic' ? 'sel' : ''}"><div class="m" data-s="${s}"></div><span class="pill ${STYLES[s].free ? '' : 'pro'}">${STYLES[s].free ? 'GRATIS' : 'PREMIUM'}</span><div class="t">${STYLES[s].name}<small>${STYLES[s].free ? 'Inklusive' : 'Kostenlos testen'}</small></div></div>`).join('')}</div>
+      <div class="grow"></div><div class="btn">Weiter mit Klassik</div></div>`);
     ph.append(f);
     requestAnimationFrame(() => f.querySelectorAll('.m').forEach(m => { const s = m.dataset.s; mapInto(m, s, { center: [40, -20], heading: 0.4, scale: 1.1, tilt: 45, anchor: [0.5, 0.6] }, (u, v) => { drawRoute(u, v, R, 0, s, { width: 6 }); drawPlayer(u, v, R.pts[0], 0, s, 9); }); }));
   }],
@@ -50,7 +50,7 @@ const SCREENS = [
     browse(ph.querySelector('.fill'), 'neon', 0.6);
     ph.append($(`<div class="f"><div class="dim" style="background:rgba(0,0,0,.78)"></div>${steps(3)}<div class="kick">Schritt 3 von 3</div><div class="h1">Wohin fährst du oft?</div><div class="sub">Dann reicht später ein Tipp oder „Hey Siri, nach Hause“.</div>
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px"><div class="field">${icon(I.home, 20)}<span>Lanaer Straße 12, Idstein</span></div><div class="field">${icon(I.work, 20)}<span style="opacity:.6">Arbeit hinzufügen</span></div></div>
-      <div class="card" style="margin-top:16px"><div class="li"><span class="ic">${icon(I.vol, 18)}</span><span>Sprachansagen<small>Musik wird dabei nur leiser</small></span><span class="toggle" style="margin-left:auto"></span></div><div class="li"><span class="ic">${icon(I.bell, 18)}</span><span>Losfahr-Hinweis<small>„Jetzt los, um 8:00 da zu sein“</small></span><span class="toggle off" style="margin-left:auto"></span></div></div>
+      <div class="card" style="margin-top:16px"><div class="li"><span class="ic">${icon(I.vol, 18)}</span><span>Sprachansagen<small>Musik wird dabei nur leiser</small></span><span class="toggle" style="margin-left:auto"></span></div></div>
       <div class="grow"></div><div class="btn">Fertig, los!</div><div class="btn2">Überspringen</div></div>`));
   }],
   ['5 Suche', 'Leere Suche ist nützlich: Kategorien, Zuletzt, Favoriten. Tastatur unten.', ph => {

@@ -2,6 +2,50 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-033 – Glas-Design: weitere Screens (Shop, Stil testen, Fahrten …) und Logik-Prüfung – Auftrag für den lokalen Claude
+
+**Ziel:** Hinweis „Kein Konto, kein Tracking“ raus; weitere Screens 1:1 im Glas-Look zeigen; alle Abläufe auf Logik prüfen.
+
+**Dateien:** `tools/prototype/glas.html`, `tools/prototype/glas.css`, `tools/prototype/js/glas.js` (neu), `tools/prototype/js/onboarding.js`, `CHANGELOG.md` (GM-032 angepasst)
+
+**Geändert (Prototyp):**
+- Neue Seite `http://localhost:8765/tools/prototype/glas.html` mit 10 Screens: Shop, Stil testen, Freigeschaltet, Meine Fahrten, Favorit merken, Wo hab ich geparkt, Baustelle voraus, Neu berechnen, Kein GPS / kein Netz, Standort aus
+- Onboarding: „Kein Konto, kein Tracking“ und „Dein Standort bleibt auf dem iPhone“ entfernt, stattdessen „Ansagen laufen weiter“; Stil-Schritt wählt Klassik vor („Weiter mit Klassik“); Losfahr-Hinweis aus dem Onboarding genommen
+
+**Logik-Prüfung (Befunde, alle im Auftrag unten berücksichtigt):**
+1. „Dein Standort bleibt auf dem iPhone“ war **falsch**: Start/Ziel gehen an Valhalla/Photon → Satz gestrichen (auch rechtlich heikel)
+2. Onboarding „Weiter mit Neon City“, obwohl Neon Premium ist → Klassik vorgewählt; Premium-Kachel startet „Stil testen“, nicht einen Kauf
+3. Stil-Test darf **nie während einer Fahrt ablaufen** (plötzlicher Stilwechsel = Ablenkung) → Ende erst nach Ankunft/Beenden
+4. Kategorie „Favoriten“ in der Suche hatte keinen Weg, Orte zu merken → Stern in der Routen-Vorschau
+5. „Zuhause · 14 Min“ setzt eine berechnete Route voraus → Minuten nur zeigen, wenn eine Route jünger als 15 Min vorliegt, sonst nur „Zuhause“
+6. Losfahr-Hinweis braucht Mitteilungen + Routing im Hintergrund (iOS führt das nicht verlässlich aus) → nicht in Version 1, raus aus dem Onboarding
+7. Ankunft „neue Straßen / Stufe“ setzt Entdecken voraus, das in Swift fehlt → ausblenden, bis Entdecken gebaut ist
+8. Einstellungen ohne „Demo-Fahrt“ → Apple-Prüfer braucht sie (siehe `docs/APPSTORE_TEXTE.md`) → bleibt in den Einstellungen
+9. Shop ohne „Käufe wiederherstellen“ wird von Apple abgelehnt → Pflicht-Link
+10. „Alle Stile, auch künftige“ ist ein Versprechen → technisch: Freischaltung `ezmaps.styles.all` gilt für jeden Stil in Code, nicht nur für eine Liste
+11. Fahrten-Verlauf speichert Wege (inkl. Wohnort) → nur lokal, abschaltbar, löschbar; im Fotomodus Start/Ziel ausblendbar (GM-029)
+12. Standort abgelehnt → App darf nicht leer sein: Karte und Suche gehen, „Los“ führt zu den iOS-Einstellungen
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Skriptfehler, alle 10 neuen Screens und das geänderte Onboarding als Bild angesehen.
+
+**Ungetestet:** Nichts in Swift.
+
+### Auftrag (Swift, nach GM-032, gleiche Glas-Bausteine)
+
+Vorlage: `glas.html`. Je Punkt eigener Eintrag, Logik in Core mit Tests wo möglich.
+
+1. **Shop** (`StoreView`): Kopf „Stile“ + Schließen; große Karte Neon City mit Schild „Beliebtester Stil“ und Live-Mini-Karte; Liste der Stile (Vorschau 54 pt, Name, Satz, Preis aus `Product.displayPrice` bzw. ✓ wenn gekauft); `PrimaryButton` „<Stil> · Preis“, darunter Zeile „Alle Stile · Preis einmalig“; Feintext „Einmalkauf, kein Abo. Gilt für iPhone und CarPlay.“; Link „Käufe wiederherstellen“ (`AppStore.sync()`). StoreKit 2 wie GM-029 Punkt 1
+2. **Stil testen**: 10 Min je Premium-Stil, einmal pro Stil (in UserDefaults merken). Glas-Banner oben „Neon City · Vorschau, noch m:ss“ + „Kaufen“. Ablauf: wenn keine Navigation läuft, zurück zu Klassik + Shop-Blatt; während der Navigation erst nach Ende. Logik in Core `StyleTrial` (Test: läuft nicht ab, solange `isNavigating`)
+3. **Freigeschaltet**: Blatt mit Haken, „<Stil> gehört dir“, „Losfahren“, „Andere Stile ansehen“; Stil sofort aktiv (auch CarPlay)
+4. **Meine Fahrten**: Liste nach Tagen, Mini-Karte je Fahrt, Summe Monat (km, Fahrten, Zeit), Teilen → Fotomodus. Core `TripLog` (Codable, nur lokal, max. 200 Fahrten), Einstellung „Fahrten speichern“ (an) + „Alle löschen“. Spur aus `NavigationSession` (GM-029 Punkt 8)
+5. **Favoriten**: Stern-Knopf in der Routen-Vorschau, Chip „Als Favorit gemerkt“; Kategorie „Favoriten“ in der Suche zeigt sie; Löschen per Wischen
+6. **Parkplatz** im Glas-Look wie Bild (GM-029 Punkt 3 gilt weiter)
+7. **Baustelle voraus**: oranges Glas-Banner (`#FF9F1C` 82 %) unter dem Abbiegehinweis, „Baustelle in 1,8 km“ + Satz aus der Meldung (GM-029 Punkt 4)
+8. **Neu berechnen**: lila Glas-Banner „Route wird neu berechnet · Du bist anders gefahren“, Ankunftszeit grau + „wird aktualisiert …“ bis die neue Route da ist (kein Vollbild)
+9. **Kein GPS / kein Netz**: Chips „Kein GPS · Position geschätzt“ (nach 5 s ohne Fix während der Fahrt, Fortschritt mit letzter Geschwindigkeit schätzen, Core-Test) und „Offline · Route bleibt“ (`NWPathMonitor`); Tacho zeigt „–“
+10. **Standort aus**: Blatt „Standort ist aus · In Einstellungen erlauben“ (`UIApplication.openSettingsURLString`) + Suche bleibt nutzbar; Kartenmitte Idstein bzw. letzter bekannter Ort
+11. Logik-Befunde 1–12 oben in Code und Texten umsetzen; `docs/legal/index.md` um Fahrten-Verlauf (lokal) ergänzen
+
 ## GM-032 – Entscheidung: UI-Richtung „B · Glas“ – Auftrag für den lokalen Claude
 
 **Ziel:** Der Nutzer hat sich für das Glas-Design entschieden (GM-030 Richtung B, GM-031 Onboarding Richtung B). Die ganze iPhone-Oberfläche wird darauf umgestellt. A, C, D werden nicht umgesetzt.
@@ -51,7 +95,7 @@ Vor dem Start `docs/LESSONS_SWIFT.md` lesen. Je Block eigener Eintrag GM-0xx, na
 
 **7. Onboarding (neu, nur beim ersten Start)** (Onboarding B, Bild 1, 2, 3, 5; Bild 4 „Fahrzeug“ gestrichen)
 - 1 Willkommen: Karte im Hintergrund (langsame Kamerafahrt, bei „Bewegung reduzieren“ still), App-Icon, „EzMaps“, ein Satz, „Los geht's“, „Ich habe schon EzMaps“ (= überspringen)
-- 2 Standort: Erklärung (zwei Zeilen „Karte zeigt dich“, „Kein Konto, kein Tracking“), **erst nach Tipp auf „Standort erlauben“** `requestWhenInUseAuthorization`; „Später“ geht weiter. Abgelehnt → später Hinweis mit Knopf zu den iOS-Einstellungen
+- 2 Standort: Erklärung (zwei Zeilen „Karte zeigt dich“, „Ansagen laufen weiter“; **kein** Hinweis „Kein Konto, kein Tracking“ und **nicht** „Standort bleibt auf dem iPhone“, siehe GM-033), **erst nach Tipp auf „Standort erlauben“** `requestWhenInUseAuthorization`; „Später“ geht weiter. Abgelehnt → später Hinweis mit Knopf zu den iOS-Einstellungen
 - 3 Stil wählen: 2×2 Kacheln mit echter Mini-Karte (MapLibre-Schnappschuss, gecacht), Klassik „Gratis“, andere „Premium · Kostenlos testen“ (StoreKit siehe GM-029 Punkt 1; bis dahin nur vorhandene Stile)
 - ~~Fahrzeug wählen~~: **gestrichen (Nutzer-Entscheidung), nicht umsetzen.** Spieler-Symbol bleibt der Pfeil. Das Onboarding hat damit nur 4 Schritte
 - 4 Zuhause/Arbeit + Schalter Sprachansagen und Losfahr-Hinweis (Mitteilungs-Erlaubnis nur fragen, wenn eingeschaltet)
