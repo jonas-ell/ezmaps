@@ -2,7 +2,7 @@
  "version": 8,
  "name": "EzMaps Neon City",
  "metadata": {
-  "ezmaps:source": "tools/maplibre/build_style.py – Werte aus tools/prototype/js/map.js (NEON)"
+  "ezmaps:source": "tools/maplibre/build_style.py – Werte aus tools/prototype/js/map.js"
  },
  "sources": {
   "openmaptiles": {
