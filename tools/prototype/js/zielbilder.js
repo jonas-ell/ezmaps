@@ -1,5 +1,6 @@
 // GM-052: Zielbilder je Stil (SVG). Gleiche Szene für alle Stile, jeder Stil nach den Referenzen des Nutzers gezeichnet.
 'use strict';
+const MC = '../../Assets/Generated/minecraft/';   // Pixel-Quest-Grafiken des Nutzers (nachgepixelt)
 
 // ---------- Szene (800 × 480, wie der CarPlay-Bildschirm) ----------
 let seed = 7;
@@ -80,6 +81,7 @@ const MARKER = {
   // Stadtplan: blauer Navi-Pfeil im weißen Kreis
   'classic': s => `<g transform="scale(${s})"><circle r="13" fill="#fff" stroke="rgba(0,0,0,.2)" stroke-width="1"/><path d="M0 -8 L7 7 L0 3 L-7 7 Z" fill="#1a73e8"/></g>`,
 };
+MARKER['pixel-quest'] = s => `<image href="${MC}Player_(texture)_BE2.webp" x="${-14 * s}" y="${-14 * s}" width="${28 * s}" height="${28 * s}" style="image-rendering:pixelated"/>`;
 const marker = (style, x, y, h, s) => `<g transform="translate(${x} ${y}) rotate(${h})">${MARKER[style](s)}</g>`;
 
 // Fadenkreuz wie CrosshairView (kurze Arme mit Lücke, nach außen ausgeblendet)
@@ -104,10 +106,30 @@ function labels(font, size, fill, opts = {}) {
 }
 
 // ---------- Stile ----------
+// weitere Kartensymbole (Neon City, Toy Town)
+const POIS_MORE = [{ k: 'coffee', x: 560, y: 340 }, { k: 'shirt', x: 230, y: 64 }, { k: 'cash', x: 700, y: 60 }, { k: 'carwash', x: 106, y: 380 },
+  { k: 'cinema', x: 520, y: 448 }, { k: 'barber', x: 330, y: 300 }, { k: 'charge', x: 742, y: 446 }];
+const G2 = {
+  coffee: 'M-7 -3 H5 V4 Q5 8 1 8 H-3 Q-7 8 -7 4 Z M5 -1 Q9 -1 9 2 Q9 5 5 5 M-4 -9 Q-2 -7 -4 -5 M0 -9 Q2 -7 0 -5',
+  shirt: 'M-4 -8 L-9 -5 L-7 0 L-5 -1 V8 H5 V-1 L7 0 L9 -5 L4 -8 Q0 -5 -4 -8 Z',
+  cash: 'M-9 -6 H9 V6 H-9 Z M0 -3 V3 M-2 -2 Q0 -4 2 -2 Q-2 0 2 2 Q0 4 -2 2',
+  carwash: 'M-8 4 V0 L-5 -4 H5 L8 0 V4 Z M-6 6 V4 M6 6 V4 M-6 -9 V-7 M0 -10 V-8 M6 -9 V-7',
+  cinema: 'M-8 -5 H4 V5 H-8 Z M4 -2 L9 -5 V5 L4 2',
+  barber: 'M-6 -8 L6 8 M6 -8 L-6 8 M-8 -9 A2 2 0 1 0 -8 -5 M8 -9 A2 2 0 1 1 8 -5',
+  charge: 'M2 -10 L-6 1 H0 L-2 10 L6 -2 H0 Z',
+};
+Object.assign(GLYPH, G2);
+const FILLED = new Set(['cross', 'fuel', 'shop', 'shirt', 'cinema', 'charge', 'carwash']);
+const blip = (k, x, y, fill, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="${GLYPH[k]}" fill="${FILLED.has(k) ? fill : 'none'}" stroke="#000" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/><path d="${GLYPH[k]}" fill="${FILLED.has(k) ? fill : 'none'}" stroke="${fill}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></g>`;
+const NEON_COL = { cross: '#ff5fa2', coffee: '#4fd4e8', cash: '#f2c94c', charge: '#5fd068', cinema: '#f5f5f5' };
+
+// Wackel-Filter für handgezeichnete Tintenlinien (Wild West)
+const INK = `<filter id="ink"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="5"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter>`;
+
 const STYLES = {
   'neon-city': {
-    title: 'Neon City', why: 'Nach deinen Pausenkarten-Bildern (Farben gemessen): Boden fast schwarz, Häuser dunkelgrau, Straßen flach mittelgrau ohne Rand, Wasser hellgrau, Symbole meist weiß mit schwarzem Rand. Route lila wie auf deinem Waypoint-Bild. Standort: schmaler hellgrauer Pfeil wie auf der Minikarte. Straßennamen klein und dunkel auf der Straße (zum Navigieren).',
-    refs: ['neon-pause-1.png', 'neon-pause-2.png', 'neon-pause-3.png', 'neon-route.png', 'neon-minikarte.png', 'neon-uebersicht.webp'], missing: ['neon-pillbox.png (GTA Pillbox Hill)'],
+    title: 'Neon City', why: 'Nach deinen Pausenkarten (Farben gemessen). Neu: flacher lila Waypoint ohne Leuchten am Routenende mit dem Fadenkreuz darüber wie auf deinem Bild, breite flache lila Route, viel mehr Symbole im gleichen Look (weiße Silhouetten mit schwarzem Rand, einzelne farbig). Waypoint und Symbole sind eigene Zeichnungen im gleichen Stil.',
+    refs: ['neon-route.png', 'neon-pause-1.png', 'neon-pause-2.png', 'neon-pause-3.png', 'neon-minikarte.png', 'neon-uebersicht.webp'], missing: [],
     draw(o) {
       let s = `<rect width="800" height="480" fill="#181818"/><path d="${poly(PARK)}" fill="#1c1d1c"/>`;
       s += `<path d="${path(STREAM)}" stroke="#6a6a6a" stroke-width="9" fill="none" stroke-linecap="round"/>`;
@@ -115,10 +137,104 @@ const STYLES = {
       for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="#969696" stroke-width="${WIDTH[r.c]}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
       s += `<path d="${ringPath(RING.r)}" stroke="#969696" stroke-width="20" fill="none"/><circle cx="400" cy="240" r="17" fill="#181818"/>`;
       s += labels('Barlow Condensed', 11, '#141414', { upper: true, spacing: 1.6, id: 'n' });
-      s += POIS.map(p => glyph(p.k, p.x, p.y, p.k === 'cross' ? '#ff5fa2' : '#f5f5f5', '#000')).join('');
-      if (o.route) s += `<path d="${path(ROUTE)}" stroke="#a13df0" stroke-width="13" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` + destNeon();
+      s += [...POIS, ...POIS_MORE].map(p => blip(p.k, p.x, p.y, NEON_COL[p.k] || '#f5f5f5')).join('');
+      if (o.route) s += `<path d="${path(ROUTE)}" stroke="#a13df0" stroke-width="16" fill="none" stroke-linecap="butt" stroke-linejoin="round"/>` + destNeon() + crosshair('rgba(255,255,255,.85)', DEST[0], DEST[1]);
       s += marker('neon-city', ME.x, ME.y, ME.h, o.route ? 1.6 : 1.1);
       if (o.look) s += crosshair('rgba(255,255,255,.9)');
+      return s;
+    },
+  },
+  'wild-west': {
+    title: 'Wild West (neu)', why: 'Komplett neu als handgezeichnete Papierkarte: vergilbtes Papier mit Flecken und dunklem Rand, alle Linien leicht zittrig wie mit Tinte gezeichnet, Häuser als dunkle Tintenblöcke, Hauptstraßen als Doppellinie, Nebenwege gestrichelt, Höhenlinien und Baum-Kringel im Gelände, Wasser mit Strichschraffur, Namen in schräger Schreibschrift. Route rot, Ziel als rotes X. Standort: heller Tropfen mit Ring (wie „Dein Charakter“). Ich habe keine Red-Dead-Bilder als Datei: sag mir, was dir am alten nicht gefallen hat, oder leg Bilder in den Referenz-Ordner.',
+    refs: [], missing: ['west-*.png (Red-Dead-Karte)'],
+    draw(o) {
+      let s = `<defs>${INK}<filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="8"/><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.32  0 0 0 0 0.16  0 0 0 0.35 0"/></filter>
+        <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="1.2" seed="2"/><feColorMatrix values="0 0 0 0 0.2  0 0 0 0 0.14  0 0 0 0 0.08  0 0 0 0.2 0"/></filter>
+        <radialGradient id="vig" cx="50%" cy="50%" r="70%"><stop offset="60%" stop-color="#3a2410" stop-opacity="0"/><stop offset="100%" stop-color="#3a2410" stop-opacity=".55"/></radialGradient>
+        <pattern id="wv" width="12" height="6" patternUnits="userSpaceOnUse"><path d="M1 3 H8" stroke="#4d4a3c" stroke-width="1"/></pattern></defs>`;
+      s += `<rect width="800" height="480" fill="#d9c49a"/><rect width="800" height="480" filter="url(#paper)"/><rect width="800" height="480" filter="url(#grain)"/>`;
+      s += `<g filter="url(#ink)" fill="none" stroke="#6b5233" stroke-width=".9" opacity=".7">${[0, 1, 2, 3].map(i => `<ellipse cx="720" cy="300" rx="${40 + i * 22}" ry="${30 + i * 16}"/>`).join('')}${[0, 1, 2].map(i => `<ellipse cx="60" cy="40" rx="${30 + i * 20}" ry="${22 + i * 14}"/>`).join('')}</g>`;
+      for (let y = 250; y < 385; y += 18) for (let x = 655; x < 785; x += 20) if (h2(x, y, 5) > 0.4) s += `<path filter="url(#ink)" d="M${x - 5} ${y} q5 -9 10 0 q-5 3 -10 0" fill="#9c8a5a" stroke="#3a2a18" stroke-width="1"/>`;
+      s += `<g filter="url(#ink)"><path d="${path(STREAM)}" stroke="#2a1d12" stroke-width="12" fill="none" stroke-linecap="round"/><path d="${path(STREAM)}" stroke="#a7a68e" stroke-width="9" fill="none" stroke-linecap="round"/><path d="${path(STREAM)}" stroke="url(#wv)" stroke-width="9" fill="none"/></g>`;
+      s += `<g filter="url(#ink)">` + HOUSES.map(b => `<rect x="${b.x + 2}" y="${b.y + 2}" width="${b.w - 4}" height="${b.h - 4}" fill="#4a3320" stroke="#21160c" stroke-width="1.2"/>`).join('');
+      for (const r of roadsSorted()) {
+        if (r.c >= 3) { s += `<path d="${path(r.p)}" stroke="#2a1d12" stroke-width="1.6" fill="none" stroke-dasharray="${r.c === 4 ? '5 4' : 'none'}"/>`; continue; }
+        s += `<path d="${path(r.p)}" stroke="#21160c" stroke-width="${WIDTH[r.c] - 9}" fill="none" stroke-linejoin="round"/><path d="${path(r.p)}" stroke="#d9c49a" stroke-width="${WIDTH[r.c] - 13}" fill="none" stroke-linejoin="round"/>`;
+      }
+      s += `<path d="${ringPath(RING.r)}" stroke="#21160c" stroke-width="12" fill="none"/><path d="${ringPath(RING.r)}" stroke="#d9c49a" stroke-width="8" fill="none"/></g>`;
+      s += labels('Rye', 12, '#2a1d12', { id: 'w', halo: '#d9c49a', haloW: 3 });
+      s += POIS.map(p => `<g transform="translate(${p.x} ${p.y})"><circle r="13" fill="#1b140e" stroke="#e8d8b0" stroke-width="1.5"/></g>` + glyph(p.k, p.x, p.y, '#fafafa', '#1b140e', 2, 0.6)).join('');
+      if (o.route) s += `<path filter="url(#ink)" d="${path(ROUTE)}" stroke="#a8201a" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` + destWest();
+      s += `<rect width="800" height="480" fill="url(#vig)"/>`;
+      s += marker('wild-west', ME.x, ME.y, ME.h, o.route ? 1.5 : 1.1);
+      if (o.look) s += crosshair('rgba(155,22,18,.9)');
+      return s;
+    },
+  },
+  'pixel-quest': {
+    title: 'Pixel Quest (neu, mit deinen Texturen)', why: 'Neu mit deinen Texturen aus Assets/Generated/minecraft: Gras-Textur als Boden, Bruchstein als Straßen, Eis/Wasser-Textur als Bach, Dorfhäuser von oben (Holz-Dach-Textur), Symbole aus deinen Bildern (Hähnchen/Steak = Essen) plus selbst gezeichnete Pixel-Symbole: Heiltrank = Krankenhaus, Smaragd = Laden, Eimer = Tankstelle, Blitz = Laden-Säule, P = Parken. Standort = dein weißer Spieler-Marker, Ziel = dein grüner Marker. Diese Grafiken kommen nach Freigabe auch in die App.',
+    refs: [], missing: ['pixel-video-*.png (Minecraft-Karten im Auto)'],
+    draw(o) {
+      let s = `<defs><pattern id="mg" width="64" height="64" patternUnits="userSpaceOnUse"><image href="${MC}anothergrasstexture.jpg" width="64" height="64" style="image-rendering:pixelated"/></pattern>
+        <pattern id="mc" width="40" height="40" patternUnits="userSpaceOnUse"><image href="${MC}cobblestonetexture.webp" width="40" height="40" style="image-rendering:pixelated"/></pattern>
+        <pattern id="mw" width="40" height="40" patternUnits="userSpaceOnUse"><image href="${MC}icetexture.webp" width="40" height="40" style="image-rendering:pixelated"/></pattern>
+        <pattern id="mr" width="24" height="24" patternUnits="userSpaceOnUse"><image href="${pixelTile(8, (x, y) => y % 3 === 2 ? '#5f4628' : ['#9c7848', '#907848', '#a88454', '#846c3c'][(x + y * 3) % 4])}" width="24" height="24" style="image-rendering:pixelated"/></pattern></defs>`;
+      s += `<rect width="800" height="480" fill="url(#mg)"/>`;
+      s += `<path d="${path(STREAM)}" stroke="url(#mw)" stroke-width="14" fill="none"/>`;
+      for (let y = 240; y < 380; y += 24) for (let x = 650; x < 780; x += 24) if (h2(x, y, 2) > 0.3) s += `<rect x="${x + 4}" y="${y + 4}" width="20" height="20" fill="#1e3a10"/><rect x="${x}" y="${y}" width="20" height="20" fill="#3c6018"/><rect x="${x + 3}" y="${y + 3}" width="7" height="7" fill="#548424"/><rect x="${x + 12}" y="${y + 11}" width="5" height="5" fill="#2e4a12"/>`;
+      for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="#3a3a3a" stroke-width="${WIDTH[r.c] + 3}" fill="none" stroke-linejoin="round"/><path d="${path(r.p)}" stroke="url(#mc)" stroke-width="${WIDTH[r.c] - 1}" fill="none" stroke-linejoin="round"/>`;
+      s += `<path d="${ringPath(RING.r)}" stroke="#3a3a3a" stroke-width="23" fill="none"/><path d="${ringPath(RING.r)}" stroke="url(#mc)" stroke-width="19" fill="none"/><circle cx="400" cy="240" r="18" fill="url(#mg)"/>`;
+      s += HOUSES.map(b => `<rect x="${b.x + 3}" y="${b.y + 4}" width="${b.w}" height="${b.h}" fill="rgba(0,0,0,.35)"/><rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="url(#mc)"/><rect x="${b.x + 2}" y="${b.y + 2}" width="${b.w - 4}" height="${b.h - 4}" fill="url(#mr)"/><path d="M${b.x + 2} ${b.y + b.h / 2} H${b.x + b.w - 2}" stroke="#3c3018" stroke-width="2"/>`).join('');
+      s += `<image href="${MC}Plains_Small_House_6.webp" x="470" y="296" width="70" height="70"/><image href="${MC}PlainsVillageBuilding.webp" x="190" y="150" width="78" height="68"/>`;
+      s += labels('Press Start 2P', 8, '#fff', { id: 'p', halo: '#000', haloW: 3 });
+      const potion = pixelTile(10, (x, y) => { const m = ['....##....', '....##....', '...####...', '..#....#..', '.#rrrrrr#.', '#rrrrwrrr#', '#rrrrrrrr#', '#rrrrrrrr#', '.#rrrrrr#.', '..######..'][y][x]; return m === '#' ? '#1b1b1b' : m === 'r' ? '#e0303a' : m === 'w' ? '#ffb0b0' : 'rgba(0,0,0,0)'; }, 3);
+      const gem = pixelTile(10, (x, y) => { const m = ['...####...', '..#gGGg#..', '.#gGGGGg#.', '#gGgGGgGg#', '#gGGGGGGg#', '.#gGGGGg#.', '..#gGGg#..', '...#gg#...', '....##....', '..........'][y][x]; return m === '#' ? '#0b3d1a' : m === 'g' ? '#17a34a' : m === 'G' ? '#5cf08a' : 'rgba(0,0,0,0)'; }, 3);
+      const sign = (letter, bg) => `<rect width="26" height="26" fill="#000"/><rect x="2" y="2" width="22" height="22" fill="#fff"/><rect x="4" y="4" width="18" height="18" fill="${bg}"/><text x="13" y="19" text-anchor="middle" font-family="Press Start 2P" font-size="11" fill="#fff">${letter}</text>`;
+      const ic = { cross: `<image href="${potion}" width="30" height="30"/>`, shop: `<image href="${gem}" width="30" height="30"/>`, food: `<image href="${MC}Cooked_Chicken_JE2_BE2.webp" width="30" height="30" style="image-rendering:pixelated"/>`,
+        parking: sign('P', '#2a5bd7'), fuel: sign('⛽', '#5a5a60') };
+      s += POIS.map(p => `<g transform="translate(${p.x - 14} ${p.y - 14})">${ic[p.k]}</g>`).join('');
+      s += `<image href="${MC}Steak_JE4_BE3.webp" x="690" y="436" width="30" height="30" style="image-rendering:pixelated"/>`;
+      if (o.route) s += `<path d="${path(ROUTE)}" stroke="#4a0d08" stroke-width="11" fill="none" stroke-linejoin="round"/><path d="${path(ROUTE)}" stroke="#e0362b" stroke-width="7" fill="none" stroke-linejoin="round"/>` +
+        `<image href="${MC}Green_Marker_(texture)_BE2.webp" x="${DEST[0] - 16}" y="${DEST[1] - 30}" width="32" height="32" style="image-rendering:pixelated"/>`;
+      const sz = o.route ? 34 : 26;
+      s += `<image href="${MC}Player_(texture)_BE2.webp" x="${ME.x - sz / 2}" y="${ME.y - sz / 2}" width="${sz}" height="${sz}" style="image-rendering:pixelated"/>`;
+      return s;
+    },
+  },
+  'toy-town': {
+    title: 'Toy Town (neu, wie der Spielteppich)', why: 'Neu nach deinen drei Teppich-Bildern: knallgrüner Rasen, graue Straßen mit gelber Randlinie und weißer gestrichelter Mitte, Zebrastreifen, Kreisverkehr mit Teich in der Mitte, Parkplätze mit blauem P, Fußballfeld, Häuser von schräg vorne (Wand, Fenster, Tür, rotes/blaues/gelbes Dach), runde Büsche und Bäume, alles mit dunklem Umriss. Standort: rotes Spielzeugauto. Eigene Zeichnungen im Teppich-Stil.',
+    refs: ['toy-teppich-1.png', 'toy-teppich-2.png', 'toy-teppich-3.png', 'toy-prototyp.png'], missing: [],
+    draw(o) {
+      let s = `<defs><filter id="felt"><feTurbulence type="fractalNoise" baseFrequency="1.4" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .12 0"/></filter></defs>`;
+      s += `<rect width="800" height="480" fill="#3eb34a"/>`;
+      // Fußballfeld im Park
+      s += `<rect x="652" y="240" width="140" height="146" fill="#2f9e3c" stroke="#fff" stroke-width="2.5"/><path d="M652 313 H792" stroke="#fff" stroke-width="2"/><circle cx="722" cy="313" r="16" fill="none" stroke="#fff" stroke-width="2"/><rect x="694" y="240" width="56" height="20" fill="none" stroke="#fff" stroke-width="2"/><rect x="694" y="366" width="56" height="20" fill="none" stroke="#fff" stroke-width="2"/>`;
+      s += `<path d="${path(STREAM)}" stroke="#1d5a8c" stroke-width="15" fill="none" stroke-linecap="round"/><path d="${path(STREAM)}" stroke="#3aa0e8" stroke-width="11" fill="none" stroke-linecap="round"/>`;
+      for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="#3a3a3a" stroke-width="${WIDTH[r.c] + 9}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+      s += `<path d="${ringPath(RING.r)}" stroke="#3a3a3a" stroke-width="29" fill="none"/>`;
+      for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="#9a9a9a" stroke-width="${WIDTH[r.c] + 7}" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${path(r.p)}" stroke="#f2c230" stroke-width="${WIDTH[r.c] + 3}" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${path(r.p)}" stroke="#9a9a9a" stroke-width="${WIDTH[r.c] + 1}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+      s += `<path d="${ringPath(RING.r)}" stroke="#9a9a9a" stroke-width="27" fill="none"/><path d="${ringPath(RING.r - 12)}" stroke="#f2c230" stroke-width="2"/><path d="${ringPath(RING.r + 12)}" stroke="#f2c230" stroke-width="2" fill="none"/>`;
+      s += `<circle cx="400" cy="240" r="16" fill="#3eb34a" stroke="#3a3a3a" stroke-width="2"/><circle cx="400" cy="240" r="10" fill="#3aa0e8" stroke="#fff" stroke-width="2.5"/>`;
+      for (const r of ROADS) if (r.c <= 3) s += `<path d="${path(r.p)}" stroke="#fff" stroke-width="2" stroke-dasharray="9 8" fill="none"/>`;
+      s += `<g fill="#fff">${[0, 1, 2, 3, 4, 5].map(i => `<rect x="${378 + i * 7}" y="284" width="4" height="14"/>`).join('')}</g>`;
+      // Parkplätze
+      s += `<rect x="440" y="250" width="70" height="40" fill="#9a9a9a" stroke="#fff" stroke-width="2"/>${[0, 1, 2].map(i => `<path d="M${463 + i * 23} 250 V290" stroke="#fff" stroke-width="2"/>`).join('')}${[0, 1, 2].map(i => `<rect x="${445 + i * 23}" y="262" width="14" height="14" rx="2" fill="#1f6fe0"/><text x="${452 + i * 23}" y="274" font-family="Fredoka" font-weight="700" font-size="11" fill="#fff" text-anchor="middle">P</text>`).join('')}`;
+      // Bäume/Büsche
+      const bush = (x, y, r) => `<circle cx="${x + 2}" cy="${y + 3}" r="${r}" fill="#155a1e"/><circle cx="${x}" cy="${y}" r="${r}" fill="#1e7a2a" stroke="#0f3d15" stroke-width="1.2"/><circle cx="${x - r * 0.3}" cy="${y - r * 0.3}" r="${r * 0.45}" fill="#38a845"/>`;
+      for (let i = 0; i < 40; i++) { const x = h2(i, 3, 3) * 800, y = h2(i, 4, 3) * 480; if (!HOUSES.some(b => x > b.x - 8 && x < b.x + b.w + 8 && y > b.y - 14 && y < b.y + b.h + 8)) s += bush(x, y, 6 + h2(i, 5, 3) * 3); }
+      // Häuser schräg von vorne
+      const walls = ['#f6e6b4', '#ffffff', '#f2b8a0', '#cfe6f5', '#f5d76e'], roofs = ['#d9342b', '#2f6fd0', '#f0b400', '#d9342b', '#2f6fd0', '#7a7f87'];
+      s += HOUSES.map(b => { if (b.w < 22) return ''; const roof = roofs[b.k], wall = walls[b.k % walls.length], wh = Math.min(12, b.h * 0.5), rh = b.h - wh;
+        let w = `<rect x="${b.x}" y="${b.y + rh}" width="${b.w}" height="${wh + 2}" fill="${wall}" stroke="#2b2b2b" stroke-width="1.2"/>`;
+        for (let x = b.x + 3; x < b.x + b.w - 6; x += 9) w += `<rect x="${x}" y="${b.y + rh + 2.5}" width="5" height="${wh - 5}" fill="#4aa8e8" stroke="#2b2b2b" stroke-width=".7"/>`;
+        w += `<rect x="${b.x + b.w / 2 - 2.5}" y="${b.y + b.h - 6}" width="5" height="8" fill="#8a4b22" stroke="#2b2b2b" stroke-width=".7"/>`;
+        return w + `<path d="M${b.x - 2} ${b.y + rh} L${b.x + 4} ${b.y} H${b.x + b.w - 4} L${b.x + b.w + 2} ${b.y + rh} Z" fill="${roof}" stroke="#2b2b2b" stroke-width="1.2" stroke-linejoin="round"/><path d="M${b.x + 4} ${b.y + rh * 0.45} H${b.x + b.w - 4}" stroke="rgba(0,0,0,.2)"/>`; }).join('');
+      s += labels('Fredoka', 12, '#fff', { id: 't', halo: '#2b2b2b', haloW: 3.5 });
+      const C = { food: '#4caf50', parking: '#1f6fe0', shop: '#f5b800', cross: '#e8453c', fuel: '#ff7a00' };
+      s += POIS.map(p => `<circle cx="${p.x}" cy="${p.y + 1.5}" r="15" fill="rgba(0,0,0,.3)"/><circle cx="${p.x}" cy="${p.y}" r="14" fill="${C[p.k]}" stroke="#fff" stroke-width="2.5"/>` + glyph(p.k, p.x, p.y, '#fff', C[p.k], 1.4, 0.62)).join('');
+      if (o.route) s += `<path d="${path(ROUTE)}" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${path(ROUTE)}" stroke="#ff7a00" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` + destToy();
+      s += `<rect width="800" height="480" filter="url(#felt)"/>`;
+      s += marker('toy-town', ME.x, ME.y, ME.h, o.route ? 1.25 : 0.95);
       return s;
     },
   },
@@ -137,88 +253,6 @@ const STYLES = {
       s += POIS.map(p => glyph(p.k, p.x, p.y, '#f5f5f5', '#000')).join('');
       if (o.route) s += `<path d="${path(ROUTE)}" stroke="#4b1a73" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${path(ROUTE)}" stroke="#a13df0" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` + destNeon();
       s += marker('neon-city', ME.x, ME.y, ME.h, o.route ? 1.6 : 1.1);
-      return s;
-    },
-  },
-  'wild-west': {
-    title: 'Wild West', why: 'Nach deinen Red-Dead-Bildern: Papierkarte mit Körnung, Straßen in der Stadt als dunkle Doppellinien, kleine Wege als feine Tintenlinien, Häuser hell mit Tintenrand, Wasser grau mit Wellen-Schraffur, Schrift wie Schreibmaschine/Western, Symbole als schwarze runde Knöpfe mit weißem Zeichen. Standort: Tropfen mit Ring wie „Dein Charakter“ in der Legende. Fadenkreuz rot, kurz.',
-    refs: ['west-prototyp.png'], missing: ['west-legende.png (Legende)', 'west-stadt.png (Stadtkarte)', 'west-thieves-landing.png (Thieves’ Landing)'],
-    draw(o) {
-      let s = `<defs><filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0.25  0 0 0 0 0.18  0 0 0 0 0.1  0 0 0 0.18 0"/></filter>
-        <pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0 10 L10 0" stroke="#7a6a48" stroke-width="1"/></pattern>
-        <pattern id="wave" width="16" height="8" patternUnits="userSpaceOnUse"><path d="M0 4 Q4 0 8 4 T16 4" stroke="#5f6b66" stroke-width="1" fill="none"/></pattern></defs>`;
-      s += `<rect width="800" height="480" fill="#dccba0"/><rect width="800" height="480" filter="url(#paper)"/>`;
-      s += `<path d="${poly(PARK)}" fill="url(#hatch)" stroke="#5e4a2c" stroke-width="1" stroke-dasharray="6 4"/>`;
-      s += `<path d="${path(STREAM)}" stroke="#3a2a1a" stroke-width="13" fill="none" stroke-linecap="round"/><path d="${path(STREAM)}" stroke="#a3aea6" stroke-width="10" fill="none" stroke-linecap="round"/><path d="${path(STREAM)}" stroke="url(#wave)" stroke-width="10" fill="none"/>`;
-      s += HOUSES.map(b => `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="#e6d7b0" stroke="#2a1d12" stroke-width="1.4"/>`).join('');
-      for (const r of roadsSorted()) {
-        if (r.c >= 3) { s += `<path d="${path(r.p)}" stroke="#2a1d12" stroke-width="${r.c === 3 ? 2.2 : 1.4}" fill="none" stroke-linecap="round"/>`; continue; }
-        s += `<path d="${path(r.p)}" stroke="#2a1d12" stroke-width="${WIDTH[r.c] - 6}" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${path(r.p)}" stroke="#ead9b0" stroke-width="${WIDTH[r.c] - 10}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-      }
-      s += `<path d="${ringPath(RING.r)}" stroke="#2a1d12" stroke-width="15" fill="none"/><path d="${ringPath(RING.r)}" stroke="#ead9b0" stroke-width="11" fill="none"/>`;
-      s += labels('Rye', 12, '#2a1d12', { id: 'w', halo: '#e3d3a8', haloW: 3 });
-      s += POIS.map(p => `<g transform="translate(${p.x} ${p.y})"><circle r="13" fill="#1b140e" stroke="#f2e4bf" stroke-width="1.5"/></g>` + glyph(p.k, p.x, p.y, '#fafafa', '#1b140e', 2, 0.6)).join('');
-      if (o.route) s += `<path d="${path(ROUTE)}" stroke="#4a0d0a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${path(ROUTE)}" stroke="#c0261f" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` + destWest();
-      s += marker('wild-west', ME.x, ME.y, ME.h, o.route ? 1.4 : 1);
-      if (o.look) s += crosshair('rgba(155,22,18,.9)');
-      return s;
-    },
-  },
-  'pixel-quest': {
-    title: 'Pixel Quest', why: 'Nach deinen Blockwelt-Karten aus den Videos: Gras-Block-Textur, graue Steinstraßen mit dunkler Kante, Häuser als Blöcke (Holz, Fichte, Stein, Ziegel) mit dunkler Seite für den 3D-Eindruck, Blätter-Bäume, Wasser-Textur, weiße Pixelschrift mit schwarzem Schatten, rote Route mit dunklem Rand. Standort: weißer Pixel-Pfeil mit schwarzem Rand wie der Spieler-Marker auf einer Blockwelt-Karte.',
-    refs: ['pixel-prototyp.png'], missing: ['pixel-video-1.png', 'pixel-video-2.png', 'pixel-video-3.png (Minecraft-Karten im Auto)'],
-    draw(o) {
-      const grass = pixelTile(16, (x, y) => { const h = h2(x, y, 1); return h < 0.18 ? '#4f8a2e' : h < 0.42 ? '#6aad3f' : h > 0.93 ? '#79bd4a' : '#5d9b37'; });
-      const stone = pixelTile(8, (x, y) => { const h = h2(x, y, 7); return h < 0.25 ? '#767676' : h > 0.85 ? '#aaaaaa' : '#8f8f8f'; });
-      const water = pixelTile(16, (x, y) => (y % 5 === 1 && (x + y) % 7 < 3) ? '#6ea0f5' : h2(x, y, 4) < 0.3 ? '#3868d6' : '#3f76e4');
-      const roofs = [['#8b6a3e', '#5f4628'], ['#5c4226', '#3b2a17'], ['#7c7c7c', '#555'], ['#923c2c', '#62271c'], ['#8b6a3e', '#5f4628'], ['#5c4226', '#3b2a17']];
-      let s = `<defs><pattern id="pg" width="64" height="64" patternUnits="userSpaceOnUse"><image href="${grass}" width="64" height="64" style="image-rendering:pixelated"/></pattern>
-        <pattern id="ps" width="32" height="32" patternUnits="userSpaceOnUse"><image href="${stone}" width="32" height="32" style="image-rendering:pixelated"/></pattern>
-        <pattern id="pw" width="64" height="64" patternUnits="userSpaceOnUse"><image href="${water}" width="64" height="64" style="image-rendering:pixelated"/></pattern></defs>`;
-      s += `<rect width="800" height="480" fill="url(#pg)"/>`;
-      s += `<path d="${path(STREAM)}" stroke="url(#pw)" stroke-width="12" fill="none" shape-rendering="crispEdges"/>`;
-      // Bäume im Park: Blätterblöcke
-      for (let y = 240; y < 380; y += 22) for (let x = 650; x < 780; x += 22) if (h2(x, y, 2) > 0.3) s += `<rect x="${x + 3}" y="${y + 3}" width="18" height="18" fill="#1e4a16"/><rect x="${x}" y="${y}" width="18" height="18" fill="#2f6b22"/><rect x="${x + 3}" y="${y + 3}" width="6" height="6" fill="#48903a"/>`;
-      for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="#3c3c3c" stroke-width="${WIDTH[r.c] + 3}" fill="none" stroke-linejoin="round"/><path d="${path(r.p)}" stroke="url(#ps)" stroke-width="${WIDTH[r.c] - 1}" fill="none" stroke-linejoin="round"/>`;
-      s += `<path d="${ringPath(RING.r)}" stroke="#3c3c3c" stroke-width="23" fill="none"/><path d="${ringPath(RING.r)}" stroke="url(#ps)" stroke-width="19" fill="none"/><circle cx="400" cy="240" r="18" fill="url(#pg)"/>`;
-      s += HOUSES.map(b => { const [top, side] = roofs[b.k]; const d = b.tall ? 9 : 6;
-        return `<rect x="${b.x}" y="${b.y + d}" width="${b.w}" height="${b.h}" fill="${side}" shape-rendering="crispEdges"/><rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="${top}" shape-rendering="crispEdges"/>` +
-          `<path d="M${b.x} ${b.y + 4} H${b.x + b.w} M${b.x} ${b.y + 10} H${b.x + b.w} M${b.x} ${b.y + 16} H${b.x + b.w}" stroke="rgba(0,0,0,.18)" stroke-width="1.5"/>`; }).join('');
-      s += labels('Press Start 2P', 8, '#fff', { id: 'p', halo: '#000', haloW: 3 });
-      const C = { shop: '#d68c28', food: '#c84632', parking: '#2a5bd7', cross: '#dc2828', fuel: '#5a5a60' };
-      s += POIS.map(p => `<g transform="translate(${p.x - 11} ${p.y - 11})"><rect width="22" height="22" fill="#000"/><rect x="2" y="2" width="18" height="18" fill="#fff"/><rect x="4" y="4" width="14" height="14" fill="${C[p.k]}"/></g>` + glyph(p.k, p.x, p.y, '#fff', C[p.k], 1.6, 0.42)).join('');
-      if (o.route) s += `<path d="${path(ROUTE)}" stroke="#4a0d08" stroke-width="11" fill="none" stroke-linejoin="round"/><path d="${path(ROUTE)}" stroke="#e0362b" stroke-width="7" fill="none" stroke-linejoin="round"/>` + destPixel();
-      s += marker('pixel-quest', ME.x, ME.y + 6, ME.h, o.route ? 1.5 : 1);
-      return s;
-    },
-  },
-  'toy-town': {
-    title: 'Toy Town', why: 'Nach deinem abgenommenen Prototyp-Bild: heller Rasen mit Flecken, Häuser als Spielzeughäuser (bunte Wand, Dach rot/blau/orange/grau, Fenster, dunkler Rand), runde Bäume mit Schatten, dunkler Asphalt mit hellem Gehweg und weißer Mittellinie, Zebrastreifen am Kreisel, Wasser mit Sandrand, runde bunte Symbole, orange Route mit weißem Rand. Standort: rotes Spielzeugauto von oben.',
-    refs: ['toy-prototyp.png'], missing: [],
-    draw(o) {
-      const walls = ['#f6d743', '#fdfdfd', '#ee5a4a', '#7cc3ee', '#f5b041', '#f4e2c4'], roofs = ['#e3412f', '#3d78c9', '#ef7d2d', '#e3412f', '#8b8f96', '#c8372a'];
-      let s = `<rect width="800" height="480" fill="#8dc63f"/>`;
-      for (let i = 0; i < 26; i++) s += `<ellipse cx="${h2(i, 1, 9) * 800}" cy="${h2(i, 2, 9) * 480}" rx="${20 + h2(i, 3, 9) * 30}" ry="${12 + h2(i, 4, 9) * 14}" fill="#a3d65a"/>`;
-      s += `<path d="${poly(PARK)}" fill="#7cc142"/>`;
-      s += `<path d="${path(STREAM)}" stroke="#f2d48b" stroke-width="15" fill="none" stroke-linecap="round"/><path d="${path(STREAM)}" stroke="#4ab0ea" stroke-width="10" fill="none" stroke-linecap="round"/>`;
-      for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="#c9cbce" stroke-width="${WIDTH[r.c] + 6}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-      s += `<path d="${ringPath(RING.r)}" stroke="#c9cbce" stroke-width="26" fill="none"/>`;
-      for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="#66686c" stroke-width="${WIDTH[r.c]}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-      s += `<path d="${ringPath(RING.r)}" stroke="#66686c" stroke-width="20" fill="none"/><circle cx="400" cy="240" r="17" fill="#7cc142" stroke="#c9cbce" stroke-width="3"/>`;
-      for (const r of ROADS) if (r.c <= 3) s += `<path d="${path(r.p)}" stroke="#fff" stroke-width="1.6" stroke-dasharray="7 7" fill="none"/>`;
-      s += `<g fill="#fff">${[0, 1, 2, 3, 4].map(i => `<rect x="${380 + i * 6}" y="282" width="3.5" height="12"/>`).join('')}</g>`;
-      // Bäume im Park
-      for (let y = 250; y < 385; y += 26) for (let x = 655; x < 785; x += 26) if (h2(x, y, 5) > 0.35) {
-        const r = 8 + h2(x, y, 6) * 3; s += `<ellipse cx="${x + 3}" cy="${y + 4}" rx="${r}" ry="${r * 0.75}" fill="rgba(30,70,20,.35)"/><circle cx="${x}" cy="${y - 3}" r="${r}" fill="#3f9b2d" stroke="#2a6b1f"/><circle cx="${x - 3}" cy="${y - 6}" r="${r * 0.42}" fill="#6cc04a"/>`; }
-      s += HOUSES.map(b => { const h = b.tall ? 12 : 7, wall = walls[b.k], roof = b.tall ? '#8b8f96' : roofs[b.k];
-        let w = `<rect x="${b.x}" y="${b.y + b.h - h}" width="${b.w}" height="${h + 2}" fill="${wall}" stroke="#2f3640" stroke-width="1"/>`;
-        for (let x = b.x + 4; x < b.x + b.w - 5; x += 8) w += `<rect x="${x}" y="${b.y + b.h - h + 2.5}" width="4" height="${h - 5}" fill="#3c8fe0" stroke="#fff" stroke-width=".6"/>`;
-        return w + `<rect x="${b.x}" y="${b.y - h}" width="${b.w}" height="${b.h}" rx="2" fill="${roof}" stroke="#2f3640" stroke-width="1.2"/><path d="M${b.x + 2} ${b.y - h + b.h / 2} H${b.x + b.w - 2}" stroke="rgba(0,0,0,.25)"/>`; }).join('');
-      s += labels('Fredoka', 12, '#fff', { id: 't', halo: '#2f3640', haloW: 3.5 });
-      const C = { food: '#4caf50', parking: '#1f6fe0', shop: '#f5b800', cross: '#e8453c', fuel: '#ff7a00' };
-      s += POIS.map(p => `<circle cx="${p.x}" cy="${p.y + 1.5}" r="15" fill="rgba(0,0,0,.25)"/><circle cx="${p.x}" cy="${p.y}" r="14" fill="${C[p.k]}" stroke="#fff" stroke-width="2.5"/>` + glyph(p.k, p.x, p.y, '#fff', C[p.k], 1.4, 0.62)).join('');
-      if (o.route) s += `<path d="${path(ROUTE)}" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${path(ROUTE)}" stroke="#ff7a00" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` + destToy();
-      s += marker('toy-town', ME.x, ME.y, ME.h, o.route ? 1.25 : 0.95);
       return s;
     },
   },
@@ -243,7 +277,7 @@ const STYLES = {
 };
 // Ziel-Symbole (wie RouteOverlay.destinationImage)
 const [dx, dy] = DEST;
-const destNeon = () => `<g transform="translate(${dx} ${dy}) rotate(45)"><rect x="-13" y="-13" width="26" height="26" rx="6" fill="#a13df0" stroke="#fff" stroke-width="3" style="filter:drop-shadow(0 0 6px #a13df0)"/></g><circle cx="${dx}" cy="${dy}" r="6" fill="none" stroke="#fff" stroke-width="3"/>`;
+const destNeon = () => `<path transform="translate(${dx} ${dy})" d="M0 -15 C4 -6 6 -4 15 0 C6 4 4 6 0 15 C-4 6 -6 4 -15 0 C-6 -4 -4 -6 0 -15 Z" fill="#a13df0" stroke="#5a1d8c" stroke-width="1.5"/>`;
 const destWest = () => `<g transform="translate(${dx - 24} ${dy - 24})"><path d="M42 24 A18 18 0 1 1 41 19" fill="none" stroke="#3a2414" stroke-width="2.2"/><path d="M14 14 L34 34 M34.5 13.5 L13.5 34.5" stroke="#c0261f" stroke-width="6" stroke-linecap="round"/></g>`;
 const destPixel = () => `<g transform="translate(${dx - 18} ${dy - 48})" shape-rendering="crispEdges"><rect x="12" y="3" width="6" height="45" fill="#1b1206"/><rect x="15" y="3" width="3" height="42" fill="#8a5a2b"/><rect x="18" y="3" width="27" height="21" fill="#1b1206"/><rect x="18" y="6" width="24" height="15" fill="#e8453c"/><rect x="21" y="9" width="9" height="6" fill="#ffcc33"/></g>`;
 const destToy = () => `<g transform="translate(${dx - 14} ${dy - 46})"><rect x="12" y="8" width="4" height="38" rx="2" fill="#2f3640"/><rect x="16" y="8" width="24" height="16" rx="3" fill="#ff7a00"/><g fill="#fff"><rect x="16" y="8" width="8" height="8"/><rect x="32" y="8" width="8" height="8"/><rect x="24" y="16" width="8" height="8"/></g><rect x="16" y="8" width="24" height="16" rx="3" fill="none" stroke="#2f3640" stroke-width="2.5"/><circle cx="14" cy="7" r="4" fill="#2f3640"/></g>`;

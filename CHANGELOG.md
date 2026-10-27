@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-053 – Zielbilder Runde 2: Neon-Waypoint und mehr Symbole, Wild West neu, Pixel Quest mit Nutzer-Grafiken, Toy Town wie Spielteppich
+
+**Ziel:** Rückmeldung des Nutzers zu GM-052: Neon-Waypoint und Symbole wie auf seinen Screenshots, Wild West gefällt gar nicht, Pixel Quest neu mit `Assets/Generated/minecraft`, Toy Town wie die Spielteppiche aus der Kindheit (3 Bilder).
+
+**Dateien:** `tools/prototype/js/zielbilder.js`, `.gitignore` (`Assets/Generated/minecraft/` vorerst nur lokal), Referenzen lokal `tools/prototype/referenzen/toy-teppich-{1,2,3}.png`
+
+**Geändert:**
+- Neon City: flacher lila Waypoint ohne Leuchten am Routenende mit Fadenkreuz darüber, breite flache Route, 7 weitere Symbole (Kaffee, Kleidung, Geld, Waschanlage, Kino, Friseur, Laden-Säule) im gleichen Look.
+- Wild West neu: handgezeichnete Tintenkarte (Zitter-Filter), Papier mit Flecken und dunklem Rand, Häuser als dunkle Tintenblöcke, Höhenlinien, Baum-Kringel, schraffiertes Wasser.
+- Pixel Quest neu mit den Grafiken des Nutzers (Gras, Bruchstein, Eis/Wasser, Dorfhäuser, Hähnchen/Steak, Spieler- und grüner Marker) plus gezeichnete Pixel-Symbole (Heiltrank = Krankenhaus, Smaragd = Laden, P-Schild). Laut Nutzer sind die Grafiken nachgepixelt (eigene Versionen); kommen nach Freigabe in die App.
+- Toy Town neu nach den Teppich-Bildern: knallgrün, gelbe Randlinien, weiße gestrichelte Mitte, Zebrastreifen, Kreisel mit Teich, Parkplätze mit blauem P, Fußballfeld, Häuser schräg von vorne, Büsche, Filz-Körnung.
+- Minecraft-Ordner war versehentlich mit GM-052 ins öffentliche Repo gekommen – vorerst wieder herausgenommen (liegt noch in der Git-Geschichte).
+
+**Tatsächlich geprüft:** Zielbild-Seite im Browser gerendert und je Stil angesehen.
+
+**Ungetestet:** Freigabe durch den Nutzer steht aus; App noch nicht angeglichen.
+
 ## GM-052 – Zielbilder je Stil zur Freigabe (Vorgehen des Nutzers: erst Zielbild absegnen, dann App angleichen)
 
 **Ziel:** Nutzer: „Du erstellst ein HTML-Bild von jeder Stil-Referenz, und erst wenn ich deine HTML-1:1-Bilder abgesegnet habe, gleichst du die App damit ab, bis es mir gefällt. Achte auch auf die korrekten Pfeile, die den Standort anzeigen, bei jedem Stil.“ Dazu GM-051 (Prüfschleife): Standort-Pfeil statt lila Punkt, Abbiegetafel je Stil, Test-Bilder für alle Stile, CarPlay-Bilder nur mit entsperrtem Mac.
