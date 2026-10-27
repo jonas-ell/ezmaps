@@ -10,7 +10,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Geändert (Prototyp):**
 - Shop: Neon City **7,99 €**, Wild West / Pixel Quest / Toy Town je **5,99 €**, Alle Stile **19,99 €** („statt 25,96 €“, enthält auch künftige Stile). Klassik gratis
-- „Pixel Quest“ in **Silkscreen** (Google Fonts, SIL OFL, blockige Pixel-Großschrift) mit hartem Schatten 2 px; „Neon City“ bleibt `.nname` (Pricedown, in der Cloud Ersatz Anton)
+- Stil-Namen in den Projekt-Schriften: Neon City Pricedown (`.nname`, in der Cloud Ersatz Anton), Wild West Rye, Pixel Quest Press Start 2P, Toy Town Fredoka
 
 **Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler, Shop und Onboarding-Stilwahl angesehen.
 
@@ -22,7 +22,13 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
    - Nur mit **App-Lizenz** von Typodermic (die vorhandene Datei hat nur Desktop-Lizenz). Nutzer kauft sie; bis dahin Anton (GM-034)
    - Schriftdatei **nie ins Repo** (Repo ist öffentlich, `tools/prototype/fonts/` bleibt in `.gitignore`). Stattdessen: `tools/mac_build.sh` kopiert, falls vorhanden, `~/EzMapsPrivate/Fonts/pricedown.otf` vor dem Build nach `App/Fonts/` (dort in `.gitignore`); `UIAppFonts` enthält beide Namen, Code nimmt Pricedown, wenn `UIFont(name:)` sie findet, sonst Anton
    - Nur der Name, sonst keine Texte in Pricedown; keine Spielnamen in Texten (Markenrecht, App-Review 4.1 – die Schrift ist stark mit einem bekannten Spiel verbunden, deshalb nur für den Stilnamen)
-3. **Pixel-Schrift für „Pixel Quest“**: `Silkscreen-Bold.ttf` (SIL OFL, von Google Fonts) + `OFL.txt` in `App/Fonts/` (darf ins Repo), `UIAppFonts`; Alternative bei Wunsch: Monocraft (SIL OFL, Minecraft-ähnlich, GitHub IdreesInc/Monocraft). **Nicht** die Original-Minecraft-Schrift. Im Baustein `StyleName` (GM-034) einsetzen, Schatten 2 pt hart. Lizenzen in Einstellungen → Über
+3. **Korrektur (Nutzer): die Projekt-Schriften benutzen, keine neuen.** Stil-Namen genau in den Schriften, die der Prototyp seit GM-003/GM-004 für die Stile nutzt (`tools/prototype/style.css`, `.sf-*`):
+   - Neon City → **Pricedown** (siehe Punkt 2), schwarze Kontur
+   - Wild West → **Rye**
+   - Pixel Quest → **Press Start 2P** (die Pixel-Schrift des Stils; nicht Silkscreen, nicht die Minecraft-Originalschrift), harter Schatten 2 pt, Größe ×0,72
+   - Toy Town → **Fredoka** Bold
+   - Klassik → SF Pro
+   Rye, Press Start 2P und Fredoka sind SIL OFL (Google Fonts): TTF + `OFL.txt` in `App/Fonts/` (dürfen ins Repo), `UIAppFonts`. Im Baustein `StyleName` (GM-034) einsetzen; Lizenzen in Einstellungen → Über. Prototyp angepasst (`.nname`, `.wname`, `.pname`, `.tname` in `glas.css`/`onboarding.css`)
 
 ## GM-034 – Name „Neon City“ wieder in der Stil-Schrift – Auftrag für den lokalen Claude
 
