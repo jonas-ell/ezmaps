@@ -30,7 +30,8 @@ def zc(far, near, z0=12, z1=14.5):
 # Weit weg kleine Straßen dunkler (sonst unruhig, GM-047).
 NEON = dict(land="#181818", residential="#1b1b1b", industrial="#1d1d1d", farm="#181818", park="#1c1d1c", forest="#1a1b1a",
             water="#6a6a6a", building="#363636", buildingEdge="#363636", urban="#181818", rail="#2c2c2c",
-            casing="#181818", label="#141414", poi_suffix="-neon", poi_minzoom=13.5)
+            casing="#181818", label="#141414", poi_suffix="-neon", poi_minzoom=13.5,
+            place_color="#ffffff", place_halo="#000000", place_halo_width=1.8)
 NEON.update(road=lambda r: zc("#a0a0a0" if r <= 1 else "#8a8a8a" if r <= 2 else "#6c6c6c" if r <= 4 else "#575757", "#969696"),
             widen=1.5, label_halo=None)
 CLASSIC = dict(land="#f2efe9", residential="#ece7e0", industrial="#ebe3e8", farm="#eef0d6", park="#d4ebc8", forest="#c3dfb4",
@@ -43,7 +44,7 @@ WESTERN = dict(land="#e4c9a8", residential="#e4c9a8", industrial="#e0c4a2", farm
                road=lambda r: "#4a3b2c", widen=1.0, ink_lines={0: 3.2, 1: 3.0, 2: 2.6, 3: 2.2, 4: 1.8, 5: 1.3, 6: 1.0, 7: 0.8},
                water_soft=True, rail_ticks=True, label_halo="#e4c9a8", label_halo_width=2,
                font="Old Standard TT Regular", label_scale=0.85, letter_spacing=0.18,
-               poi_suffix="-west", poi_minzoom=13.5)
+               poi_suffix="-west", poi_minzoom=13.5, place_spacing=0.2, place_color="#3a2d20", place_halo="#e4c9a8")
 # GM-050: Pixel Quest und Toy Town wieder eigenständig wie im Prototyp (js/map.js drawPixel/drawToy, docs/previews/c4-*):
 # eigene Muster (Bilder zeichnet die App: RouteOverlay.patternImages, Website: js/poi.js), eigene Schrift, eigene Symbole.
 # Nutzer: „du kannst die Maps doch nicht alle im selben Stil machen“.
@@ -65,7 +66,7 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              building_pattern=by_height(["ez-pat-oak-px", "ez-pat-spruce-px", "ez-pat-brick-px", "ez-pat-cobble-px"]),
              building_shadow=True,
              font="Press Start 2P Regular", label_scale=0.62, text_transform="none", letter_spacing=0, label_halo_width=1.6,
-             poi_suffix="-px", poi_minzoom=14)
+             poi_suffix="-px", poi_minzoom=14, place_color="#ffffff", place_halo="#000000", place_halo_width=2, place_transform="none")
 TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b9d86a", park="#7cc142", forest="#62b235",
            water="#4ab0ea", building=by_height(["#e3412f", "#ef7d2d", "#3d78c9", "#8b8f96"]),
            buildingEdge="#2f3640", rail="#2f3640", casing="#c9cbce", label="#ffffff",
@@ -73,7 +74,7 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
            pat=dict(land="ez-pat-lawn-toy", forest="ez-pat-trees-toy", park="ez-pat-park-toy"),
            water_edge="#f2d48b", road_dash="#ffffff", building_ink="#2f3640",
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
-           poi_suffix="-toy", poi_minzoom=14)
+           poi_suffix="-toy", poi_minzoom=14, place_color="#ffffff", place_halo="#2f3640", place_halo_width=2.4, place_transform="none")
 
 WIDTH = {0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5}       # Meter
 MIN_PX = {0: 4.4, 1: 3.6, 2: 3, 3: 2.4, 4: 2, 5: 1.4, 6: 1.2, 7: 1}   # Bildpunkte
@@ -165,6 +166,7 @@ def build(P, title):
         layers.insert(rail_i + 1, t)
     if P.get("rail_pattern"):  # GM-057: Schienen-Grafik (Pixel Quest)
         layers[rail_i]["paint"]["line-pattern"] = P["rail_pattern"]
+        layers[rail_i]["minzoom"] = 13  # GM-058: weit weg nur Rauschen
         layers[rail_i]["paint"]["line-width"] = ["interpolate", ["linear"], ["zoom"], 13, 8, 17, 18]
     if P.get("water_edge"):
         i = next(k for k, l in enumerate(layers) if l["id"] == "water")
@@ -189,6 +191,7 @@ def build(P, title):
         "paint": paint,
     })
     layers.append(poi_layer(P))
+    layers.append(place_layer(P))  # GM-058: Orts- und Stadtnamen (vorher keine – beim Rauszoomen kein „Frankfurt“)
     return {
         "version": 8,
         "name": f"EzMaps {title}",
@@ -225,6 +228,27 @@ def poi_layer(P):
         "id": "poi-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": P.get("poi_minzoom", 14.5),
         "filter": ["in", ["get", "class"], ["literal", list(POI)]],
         "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.5, 17, 0.7], "icon-padding": 22},  # GM-030: weniger dicht (Fahrt-Bilder)
+    }
+
+
+# GM-058: Ortsnamen – Städte groß, Dörfer klein, Stadtteile erst nah; Schrift und Farbe je Stil
+def place_layer(P):
+    font = P.get("place_font", P.get("font", "Barlow Condensed SemiBold"))
+    sc = P.get("label_scale", 1)
+    size = ["interpolate", ["linear"], ["zoom"],
+            6, ["match", ["get", "class"], "city", round(14 * sc, 1), "town", round(10 * sc, 1), round(8 * sc, 1)],
+            12, ["match", ["get", "class"], "city", round(24 * sc, 1), "town", round(18 * sc, 1), "village", round(14 * sc, 1), round(12 * sc, 1)],
+            16, ["match", ["get", "class"], "city", round(30 * sc, 1), "town", round(24 * sc, 1), "village", round(18 * sc, 1), round(14 * sc, 1)]]
+    return {
+        "id": "place-names", "type": "symbol", "source": "openmaptiles", "source-layer": "place", "minzoom": 5,
+        "filter": ["any", ["in", ["get", "class"], ["literal", ["city", "town"]]],
+                   ["all", ["==", ["get", "class"], "village"], [">=", ["zoom"], 9.5]],
+                   ["all", ["in", ["get", "class"], ["literal", ["suburb", "quarter"]]], [">=", ["zoom"], 12]]],
+        "layout": {"text-field": ["coalesce", ["get", "name:de"], ["get", "name"]], "text-font": [font], "text-size": size,
+                   "text-transform": P.get("place_transform", "uppercase"), "text-letter-spacing": P.get("place_spacing", 0.08),
+                   "text-max-width": 8, "text-padding": 4, "symbol-sort-key": ["get", "rank"]},
+        "paint": {"text-color": P.get("place_color", P["label"]), "text-halo-color": P.get("place_halo", P.get("label_halo") or "#000000"),
+                  "text-halo-width": P.get("place_halo_width", 1.6)},
     }
 
 

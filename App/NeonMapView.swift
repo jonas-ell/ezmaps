@@ -458,6 +458,7 @@ struct NeonMapView: UIViewRepresentable {
             c.allowed = locationAllowed
             if locationAllowed && !navigating { map.showsUserLocation = true; map.userTrackingMode = .follow }
         }
+        if navigating { c.crosshair?.isHidden = true } // GM-058
         if navigating && visible { c.camera?.start() } else if c.camera?.isRunning == true { c.camera?.stop() }
         if map.isHidden == visible {
             map.isHidden = !visible
@@ -499,7 +500,7 @@ struct NeonMapView: UIViewRepresentable {
             MainActor.assumeIsolated {
                 if camera?.isRunning == true { camera?.detach() }
                 // GM-049/050: Fadenkreuz (Neon City weiß, Wild West rot), solange man sich umschaut
-                if let color = CrosshairView.color(for: style) {
+                if !navigating, let color = CrosshairView.color(for: style) { // GM-058: in der Navigation kein Fadenkreuz
                     if crosshair == nil {
                         let v = CrosshairView(frame: mapView.bounds)
                         v.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -709,6 +710,7 @@ enum StylePatterns {
         out["ez-pat-road-px"] = UIImage(named: "px-tex-cobble") ?? out["ez-pat-road-px-own"]
         out["ez-pat-water-px"] = UIImage(named: "px-tex-water") ?? out["ez-pat-water-px-own"]
         out["ez-pat-rail-px"] = UIImage(named: "px-tex-rail") ?? out["ez-pat-road-px-own"]
+        if let wheat = UIImage(named: "px-tex-wheat") { out["ez-pat-farm-px"] = wheat } // GM-058: Weizenfeld
         // Toy Town
         out["ez-pat-lawn-toy"] = UIGraphicsImageRenderer(size: CGSize(width: 64, height: 64)).image { ctx in
             rgb(141, 198, 63).setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 64, height: 64))
