@@ -68,6 +68,14 @@ struct ContentView: View {
             ParkedCarSheet(model: model).presentationDetents([.height(300)])
         }
         .fullScreenCover(isPresented: $showExplore) { ExploreScreen(model: model) }
+        // GM-031: Store-Screenshot „einstellungen“ – mehrmals versuchen, bis das Blatt offen ist (Task in onAppear ging verloren)
+        .task {
+            guard ScreenshotMode.state == "einstellungen" else { return }
+            for _ in 0..<6 where !showSettings {
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                showSettings = true
+            }
+        }
         .preferredColorScheme(.dark)
         .tint(GlassTokens.accent)
         .onChange(of: scenePhase) {
@@ -78,10 +86,6 @@ struct ContentView: View {
             model.appActive = scenePhase == .active
             model.onAppear()
             ScreenshotMode.run(model) // GM-021: nur mit Startargument -EZShot (Store-Screenshots)
-            if ScreenshotMode.state == "einstellungen" {
-                // GM-030: erst nach dem ersten Bild öffnen – direkt beim Start ging das Blatt auf frischen Geräten verloren
-                Task { try? await Task.sleep(nanoseconds: 1_500_000_000); showSettings = true }
-            }
         }
     }
 }

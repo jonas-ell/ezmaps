@@ -235,9 +235,11 @@ tell application "System Events" to tell process "Simulator"
   -- Bildinhalt 800 × 480, unten im Fenster (oben Titelleiste); EzMaps-Symbol in der linken Leiste bei (52, 200)
   set k to ww / 800
   set top to wh - 480 * k
-  click at {px + 52 * k, py + top + 200 * k}
-  delay 2
-  click at {px + 52 * k, py + top + 200 * k}
+  -- GM-031: dreimal mit Pause (nach dem App-Neustart kommt der erste Tipp oft zu früh); Tipp im Dock stört eine offene App nicht
+  repeat 3 times
+    click at {px + 52 * k, py + top + 200 * k}
+    delay 3
+  end repeat
 end tell
 return "Fenster " & px & "," & py & " " & ww & "x" & wh
 OSA
