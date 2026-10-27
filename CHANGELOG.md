@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-040 – Gesamtblick: Konzept- und Verbesserungsideen
+
+**Ziel:** Nutzer: ganze App ansehen und Ideen sammeln, wie alles besser wird, auch vom Konzept her.
+
+**Dateien:** `docs/KONZEPT_IDEEN.md` (neu)
+
+**Geändert:** Nur Doku. Ist-Stand (Swift bei GM-028, nur Neon, kein StoreKit; GM-029 bis GM-039 offen), Konzept-Vorschläge (1.0 klein: Klassik + Neon + Plus, weitere Stile als Updates; Aufdecken als echter Unterschied; Reverse Trial 3 Tage Neon; Paywall-Zeitpunkte; Fahrt-Replay-Video; eigene Server vor Werbung; fehlender Live-Verkehr; anonyme Zählung), Produkt-Ideen, Arbeitsreihenfolge, Top 5.
+
+**Tatsächlich geprüft:** Swift-Dateien, Prototyp, TODO und Doku gelesen. Nichts gebaut.
+
+**Ungetestet:** –
+
+### Auftrag
+Noch keiner – erst entscheidet der Nutzer, welche Ideen umgesetzt werden. Die Arbeitsreihenfolge in Abschnitt 3 gilt nur, wenn der Nutzer sie freigibt.
+
 ## GM-039 – Einzelkäufe von Stilen wieder da (teuer, neben Plus) – Auftrag für den lokalen Claude
 
 **Ziel:** Nutzer will auch Einzelkäufe einzelner Karten. Ergänzt GM-038 (Punkt 1 „Einzelstil-Produkte nicht anlegen“ ist damit aufgehoben).
