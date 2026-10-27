@@ -2,6 +2,28 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-052 – Zielbilder je Stil zur Freigabe (Vorgehen des Nutzers: erst Zielbild absegnen, dann App angleichen)
+
+**Ziel:** Nutzer: „Du erstellst ein HTML-Bild von jeder Stil-Referenz, und erst wenn ich deine HTML-1:1-Bilder abgesegnet habe, gleichst du die App damit ab, bis es mir gefällt. Achte auch auf die korrekten Pfeile, die den Standort anzeigen, bei jedem Stil.“ Dazu GM-051 (Prüfschleife): Standort-Pfeil statt lila Punkt, Abbiegetafel je Stil, Test-Bilder für alle Stile, CarPlay-Bilder nur mit entsperrtem Mac.
+
+**Dateien:** `tools/prototype/zielbilder.html`, `tools/prototype/js/zielbilder.js` (neu), `.gitignore` (`tools/prototype/referenzen/` – Spiel-Screenshots nur lokal), GM-051: `App/NeonMapView.swift`, `App/ContentView.swift` (NavPanelLook/NavPanel), `App/ShopScreens.swift`, `tools/mac_build.sh`, `tools/mac_screens.sh`, `tools/mac_check.sh`
+
+**Geändert:**
+- Zielbild-Seite: je Stil links die Referenzen (lokal), rechts ein SVG-Nachbau derselben Szene (Kreisverkehr, Straßen, Häuser, Park, Bach, Symbole, Route mit Ziel, Standort) als Navigation, frei fahren und – bei Neon City und Wild West – Umschauen mit Fadenkreuz; darunter der Standort-Pfeil des Stils.
+  - Neon City nach den Pausenkarten (dazu Variante „Auto-Foto“ zum Vergleichen), Standort = schmaler hellgrauer Pfeil (Minikarte).
+  - Wild West nach den Red-Dead-Bildern, Standort = Tropfen mit Ring („Dein Charakter“).
+  - Pixel Quest nach den Blockwelt-Videos, Standort = weiße Pixel-Pfeilspitze mit Kerbe.
+  - Toy Town nach dem Prototyp, Standort = rotes Spielzeugauto.
+  - Klassik schlicht, Standort = blauer Pfeil im weißen Kreis.
+- GM-051: Standort-Ansicht wird nach dem Setzen des Delegates neu angelegt (vorher lila Standard-Punkt), Pfeil-Rand obenauf; Abbiegetafel je Stil (Pergament mit Doppelrahmen und Western-Schrift, dunkelblauer Pixel-Kasten mit weißem Rand und Pixelschrift, weiße Spielzeug-Tafel mit Rand, Abbiege-Text als dritte Zeile); Symbole auf der Stil-Seite gleich hoch; Test-Bilder `stil-<stil>-karte/navigation` für alle Stile; CarPlay-Bilder werden bei gesperrtem Mac übersprungen, alte bleiben.
+
+**Tatsächlich geprüft:**
+- Mac: BUILD SUCCEEDED, 64/64 Tests; iPhone- und Test-Bilder (18) angesehen: Standort-Pfeil hell mit Rand, Abbiegetafeln je Stil, jeder Stil eigenständig.
+- Zielbild-Seite im Browser gerendert und je Stil angesehen.
+- CarPlay: Mac gesperrt erkannt („MAC GESPERRT“), alte Bilder behalten.
+
+**Ungetestet:** Freigabe der Zielbilder durch den Nutzer steht aus; die App wird erst danach angeglichen (Standort-Pfeile je Stil sind in der App noch nicht umgesetzt).
+
 ## GM-050 – Pfeil flüssig, Pixel Quest als Blockwelt, Toy Town als Spielteppich, Ziel-Symbole je Stil, Fadenkreuz wie GTA, Test-Käufe, neue Stil-Seite
 
 **Ziel:** Gerätetest des Nutzers: Pfeil ruckelt und nimmt Kurven schlecht, Kamera fliegt beim Start von Idstein her, Stimme roboterhaft und bricht ab, Ansagen nicht stummschaltbar, Knopf oben rechts überdeckt den Kompass, gelber Ziel-Punkt „lame“ (jeder Stil ein eigenes Ziel), Stil-Seite „Plus holen“ zu trocken, Preise und simulierte Käufe in die echte App, Unterlagen für App Store Connect. Dazu: Fadenkreuz wie in GTA (nicht über den ganzen Bildschirm) und „Pixel Quest und Toy Town sehen gar nicht mehr aus wie sie sollen – die Maps nicht alle im selben Stil“, Pixel Quest wie die Blockwelt-Karten aus den Videos des Nutzers.
