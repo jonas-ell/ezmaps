@@ -262,12 +262,14 @@ OSA
   # GM-025: „frei“ = Fahren ohne Route (Hauptzweck im Auto): simulierte Fahrt durch Idstein, ~45 km/h
   xcrun simctl location "$SID" start --speed=12.5 50.21712,8.25734 50.21780,8.25900 50.21930,8.26250 50.22010,8.26520 50.22130,8.26690 50.22230,8.26900 50.22420,8.27100 || echo "Standort-Fahrt nicht möglich"
   # GM-030: mehr CarPlay-Fälle – Ziele-Liste (Knopf „Ziele“ antippen), Ankunft, Fahrt ohne Route nachts nicht nötig
-  for ENTRY in frei:14 vorschau:16 navigation:28 ankunft:30 ziele:8; do
+  # GM-061: freie Fahrt in jedem Stil (frei-<stil>), Rest in Neon City
+  for ENTRY in frei:14 frei-classic:14 frei-wild-west:14 frei-pixel-quest:14 frei-toy-town:14 vorschau:16 navigation:28 ankunft:30 ziele:8; do
     NAME=${ENTRY%%:*}; WAIT=${ENTRY##*:}
+    CSTYLE=neon-city; case "$NAME" in frei-*) CSTYLE=${NAME#frei-};; esac
     xcrun simctl terminate "$SID" "$BID" 2>/dev/null
     [ "$NAME" = "vorschau" ] && { xcrun simctl location "$SID" clear; xcrun simctl location "$SID" set 50.21712,8.25734; }
-    STATE=$NAME; [ "$NAME" = "ziele" ] && STATE=karte; [ "$NAME" = "frei" ] && STATE=frei
-    xcrun simctl launch "$SID" "$BID" -EZShot "$STATE" -EZStyle neon-city -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
+    STATE=$NAME; [ "$NAME" = "ziele" ] && STATE=karte; case "$NAME" in frei*) STATE=frei;; esac
+    xcrun simctl launch "$SID" "$BID" -EZShot "$STATE" -EZStyle "$CSTYLE" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
     sleep 6   # GM-026: CarPlay braucht nach dem Neustart der App etwas, sonst geht der Klick ins Leere
     # GM-024: EzMaps im CarPlay-Fenster antippen (Startbildschirm: Icon unter „Nachrichten“, bei 25 % / 58 % des Bildes)
     osascript <<'OSA' 2>&1 | sed 's/^/Antippen: /'
