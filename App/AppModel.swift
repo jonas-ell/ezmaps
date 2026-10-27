@@ -168,7 +168,8 @@ final class AppModel {
 
     var selected: Route? { routes.indices.contains(selectedRoute) ? routes[selectedRoute] : nil }
 
-    func onAppear() { location.requestPermission() }
+    /// GM-043: Standort erst nach dem Onboarding-Schritt „Wo bist du gerade?“ abfragen (erst Nutzen erklären)
+    func onAppear() { if settings.onboarded || ScreenshotMode.state != nil { location.requestPermission() } }
 
     func recenter() { recenterRequest += 1 }
 
@@ -531,6 +532,13 @@ final class AppModel {
     func saveTrialNow() { GameStorage.saveTrial(trial) }
 
     func completeOnboarding() { updateSettings { $0.onboarded = true } }
+
+    /// Orte suchen ohne den Suchbildschirm (Onboarding, Einstellungen: Zuhause/Arbeit)
+    func searchPlaces(_ query: String) async -> [PhotonClient.Place] {
+        let q = query.trimmingCharacters(in: .whitespaces)
+        guard q.count >= 2 else { return [] }
+        return (try? await photon.search(q, near: currentCoordinate)) ?? []
+    }
 
     private func reroute(from position: Coordinate, heading: Double?) {
         guard !rerouting, let s = session, let dest = destination else { return }

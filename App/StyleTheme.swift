@@ -64,3 +64,8 @@ struct StyleName: View {
         }
     }
 }
+
+/// Für `.sheet(item:)` (Shop, „Test vorbei“)
+extension MapStyle: Identifiable {
+    public var id: String { rawValue }
+}
