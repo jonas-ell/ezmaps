@@ -41,7 +41,7 @@ const SCREENS = [
   ['3 Stil wählen', 'Echte Karten-Vorschau je Stil. Klassik gratis, Premium mit „Testen“.', ph => {
     ph.querySelector('.fill').style.background = '#0b0b0d';
     const f = $(`<div class="f">${steps(2)}<div class="kick">Schritt 2 von 3</div><div class="h1">Wie soll deine Welt aussehen?</div><div class="sub">Du kannst jederzeit wechseln.</div>
-      <div class="grid2" style="margin-top:16px">${['classic', 'neon', 'western', 'pixel'].map((s, i) => `<div class="tile ${s === 'classic' ? 'sel' : ''}"><div class="m" data-s="${s}"></div><span class="pill ${STYLES[s].free ? '' : 'pro'}">${STYLES[s].free ? 'GRATIS' : 'PREMIUM'}</span><div class="t">${s === 'neon' ? '<span class="nname">Neon City</span>' : STYLES[s].name}<small>${STYLES[s].free ? 'Inklusive' : 'Kostenlos testen'}</small></div></div>`).join('')}</div>
+      <div class="grid2" style="margin-top:16px">${['classic', 'neon', 'western', 'pixel'].map((s, i) => `<div class="tile ${s === 'classic' ? 'sel' : ''}"><div class="m" data-s="${s}"></div><span class="pill ${STYLES[s].free ? '' : 'pro'}">${STYLES[s].free ? 'GRATIS' : 'PREMIUM'}</span><div class="t">${s === 'neon' ? '<span class="nname">Neon City</span>' : s === 'pixel' ? '<span class="pname">Pixel Quest</span>' : STYLES[s].name}<small>${STYLES[s].free ? 'Inklusive' : 'Kostenlos testen'}</small></div></div>`).join('')}</div>
       <div class="grow"></div><div class="btn">Weiter mit Klassik</div></div>`);
     ph.append(f);
     requestAnimationFrame(() => f.querySelectorAll('.m').forEach(m => { const s = m.dataset.s; mapInto(m, s, { center: [40, -20], heading: 0.4, scale: 1.1, tilt: 45, anchor: [0.5, 0.6] }, (u, v) => { drawRoute(u, v, R, 0, s, { width: 6 }); drawPlayer(u, v, R.pts[0], 0, s, 9); }); }));

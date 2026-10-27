@@ -83,3 +83,5 @@
 
 /* GM-034: Name „Neon City“ immer in der Stil-Schrift (Pricedown, nur lokal; Ersatz Impact), schwarze Kontur */
 .nname { font-family: Pricedown, Impact, Anton, sans-serif; font-weight: 400; letter-spacing: .5px; font-size: 1.18em; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 0 #000; }
+/* GM-035: Name „Pixel Quest“ in Pixel-Blockschrift (Silkscreen, SIL OFL; Alternative Monocraft, OFL) */
+.pname { font-family: Silkscreen, 'Press Start 2P', monospace; font-weight: 700; letter-spacing: .5px; font-size: 1.05em; text-shadow: 2px 2px 0 #000; }
