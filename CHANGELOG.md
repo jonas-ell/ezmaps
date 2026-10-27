@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-058 – Ortsnamen, Weizenfeld, kein Fadenkreuz in der Navigation
+
+**Ziel:** Nutzer (Gerätetest): beim Rauszoomen keine Stadtnamen, Fadenkreuz in der Navigation, neue Weizen-Grafik für Felder.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `App/Assets.xcassets/PixelQuest/px-tex-wheat.imageset` (neu)
+
+**Geändert:**
+- Neue Ebene `place-names` in allen Stilen (Städte ab Zoom 5, Dörfer ab 9,5, Stadtteile ab 12), Schrift und Farbe je Stil.
+- Pixel Quest: Felder als Weizen von oben (Farben aus der Weizen-Grafik des Nutzers, die Grafik selbst ist schräg von der Seite), Schienen erst ab Zoom 13.
+- Fadenkreuz nie in der Navigation.
+
+**Tatsächlich geprüft:** STIL OK, Geräte-Build OK und installiert.
+
+**Ungetestet:** Aussehen auf dem Gerät.
+
 ## GM-057 – Zielbilder in die App: Wild West nach Red-Dead-Karten, Pixel Quest mit Nutzer-Grafiken, Neon-Waypoint, mehr Symbole, Standort-Marker je Stil
 
 **Ziel:** Nutzer: „setz mal alles jetzt in der App um, ich bewerte dann, lad es direkt auf mein Handy“. Toy Town gefällt nicht → bleibt bis zu den Codex-Grafiken wie bisher.
