@@ -238,6 +238,67 @@ variants: parchment map with red (#C0261F) route, and pixel-art overworld with g
 (#FFCC33) dotted path. No game references.
 ```
 
+## 9. Kartenknöpfe und Stil-Bilder, Neuauflage (GM-045)
+
+Nutzer: Knöpfe oben rechts sehen „scuffed“ aus (SF Symbols im grauen Kreis), Stil-Bilder sind langweilig.
+Der Open-World-Look ist das, womit die App wirbt: kräftig, dicke schwarze Kontur, klare weiße Formen.
+
+### 9a. Kartenknöpfe (HUD)
+
+```
+Design an original, bold HUD icon set for a car navigation app with an open-world video game look
+(chunky, high contrast, readable at arm's length while driving). Fully original geometry:
+do not copy SF Symbols, Material, Lucide or any game's UI.
+
+Style: solid white filled glyphs (#FFFFFF) with a 1.5 px black outline (#000000, round joins) and a
+hard 1.5 px drop shadow down-right (#000000 at 60%). Slightly chunky proportions, rounded corners
+(radius ~1.5), no thin lines, no gradients. Each glyph sits centered in viewBox 0 0 32 32 with 3 px margin.
+Must read on dark grey #3B3C3E, on light #F2EFE9 and on a black 80% round button.
+
+Files (SVG, plus Xcode imagesets with Contents.json: "preserves-vector-representation": true,
+"template-rendering-intent": "original"), folder Assets/Generated/Icons/HUD/, names exactly:
+  hud-recenter   (navigation arrowhead pointing up-right with a small ring at its base)
+  hud-styles     (paint palette with three dots)
+  hud-explore    (folded map with a small pin)
+  hud-settings   (cog with 8 rounded teeth)
+  hud-zoom-in, hud-zoom-out (plus / minus in a magnifier)
+  hud-search     (magnifier)
+  hud-back       (chunky chevron left)
+  hud-close      (chunky X)
+  hud-star, hud-star-filled
+  hud-pan        (four arrows from the center, for moving the map)
+  hud-volume-on, hud-volume-off
+Also deliver hud-button-bg.svg: a 56x56 round button background, #0B0B0C at 85% with a 2 px
+#FFFFFF at 18% inner stroke and soft shadow, so the glyph can be placed on it.
+Write index.html showing every icon on the three backgrounds at 24, 32 and 48 px, and on hud-button-bg.
+```
+
+### 9b. Stil-Bilder (Kacheln im Onboarding und in der Stil-Liste)
+
+```
+Create five original square map tiles, one per map style of a car navigation app, as PNG 1024x1024
+(@1x 256, @2x 512, @3x 768 exported too) with rounded corners baked in (radius 22% of the size) and
+transparent outside the corners. Folder Assets/Generated/StyleTiles/, names style-classic,
+style-neon-city, style-wild-west, style-pixel-quest, style-toy-town.
+
+Each tile: a top-down view of a small city block (two crossing streets, a curved street, buildings,
+a little park or water), with a thick route line making one turn and a player arrowhead on the route.
+No text, no logos, nothing from existing games or real brands.
+  classic:     light city map, beige ground #F2EFE9, white streets, grey buildings, blue route #1F6FE0
+  neon-city:   dark grey ground #3B3C3E, lighter grey buildings #4A4B4E with subtle bevel, white streets
+               #ECECEC with dark casing #1A1A1B, purple route #A13DF0 with a soft glow, white arrowhead
+               with black outline; this is the hero tile, make it the most striking (night city feel)
+  wild-west:   parchment #DCC59A, inked brown streets #3A2414, small wooden-roof buildings, red route #C0261F
+  pixel-quest: pixel art (hard edges, 16 px grid scaled up), grass #60A83A, sand paths, tiny trees,
+               yellow route #FFCC33
+  toy-town:    lawn #8DC63F, toy-like rounded buildings with soft shadows, grey road with white dashes,
+               orange route #FF7A00
+Also write index.html showing all five tiles side by side at 64, 128 and 256 px on #1C1C1E.
+```
+
+Einbau: `StyleSwatch` (App/ShopScreens.swift) zeigt dann das Bild statt der gezeichneten Fläche;
+`GlassRoundButton` nimmt die HUD-Bilder statt der SF Symbols.
+
 ## Nicht von Codex
 
 - **Schriften:**

@@ -38,6 +38,13 @@ final class FollowCamera: NSObject {
     /// GM-028: höchste Bildrate (CarPlay 30 – Autoradios zeigen meist nicht mehr, halbiert die Arbeit)
     var maxFPS: Float = 60
     private var lastSet: (Double, Double, Double, Double, CGPoint)?
+    /// GM-045: Nutzer schaut sich um (Wischen, CarPlay-Verschieben) – Karte bleibt, wo sie ist, Pfeil sitzt auf der Fahrposition
+    private(set) var detached = false
+
+    static var locationAllowed: Bool {
+        let s = CLLocationManager().authorizationStatus
+        return s == .authorizedWhenInUse || s == .authorizedAlways
+    }
 
     init(map: MLNMapView, pitch: CGFloat) {
         self.map = map
@@ -54,6 +61,7 @@ final class FollowCamera: NSObject {
     func start() {
         guard link == nil else { return }
         hasState = false
+        detached = false
         let l = CADisplayLink(target: self, selector: #selector(tick(_:)))
         l.preferredFrameRateRange = CAFrameRateRange(minimum: min(15, maxFPS), maximum: maxFPS, preferred: maxFPS)
         lastSet = nil
@@ -70,10 +78,21 @@ final class FollowCamera: NSObject {
         link?.invalidate()
         link = nil
         arrow.isHidden = true
-        map?.showsUserLocation = restoreUserLocation
+        detached = false
+        arrow.transform = .identity
+        map?.showsUserLocation = restoreUserLocation && Self.locationAllowed
         map?.contentInset = .zero
         map?.compassView.isHidden = false
         map?.attributionButton.isHidden = !restoreAttribution
+    }
+
+    func detach() { detached = true }
+
+    /// Zurück zum Auto: Kamera folgt wieder, Pfeil fest in der Mitte
+    func attach() {
+        detached = false
+        lastSet = nil
+        arrow.transform = .identity
     }
 
     func zoom(by step: Double) {
@@ -100,6 +119,14 @@ final class FollowCamera: NSObject {
             if dh > 180 { dh -= 360 } else if dh < -180 { dh += 360 }
             heading = (heading + dh * kRot + 360).truncatingRemainder(dividingBy: 360)
             altitude += (goalAlt - altitude) * kAlt
+        }
+        if detached {
+            // Pfeil auf die Fahrposition setzen, gedreht relativ zur Karte; außerhalb des Bildes ausblenden
+            let p = map.convert(CLLocationCoordinate2D(latitude: lat, longitude: lon), toPointTo: map)
+            arrow.center = p
+            arrow.transform = CGAffineTransform(rotationAngle: CGFloat((heading - map.direction) * .pi / 180))
+            arrow.isHidden = !map.bounds.insetBy(dx: -30, dy: -30).contains(p)
+            return
         }
         // Mittelpunkt der Kamera = Pfeil-Position: Mitte der freien Fläche (Safe Area – in CarPlay ohne die
         // Abbiegekarte/Leisten von iOS), senkrecht bei arrowY. Inset nur ändern, wenn nötig.

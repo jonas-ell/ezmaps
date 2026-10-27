@@ -9,6 +9,7 @@ struct ContentView: View {
     @State private var showSettings = false
     @State private var showExplore = false
     @Environment(\.scenePhase) private var scenePhase
+    private var onboarding: Bool { !model.settings.onboarded && ScreenshotMode.state == nil }
 
     var body: some View {
         ZStack {
@@ -24,22 +25,23 @@ struct ContentView: View {
                 speedKmh: model.navSpeedKmh,
                 padding: UIEdgeInsets(top: 130, left: 60, bottom: 380, right: 60),
                 visible: scenePhase == .active,
-                style: model.activeStyle,
-                trail: model.trail
+                style: onboarding ? .neonCity : model.activeStyle, // GM-045: Willkommen zeigt den Neon-Look
+                trail: model.trail,
+                locationAllowed: model.location.isAllowed
             )
             .ignoresSafeArea()
 
             StatusBarScrim()
 
             switch model.screen {
-            case .map: MapHome(model: model, showSettings: $showSettings, showExplore: $showExplore)
+            case .map: if !onboarding { MapHome(model: model, showSettings: $showSettings, showExplore: $showExplore) } // GM-045: nicht unter dem Onboarding
             case .search: SearchScreen(model: model)
             case .preview: RoutePreview(model: model)
             case .navigating: NavigationHUD(model: model)
             case .arrived: ArrivalSheet(model: model)
             }
 
-            if !model.settings.onboarded && ScreenshotMode.state == nil {
+            if onboarding {
                 OnboardingView(model: model).transition(.opacity)
             }
         }

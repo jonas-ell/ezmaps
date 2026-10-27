@@ -172,7 +172,10 @@ final class AppModel {
     /// GM-043: Standort erst nach dem Onboarding-Schritt „Wo bist du gerade?“ abfragen (erst Nutzen erklären)
     func onAppear() { if settings.onboarded || ScreenshotMode.state != nil { location.requestPermission() } }
 
-    func recenter() { recenterRequest += 1 }
+    func recenter() {
+        location.requestPermission() // GM-045: wer im Onboarding „Später“ gewählt hat, wird hier gefragt
+        recenterRequest += 1
+    }
 
     // MARK: Suche
 

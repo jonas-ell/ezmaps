@@ -2,6 +2,25 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-045 – Reif für den CarPlay-Antrag: Karte verschieben, Neuberechnung im Auto, App aufs iPhone, Prüflauf stabiler
+
+**Ziel:** Nutzer: „arbeite so lange bis die app reif ist um sich für carplay zu bewerben“ und „die app kannst du zum testen auf das gerät jonas vom mac aus laden“. Dazu die Merge-Nacharbeit (lokal GM-029 bis GM-031 trafen auf Cloud GM-022 bis GM-044, Nummern doppelt; ab hier geht es mit GM-045 weiter).
+
+**Dateien:** `App/CarPlaySceneDelegate.swift`, `App/AppModel.swift`, `App/ContentView.swift`, `tools/mac_build.sh`, `tools/mac_device.sh` (neu), `docs/CARPLAY_ANTRAG.md` (neu)
+
+**Geändert:**
+- CarPlay: Karte verschieben (Pflicht für Navis). Neuer Kartenknopf mit vier Pfeilen öffnet Apples Verschiebe-Ansicht (Pfeiltasten für Autos mit Drehknopf); Wischen auf Touchscreens geht auch. Die Kamera folgt dem Auto erst wieder nach „Mitte“, beim Schließen der Verschiebe-Ansicht oder beim Wechsel des Bildschirms (z. B. Navi startet).
+- CarPlay: während der Neuberechnung zeigt die Abbiegekarte „Route wird neu berechnet“ (`pauseTrip(for: .rerouting)`); `rerouting` im Modell ist jetzt beobachtbar.
+- Store-Screenshot „einstellungen“: Blatt wird mehrmals geöffnet, bis es offen ist (vorher ging der Aufruf verloren und das Bild zeigte die Karte).
+- CarPlay-Screenshots: EzMaps-Symbol dreimal mit Pause antippen (vorher zeigten frei/vorschau/navigation oft den CarPlay-Startbildschirm).
+- Neu `bash tools/mac_device.sh`: baut signiert für das iPhone „jonas“, installiert und startet die App (Marker `.do_device`). CarPlay-Berechtigung ist im Geräte-Build nicht drin.
+- Neu `docs/CARPLAY_ANTRAG.md`: Apples Regeln für CarPlay-Navis mit Stand, englischer Formulartext, was vor dem Absenden fehlt.
+
+**Tatsächlich geprüft:**
+- Geräte-Build für iPhone 15 „jonas“: GERÄTE-BUILD OK, installiert und gestartet (`com.game.ezmaps`).
+
+**Ungetestet:** Verschieben und Neuberechnung im CarPlay-Simulator von Hand (Screenshots decken das nicht ab); Verhalten im echten Auto (braucht Apples Freigabe).
+
 ## GM-044 – Fahrt-Replay im CarPlay-Format (Querformat 16:9)
 
 **Ziel:** Nutzer: „das video soll im carplay format sein“. Bisher Hochformat 9:16, jetzt Querformat wie der CarPlay-Bildschirm.

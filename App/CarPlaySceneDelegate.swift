@@ -309,7 +309,6 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     private var navigating = false
     private var camera: FollowCamera?
     /// GM-045: Nutzer verschiebt die Karte – Kamera folgt dem Auto erst wieder nach „Mitte“ oder Bildschirmwechsel
-    private var panning = false
     private var dragDone = CGPoint.zero
     private var lastScreen: AppModel.Screen?
     /// GM-043: Kartenstil im Auto (gleich wie auf dem iPhone, inkl. Stil-Test)
@@ -326,7 +325,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         map.compassView.isHidden = true // GM-024: kein Kompass im Auto (Norden steht ohnehin über die Fahrtrichtung fest)
         map.attributionButton.isHidden = true // Hinweis steht als Text unten rechts
         map.delegate = self
-        map.userTrackingMode = .follow
+        if FollowCamera.locationAllowed { map.userTrackingMode = .follow } // GM-045: nie selbst nach dem Standort fragen
         view.addSubview(map)
         mapView = map
         let cam = FollowCamera(map: map, pitch: 0)
@@ -424,8 +423,8 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         guard let map = mapView else { return }
         // GM-027: Kamera zuerst umschalten – sonst überschreibt sie den gerade eingepassten Vorschau-Ausschnitt
         let screen = AppModel.shared.screen
-        if screen != lastScreen { lastScreen = screen; panning = false } // GM-045: neuer Bildschirm → wieder dem Auto folgen
-        if screen == .preview || panning { camera?.stop() } else { camera?.start() }
+        if screen != lastScreen { lastScreen = screen; camera?.attach() } // GM-045: neuer Bildschirm → wieder dem Auto folgen
+        if screen == .preview { camera?.stop() } else { camera?.start() }
         if revision != self.revision || selected != self.selected {
             let isNew = revision != self.revision
             self.revision = revision
@@ -458,14 +457,13 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     }
 
     func beginPan() {
-        panning = true
         dragDone = .zero
-        camera?.stop()
+        camera?.detach() // Pfeil bleibt auf dem Auto, die Karte bewegt sich
     }
 
     /// Ein Schritt per Pfeiltaste: ein Drittel des Bildschirms, bezogen auf die Bildschirmrichtung
     func pan(_ direction: CPMapTemplate.PanDirection) {
-        if !panning { beginPan() }
+        if camera?.detached != true { beginPan() }
         let dx = view.bounds.width / 3, dy = view.bounds.height / 3
         var d = CGPoint.zero
         if direction.contains(.left) { d.x -= dx }
@@ -477,7 +475,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
 
     /// Wischen: CarPlay liefert die Gesamtverschiebung seit Beginn, wir bewegen nur um den neuen Teil
     func drag(to translation: CGPoint) {
-        if !panning { beginPan() }
+        if camera?.detached != true { beginPan() }
         move(by: CGPoint(x: dragDone.x - translation.x, y: dragDone.y - translation.y), animated: false)
         dragDone = translation
     }
@@ -491,7 +489,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     }
 
     func recenter() {
-        panning = false
+        camera?.attach()
         camera?.altitudeFactor = 1.0 // GM-030: gleiche Höhe wie beim Start
         camera?.start()
     }

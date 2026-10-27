@@ -47,7 +47,7 @@ struct StyleName: View {
         switch style {
         case .neonCity:
             Text(title)
-                .font(.custom(UIFont(name: "Pricedown", size: size) != nil ? "Pricedown" : "Anton-Regular", size: size * 1.18))
+                .font(.custom(UIFont(name: "Pricedown-Black", size: size) != nil ? "Pricedown-Black" : "Anton-Regular", size: size * 1.18))
                 .foregroundStyle(.white)
                 .shadow(color: .black, radius: 0, x: 1.5, y: 1.5)
                 .shadow(color: .black, radius: 0, x: -1.5, y: -1.5)

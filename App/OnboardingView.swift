@@ -1,23 +1,28 @@
 import SwiftUI
 import EzMapsCore
 
-/// GM-043: Onboarding im Glas-Look (GM-031/032): Willkommen, Standort (Nutzen vor der iOS-Frage), Stil wählen, Zuhause/Arbeit.
-/// Kein Konto, keine Fahrzeugwahl (GM-032), Klassik vorausgewählt, Kauf-Stile nur „kostenlos testen“ (10 Minuten, GM-041).
+/// GM-043: Onboarding im Glas-Look (GM-031/032): Willkommen, Standort (Nutzen vor der iOS-Frage), Stil wählen.
+/// GM-045: Zuhause/Arbeit und „Ich habe schon EzMaps“ raus (Nutzer), Neon City vorausgewählt (der Look, mit dem die App wirbt),
+/// Hintergrund deckend statt halb durchsichtig über der Startkarte. Kauf-Stile nur „kostenlos testen“ (10 Minuten, GM-041).
 struct OnboardingView: View {
     let model: AppModel
     @State private var step = 0
-    @State private var pick: MapStyle = .classic
+    @State private var pick: MapStyle = .neonCity
 
     var body: some View {
         ZStack {
-            SwiftUI.Color.black.opacity(step == 0 ? 0.35 : 0.8).ignoresSafeArea()
+            if step == 0 {
+                // Karte (im Hintergrund Neon City) oben sichtbar, unten dunkel für den Text
+                LinearGradient(colors: [.black.opacity(0.1), .black.opacity(0.75), .black], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
+            } else {
+                SwiftUI.Color.black.opacity(0.92).ignoresSafeArea()
+            }
             VStack(alignment: .leading, spacing: 0) {
                 if step > 0 { StepBar(step: step) }
                 switch step {
                 case 0: welcome
                 case 1: locationStep
-                case 2: styleStep
-                default: HomeWorkStep(model: model) { finish() }
+                default: styleStep
                 }
             }
             .padding(.horizontal, 22)
@@ -37,14 +42,12 @@ struct OnboardingView: View {
             Text(L("Deine Stadt als Spielwelt. Echte Navigation für ganz Deutschland, auch in CarPlay."))
                 .font(.system(size: 17)).foregroundStyle(.white.opacity(0.85))
             Button(L("Los geht's")) { step = 1 }.buttonStyle(PrimaryGlassButtonStyle()).padding(.top, 12)
-            Button(L("Ich habe schon EzMaps")) { Task { await model.purchases.restore() }; finish() }
-                .buttonStyle(GlassButtonStyle())
         }
     }
 
     private var locationStep: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Kicker(text: String(format: L("Schritt %d von %d"), 1, 3)).padding(.top, 14)
+            Kicker(text: String(format: L("Schritt %d von %d"), 1, 2)).padding(.top, 14)
             Text(L("Wo bist du gerade?")).font(.system(size: 30, weight: .heavy))
             Text(L("Damit EzMaps dich navigiert und deine Stadt aufdeckt.")).foregroundStyle(.white.opacity(0.8))
             Spacer()
@@ -62,7 +65,7 @@ struct OnboardingView: View {
 
     private var styleStep: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Kicker(text: String(format: L("Schritt %d von %d"), 2, 3)).padding(.top, 14)
+            Kicker(text: String(format: L("Schritt %d von %d"), 2, 2)).padding(.top, 14)
             Text(L("Wie soll deine Welt aussehen?")).font(.system(size: 30, weight: .heavy)).fixedSize(horizontal: false, vertical: true)
             Text(L("Du kannst jederzeit wechseln.")).foregroundStyle(.white.opacity(0.8))
             ScrollView {
@@ -75,7 +78,7 @@ struct OnboardingView: View {
             }
             Button(pick == .classic ? L("Weiter mit Klassik") : String(format: L("%@ 10 Minuten testen"), L(pick.titleKey))) {
                 model.selectStyle(pick)
-                step = 3
+                finish()
             }
             .buttonStyle(PrimaryGlassButtonStyle())
         }
@@ -107,7 +110,7 @@ struct OnboardingView: View {
 
     private func finish() {
         model.completeOnboarding()
-        model.location.requestPermission()
+        // GM-045: keine Standort-Frage mehr am Ende – wer „Später“ wählt, wird erst beim Standort-Knopf gefragt
     }
 }
 
@@ -115,7 +118,7 @@ struct StepBar: View {
     let step: Int
     var body: some View {
         HStack(spacing: 6) {
-            ForEach(1...3, id: \.self) { i in
+            ForEach(1...2, id: \.self) { i in
                 Capsule().fill(i <= step ? GlassTokens.accent : SwiftUI.Color.white.opacity(0.2)).frame(height: 4)
             }
         }

@@ -33,7 +33,7 @@ enum NeonMap {
         map.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         map.backgroundColor = StyleTheme.of(style).background
         map.setCenter(MapStyleResource.idstein, zoomLevel: zoom, animated: false)
-        map.showsUserLocation = true
+        map.showsUserLocation = FollowCamera.locationAllowed // GM-045: sonst fragt MapLibre beim Start selbst nach dem Standort
         map.logoView.isHidden = true
         // Den OSM-Hinweis zeigen wir immer selbst als Text (ODbL), das (i)-Symbol bleibt für Details
         map.attributionButtonPosition = .topRight
@@ -292,6 +292,8 @@ struct NeonMapView: UIViewRepresentable {
     /// GM-043: Kartenstil und gefahrene Strecke (Leuchtlinie)
     var style: MapStyle = .classic
     var trail: [Coordinate] = []
+    /// GM-045: Standort erst zeigen, wenn erlaubt (Frage kommt im Onboarding, nicht beim Start)
+    var locationAllowed: Bool = false
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -302,7 +304,7 @@ struct NeonMapView: UIViewRepresentable {
         overlay.theme = StyleTheme.of(style)
         context.coordinator.overlay = overlay
         context.coordinator.style = style
-        map.userTrackingMode = .follow
+        if locationAllowed { map.userTrackingMode = .follow }
         return map
     }
 
@@ -325,12 +327,12 @@ struct NeonMapView: UIViewRepresentable {
         }
         if c.navigating != navigating {
             c.navigating = navigating
-            map.showsUserLocation = !navigating // GM-022: in der Navigation zeigt unser Pfeil die Fahrposition
+            map.showsUserLocation = !navigating && locationAllowed // GM-022: in der Navigation zeigt unser Pfeil die Fahrposition
             if !navigating {
                 let cam = map.camera
                 cam.pitch = 0
                 map.setCamera(cam, animated: true)
-                map.userTrackingMode = .follow
+                if locationAllowed { map.userTrackingMode = .follow }
             }
         }
         // GM-025: Navigation – Kamera gleitet weich, fester Pfeil (unteres Drittel)
@@ -341,6 +343,10 @@ struct NeonMapView: UIViewRepresentable {
             cam.glow = { true }
             c.camera = cam
         }
+        if c.allowed != locationAllowed {
+            c.allowed = locationAllowed
+            if locationAllowed && !navigating { map.showsUserLocation = true; map.userTrackingMode = .follow }
+        }
         if navigating && visible { c.camera?.start() } else if c.camera?.isRunning == true { c.camera?.stop() }
         if map.isHidden == visible {
             map.isHidden = !visible
@@ -348,7 +354,7 @@ struct NeonMapView: UIViewRepresentable {
         }
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest
-            if !navigating { map.userTrackingMode = .follow }
+            if !navigating { if locationAllowed { map.userTrackingMode = .follow } } else { c.camera?.attach() } // GM-045: Mitte → Pfeil wieder fest
         }
     }
 
@@ -361,9 +367,16 @@ struct NeonMapView: UIViewRepresentable {
         var camera: FollowCamera?
         var style: MapStyle = .classic
         var trailCount = 0
+        var allowed = false
 
         func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
             overlay?.styleLoaded(style)
+        }
+
+        /// GM-045: Nutzer wischt/zoomt in der Navigation → Kamera hält an, Pfeil bleibt auf der Fahrposition (vorher wanderte er mit)
+        func mapView(_ mapView: MLNMapView, regionWillChangeWith reason: MLNCameraChangeReason, animated: Bool) {
+            let gestures: MLNCameraChangeReason = [.gesturePan, .gesturePinch, .gestureRotate, .gestureZoomIn, .gestureZoomOut, .gestureOneFingerZoom, .gestureTilt]
+            if !reason.intersection(gestures).isEmpty, camera?.isRunning == true { camera?.detach() }
         }
     }
 }
