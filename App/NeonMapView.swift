@@ -594,13 +594,14 @@ final class PlayerLocationView: MLNUserLocationAnnotationView {
         p.addLine(to: CGPoint(x: 5, y: 26))
         p.close()
         p.lineJoinStyle = .round
+        // GM-051: erst Fläche mit Schatten, dann der dunkle Rand obendrauf – vorher verdeckte die Fläche den Rand (auf hellen Karten unsichtbar)
         ctx.cgContext.setShadow(offset: CGSize(width: 0, height: 1.5), blur: 3, color: UIColor.black.withAlphaComponent(0.6).cgColor)
-        UIColor(white: 0.1, alpha: 1).setStroke()
-        p.lineWidth = 3
-        p.stroke()
-        ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
         UIColor(white: 0.95, alpha: 1).setFill()
         p.fill()
+        ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
+        UIColor(white: 0.1, alpha: 1).setStroke()
+        p.lineWidth = 2
+        p.stroke()
     }
 }
 
