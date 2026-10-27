@@ -74,11 +74,15 @@ function makeRoute(trip) {
     man.push({ distance: k === 'destination' ? cum[n] : cum[Math.min(m.begin_shape_index, n)], kind: k, text, street: k === 'destination' ? '' : street });
   });
   if (!man.length || man[man.length - 1].kind !== 'destination') man.push({ distance: cum[n], kind: 'destination', text: KTEXT.destination, street: '' });
-  return { shape, cum, length: cum[n], duration: trip.summary.time, maneuvers: man, speeds, names };
+  return { shape, cum, length: cum[n], duration: trip.summary.time, maneuvers: man, speeds, names, limits: null };
 }
-async function valhallaRoutes(from, to) {
-  const body = { locations: [{ lat: from[0], lon: from[1] }, { lat: to[0], lon: to[1] }], costing: 'auto',
-    costing_options: { auto: { use_highways: 1, use_tolls: 1 } }, directions_options: { language: 'de-DE', units: 'kilometers' }, alternates: 2 };
+async function valhallaRoutes(from, to, o = {}) {
+  const start = { lat: from[0], lon: from[1] };
+  if (o.heading != null) { start.heading = Math.round(((o.heading % 360) + 360) % 360); start.heading_tolerance = 45; }
+  const body = { locations: [start, { lat: to[0], lon: to[1] }], costing: 'auto',
+    costing_options: { auto: { use_highways: S.avoidHighway ? 0 : 1, use_tolls: S.avoidToll ? 0 : 1 } }, directions_options: { language: 'de-DE', units: 'kilometers' },
+    alternates: o.alternates == null ? 2 : o.alternates };
+  if (o.exclude && o.exclude.length) body.exclude_locations = o.exclude.map(c => ({ lat: c[0], lon: c[1] }));
   const r = await fetch(VALHALLA + '/route', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
   const j = await r.json(); if (!r.ok) throw new Error(j.error || r.status);
   return [j.trip, ...(j.alternates || []).map(a => a.trip)].map(makeRoute);
@@ -98,27 +102,8 @@ async function photon(q, near) { // Core/PhotonClient.swift (vereinfacht: Untert
 }
 
 // ---------- Zustand (Mirror AppModel) ----------
-const S = { screen: 'map', style: 'neon-city', pos: null, routes: [], sel: 0, dest: null, prog: 0, trail: [], speed: 2, recents: [], query: '', results: [],
+const S = { voice: true, avoidHighway: false, avoidToll: false, message: null, nav: null, navCoord: null, navHeading: 0, navKmh: 50, screen: 'map', style: 'neon-city', pos: null, routes: [], sel: 0, dest: null, prog: 0, trail: [], speed: 2, recents: [], query: '', results: [],
   carList: null, carQuery: '', carResults: [] };
-
-// ---------- Kartensymbole (App: SF Symbols, RouteOverlay.poiImages) ----------
-const POI_COLORS = { shop: '#f5f5f5', cross: '#ff5fa2', fuel: '#f5f5f5', parking: '#f5f5f5', food: '#f5f5f5', charge: '#5fd068' }; // GM-048
-function drawPoi(kind, color) {
-  const s = 44, c = document.createElement('canvas'); c.width = c.height = s; const g = c.getContext('2d');
-  const path = () => {
-    g.beginPath();
-    if (kind === 'parking') { g.font = '900 34px Inter, Arial'; g.textAlign = 'center'; g.textBaseline = 'middle'; return 'text'; }
-    if (kind === 'cross') { g.rect(17, 7, 10, 30); g.rect(7, 17, 30, 10); }
-    if (kind === 'shop') { g.moveTo(6, 18); g.lineTo(38, 18); g.lineTo(33, 37); g.lineTo(11, 37); g.closePath(); g.moveTo(13, 18); g.lineTo(19, 8); g.lineTo(21, 9); g.lineTo(16, 18); g.moveTo(31, 18); g.lineTo(25, 8); g.lineTo(23, 9); g.lineTo(28, 18); }
-    if (kind === 'fuel') { g.rect(9, 8, 18, 29); g.rect(27, 15, 7, 4); g.rect(31, 15, 3, 18); }
-    if (kind === 'food') { g.rect(11, 7, 3, 30); g.rect(7, 7, 2.5, 12); g.rect(15.5, 7, 2.5, 12); g.rect(7, 17, 11, 3); g.moveTo(28, 37); g.lineTo(31, 37); g.lineTo(31, 7); g.quadraticCurveTo(24, 12, 26, 24); g.lineTo(28, 24); g.closePath(); }
-    if (kind === 'charge') { g.moveTo(25, 4); g.lineTo(10, 25); g.lineTo(21, 25); g.lineTo(18, 40); g.lineTo(34, 18); g.lineTo(23, 18); g.closePath(); }
-    return 'path';
-  };
-  g.lineJoin = 'round'; g.lineWidth = 6; g.strokeStyle = '#000'; g.fillStyle = color;
-  if (path() === 'text') { g.strokeText('P', 22, 24); g.fillText('P', 22, 24); } else { g.stroke(); g.fill(); }
-  return g.getImageData(0, 0, s, s);
-}
 
 // ---------- Karten ----------
 function styleURL(name) { return `${BASE}App/MapStyles/style-${name}.json`; }
@@ -149,11 +134,10 @@ function pushOverlay(map) {
   map.getSource('ez-dest').setData({ type: 'FeatureCollection', features: S.dest ? [{ type: 'Feature', geometry: { type: 'Point', coordinates: [S.dest.c[1], S.dest.c[0]] } }] : [] });
   map.getSource('ez-trail').setData({ type: 'FeatureCollection', features: S.trail.length > 1 ? [line(S.trail)] : [] });
 }
-function makeMap(el, interactive = true) {
-  const map = new maplibregl.Map({ container: el, center: [IDSTEIN[1], IDSTEIN[0]], zoom: 15, attributionControl: false, pitchWithRotate: false, dragRotate: false, interactive });
+function makeMap(el, pixelRatio = devicePixelRatio) {
+  const map = new maplibregl.Map({ container: el, pixelRatio, interactive: true, center: [IDSTEIN[1], IDSTEIN[0]], zoom: 15, attributionControl: false, pitchWithRotate: false, dragRotate: false });
   map.on('styleimagemissing', e => {
-    const m = /^ez-poi-([a-z]+)(-neon)?$/.exec(e.id); if (!m) return;
-    if (!map.hasImage(e.id)) map.addImage(e.id, drawPoi(m[1], m[2] ? POI_COLORS[m[1]] : '#f5f5f5'), { pixelRatio: 1 }); // App: ~40 pt Bild × icon-size
+    const img = poiImage(e.id); if (img && !map.hasImage(e.id)) map.addImage(e.id, img, { pixelRatio: 1 }); // App: ~40 pt Bild × icon-size
   });
   map.on('style.load', () => addOverlay(map));
   return map;
@@ -161,7 +145,8 @@ function makeMap(el, interactive = true) {
 
 // ---------- FollowCamera (App/FollowCamera.swift) ----------
 const altitudeForKmh = k => 320 + (Math.min(130, Math.max(30, k)) - 30) * 6;     // RouteOverlay.altitude(forKmh:)
-function altitudeToZoom(alt, h, lat) { const mpp = alt / (1.5 * h); return Math.log2(40075016.686 * Math.cos(lat * rad) / (512 * mpp)); } // MapLibre: Blickwinkel 36,87°
+// GM-049: wie MLNAltitudeForZoomLevel in MapLibre Native – Blickwinkel 30°, Kachel 512 (vorher 36,87° angenommen → zu weit weg)
+function altitudeToZoom(alt, h, lat) { const mpp = alt * 2 * Math.tan(15 * rad) / h; return Math.log2(40075016.686 * Math.cos(lat * rad) / (512 * mpp)); }
 class FollowCamera {
   constructor(map, arrowEl, { pitch = 0, arrowY = 0.5, insets = () => ({ top: 0, left: 0, bottom: 0, right: 0 }), glow = () => false } = {}) {
     Object.assign(this, { map, arrowEl, pitch, arrowY, insets, glow, factor: 1, running: false, detached: false, has: false });
@@ -197,45 +182,16 @@ class FollowCamera {
   }
 }
 
-// ---------- Fahrt-Simulation (wie simctl location / Demo-Fahrt der App) ----------
-let sim = null;           // { pts, cum, d, kmh(i), onRoute }
-let gpsTimer = 0;
-function startSim(pts, kmhAt, onRoute) { sim = { pts, cum: cumul(pts), d: 0, kmhAt, onRoute }; S.trail = []; gpsTimer = 1; }
-function stepSim(dt) {
-  if (!sim) return;
-  const r = at(sim.pts, sim.cum, sim.d); const kmh = sim.kmhAt(r.i - 1);
-  sim.d += kmh / 3.6 * dt * S.speed;
-  gpsTimer += dt;
-  if (gpsTimer >= 1) { // GPS 1×/s, Kamera gleitet dazwischen (wie in der App)
-    gpsTimer = 0; const q = at(sim.pts, sim.cum, sim.d);
-    S.pos = { p: q.p, h: q.h, kmh };
-    S.trail.push(q.p); if (S.trail.length > 600) S.trail.shift();
-    if (sim.onRoute) S.prog = sim.d;
-    for (const m of maps()) pushOverlay(m);
-    render();
-  }
-  if (sim.d >= sim.cum[sim.cum.length - 1]) {
-    if (sim.onRoute) { S.screen = 'arrived'; } sim = null; render();
-  }
-}
-
-// ---------- Navigation (Core/NavigationSession, vereinfacht auf das Sichtbare) ----------
-function navState() {
-  const r = S.routes[S.sel]; if (!r) return null;
-  const d = S.prog; const m = r.maneuvers.find(x => x.distance > d + 5) || r.maneuvers[r.maneuvers.length - 1];
-  const i = r.maneuvers.indexOf(m); const after = r.maneuvers[i + 1];
-  const remain = Math.max(0, r.length - d);
-  return { m, after, toMan: Math.max(0, m.distance - d), remain, time: r.duration * remain / r.length };
-}
+// Fahrt-Simulation und Navigation: js/navcore.js (Abbild von Core und AppModel)
 
 // ---------- Bedienung ----------
 const $ = id => document.getElementById(id);
-const pmap = makeMap($('pmap')), cmap = makeMap($('cmap'));
+const pmap = makeMap($('pmap')), cmap = makeMap($('cmap'), 2 * devicePixelRatio); // CarPlay: 2× wie der Simulator
 const maps = () => [pmap, cmap];
 const pcam = new FollowCamera(pmap, $('parrow'), { pitch: 0, arrowY: 0.62, glow: () => true,     // GM-045: iPhone flach wie CarPlay
   insets: () => ({ top: 59, left: 0, bottom: 34, right: 0 }) });
 const ccam = new FollowCamera(cmap, $('carrow'), { pitch: 0, arrowY: 0.5, glow: () => S.screen === 'navigating',
-  insets: () => ({ top: 100, left: S.screen === 'navigating' ? 360 : 0, bottom: 0, right: 90 }) });
+  insets: () => ({ top: 50, left: S.screen === 'navigating' ? 180 : 0, bottom: 0, right: 45 }) }); // Punkte: Leiste oben, Knopfspalte, Abbiegekarte
 let tracking = true;                                       // iPhone ohne Navi: MapLibre userTrackingMode .follow
 pmap.on('dragstart', e => { if (e.originalEvent && S.screen !== 'navigating') tracking = false; });
 
@@ -258,15 +214,6 @@ async function choose(place) {
   const w = $('cwin').clientWidth; fit(cmap, { top: 24, left: w * 0.56 + 10, bottom: 14, right: 58 });   // CarMapViewController.show
   render();
 }
-function startNav() {
-  const r = S.routes[S.sel]; if (!r) return;
-  S.screen = 'navigating'; S.prog = 0; S.routes = [r]; S.sel = 0;
-  startSim(r.shape, i => r.speeds[Math.max(0, i)] || 50, true);
-  S.pos = { p: r.shape[0], h: bearing(r.shape[0], r.shape[1]), kmh: r.speeds[0] };
-  pcam.start(); ccam.start(); for (const m of maps()) pushOverlay(m); render();
-}
-function endNav() { S.screen = 'map'; S.routes = []; S.dest = null; sim = null; pcam.stop(); for (const m of maps()) pushOverlay(m); render(); }
-
 // ---------- Oberfläche iPhone (ContentView.swift) ----------
 const SYM = { left: 'M30 46V26a6 6 0 0 0-6-6H14m6-8-8 8 8 8', 'sharp-left': 'M30 46V26a6 6 0 0 0-6-6H14m6-8-8 8 8 8', right: 'M22 46V26a6 6 0 0 1 6-6h10m-6-8 8 8-8 8', 'sharp-right': 'M22 46V26a6 6 0 0 1 6-6h10m-6-8 8 8-8 8',
   'slight-left': 'M32 46V30L18 16m0 10V16h10', 'slight-right': 'M20 46V30l14-14m0 10V16H24', 'uturn-left': 'M18 46V22a8 8 0 0 1 16 0v14m-6-6 6 6 6-6', 'uturn-right': 'M18 46V22a8 8 0 0 1 16 0v14m-6-6 6 6 6-6',
@@ -293,16 +240,20 @@ function renderPhone() {
       h += `<div class="route ${i === S.sel ? 'sel' : ''}" data-route="${i}"><b>${fmtMin(r.duration)}</b><small>${i ? 'Alternative ' + i : 'Schnellste'} · ${fmtDist(r.length)} · an ${clock(eta)}</small></div>`; });
     if (S.routes.length) h += `<button class="go" data-act="go">Los</button>`;
     h += `</div>`;
-  } else if (S.screen === 'navigating' && n) {
-    h += `<div class="navcard">${sym(n.m.kind)}<div><div class="d">${fmtDist(n.toMan)}</div><div class="s">${n.m.street || n.m.text}</div></div></div>`;
-    if (n.after) h += `<div class="nextchip">danach ${n.after.text.replace(/^./, c => c.toLowerCase())}${n.after.street ? ' · ' + n.after.street : ''}</div>`;
+  } else if (S.screen === 'navigating') {
+    const m = n && n.maneuver;
+    if (!m) h += `<div class="navcard"><div><div class="s">Route wird gestartet …</div></div></div>`;
+    else h += `<div class="navcard">${sym(m.kind)}<div><div class="d">${fmtDist(n.distanceToManeuver)}</div><div class="s">${m.street || m.text}</div></div></div>`;
+    if (n && n.thenManeuver) h += `<div class="nextchip">danach ${lowerFirst(n.thenManeuver.text)}${n.thenManeuver.street ? ' · ' + n.thenManeuver.street : ''}</div>`;
+    if (n && n.speedLimit) h += n.speedLimit < 0 ? `<div class="limit nolimit"></div>` : `<div class="limit">${n.speedLimit}</div>`;
     h += `<div class="hudcol" style="top:auto;bottom:150px">${hudbtn('hud-recenter', 'center', 'Mitte')}</div>`;
     h += `<div class="osm" style="bottom:118px">© OpenMapTiles · © OpenStreetMap-Mitwirkende</div>`;
-    const eta = new Date(Date.now() + n.time * 1000);
-    h += `<div class="navbar"><div style="width:54px"></div><div class="eta"><b>${clock(eta)}</b><small>${fmtMin(n.time)} · ${fmtDist(n.remain)}</small></div><button class="xbtn" data-act="end">✕</button></div>`;
+    const time = n ? n.remainingTime : session.route.duration, remain = n ? n.remainingDistance : session.route.length;
+    h += `<div class="navbar"><div style="width:54px"></div><div class="eta"><b>${clock(new Date(Date.now() + time * 1000))}</b><small>${fmtMin(time)} · ${fmtDist(remain)}</small></div><button class="xbtn" data-act="end">✕</button></div>`;
   } else if (S.screen === 'arrived') {
     h += `<div class="arrive"><div class="title">Angekommen</div><div class="sub">${S.dest ? S.dest.name : ''}</div><button class="go" data-act="end">Fertig</button></div>`;
   }
+  if (S.message) h += `<div class="toast" style="top:${S.screen === 'navigating' ? 200 : 60}px">${S.message}</div>`;   // AppModel.show
   const focused = document.activeElement && document.activeElement.id === 'q';
   ui.innerHTML = h;
   const q = $('q'); if (q) { if (focused || S.screen === 'search') { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
@@ -325,10 +276,14 @@ function renderCar() {
     if (S.routes.length) h += `<button class="green" data-car="go">Los</button>`;
     h += `</div>`;
   }
-  if (S.screen === 'navigating' && n) {
-    h += `<div class="cman"><div class="row">${sym(n.m.kind)}<div class="d">${carDist(n.toMan)}</div></div><div class="tx">${n.m.text}${n.m.street ? ' · ' + n.m.street : ''}</div></div>`;
-    const eta = new Date(Date.now() + n.time * 1000);
-    h += `<div class="cest"><div><b>${clock(eta)}</b><small>Ankunft</small></div><div><b>${Math.max(1, Math.round(n.time / 60))}</b><small>Min.</small></div><div><b>${carDist(n.remain).replace(' km', '')}</b><small>${carDist(n.remain).endsWith('km') ? 'km' : 'm'}</small></div></div>`;
+  if (S.screen === 'navigating' && n && n.maneuver) {
+    const m = n.maneuver;
+    // CPNavigationSession: während der Neuberechnung pauseTrip(for: .rerouting) – GM-045
+    if (rerouting) h += `<div class="cman"><div class="tx">Route wird neu berechnet</div></div>`;
+    else h += `<div class="cman"><div class="row">${sym(m.kind)}<div class="d">${carDist(n.distanceToManeuver)}</div></div><div class="tx">${m.street ? m.text + ' · ' + m.street : m.text}</div></div>`;
+    const cd = carDist(n.remainingDistance);
+    h += `<div class="cest"><div><b>${clock(new Date(Date.now() + n.remainingTime * 1000))}</b><small>Ankunft</small></div><div><b>${Math.max(1, Math.round(n.remainingTime / 60))}</b><small>Min.</small></div><div><b>${cd.replace(/ k?m$/, '')}</b><small>${cd.endsWith('km') ? 'km' : 'm'}</small></div></div>`;
+    if (n.speedLimit > 0) h += `<div class="climit">${n.speedLimit}</div>`;   // GM-022: kein Schild bei „unbegrenzt“ im Auto
   }
   ui.innerHTML = h;
 }
@@ -364,14 +319,19 @@ document.addEventListener('input', e => {
     clearTimeout(qTimer); qTimer = setTimeout(async () => { S.results = S.query.length > 1 ? await photon(S.query, S.pos ? S.pos.p : IDSTEIN) : []; render(); }, 350); }
   if (e.target.id === 'cq') { S.carQuery = e.target.value; clearTimeout(qTimer); qTimer = setTimeout(async () => { S.carResults = S.carQuery.length > 1 ? await photon(S.carQuery, S.pos ? S.pos.p : IDSTEIN) : []; render(); }, 350); }
 });
+document.addEventListener('keydown', e => { if (!/INPUT|SELECT/.test(e.target.tagName)) { keys[e.key.toLowerCase()] = true; if (e.key.startsWith('Arrow')) e.preventDefault(); } });
+document.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+for (const m of [pmap, cmap]) m.on('click', e => driveTo(e.lngLat));
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.screen === 'search') { S.screen = 'map'; S.query = ''; S.results = []; render(); } });
 $('style').addEventListener('change', e => applyStyle(e.target.value));
-$('stop').addEventListener('click', () => { sim = null; });
+$('stop').addEventListener('click', () => { sim = null; manual = null; });
+$('wrong').addEventListener('click', () => wrongTurn());
+$('voice').addEventListener('change', e => { S.voice = e.target.checked; });
 $('free').addEventListener('click', async () => {
   const txt = await (await fetch(BASE + 'tools/drive_wallrabenstein.txt')).text();
   const pts = txt.trim().split(/\s+/).map(s => s.split(',').map(Number));
   if (S.screen === 'navigating') endNav();
-  startSim(pts, () => 50, false);                          // tools/mac_drive.sh: 14 m/s ≈ 50 km/h
+  startPathSim(pts, () => 50);                             // tools/mac_drive.sh: 14 m/s ≈ 50 km/h
   S.pos = { p: pts[0], h: bearing(pts[0], pts[1]), kmh: 50 }; tracking = true; ccam.start(); render();
 });
 
@@ -379,14 +339,18 @@ $('free').addEventListener('click', async () => {
 let last = performance.now();
 function frame(now) {
   const dt = Math.min(0.1, (now - last) / 1000); last = now;
-  stepSim(dt);
-  const target = S.pos ? { p: S.pos.p, h: S.pos.h, kmh: S.pos.kmh } : null;  // AppModel.cameraTarget
+  stepSim(dt); stepManual(dt);
+  // AppModel.cameraTarget: in der Navigation die Stelle auf der Route, sonst das GPS
+  const target = S.screen === 'navigating' && S.navCoord ? { p: S.navCoord, h: S.navHeading, kmh: S.navKmh } : S.pos ? { p: S.pos.p, h: S.pos.h, kmh: S.pos.kmh } : null;
   ccam.tick(dt, target);
   if (S.screen === 'navigating') pcam.tick(dt, target);
   const dot = $('pdot');
   if (S.pos && S.screen !== 'navigating') {
     const p = pmap.project([S.pos.p[1], S.pos.p[0]]); dot.style.left = p.x + 'px'; dot.style.top = p.y + 'px'; dot.style.transform = `rotate(${S.pos.h - pmap.getBearing()}deg)`; dot.style.display = 'block';
   } else dot.style.display = 'none';
+  const west = S.style === 'wild-west';
+  $('pxh').style.display = west && (S.screen === 'navigating' ? pcam.detached : !tracking) ? 'block' : 'none';
+  $('cxh').style.display = west && ccam.detached ? 'block' : 'none';
   requestAnimationFrame(frame);
 }
 setInterval(() => { if (tracking && S.pos && (S.screen === 'map' || S.screen === 'search')) pmap.easeTo({ center: [S.pos.p[1], S.pos.p[0]], duration: 900, easing: x => x }); }, 1000);

@@ -226,6 +226,22 @@ final class RouteOverlay {
         ]
         var out: [String: UIImage] = [:]
         let cfg = UIImage.SymbolConfiguration(pointSize: 30, weight: .heavy)
+        // GM-049: Wild West – schwarzer runder Knopf mit weißem Zeichen (Papierkarten-Look, eigene Zeichnung aus SF Symbols)
+        let west = ["ez-poi-shop-west": "basket.fill", "ez-poi-cross-west": "cross.fill", "ez-poi-fuel-west": "fuelpump.fill",
+                    "ez-poi-parking-west": "parkingsign", "ez-poi-food-west": "fork.knife", "ez-poi-charge-west": "bolt.fill"]
+        for (name, sym) in west {
+            guard let glyph = UIImage(systemName: sym, withConfiguration: UIImage.SymbolConfiguration(pointSize: 17, weight: .bold)) else { continue }
+            out[name] = UIGraphicsImageRenderer(size: CGSize(width: 40, height: 40)).image { _ in
+                let ring = UIBezierPath(ovalIn: CGRect(x: 2, y: 2, width: 36, height: 36))
+                UIColor(red: 0x1b / 255.0, green: 0x14 / 255.0, blue: 0x0e / 255.0, alpha: 1).setFill()
+                ring.fill()
+                UIColor(red: 0xf2 / 255.0, green: 0xe4 / 255.0, blue: 0xbf / 255.0, alpha: 1).setStroke()
+                ring.lineWidth = 1.5
+                ring.stroke()
+                let g = glyph.withTintColor(UIColor(white: 0.97, alpha: 1), renderingMode: .alwaysOriginal)
+                g.draw(at: CGPoint(x: 20 - g.size.width / 2, y: 20 - g.size.height / 2))
+            }
+        }
         for (name, (sym, color)) in symbols {
             guard let base = UIImage(systemName: sym, withConfiguration: cfg) else { continue }
             let size = CGSize(width: base.size.width + 10, height: base.size.height + 10)
@@ -323,6 +339,7 @@ struct NeonMapView: UIViewRepresentable {
         if c.style != style {
             c.style = style
             c.overlay?.switchStyle(style)
+            c.crosshair?.isHidden = true
         }
         if c.trailCount != trail.count {
             c.trailCount = trail.count
@@ -366,6 +383,7 @@ struct NeonMapView: UIViewRepresentable {
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest
             if !navigating { if locationAllowed { map.userTrackingMode = .follow } } else { c.camera?.attach() } // GM-045: Mitte → Pfeil wieder fest
+            c.crosshair?.isHidden = true
         }
     }
 
@@ -379,6 +397,7 @@ struct NeonMapView: UIViewRepresentable {
         var style: MapStyle = .classic
         var trailCount = 0
         var allowed = false
+        var crosshair: CrosshairView?
 
         func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
             overlay?.styleLoaded(style)
@@ -394,8 +413,48 @@ struct NeonMapView: UIViewRepresentable {
         func mapView(_ mapView: MLNMapView, regionWillChangeWith reason: MLNCameraChangeReason, animated: Bool) {
             let gestures: MLNCameraChangeReason = [.gesturePan, .gesturePinch, .gestureRotate, .gestureZoomIn, .gestureZoomOut, .gestureOneFingerZoom, .gestureTilt]
             guard !reason.intersection(gestures).isEmpty else { return }
-            MainActor.assumeIsolated { if camera?.isRunning == true { camera?.detach() } }
+            MainActor.assumeIsolated {
+                if camera?.isRunning == true { camera?.detach() }
+                // GM-049: Wild West – rotes Fadenkreuz über die ganze Karte, solange man sich umschaut
+                if style == .wildWest {
+                    if crosshair == nil {
+                        let v = CrosshairView(frame: mapView.bounds)
+                        v.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                        mapView.addSubview(v)
+                        crosshair = v
+                    }
+                    crosshair?.isHidden = false
+                }
+            }
         }
+
+        func mapView(_ mapView: MLNMapView, didChange mode: MLNUserTrackingMode, animated: Bool) {
+            guard mode != .none else { return }
+            MainActor.assumeIsolated { crosshair?.isHidden = true }
+        }
+    }
+}
+
+/// GM-049: dünnes rotes Fadenkreuz quer über die Karte (Papierkarten-Look Wild West), Mitte = Kartenmitte
+final class CrosshairView: UIView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        isUserInteractionEnabled = false
+        backgroundColor = .clear
+        contentMode = .redraw
+    }
+
+    required init?(coder: NSCoder) { fatalError("nicht benutzt") }
+
+    override func draw(_ rect: CGRect) {
+        let p = UIBezierPath()
+        p.move(to: CGPoint(x: bounds.midX, y: 0))
+        p.addLine(to: CGPoint(x: bounds.midX, y: bounds.maxY))
+        p.move(to: CGPoint(x: 0, y: bounds.midY))
+        p.addLine(to: CGPoint(x: bounds.maxX, y: bounds.midY))
+        p.lineWidth = 1.5
+        UIColor(red: 0x9b / 255.0, green: 0x16 / 255.0, blue: 0x12 / 255.0, alpha: 0.85).setStroke()
+        p.stroke()
     }
 }
 

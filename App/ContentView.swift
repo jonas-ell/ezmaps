@@ -54,7 +54,7 @@ struct ContentView: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
                     .glass(20)
-                    .padding(.top, 60)
+                    .padding(.top, model.screen == .navigating ? 200 : 60) // GM-049: unter der Abbiegekarte statt darüber
                     .padding(.horizontal, 24)
                     .transition(.opacity)
             }

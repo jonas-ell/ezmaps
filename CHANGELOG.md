@@ -2,6 +2,28 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-049 – Website wirklich 1:1 (CarPlay-Maßstab, Logik der App), freies Fahren, Stil-Vorschauen aus echten Karten, Wild West mit runden Symbolen und Fadenkreuz
+
+**Ziel:** Nutzer: „die Website ist nicht 1 zu 1 wie die App und genauso wenig wie das CarPlay“, „ich will freies Fahren auch simulieren können“, „die Logik der echten App auf die 1:1-Seite, arbeite den Swift-Code ab und spiegel es“, „die Stil-Vorschauen sollen so sein, dass man sie im Einsatz in CarPlay sieht“, für Wild West Symbole wie im Bild und ein rotes Fadenkreuz beim Verschieben.
+
+**Dateien:** `tools/prototype/live.html`, `live.css`, `js/live.js`, `js/navcore.js` (neu), `js/poi.js` (neu), `stylepreview.html` + `js/stylepreview.js` (neu), `tools/maplibre/render_previews.py` (neu), `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/Assets.xcassets/StyleTiles/*`, `App/NeonMapView.swift`, `App/AppModel.swift`, `App/ContentView.swift`, `docs/store/stile/*.png`
+
+**Geändert:**
+- Website, Maßstab: App-Screenshots und Website nebeneinander gelegt. CarPlay im Simulator hat 800 × 480 Pixel, aber nur 400 × 240 Punkte (2×). Die Website hatte 800 Punkte gezeichnet, darum war alles halb so groß. CarPlay jetzt in echten Punkten mit doppelter Pixeldichte, alle Maße halbiert. Höhe → Zoom jetzt wie MapLibre Native (`MLNAltitudeForZoomLevel`: 30° Blickwinkel, vorher 36,87° angenommen).
+- Website, Logik aus Swift übernommen (`js/navcore.js`): `NavigationSession` (Einrasten mit Fenster und Rücksprung-Schutz, Ankunft 25 m, „danach“ nur unter 300 m, Ansagen nach Tempo-Stufen mit denselben Texten), `RerouteMonitor` (30 m, 8 s), Neuberechnung mit Fahrtrichtung und gesperrter verpasster Abbiegung (dann ohne Sperre), Tempolimits über `trace_attributes` mit `SpeedLimits.fill`, `AppModel.feed`/`cameraTarget`/Demo-Fahrt (läuft nach Neuberechnung auf der neuen Route weiter), Hinweise (`show`), Sprachansagen (Browser-Stimme Deutsch, abschaltbar). Tempolimit-Schild auf iPhone (auch „unbegrenzt“) und CarPlay (nur Zahl), CarPlay-Abbiegekarte zeigt während der Neuberechnung „Route wird neu berechnet“.
+- Website, freies Fahren: Tastatur (W/S oder ↑/↓ Gas und Bremse, A/D oder ←/→ lenken), Klick auf die Karte = über echte Straßen dorthin fahren (ohne Navi), „Falsch abbiegen“ fährt 6 s quer weg. In der Navigation führt Abweichen zur Neuberechnung wie in der App; 3 s ohne Taste → Demo-Fahrt fährt weiter.
+- App und Website: neben der Route (vor der Neuberechnung) folgt der Pfeil dem Auto, statt auf der alten Routen-Stelle stehen zu bleiben. Hinweis-Text in der Navigation unter der Abbiegekarte statt darüber.
+- Stil-Vorschauen (Onboarding, Stil-Liste, Shop, Einstellungen): statt gemalter Kacheln echte Kartenausschnitte, gerendert mit den App-Stilen in CarPlay-Größe (720 × 480 bei Zoom der CarPlay-Kamera, 50 km/h) mit Pfeil und Route, verkleinert auf 240 × 160 pt (`render_previews.py`, Bilder in `docs/store/stile/`).
+- Wild West: Kartensymbole als schwarze runde Knöpfe mit weißem Zeichen (eigene Zeichnung aus SF Symbols, keine Spiel-Symbole). Rotes Fadenkreuz quer über die Karte, sobald man die Karte verschiebt (`CrosshairView`), weg bei „Mitte“. Gleich auf der Website.
+- Website-Kartensymbole in `js/poi.js` (gemeinsam für Website und Vorschau-Renderer).
+
+**Tatsächlich geprüft:**
+- Browser (Playwright): App-Screenshot und Website nebeneinander (CarPlay-Maßstab jetzt gleich), freie Fahrt per Tastatur, Navigation nach Niedernhausen mit Tempolimit 50 aus Valhalla und „danach“-Hinweis, „Falsch abbiegen“ → Neuberechnung (Fortschritt neu auf der neuen Route, Demo-Fahrt weiter). Keine Fehler in der Konsole.
+- `check_style.py`: STIL OK (Wild-West-Symbole werden in `poiImages` gezeichnet).
+- Stil-Vorschauen für alle 5 Stile gerendert und angesehen.
+
+**Ungetestet:** Swift-Teile (Wild-West-Symbole, Fadenkreuz, Pfeil neben der Route, Hinweis-Position, neue Vorschaubilder) erst nach Mac-Build.
+
 ## GM-048 – Neon City wie die Pausenkarte der Vorlage, Standort als heller Pfeil
 
 **Ziel:** Nutzer schickt vier Bilder (Minikarte und Pausenkarte eines Open-World-Spiels): „die Map soll so sein und der Standort von einem selber, wenn man nicht am Fahren ist oder Navi an hat, so“.

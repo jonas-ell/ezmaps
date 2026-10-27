@@ -323,8 +323,9 @@ final class AppModel {
         session = s
         record(position)
         nav = u.state
-        navCoordinate = s.route.coordinate(at: u.state.progress) ?? position
-        navHeading = s.route.heading(at: u.state.progress)
+        // GM-049: neben der Route (vor der Neuberechnung) folgt der Pfeil dem Auto, statt auf der alten Stelle stehen zu bleiben
+        navCoordinate = u.state.offRoute ? position : (s.route.coordinate(at: u.state.progress) ?? position)
+        navHeading = u.state.offRoute ? (course ?? navHeading) : s.route.heading(at: u.state.progress)
         let seg = s.route.segmentIndex(at: u.state.progress)
         if seg < s.route.segmentSpeeds.count { navSpeedKmh = s.route.segmentSpeeds[seg] }
         if let text = u.announcement, settings.voice { speech.say(text) }

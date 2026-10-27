@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Stil-Vorschau</title>
+<!-- GM-049: rendert eine Stil-Vorschau „wie im Einsatz in CarPlay“ mit den echten App-Stilen (App/MapStyles) für
+     App/Assets.xcassets/StyleTiles. Aufruf über tools/maplibre/render_previews.py (Server: python tools/prototype/serve.py). -->
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>html, body { margin: 0; } #m { position: absolute; inset: 0; } #a { position: absolute; left: 50%; top: 58%; width: 60px; margin: -30px 0 0 -30px; } .maplibregl-ctrl-attrib { display: none; }</style>
+</head>
+<body>
+<div id="m"></div><img id="a" alt="">
+<script src="js/poi.js"></script>
+<script src="js/stylepreview.js"></script>
+</body>
+</html>

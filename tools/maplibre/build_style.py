@@ -38,7 +38,8 @@ CLASSIC = dict(land="#f2efe9", residential="#ece7e0", industrial="#ebe3e8", farm
                road=lambda r: "#f7c56b" if r <= 1 else "#fde7a6" if r <= 3 else "#ffffff", widen=1.15, label_halo="#ffffff")
 WESTERN = dict(land="#dcc59a", residential="#d4bb8a", industrial="#ccb07f", farm="#e3cfa2", park="#d6c18c", forest="#cdb782",
                water="#a3b7ae", building="#9b7a50", buildingEdge="#5e4127", rail="#4a3220", casing="#4a3220", label="#3a2414",
-               road=lambda r: "#f2e4bf" if r <= 4 else "#7a5a38", widen=1.0, thin_minor=True, label_halo="#e9d9b0")
+               road=lambda r: "#f2e4bf" if r <= 4 else "#7a5a38", widen=1.0, thin_minor=True, label_halo="#e9d9b0",
+               poi_suffix="-west", poi_minzoom=13.5)  # GM-049: schwarze runde Knöpfe mit weißem Zeichen (eigene Zeichnung)
 PIXEL = dict(land="#60a83a", residential="#6eb242", industrial="#9c9c88", farm="#c9b458", park="#7cbe4c", forest="#2f7d32",
              water="#3b7dd8", building="#be4632", buildingEdge="#602a1e", rail="#5a4632", casing="#606060", label="#1b1206",
              road=lambda r: "#a7a7a7" if r <= 3 else "#d8b878", casing_minor="#a8864f", widen=1.2, label_halo="#e8d48a")
