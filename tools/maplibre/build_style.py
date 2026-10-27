@@ -21,10 +21,16 @@ OUT_DIR = ROOT / "App" / "MapStyles"
 # --- aus js/map.js (NEON) ---
 # GM-024: nach Foto des Nutzers (CarPlay-Vorlage): mittelgrauer Boden, Häuser heller als der Boden,
 # fast weiße Straßen mit dunklem Rand, Straßennamen dunkel auf der Straße
-NEON = dict(land="#3b3c3e", residential="#3b3c3e", industrial="#3e3f41", farm="#38393b", park="#36383a", forest="#333537",
-            water="#5d6870", building="#5b5c5f", buildingEdge="#4a4b4e", urban="#3b3c3e", rail="#2b2c2e",
-            casing="#151617", label="#1d1e20")
-NEON.update(road=lambda r: "#ececec" if r <= 4 else "#dcdcdc" if r <= 6 else "#c4c4c4", widen=1.5, label_halo=None)
+# GM-045: Übersicht (weit weg) nach zweitem Bild des Nutzers (Pausenkarte eines Open-World-Spiels): fast schwarzer Boden,
+# dünne graue Straßen ohne Rand, farbige Symbole. Ab Zoom 14,5 (Fahrt, CarPlay) unverändert wie das Foto. Dazwischen fließend.
+def zc(far, near, z0=12, z1=14.5):
+    return ["interpolate", ["linear"], ["zoom"], z0, far, z1, near]
+NEON = dict(land=zc("#232425", "#3b3c3e"), residential=zc("#323335", "#3b3c3e"), industrial=zc("#343537", "#3e3f41"),
+            farm=zc("#212223", "#38393b"), park=zc("#202322", "#36383a"), forest=zc("#1e2120", "#333537"),
+            water=zc("#4b5155", "#5d6870"), building="#5b5c5f", buildingEdge="#4a4b4e", urban="#3b3c3e", rail="#2b2c2e",
+            casing=zc("#232425", "#151617"), label="#1d1e20", poi_suffix="-neon", poi_minzoom=13.5)
+NEON.update(road=lambda r: zc("#bdbdbd" if r <= 1 else "#979797" if r <= 4 else "#7e7e7e", "#ececec" if r <= 4 else "#dcdcdc" if r <= 6 else "#c4c4c4"),
+            widen=1.5, label_halo=None)
 CLASSIC = dict(land="#f2efe9", residential="#ece7e0", industrial="#ebe3e8", farm="#eef0d6", park="#d4ebc8", forest="#c3dfb4",
                water="#aad3df", building="#ddd5cc", buildingEdge="#cbc0b5", rail="#a3a3a3", casing="#c9c1b6", label="#4a4a4a",
                road=lambda r: "#f7c56b" if r <= 1 else "#fde7a6" if r <= 3 else "#ffffff", widen=1.15, label_halo="#ffffff")
@@ -109,7 +115,7 @@ def build(P, title):
                    "text-max-angle": 30, "text-padding": 2, "symbol-spacing": 220},
         "paint": paint,
     })
-    layers.append(poi_layer())
+    layers.append(poi_layer(P))
     return {
         "version": 8,
         "name": f"EzMaps {title}",
@@ -135,12 +141,12 @@ def with_min(l, cls):
 POI = {"shop": "ez-poi-shop", "grocery": "ez-poi-shop", "hospital": "ez-poi-cross", "pharmacy": "ez-poi-cross", "doctors": "ez-poi-cross",
        "fuel": "ez-poi-fuel", "parking": "ez-poi-parking", "restaurant": "ez-poi-food", "fast_food": "ez-poi-food", "cafe": "ez-poi-food",
        "charging_station": "ez-poi-charge"}
-def poi_layer():
+def poi_layer(P):
     match = ["match", ["get", "class"]]
-    for k, v in POI.items(): match += [k, v]
+    for k, v in POI.items(): match += [k, v + P.get("poi_suffix", "")]  # GM-045: Neon City farbig
     match.append("")
     return {
-        "id": "poi-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": 14.5,
+        "id": "poi-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": P.get("poi_minzoom", 14.5),
         "filter": ["in", ["get", "class"], ["literal", list(POI)]],
         "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.5, 17, 0.7], "icon-padding": 22},  # GM-030: weniger dicht (Fahrt-Bilder)
     }

@@ -25,7 +25,7 @@ for p in STYLES:
     if p.read_bytes().replace(bytes([13, 10]), bytes([10])) != before[p].replace(bytes([13, 10]), bytes([10])):
         errors.append(f"{p.name} war nicht aktuell (build_style.py neu ausgeführt – bitte committen)")
 swift = (ROOT / "App" / "NeonMapView.swift").read_text(encoding="utf-8")
-drawn = set(re.findall(r'"(ez-poi-[a-z]+)"', swift))
+drawn = set(re.findall(r'"(ez-poi-[a-z-]+)"', swift))
 fonts_all = set()
 for STYLE in STYLES:
     style = json.loads(STYLE.read_text(encoding="utf-8"))

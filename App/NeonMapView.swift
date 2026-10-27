@@ -212,16 +212,25 @@ final class RouteOverlay {
 
     /// GM-026: Kartensymbole wie in der Vorlage – weißes Symbol mit schwarzem Rand (Namen passen zu build_style.py POI)
     static func poiImages() -> [String: UIImage] {
-        let symbols = ["ez-poi-shop": "basket.fill", "ez-poi-cross": "cross.fill", "ez-poi-fuel": "fuelpump.fill",
-                       "ez-poi-parking": "parkingsign", "ez-poi-food": "fork.knife", "ez-poi-charge": "bolt.car.fill"]
+        let white = UIColor(white: 0.96, alpha: 1)
+        let blue = UIColor(red: 0x5d / 255.0, green: 0xb8 / 255.0, blue: 0xf0 / 255.0, alpha: 1)
+        let red = UIColor(red: 0xf0 / 255.0, green: 0x5a / 255.0, blue: 0x5a / 255.0, alpha: 1)
+        let green = UIColor(red: 0x5f / 255.0, green: 0xd0 / 255.0, blue: 0x68 / 255.0, alpha: 1)
+        let symbols: [String: (String, UIColor)] = [
+            "ez-poi-shop": ("basket.fill", white), "ez-poi-cross": ("cross.fill", white), "ez-poi-fuel": ("fuelpump.fill", white),
+            "ez-poi-parking": ("parkingsign", white), "ez-poi-food": ("fork.knife", white), "ez-poi-charge": ("bolt.car.fill", white),
+            // GM-045: Neon City – farbige Symbole wie auf der Übersichtskarte der Vorlage (eigene Zeichnung, SF Symbols)
+            "ez-poi-shop-neon": ("basket.fill", blue), "ez-poi-cross-neon": ("cross.fill", red), "ez-poi-fuel-neon": ("fuelpump.fill", white),
+            "ez-poi-parking-neon": ("parkingsign", blue), "ez-poi-food-neon": ("fork.knife", blue), "ez-poi-charge-neon": ("bolt.car.fill", green),
+        ]
         var out: [String: UIImage] = [:]
         let cfg = UIImage.SymbolConfiguration(pointSize: 30, weight: .heavy)
-        for (name, sym) in symbols {
+        for (name, (sym, color)) in symbols {
             guard let base = UIImage(systemName: sym, withConfiguration: cfg) else { continue }
             let size = CGSize(width: base.size.width + 10, height: base.size.height + 10)
             out[name] = UIGraphicsImageRenderer(size: size).image { _ in
                 let black = base.withTintColor(.black, renderingMode: .alwaysOriginal)
-                let white = base.withTintColor(UIColor(white: 0.96, alpha: 1), renderingMode: .alwaysOriginal)
+                let white = base.withTintColor(color, renderingMode: .alwaysOriginal)
                 for dx in stride(from: -3.0, through: 3.0, by: 1.5) {
                     for dy in stride(from: -3.0, through: 3.0, by: 1.5) where dx * dx + dy * dy <= 9 {
                         black.draw(at: CGPoint(x: 5 + dx, y: 5 + dy))

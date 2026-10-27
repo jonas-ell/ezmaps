@@ -103,6 +103,7 @@ export const NEON_ROADS = { // für drawRoads (Vektorstraßen), derzeit nicht ak
 };
 // GM-010: Look nach Vorlage (dunkle Open-World-Übersicht): fast schwarzes Land, Stadt als dunkelgraue Blöcke,
 // breite hellgraue Straßen ohne Rand, Gebäude nur knapp heller als der Block, Wasser grau und hell
+// GM-045: in der App (build_style.py) ist Neon weit weg fast schwarz mit grauen Straßen (zc), nah wie hier – Prototyp zeigt die nahe Stufe
 const NEON = { // GM-024: nach Foto des Nutzers – Mirror in tools/maplibre/build_style.py, change both
   land: '#3b3c3e', residential: '#3b3c3e', industrial: '#3e3f41', farm: '#38393b', park: '#36383a', forest: '#333537',
   water: '#5d6870', waterLine: '#5d6870', building: '#5b5c5f', buildingEdge: '#4a4b4e', casing: '#151617', widen: 1.5,
