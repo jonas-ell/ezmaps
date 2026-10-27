@@ -15,6 +15,9 @@ packages:
 targets:
   EzMaps:
     type: application
+    # GM-043: StoreKit-Testdatei für Simulator-Käufe (Preise wie GM-038/039, kein Einführungsangebot GM-042)
+    scheme:
+      storeKitConfiguration: App/EzMaps.storekit
     platform: iOS
     sources:
       - path: App
@@ -50,6 +53,8 @@ targets:
           UIColorName: LaunchBackground
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIBackgroundModes: [location, audio]
+        # GM-043: Stil-Schriften (OFL, App/Fonts) – Pricedown nur, wenn mac_build.sh sie lokal kopiert hat
+        UIAppFonts: [Rye-Regular.ttf, PressStart2P-Regular.ttf, Fredoka-Bold.ttf, Anton-Regular.ttf, Pricedown.otf]
         ITSAppUsesNonExemptEncryption: false  # GM-020: nur HTTPS (Ausnahme) – keine Export-Fragen bei jedem Upload
         # GM-020: Server-Adressen – vor dem Start auf eigene Server umstellen (docs/VEROEFFENTLICHUNG.md)
         EZValhallaURL: "https://valhalla1.openstreetmap.de"

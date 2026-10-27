@@ -27,6 +27,23 @@ enum GameStorage {
         try? data.write(to: explorationURL, options: .atomic)
     }
 
+    // MARK: Fahrtenbuch (GM-043): Fahrten, Favoriten, Zuhause/Arbeit, Parkplatz, Abzeichen, Mission
+
+    private static var journalURL: URL {
+        explorationURL.deletingLastPathComponent().appendingPathComponent("journal.json")
+    }
+
+    static func loadJournal() -> Journal {
+        guard let data = try? Data(contentsOf: journalURL),
+              let j = try? JSONDecoder().decode(Journal.self, from: data) else { return Journal() }
+        return j
+    }
+
+    static func saveJournal(_ journal: Journal) {
+        guard let data = try? JSONEncoder().encode(journal) else { return }
+        try? data.write(to: journalURL, options: .atomic)
+    }
+
     // MARK: Stil-Testzeit
 
     private static let service = "app.ezmaps.trial"

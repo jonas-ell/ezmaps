@@ -6,6 +6,9 @@ cd "$(dirname "$0")/.."
 echo "=== EzMaps Build $(date '+%Y-%m-%d %H:%M:%S') ==="
 command -v xcodegen >/dev/null || { echo "xcodegen fehlt (brew install xcodegen)"; exit 1; }
 
+# GM-043: Pricedown (Name „Neon City“) nur lokal – Desktop-Lizenz, nie im Repo (GM-035). Ohne Datei nimmt die App Anton.
+if [ -f "$HOME/EzMapsPrivate/Fonts/pricedown.otf" ]; then cp "$HOME/EzMapsPrivate/Fonts/pricedown.otf" App/Fonts/Pricedown.otf && echo "Pricedown aus ~/EzMapsPrivate übernommen"; fi
+
 # GM-021: Archiv für den App Store (Marker tools/.do_archive, geschickt von tools/mac_archive.sh).
 # Mit zusätzlichem Marker tools/.do_upload wird hochgeladen, sonst nur signiert exportiert (Probe).
 # Schlüsselbund und API-Schlüssel wie in App/MAC_ZUGANG_NEUE_APP.md Abschnitt 6 (gilt für alle Apps des Teams).
