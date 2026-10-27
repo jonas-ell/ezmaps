@@ -1,5 +1,7 @@
 # EzMaps – Gesamtblick und Verbesserungsideen (GM-040)
 
+> **Entscheidungen des Nutzers (GM-041):** 1.1 abgelehnt: Alle 5 jetzigen Stile kommen in die 1.0, weitere Stile danach. 1.2 ja: Design-Konzept in `tools/prototype/aufdecken.html`, Logik in `Core/Exploration.swift`. 1.3 abgelehnt: keine Probezeit, nur kurzes Testen (10 Min je Stil, zählt auch in CarPlay, nicht durch Neuinstallieren umgehbar, `Core/StyleTrial.swift`). 1.5 ja: Fahrt-Replay (`Core/ReplayPlanner.swift`, Prototyp-Screen „Fahrt-Replay“).
+
 Stand: Oktober 2026. Grundlage: Swift-App (`App/`, `Core/`, Stand GM-028), Prototyp (`tools/prototype/`), CHANGELOG bis GM-039, `docs/TODO_PROTOTYP_REVIEW.md`, Konkurrenz-Recherche (GM-037).
 
 ## 0. Ehrlicher Ist-Stand

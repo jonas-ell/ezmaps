@@ -62,3 +62,6 @@
 "Über" = "About";
 "Übersicht" = "Overview";
 "© OpenMapTiles · © OpenStreetMap-Mitwirkende" = "© OpenMapTiles · © OpenStreetMap contributors";
+
+/* GM-041 Stadt aufdecken */
+"+%d %% neue Straßen" = "+%d %% new streets";

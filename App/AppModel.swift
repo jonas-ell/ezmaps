@@ -58,6 +58,8 @@ final class AppModel {
     var message: String?
     /// Zählt hoch, wenn die Karte wieder dem Standort folgen soll
     private(set) var recenterRequest = 0
+    /// GM-041: Ergebnis „Stadt aufdecken“ der letzten Fahrt (für den Ankunft-Screen)
+    private(set) var lastReveal: TripReveal?
 
     @ObservationIgnored private var session: NavigationSession?
     @ObservationIgnored private let speech = SpeechService()
@@ -68,6 +70,10 @@ final class AppModel {
     @ObservationIgnored private var messageTask: Task<Void, Never>?
     @ObservationIgnored private var rerouting = false
     @ObservationIgnored private let defaults = UserDefaults.standard
+    /// GM-041: aufgedeckte Straßen (Datei) und die Punkte der laufenden Fahrt
+    @ObservationIgnored private var exploration = GameStorage.loadExploration()
+    @ObservationIgnored private var tripTrack: [Coordinate] = []
+    @ObservationIgnored private var lastAccuracy: Double = .greatestFiniteMagnitude
 
     private init() {
         if let data = defaults.data(forKey: "settings"), let s = try? JSONDecoder().decode(AppSettings.self, from: data) {
@@ -188,6 +194,8 @@ final class AppModel {
         navCoordinate = route.coordinate(at: 0)
         navHeading = route.heading(at: 0)
         screen = .navigating
+        tripTrack = []
+        lastReveal = nil
         location.setNavigating(true)
         speech.say(s.startAnnouncement())
         loadSpeedLimits(for: route)
@@ -195,6 +203,9 @@ final class AppModel {
     }
 
     func endNavigation() {
+        // abgebrochene Fahrt: gefahrene Straßen trotzdem aufdecken
+        if lastReveal == nil { finishTrip() }
+        tripTrack = []
         demoTask?.cancel()
         demoPosition = nil
         navCoordinate = nil
@@ -221,6 +232,7 @@ final class AppModel {
     private func handleGPS(_ loc: CLLocation) {
         if loc.speed > 1.5 && loc.course >= 0 { driveHeading = loc.course }
         if loc.speed >= 0 { driveKmh = loc.speed * 3.6 }
+        lastAccuracy = loc.horizontalAccuracy >= 0 ? loc.horizontalAccuracy : .greatestFiniteMagnitude
         guard demoPosition == nil else { return } // Demo-Fahrt hat Vorrang
         let speed: Double? = loc.speed >= 0 ? loc.speed : nil
         let course: Double? = loc.course >= 0 ? loc.course : nil
@@ -231,6 +243,7 @@ final class AppModel {
         guard var s = session else { return }
         let u = s.update(position: position, speed: speed)
         session = s
+        record(position)
         nav = u.state
         navCoordinate = s.route.coordinate(at: u.state.progress) ?? position
         navHeading = s.route.heading(at: u.state.progress)
@@ -241,8 +254,30 @@ final class AppModel {
         if u.state.arrived && screen == .navigating {
             demoTask?.cancel()
             location.setNavigating(false)
+            finishTrip()
             screen = .arrived
         }
+    }
+
+    // MARK: Stadt aufdecken (GM-041)
+
+    /// Nur genaue Punkte (≤ 30 m) und erst ab 10 m Abstand aufnehmen. Die Demo-Fahrt zählt nur in Debug-Builds
+    /// (zum Testen im Simulator), im Store-Build deckt sie nichts auf.
+    private func record(_ position: Coordinate) {
+        #if DEBUG
+        let demoCounts = demoPosition != nil
+        #else
+        let demoCounts = false
+        #endif
+        guard demoCounts || (demoPosition == nil && lastAccuracy <= 30) else { return }
+        if let last = tripTrack.last, last.distance(to: position) < 10 { return }
+        tripTrack.append(position)
+    }
+
+    private func finishTrip() {
+        guard tripTrack.count > 1 else { return }
+        lastReveal = exploration.addTrip(tripTrack)
+        GameStorage.saveExploration(exploration)
     }
 
     private func reroute(from position: Coordinate, heading: Double?) {

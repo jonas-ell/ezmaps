@@ -409,6 +409,13 @@ struct ArrivalSheet: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text(L("Angekommen")).font(.caption.weight(.semibold)).textCase(.uppercase).foregroundStyle(.secondary)
                     Text(model.destination?.name ?? "").font(.title.weight(.bold)).lineLimit(2).minimumScaleFactor(0.7)
+                    // GM-041: Stadt aufdecken – Anteil neuer Straßen dieser Fahrt
+                    if let reveal = model.lastReveal, reveal.totalCells > 1 {
+                        Text(String(format: L("+%d %% neue Straßen"), reveal.newPercent))
+                            .font(.title3.weight(.heavy))
+                            .foregroundStyle(Color(uiColor: NeonColors.route))
+                            .lineLimit(1).minimumScaleFactor(0.8)
+                    }
                     Button { model.endNavigation() } label: {
                         Text(L("Fertig")).font(.title3.weight(.heavy)).frame(maxWidth: .infinity).frame(height: 54)
                             .background(Color(uiColor: NeonColors.route), in: EZShape.box).foregroundStyle(.white)

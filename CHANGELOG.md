@@ -2,6 +2,71 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-041 – Stadt aufdecken (Konzept + Logik), Stil-Test nicht umgehbar, Fahrt-Replay – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer zu GM-040:
+- Alle 5 jetzigen Stile kommen in die 1.0, neue Stile danach.
+- Design-Konzept für „Stadt aufdecken“ machen.
+- Keine Probezeit, aber kurzes Testen, auch in CarPlay, nicht durch Neuinstallieren umgehbar.
+- Fahrt-Replay: ja.
+- Alles in Code umsetzen.
+
+**Dateien:**
+- `Core/Sources/EzMapsCore/{Exploration,StyleTrial,ReplayPlanner}.swift` + Tests
+- `tools/prototype/js/{explore,replay,aufdecken}.js`, `tools/prototype/aufdecken.{html,css}`
+- `App/GameStorage.swift` (neu), `App/AppModel.swift`, `App/ContentView.swift`, `App/en.lproj/Localizable.strings`
+- `docs/KONZEPT_IDEEN.md`
+
+**Geändert:**
+- **Logik Aufdecken** (`Exploration.swift`, gespiegelt in `explore.js`):
+  - Gefahrene Strecke wird zu Straßenzellen (Kacheln Zoom 20, ~24 m). Das geht in ganz Deutschland, ohne eigene Straßendaten und ohne Server.
+  - GPS-Lücken über 400 m (Tunnel) decken nichts dazwischen auf.
+  - `TripReveal` (+X % neue Straßen), Anteil je Ortsteil, Stufen 0/10/25/50/75 % (Neu hier, Unterwegs, Kenner, Insider, Legende), 10 Abzeichen mit eigenen Namen.
+- **Stil-Test** (`StyleTrial.swift`):
+  - 10 Min je Kauf-Stil, einmal.
+  - Zählt, solange der Stil auf iPhone **oder** CarPlay sichtbar ist (gleichzeitig nur einmal).
+  - Läuft nie in einer Fahrt ab, erst nach der Ankunft.
+  - `merge` nimmt den größeren Verbrauch aus Schlüsselbund und iCloud. Löschen und Neuinstallieren bringt keinen neuen Test.
+- **Fahrt-Replay** (`ReplayPlanner.swift`, gespiegelt in `replay.js`):
+  - 10 s, 30 Bilder/s, 9:16.
+  - Kamera folgt der Strecke (weich gedreht), am Ende Überblick über die ganze Strecke.
+- **App:**
+  - `GameStorage`: Aufdecken als Datei; Testzeit in Schlüsselbund und `NSUbiquitousKeyValueStore`.
+  - `AppModel` zeichnet die Fahrt auf (Genauigkeit ≤ 30 m, alle 10 m; Demo-Fahrt nur in Debug-Builds) und deckt bei Ankunft oder Abbruch auf.
+  - Ankunft zeigt „+X % neue Straßen“ (DE und EN).
+- **Prototyp `aufdecken.html`**, 9 Screens im Glas-Look:
+  - Meine Stadt (Nebel)
+  - Ortsteil
+  - Fahrt iPhone (nur dünnes Leuchten, „+3 neu“)
+  - Ankunft mit Aufleuchten
+  - Abzeichen (goldener Rand)
+  - Wochenmission
+  - Fahrt-Replay (läuft als Animation)
+  - Stil-Test vorbei
+  - CarPlay mit Test-Uhr
+
+**Tatsächlich geprüft:**
+- `swift test` in Core (Linux): 46 Tests grün, davon 19 neu.
+- `swiftc -parse` für die 3 geänderten App-Dateien.
+- Playwright: `aufdecken.html` ohne Fehler, alle Screens angesehen.
+- `explore.js` gegen Swift-Werte gegengerechnet.
+
+**Ungetestet:**
+- App nicht auf dem Mac gebaut: Schlüsselbund, iCloud, Ankunftszeile.
+- Ob Schlüsselbund-Einträge nach dem Löschen der App bleiben, ist von Apple nicht garantiert (heute: ja).
+
+### Auftrag (Swift)
+1. **Bauen und prüfen**: `GameStorage.swift` und die Änderungen in `AppModel`/`ContentView` auf dem Mac bauen. Demo-Fahrt im Simulator (Debug): Bei Ankunft muss „+100 % neue Straßen“ stehen, bei derselben Fahrt nochmal „+0 %“.
+2. **Tab/Ansicht „Entdecken“** wie Prototyp „Meine Stadt“ und „Ortsteil“:
+   - Nebel als MapLibre-Ebene: dunkle Fläche, gefahrene Zellen als Linien-Layer ausgeschnitten (GeoJSON-Quelle aus `ExploreCell.center` der Zellen, zusammenhängende Zellen als Linien).
+   - Ortsteile: Grenzen aus OSM `place=suburb/quarter/village` (Photon `reverse` oder Kachel-Ebene `place`), Straßenzellen je Ortsteil per `querySourceFeatures` der Straßen-Ebene → `ExploreCell.cells(along:)` → `ExplorationStore.share(of:)`.
+3. **Ankunft** wie Prototyp „Ankunft · Aufleuchten“: neue Zellen 0,8 s nacheinander aufleuchten, Kacheln „+X % neue Straßen / Abschnitte / Ort“, Stufenbalken, Knöpfe „Replay“ und „Fertig“. Nur im Stand. „Bewegung reduzieren“ beachten.
+4. **Während der Fahrt** (iPhone und CarPlay): nur dünnes Leuchten der frisch gefahrenen neuen Strecke, kleine Zahl „+3 neu“ in der unteren Leiste (iPhone). Keine Meldungen, keine Abzeichen während der Fahrt.
+5. **Abzeichen und Stufe**: `Badge.earned(...)` nach der Ankunft; neue Abzeichen als eigener Moment nach dem Ankunft-Blatt, Teilen-Knopf.
+6. **Stil-Test**: `StyleTrial` im `AppModel` halten (`GameStorage.loadTrial()` beim Start). Jede Sekunde `tick(seconds:visible:navigating:)`; `visible` = Stil auf iPhone im Vordergrund **oder** in CarPlay. Zeit über `ProcessInfo.processInfo.systemUptime` messen, nicht über die Uhrzeit. Speichern alle 10 s und beim Wechsel in den Hintergrund. In CarPlay kleine Uhr „Test 4:12“ (Kartenleiste/Hinweis). Bei `.expired`: zurück zu Klassik, dann Blatt „Test vorbei“ (Prototyp), nie in CarPlay. iCloud-Schlüsselwerte: Capability „iCloud → Key-value storage“ in `project.yml`/Entitlements ergänzen.
+7. **Fahrt-Replay**: `ReplayPlanner().frames(for: track)` → je Bild MapLibre-Kamera setzen (`MLNMapSnapshotter` oder Offscreen-`MLNMapView`), Strecke bis `progress` als Linie, neue Zellen hell. Mit `AVAssetWriter` (H.264, 1080 × 1920, 30 fps) speichern, Wasserzeichen „EzMaps“ und „© OpenStreetMap-Mitwirkende“ ins Bild. Teilen über `ShareLink`. Ab 2 Minuten Fahrt anbieten.
+8. **Datenschutz**: Aufdecken und Fahrten bleiben auf dem Gerät. Testzeit liegt in iCloud (Apple). `docs/legal` und Datenschutzangaben im Store prüfen. Einstellungen: „Entdeckte Karte zurücksetzen“ (`ExplorationStore.reset()`), setzt die Testzeit **nicht** zurück.
+
 ## GM-040 – Gesamtblick: Konzept- und Verbesserungsideen
 
 **Ziel:** Nutzer: ganze App ansehen und Ideen sammeln, wie alles besser wird, auch vom Konzept her.
