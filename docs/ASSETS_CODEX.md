@@ -299,6 +299,55 @@ Also write index.html showing all five tiles side by side at 64, 128 and 256 px 
 Einbau: `StyleSwatch` (App/ShopScreens.swift) zeigt dann das Bild statt der gezeichneten Fläche;
 `GlassRoundButton` nimmt die HUD-Bilder statt der SF Symbols.
 
+## 10. Toy Town wie ein Kinder-Spielteppich (GM-054)
+
+Vorlage: klassische Straßen-Spielteppiche (Nutzer-Bilder lokal in `tools/prototype/referenzen/toy-teppich-*.png`).
+Gemeinsamer Stil für alle Teile – diesen Absatz jedem Prompt voranstellen:
+
+```
+Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified
+cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos,
+no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with
+windows and door visible), exactly like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A,
+yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87,
+walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy
+any existing rug design.
+Deliver transparent PNG at @1x/@2x/@3x plus a 1024 px master, folder Assets/Generated/ToyTown/<group>/,
+and an index.html showing every file on #3EB34A.
+```
+
+### 10a. Häuser (Gebäude-Symbole, auf jedem Haus der Karte)
+```
+12 small buildings as separate sprites, 64x64 @1x, footprint centered, front facing down:
+toy-house-1..6 (family houses, different roof colors and shapes), toy-shop (store with awning),
+toy-school (with small clock), toy-hospital (white building with red cross on the roof),
+toy-fire-station (red, two garage doors), toy-police (blue), toy-apartment (3 floors).
+```
+
+### 10b. Natur und Plätze
+```
+toy-tree-round (3 sizes), toy-bush-group, toy-flower-bed, toy-pond (blue with light rim, for roundabout centers),
+toy-football-pitch (top-down, 128x96), toy-playground (slide and swing, 96x96), toy-parking-lot (4 bays with blue P, 128x64).
+```
+
+### 10c. Kacheln für die Karte (nahtlos)
+```
+Seamless tiling textures 256x256: toy-grass (bright green with very subtle lighter patches and tiny flowers),
+toy-asphalt (flat grey with very fine speckles), toy-water (blue with a few light wave strokes).
+```
+
+### 10d. Symbole und Marker
+```
+Round badges 48x48 with white rim and soft shadow, white pictogram inside: toy-poi-food (fork/knife, green),
+toy-poi-parking (P, blue), toy-poi-shop (basket, yellow), toy-poi-hospital (cross, red), toy-poi-fuel (pump, orange),
+toy-poi-charge (plug with bolt, teal).
+Player marker toy-car-red: cute red toy car from straight above, 64x64, pointing up, windows light blue, black tires.
+Destination toy-flag: checkered finish flag on a short pole, 64x64, anchor at the pole bottom.
+```
+
+Einbau: Häuser als Symbol auf jedem Gebäude (MapLibre `symbol` auf dem Gebäude-Mittelpunkt, Größe nach Grundfläche),
+Kacheln als `fill-pattern`, Marker wie bei den anderen Stilen.
+
 ## Nicht von Codex
 
 - **Schriften:**

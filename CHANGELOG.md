@@ -2,6 +2,20 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-054 – Pixel Quest Runde 3 (sauber, animiertes Wasser), Codex-Aufträge für Toy Town
+
+**Ziel:** Nutzer: Pixel-Karte „scuffed“ (Symbole, Häuser wild verteilt), Eis statt Wasser, grüner Pfeil nur Alternative, weiß Standard; Toy Town sieht nicht wie die Teppiche aus → Codex-Prompts für einzelne Elemente.
+
+**Dateien:** `tools/prototype/js/zielbilder.js`, `docs/ASSETS_CODEX.md` (Abschnitt 10)
+
+**Geändert:**
+- Pixel Quest: Häuser in Reihen entlang der Straßen, gleich groß und ausgerichtet, von oben mit Satteldach (helle/dunkle Holzhälfte, First), Bruchstein-Sockel und Schatten; isometrische Hausbilder entfernt. Symbole einheitlich 16 × 16 Pixel doppelt groß mit Schatten (Hähnchen, Steak aus Nutzer-Grafiken; Heiltrank, Smaragd, Holzschild P, Kanister selbst gepixelt). Wasser = `Water_Item_Animated.gif` (animiert), Teich im Park. Ziel = rote Pixel-Fahne. Standort weiß (Standard), grün als wählbare Alternative.
+- Toy Town: Codex-Aufträge für Häuser (12), Natur/Plätze, nahtlose Kacheln, Symbole, Auto-Marker und Zielfahne im Spielteppich-Stil (eigene Zeichnungen, keine Teppich-Motive kopiert).
+
+**Tatsächlich geprüft:** Zielbild Pixel Quest im Browser gerendert und angesehen.
+
+**Ungetestet:** Freigabe durch den Nutzer; Toy-Town-Assets stehen aus (Codex).
+
 ## GM-053 – Zielbilder Runde 2: Neon-Waypoint und mehr Symbole, Wild West neu, Pixel Quest mit Nutzer-Grafiken, Toy Town wie Spielteppich
 
 **Ziel:** Rückmeldung des Nutzers zu GM-052: Neon-Waypoint und Symbole wie auf seinen Screenshots, Wild West gefällt gar nicht, Pixel Quest neu mit `Assets/Generated/minecraft`, Toy Town wie die Spielteppiche aus der Kindheit (3 Bilder).

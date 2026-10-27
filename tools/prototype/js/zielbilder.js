@@ -172,30 +172,46 @@ const STYLES = {
     },
   },
   'pixel-quest': {
-    title: 'Pixel Quest (neu, mit deinen Texturen)', why: 'Neu mit deinen Texturen aus Assets/Generated/minecraft: Gras-Textur als Boden, Bruchstein als Straßen, Eis/Wasser-Textur als Bach, Dorfhäuser von oben (Holz-Dach-Textur), Symbole aus deinen Bildern (Hähnchen/Steak = Essen) plus selbst gezeichnete Pixel-Symbole: Heiltrank = Krankenhaus, Smaragd = Laden, Eimer = Tankstelle, Blitz = Laden-Säule, P = Parken. Standort = dein weißer Spieler-Marker, Ziel = dein grüner Marker. Diese Grafiken kommen nach Freigabe auch in die App.',
+    title: 'Pixel Quest (Runde 3)', why: 'Mit deinen Grafiken: Gras, Bruchstein-Straßen, animiertes Wasser (Water_Item_Animated.gif). Häuser jetzt ordentlich: in Reihen entlang der Straßen, alle gleich ausgerichtet, von oben gesehen (Holzdach mit First, Bruchstein-Sockel, Schatten). Symbole einheitlich 16 × 16 Pixel, doppelt groß: Hähnchen = Essen, Steak = Imbiss, Heiltrank = Krankenhaus, Smaragd = Laden, Holzschild mit P = Parken, Kanister = Tankstelle. Standort: weißer Marker (Standard); grüner Marker als Alternative zum Aussuchen in der App.',
     refs: [], missing: ['pixel-video-*.png (Minecraft-Karten im Auto)'],
     draw(o) {
+      const planks = pixelTile(16, (x, y) => { if (y % 4 === 3) return '#5f4628'; if ((x + Math.floor(y / 4) * 6) % 16 === 0) return '#6c5430'; const h = h2(x, y, 21); return h < 0.2 ? '#9c7848' : h > 0.85 ? '#a88454' : '#907848'; }, 2);
+      const planksDark = pixelTile(16, (x, y) => { if (y % 4 === 3) return '#3c3018'; const h = h2(x, y, 22); return h < 0.25 ? '#6c5430' : '#604824'; }, 2);
       let s = `<defs><pattern id="mg" width="64" height="64" patternUnits="userSpaceOnUse"><image href="${MC}anothergrasstexture.jpg" width="64" height="64" style="image-rendering:pixelated"/></pattern>
-        <pattern id="mc" width="40" height="40" patternUnits="userSpaceOnUse"><image href="${MC}cobblestonetexture.webp" width="40" height="40" style="image-rendering:pixelated"/></pattern>
-        <pattern id="mw" width="40" height="40" patternUnits="userSpaceOnUse"><image href="${MC}icetexture.webp" width="40" height="40" style="image-rendering:pixelated"/></pattern>
-        <pattern id="mr" width="24" height="24" patternUnits="userSpaceOnUse"><image href="${pixelTile(8, (x, y) => y % 3 === 2 ? '#5f4628' : ['#9c7848', '#907848', '#a88454', '#846c3c'][(x + y * 3) % 4])}" width="24" height="24" style="image-rendering:pixelated"/></pattern></defs>`;
+        <pattern id="mc" width="32" height="32" patternUnits="userSpaceOnUse"><image href="${MC}cobblestonetexture.webp" width="32" height="32" style="image-rendering:pixelated"/></pattern>
+        <pattern id="mw" width="48" height="48" patternUnits="userSpaceOnUse"><image href="${MC}Water_Item_Animated.gif" width="48" height="48" style="image-rendering:pixelated"/></pattern>
+        <pattern id="pl" width="32" height="32" patternUnits="userSpaceOnUse"><image href="${planks}" width="32" height="32" style="image-rendering:pixelated"/></pattern>
+        <pattern id="pd" width="32" height="32" patternUnits="userSpaceOnUse"><image href="${planksDark}" width="32" height="32" style="image-rendering:pixelated"/></pattern></defs>`;
       s += `<rect width="800" height="480" fill="url(#mg)"/>`;
-      s += `<path d="${path(STREAM)}" stroke="url(#mw)" stroke-width="14" fill="none"/>`;
-      for (let y = 240; y < 380; y += 24) for (let x = 650; x < 780; x += 24) if (h2(x, y, 2) > 0.3) s += `<rect x="${x + 4}" y="${y + 4}" width="20" height="20" fill="#1e3a10"/><rect x="${x}" y="${y}" width="20" height="20" fill="#3c6018"/><rect x="${x + 3}" y="${y + 3}" width="7" height="7" fill="#548424"/><rect x="${x + 12}" y="${y + 11}" width="5" height="5" fill="#2e4a12"/>`;
-      for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="#3a3a3a" stroke-width="${WIDTH[r.c] + 3}" fill="none" stroke-linejoin="round"/><path d="${path(r.p)}" stroke="url(#mc)" stroke-width="${WIDTH[r.c] - 1}" fill="none" stroke-linejoin="round"/>`;
-      s += `<path d="${ringPath(RING.r)}" stroke="#3a3a3a" stroke-width="23" fill="none"/><path d="${ringPath(RING.r)}" stroke="url(#mc)" stroke-width="19" fill="none"/><circle cx="400" cy="240" r="18" fill="url(#mg)"/>`;
-      s += HOUSES.map(b => `<rect x="${b.x + 3}" y="${b.y + 4}" width="${b.w}" height="${b.h}" fill="rgba(0,0,0,.35)"/><rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="url(#mc)"/><rect x="${b.x + 2}" y="${b.y + 2}" width="${b.w - 4}" height="${b.h - 4}" fill="url(#mr)"/><path d="M${b.x + 2} ${b.y + b.h / 2} H${b.x + b.w - 2}" stroke="#3c3018" stroke-width="2"/>`).join('');
-      s += `<image href="${MC}Plains_Small_House_6.webp" x="470" y="296" width="70" height="70"/><image href="${MC}PlainsVillageBuilding.webp" x="190" y="150" width="78" height="68"/>`;
+      // Teich im Park + Bach, animiert
+      s += `<path d="${path(STREAM)}" stroke="#2a3f8a" stroke-width="18" fill="none"/><path d="${path(STREAM)}" stroke="url(#mw)" stroke-width="14" fill="none"/>`;
+      s += `<rect x="700" y="300" width="72" height="56" fill="#2a3f8a"/><rect x="703" y="303" width="66" height="50" fill="url(#mw)"/>`;
+      // Bäume: Laub-Blöcke mit Stamm-Schatten
+      const tree = (x, y) => `<rect x="${x + 5}" y="${y + 5}" width="22" height="22" fill="rgba(0,0,0,.35)"/><rect x="${x}" y="${y}" width="22" height="22" fill="#2e5212"/><rect x="${x + 2}" y="${y + 2}" width="8" height="8" fill="#3c6c18"/><rect x="${x + 12}" y="${y + 6}" width="6" height="6" fill="#487824"/><rect x="${x + 6}" y="${y + 13}" width="7" height="6" fill="#3c6018"/>`;
+      for (const [x, y] of [[652, 244], [680, 250], [744, 246], [654, 290], [656, 360], [690, 366], [770, 250]]) s += tree(x, y);
+      for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="#2e2e2e" stroke-width="${WIDTH[r.c] + 3}" fill="none" stroke-linejoin="round"/><path d="${path(r.p)}" stroke="url(#mc)" stroke-width="${WIDTH[r.c] - 1}" fill="none" stroke-linejoin="round"/>`;
+      s += `<path d="${ringPath(RING.r)}" stroke="#2e2e2e" stroke-width="23" fill="none"/><path d="${ringPath(RING.r)}" stroke="url(#mc)" stroke-width="19" fill="none"/><circle cx="400" cy="240" r="18" fill="url(#mg)"/>`;
+      // Häuser: Reihen entlang der Straßen, gleich groß, Satteldach von oben (helle/dunkle Dachhälfte), Bruchstein-Sockel
+      const house = (x, y, w, h) => `<rect x="${x + 4}" y="${y + 5}" width="${w}" height="${h}" fill="rgba(0,0,0,.4)"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#mc)"/>` +
+        `<rect x="${x + 2}" y="${y + 2}" width="${w - 4}" height="${(h - 4) / 2}" fill="url(#pl)"/><rect x="${x + 2}" y="${y + 2 + (h - 4) / 2}" width="${w - 4}" height="${(h - 4) / 2}" fill="url(#pd)"/>` +
+        `<rect x="${x + 2}" y="${y + h / 2 - 1}" width="${w - 4}" height="2" fill="#3c3018"/>`;
+      const rows = [ // [x0, x1, y] – Häuserreihen parallel zu den Straßen
+        [20, 130, 140], [20, 130, 176], [20, 130, 212], [20, 130, 248], [190, 360, 134], [190, 360, 170], [440, 590, 116], [440, 590, 152],
+        [20, 360, 352], [430, 590, 252], [430, 590, 290], [430, 590, 330], [430, 590, 366], [650, 790, 112], [650, 790, 150], [420, 590, 430], [650, 790, 418], [20, 130, 20], [20, 130, 56], [470, 590, 20], [190, 290, 14]];
+      for (const [x0, x1, y] of rows) for (let x = x0; x + 28 <= x1; x += 36) { if (h2(x, y, 31) < 0.12) continue; s += house(x, y, 28, 22); }
       s += labels('Press Start 2P', 8, '#fff', { id: 'p', halo: '#000', haloW: 3 });
-      const potion = pixelTile(10, (x, y) => { const m = ['....##....', '....##....', '...####...', '..#....#..', '.#rrrrrr#.', '#rrrrwrrr#', '#rrrrrrrr#', '#rrrrrrrr#', '.#rrrrrr#.', '..######..'][y][x]; return m === '#' ? '#1b1b1b' : m === 'r' ? '#e0303a' : m === 'w' ? '#ffb0b0' : 'rgba(0,0,0,0)'; }, 3);
-      const gem = pixelTile(10, (x, y) => { const m = ['...####...', '..#gGGg#..', '.#gGGGGg#.', '#gGgGGgGg#', '#gGGGGGGg#', '.#gGGGGg#.', '..#gGGg#..', '...#gg#...', '....##....', '..........'][y][x]; return m === '#' ? '#0b3d1a' : m === 'g' ? '#17a34a' : m === 'G' ? '#5cf08a' : 'rgba(0,0,0,0)'; }, 3);
-      const sign = (letter, bg) => `<rect width="26" height="26" fill="#000"/><rect x="2" y="2" width="22" height="22" fill="#fff"/><rect x="4" y="4" width="18" height="18" fill="${bg}"/><text x="13" y="19" text-anchor="middle" font-family="Press Start 2P" font-size="11" fill="#fff">${letter}</text>`;
-      const ic = { cross: `<image href="${potion}" width="30" height="30"/>`, shop: `<image href="${gem}" width="30" height="30"/>`, food: `<image href="${MC}Cooked_Chicken_JE2_BE2.webp" width="30" height="30" style="image-rendering:pixelated"/>`,
-        parking: sign('P', '#2a5bd7'), fuel: sign('⛽', '#5a5a60') };
-      s += POIS.map(p => `<g transform="translate(${p.x - 14} ${p.y - 14})">${ic[p.k]}</g>`).join('');
-      s += `<image href="${MC}Steak_JE4_BE3.webp" x="690" y="436" width="30" height="30" style="image-rendering:pixelated"/>`;
+      // Symbole: 16 × 16 Pixel, je 2 px
+      const spr = (rows, pal) => pixelTile(16, (x, y) => { const c = (rows[y] || '')[x] || '.'; return pal[c] || 'rgba(0,0,0,0)'; }, 2);
+      const potion = spr(['......kk........', '.....kbbk.......', '......kk........', '.....kwwk.......', '.....kwwk.......', '....kwwwwk......', '...kwrrrrwk.....', '..kwrrRrrrrk....', '..krrRRrrrrk....', '..krrrrrrrrk....', '..krrrrrrrrk....', '...krrrrrrk.....', '....kkkkkk......'].map(r => '  ' + r), { k: '#1b1b1b', b: '#8a5a2b', w: '#cfe8ff', r: '#d42a3a', R: '#ff8a9a' });
+      const emerald = spr(['', '.....kkkkk......', '....kgGGGgk.....', '...kgGWGGGgk....', '..kgGGWGGGGgk...', '..kgGGGGGGGgk...', '..kggGGGGGggk...', '...kggGGGggk....', '....kggggggk....', '.....kgggk......', '......kgk.......', '.......k........'].map(r => ' ' + r), { k: '#0b3d1a', g: '#17a34a', G: '#41d978', W: '#c8ffd9' });
+      const signP = spr(['', '.kkkkkkkkkkkkk..', '.kwwwwwwwwwwwk..', '.kwwkkkkkwwwwk..', '.kwwkwwwwkwwwk..', '.kwwkwwwwkwwwk..', '.kwwkkkkkwwwwk..', '.kwwkwwwwwwwwk..', '.kwwkwwwwwwwwk..', '.kwwwwwwwwwwwk..', '.kkkkkkkkkkkkk..', '......kbk.......', '......kbk.......', '......kbk.......', '.....kkkkk......'], { k: '#2a1c0e', w: '#b8945c', b: '#6c5430' });
+      const can = spr(['', '.....kkkk.......', '....kyyyk.......', '..kkkkkkkkk.....', '..krrrrrrrk.....', '..krwwrrrrk.....', '..krrrrrrrk.....', '..krrwwrrrk.....', '..krrrrrrrk.....', '..krrrrrwwk.....', '..krrrrrrrk.....', '..kkkkkkkkk.....'].map(r => ' ' + r), { k: '#1b1b1b', y: '#f2c230', r: '#c23a2a', w: '#e86a50' });
+      const ic = { cross: potion, shop: emerald, parking: signP, fuel: can };
+      const icon = (href, x, y) => `<g transform="translate(${x - 16} ${y - 16})"><image href="${href}" width="32" height="32" style="image-rendering:pixelated;filter:drop-shadow(1.5px 1.5px 0 rgba(0,0,0,.6))"/></g>`;
+      s += POIS.map(p => icon(p.k === 'food' ? MC + 'Cooked_Chicken_JE2_BE2.webp' : ic[p.k], p.x, p.y)).join('');
+      s += icon(MC + 'Steak_JE4_BE3.webp', 706, 450);
       if (o.route) s += `<path d="${path(ROUTE)}" stroke="#4a0d08" stroke-width="11" fill="none" stroke-linejoin="round"/><path d="${path(ROUTE)}" stroke="#e0362b" stroke-width="7" fill="none" stroke-linejoin="round"/>` +
-        `<image href="${MC}Green_Marker_(texture)_BE2.webp" x="${DEST[0] - 16}" y="${DEST[1] - 30}" width="32" height="32" style="image-rendering:pixelated"/>`;
+        `<rect x="${DEST[0] - 3}" y="${DEST[1] - 34}" width="6" height="34" fill="#2a1c0e"/><rect x="${DEST[0] + 3}" y="${DEST[1] - 34}" width="24" height="16" fill="#2a1c0e"/><rect x="${DEST[0] + 5}" y="${DEST[1] - 32}" width="20" height="12" fill="#d42a3a"/>`;
       const sz = o.route ? 34 : 26;
       s += `<image href="${MC}Player_(texture)_BE2.webp" x="${ME.x - sz / 2}" y="${ME.y - sz / 2}" width="${sz}" height="${sz}" style="image-rendering:pixelated"/>`;
       return s;
@@ -299,5 +315,5 @@ for (const [key, st] of Object.entries(STYLES)) {
     </div>
     <div class="markers">Standort-Pfeil:
       <svg viewBox="-32 -32 64 64">${MARKER[base](1.2)}</svg> frei
-      <svg viewBox="-32 -32 64 64">${MARKER[base](1.8)}</svg> Navigation</div></section>`);
+      <svg viewBox="-32 -32 64 64">${MARKER[base](1.8)}</svg> Navigation${key === 'pixel-quest' ? ` <svg viewBox="-32 -32 64 64"><image href="${MC}Green_Marker_(texture)_BE2.webp" x="-25" y="-25" width="50" height="50" style="image-rendering:pixelated"/></svg> Alternative (in der App wählbar)` : ''}</div></section>`);
 }
