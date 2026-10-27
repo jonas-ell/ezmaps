@@ -347,6 +347,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         map.preferredFramesPerSecond = .lowPower // GM-028: 30 Bilder/s im Auto
         cam.restoreUserLocation = false // GM-027: im Auto nie den GPS-Punkt von MapLibre
         camera = cam
+        cam.setStyle(shownStyle)
         cam.start()
         let ov = RouteOverlay(map: map)
         ov.theme = StyleTheme.of(shownStyle)
@@ -416,6 +417,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
             shownStyle = style
             overlay?.switchStyle(style)
         }
+        camera?.setStyle(style) // GM-057: Fahr-Pfeil je Stil
         if trail.count != trailCount {
             trailCount = trail.count
             overlay?.showTrail(trail)

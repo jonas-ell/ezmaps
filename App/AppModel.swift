@@ -20,6 +20,8 @@ struct AppSettings: Codable, Equatable {
     var speechRate: Double = 1
     /// GM-043: Onboarding (GM-031/032) schon gesehen
     var onboarded = false
+    /// GM-057: Pixel Quest – Standort-Marker grün statt weiß (Standard weiß)
+    var pixelMarkerGreen = false
 
     init() {}
 
@@ -36,6 +38,7 @@ struct AppSettings: Codable, Equatable {
         voiceIdentifier = try c.decodeIfPresent(String.self, forKey: .voiceIdentifier)
         speechRate = try c.decodeIfPresent(Double.self, forKey: .speechRate) ?? 1
         onboarded = try c.decodeIfPresent(Bool.self, forKey: .onboarded) ?? false
+        pixelMarkerGreen = try c.decodeIfPresent(Bool.self, forKey: .pixelMarkerGreen) ?? false
     }
 }
 

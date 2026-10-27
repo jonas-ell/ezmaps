@@ -26,6 +26,13 @@ for p in STYLES:
         errors.append(f"{p.name} war nicht aktuell (build_style.py neu ausgeführt – bitte committen)")
 swift = (ROOT / "App" / "NeonMapView.swift").read_text(encoding="utf-8")
 drawn = set(re.findall(r'"(ez-(?:poi|pat)-[a-z-]+)"', swift))  # GM-050: auch Muster (fill-pattern, background-pattern)
+# GM-057: Symbole je Art und Stil (RouteOverlay.poiKinds × poiSuffixes)
+_kinds = re.search(r"poiKinds: \[String: \(String, UIColor\)\] = \[(.*?)\n    \]", swift, re.S)
+_suff = re.search(r"poiSuffixes = \[(.*?)\]", swift)
+if _kinds and _suff:
+    for k in re.findall(r'"([a-z]+)": \(', _kinds.group(1)):
+        for sfx in re.findall(r'"([a-z-]*)"', _suff.group(1)):
+            drawn.add(f"ez-poi-{k}{sfx}")
 fonts_all = set()
 for STYLE in STYLES:
     style = json.loads(STYLE.read_text(encoding="utf-8"))

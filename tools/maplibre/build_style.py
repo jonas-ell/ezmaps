@@ -36,10 +36,14 @@ NEON.update(road=lambda r: zc("#a0a0a0" if r <= 1 else "#8a8a8a" if r <= 2 else 
 CLASSIC = dict(land="#f2efe9", residential="#ece7e0", industrial="#ebe3e8", farm="#eef0d6", park="#d4ebc8", forest="#c3dfb4",
                water="#aad3df", building="#ddd5cc", buildingEdge="#cbc0b5", rail="#a3a3a3", casing="#c9c1b6", label="#4a4a4a",
                road=lambda r: "#f7c56b" if r <= 1 else "#fde7a6" if r <= 3 else "#ffffff", widen=1.15, label_halo="#ffffff")
-WESTERN = dict(land="#dcc59a", residential="#d4bb8a", industrial="#ccb07f", farm="#e3cfa2", park="#d6c18c", forest="#cdb782",
-               water="#a3b7ae", building="#9b7a50", buildingEdge="#5e4127", rail="#4a3220", casing="#4a3220", label="#3a2414",
-               road=lambda r: "#f2e4bf" if r <= 4 else "#7a5a38", widen=1.0, thin_minor=True, label_halo="#e9d9b0",
-               poi_suffix="-west", poi_minzoom=13.5)  # GM-049: schwarze runde Knöpfe mit weißem Zeichen (eigene Zeichnung)
+# GM-057: Wild West nach den Red-Dead-Karten des Nutzers (Zielbild Runde 3, Farben gemessen): helles Pfirsich-Papier,
+# Straßen nur dünne dunkelbraune Linien, Wasser graugrün mit weichem Rand, Häuser kaum sichtbar, Schrift Old Standard TT (OFL).
+WESTERN = dict(land="#e4c9a8", residential="#e4c9a8", industrial="#e0c4a2", farm="#e4c9a8", park="#dec5a2", forest="#dcc29e",
+               water="#aaa392", building="#e9d1b2", buildingEdge="#a48c6c", rail="#4a3b2c", casing="#4a3b2c", label="#4a3b2c",
+               road=lambda r: "#4a3b2c", widen=1.0, ink_lines={0: 3.2, 1: 3.0, 2: 2.6, 3: 2.2, 4: 1.8, 5: 1.3, 6: 1.0, 7: 0.8},
+               water_soft=True, rail_ticks=True, label_halo="#e4c9a8", label_halo_width=2,
+               font="Old Standard TT Regular", label_scale=0.85, letter_spacing=0.18,
+               poi_suffix="-west", poi_minzoom=13.5)
 # GM-050: Pixel Quest und Toy Town wieder eigenständig wie im Prototyp (js/map.js drawPixel/drawToy, docs/previews/c4-*):
 # eigene Muster (Bilder zeichnet die App: RouteOverlay.patternImages, Website: js/poi.js), eigene Schrift, eigene Symbole.
 # Nutzer: „du kannst die Maps doch nicht alle im selben Stil machen“.
@@ -57,7 +61,7 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              road=lambda r: "#8f8f8f", widen=1.2, label_halo="#000000",
              pat=dict(land="ez-pat-grass-px", residential="ez-pat-grass-px", forest="ez-pat-leaves-px", park="ez-pat-grass-px",
                       water="ez-pat-water-px", farm="ez-pat-farm-px", industrial="ez-pat-stone-px"),
-             road_pattern="ez-pat-road-px",
+             road_pattern="ez-pat-road-px", rail_pattern="ez-pat-rail-px",
              building_pattern=by_height(["ez-pat-oak-px", "ez-pat-spruce-px", "ez-pat-brick-px", "ez-pat-cobble-px"]),
              building_shadow=True,
              font="Press Start 2P Regular", label_scale=0.62, text_transform="none", letter_spacing=0, label_halo_width=1.6,
@@ -128,12 +132,17 @@ def build(P, title):
     order = sorted(CLASS_RANK.items(), key=lambda kv: -kv[1])
     widen = P["widen"]
     thin = P.get("thin_minor", False)  # Wild West: kleine Straßen als dünne braune Linien ohne Rand
-    for cls, r in order:
+    ink = P.get("ink_lines")  # GM-057: Wild West – nur eine dünne Tintenlinie je Straße
+    for cls, r in (order if not ink else []):
         if thin and r >= 5:
             continue
         casing = P.get("casing_minor", P["casing"]) if r >= 4 else P["casing"]
         layers.append(with_min(line(f"road-{cls}-casing", "transportation", casing, meters(WIDTH[r] * 0.75 * widen + 3, MIN_PX[r] + 1.6), road_filter(cls)), cls))
-    for cls, r in order:
+    for cls, r in (order if ink else []):
+        px = ink[r]
+        layers.append(with_min(line(f"road-{cls}", "transportation", P["road"](r),
+                                    ["interpolate", ["linear"], ["zoom"], 10, px * 0.6, 15, px, 18, px * 1.6], road_filter(cls)), cls))
+    for cls, r in (order if not ink else []):
         w = meters(WIDTH[r] * 0.75 * widen * (0.42 if thin and r >= 5 else 1), MIN_PX[r] * (2.4 * 0.42 if thin and r >= 5 else 1))
         layers.append(with_min(line(f"road-{cls}", "transportation", P["road"](r), w, road_filter(cls)), cls))
         if P.get("road_pattern"): layers[-1]["paint"]["line-pattern"] = P["road_pattern"]  # GM-050: Steinstraße (Pixel Quest)
@@ -144,6 +153,19 @@ def build(P, title):
                 layers.append(with_min({**line(f"road-{cls}-dash", "transportation", P["road_dash"], meters(0.5, 0.8, 13), road_filter(cls), cap="butt"),
                                         "minzoom": 14}, cls) | {"minzoom": max(14, MINZOOM[cls])})
                 layers[-1]["paint"]["line-dasharray"] = [3, 3]
+    if P.get("water_soft"):  # GM-057: weicher Übergang ins Papier
+        i = next(k for k, l in enumerate(layers) if l["id"] == "water")
+        soft = line("water-soft", "water", P["water"], 10, ["!=", ["get", "class"], "swimming_pool"])
+        soft["paint"].update({"line-blur": 8, "line-opacity": 0.7})
+        layers.insert(i, soft)
+    rail_i = next(k for k, l in enumerate(layers) if l["id"] == "rail")
+    if P.get("rail_ticks"):  # GM-057: Bahn mit Querstrichen (Wild West)
+        t = line("rail-ticks", "transportation", P["rail"], 6, ["in", ["get", "class"], ["literal", ["rail", "transit"]]], cap="butt")
+        t["paint"]["line-dasharray"] = [0.25, 1.4]
+        layers.insert(rail_i + 1, t)
+    if P.get("rail_pattern"):  # GM-057: Schienen-Grafik (Pixel Quest)
+        layers[rail_i]["paint"]["line-pattern"] = P["rail_pattern"]
+        layers[rail_i]["paint"]["line-width"] = ["interpolate", ["linear"], ["zoom"], 13, 8, 17, 18]
     if P.get("water_edge"):
         i = next(k for k, l in enumerate(layers) if l["id"] == "water")
         layers.insert(i + 1, line("water-edge", "water", P["water_edge"], meters(2.5, 1.2), ["!=", ["get", "class"], "swimming_pool"]))
@@ -189,9 +211,12 @@ def with_min(l, cls):
 
 
 # GM-026: weiße Kartensymbole mit schwarzem Rand wie in der Vorlage. Bilder zeichnet die App beim Laden (RouteOverlay.poiImages)
+# GM-057: mehr Arten (Nutzer: „mir fehlen Icons wie in meinen Screenshots“) – Bilder: RouteOverlay.poiKinds (NeonMapView.swift)
 POI = {"shop": "ez-poi-shop", "grocery": "ez-poi-shop", "hospital": "ez-poi-cross", "pharmacy": "ez-poi-cross", "doctors": "ez-poi-cross",
-       "fuel": "ez-poi-fuel", "parking": "ez-poi-parking", "restaurant": "ez-poi-food", "fast_food": "ez-poi-food", "cafe": "ez-poi-food",
-       "charging_station": "ez-poi-charge"}
+       "fuel": "ez-poi-fuel", "parking": "ez-poi-parking", "restaurant": "ez-poi-food", "fast_food": "ez-poi-fastfood", "cafe": "ez-poi-coffee",
+       "charging_station": "ez-poi-charge", "clothing_store": "ez-poi-shirt", "bank": "ez-poi-cash", "atm": "ez-poi-cash",
+       "cinema": "ez-poi-cinema", "hairdresser": "ez-poi-barber", "lodging": "ez-poi-hotel", "school": "ez-poi-school",
+       "college": "ez-poi-school", "place_of_worship": "ez-poi-church", "playground": "ez-poi-playground"}
 def poi_layer(P):
     match = ["match", ["get", "class"]]
     for k, v in POI.items(): match += [k, v + P.get("poi_suffix", "")]  # GM-045: Neon City farbig

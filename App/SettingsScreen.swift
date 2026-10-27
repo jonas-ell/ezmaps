@@ -29,6 +29,14 @@ struct SettingsScreen: View {
                         }
                     }
                 }
+                if model.activeStyle == .pixelQuest {
+                    Section("Pixel Quest") {
+                        Picker(L("Standort-Marker"), selection: Binding(get: { model.settings.pixelMarkerGreen }, set: { v in model.updateSettings { $0.pixelMarkerGreen = v } })) {
+                            Text(L("Weiß")).tag(false)
+                            Text(L("Grün")).tag(true)
+                        }
+                    }
+                }
                 Section(L("Navigation")) {
                     Toggle(L("Sprachansagen"), isOn: binding(\.voice))
                     if SpeechService.bestGermanVoice == nil {

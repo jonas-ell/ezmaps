@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-057 – Zielbilder in die App: Wild West nach Red-Dead-Karten, Pixel Quest mit Nutzer-Grafiken, Neon-Waypoint, mehr Symbole, Standort-Marker je Stil
+
+**Ziel:** Nutzer: „setz mal alles jetzt in der App um, ich bewerte dann, lad es direkt auf mein Handy“. Toy Town gefällt nicht → bleibt bis zu den Codex-Grafiken wie bisher.
+
+**Dateien:** `tools/maplibre/build_style.py`, `tools/maplibre/check_style.py`, `App/MapStyles/*.json`, `Resources/Glyphs/Old Standard TT Regular` + `OFL-OldStandard.txt` (neu), `App/Assets.xcassets/PixelQuest/*` (neu, Grafiken des Nutzers – laut Nutzer nachgepixelt), `App/NeonMapView.swift`, `App/FollowCamera.swift` (PlayerMarker), `App/CarPlaySceneDelegate.swift`, `App/AppModel.swift`, `App/SettingsScreen.swift`, `App/en.lproj/Localizable.strings`
+
+**Geändert:**
+- Wild West wie Zielbild Runde 3: Pfirsich-Papier, Straßen als dünne Tintenlinien, weicher Wasserrand, Bahn mit Querstrichen, Häuser kaum sichtbar, Schrift Old Standard TT (OFL, eigene Glyphen), Ziel nur rotes X, Fadenkreuz durchgehend rot, Standort heller Pfeil.
+- Pixel Quest: Gras-, Bruchstein-, Wasser- und Schienen-Grafik des Nutzers, Symbole aus seinen Items (Hähnchen, Steak, Milcheimer, Smaragd, Lavaeimer, Redstone, Goldbarren, Truhe, Kessel, Papier, Schere, Bett, Buch, Glocke, Kuchen), Heiltrank und P-Schild gepixelt, Ziel rote Fahne, Standort weißer Marker; grün wählbar (Einstellungen → Pixel Quest → Standort-Marker).
+- Neon City: flacher lila Waypoint ohne Leuchten, Route breit und flach.
+- 16 Symbol-Arten statt 6 für alle Stile (Café, Imbiss, Kleidung, Bank, Kino, Friseur, Hotel, Schule, Kirche, Spielplatz neu); `check_style.py` prüft Arten × Stile.
+- Standort-Marker je Stil (Fahrt und Stand): Neon Codex-Pfeil, Wild West heller Pfeil, Pixel Quest Nutzer-Marker, Toy Town rotes Spielzeugauto, Klassik blauer Pfeil im Kreis.
+
+**Tatsächlich geprüft:** `check_style.py`: STIL OK (4 Schriften).
+
+**Ungetestet:** bis zum Mac-Build; Website zeigt die neuen Symbol-Arten noch nicht.
+
 ## GM-056 – Zielbilder: Pixel Quest mit den neuen Items des Nutzers, Toy Town mit Teppich-Ausschnitten (Platzhalter)
 
 **Ziel:** Nutzer: neue Minecraft-Items liegen bereit; „schneid dir die Häuser aus meinen Teppich-Referenzen raus“.

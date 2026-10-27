@@ -17,8 +17,21 @@ final class FollowCamera: NSObject {
 
     private weak var map: MLNMapView?
     // GM-026: Pfeil von Codex (Assets/Generated/Player/NeonV2), mit lila Leuchten während der Navigation
-    private let plainArrow = UIImage(named: "PlayerNeon") ?? RouteOverlay.arrowImage()
-    private let glowArrow = UIImage(named: "PlayerNeonGlow") ?? RouteOverlay.arrowImage()
+    private var plainArrow = UIImage(named: "PlayerNeon") ?? RouteOverlay.arrowImage()
+    private var glowArrow = UIImage(named: "PlayerNeonGlow") ?? RouteOverlay.arrowImage()
+    private var markerStyle: MapStyle?
+
+    /// GM-057: Standort-Marker je Stil (Zielbilder): Neon Codex-Pfeil, Pixel Quest Marker des Nutzers, Toy Town Spielzeugauto …
+    func setStyle(_ style: MapStyle) {
+        let key = style
+        guard markerStyle != key || style == .pixelQuest else { return }
+        markerStyle = key
+        let m = PlayerMarker.images(for: style)
+        plainArrow = m.plain
+        glowArrow = m.glow
+        arrow.image = plainArrow
+        lastSet = nil
+    }
     private lazy var arrow = UIImageView(image: plainArrow)
     var glow: (() -> Bool)?
     private var link: CADisplayLink?
@@ -152,5 +165,81 @@ final class FollowCamera: NSObject {
         arrow.isHidden = false
         if arrow.superview === map { map.bringSubviewToFront(arrow) }
         if map.showsUserLocation { map.showsUserLocation = false } // GM-027: kein zweiter (grauer) GPS-Punkt neben dem Pfeil
+    }
+}
+
+/// GM-057: Standort-Marker je Stil (Zielbilder des Nutzers). Fahr-Pfeil (FollowCamera) und Stand-Marker (PlayerLocationView).
+enum PlayerMarker {
+    static func images(for style: MapStyle) -> (plain: UIImage, glow: UIImage) {
+        switch style {
+        case .neonCity:
+            return (UIImage(named: "PlayerNeon") ?? RouteOverlay.arrowImage(), UIImage(named: "PlayerNeonGlow") ?? RouteOverlay.arrowImage())
+        case .pixelQuest:
+            let green = AppModel.shared.settings.pixelMarkerGreen
+            let img = pixel(UIImage(named: green ? "px-player-green" : "px-player"))
+            return (img, img)
+        case .toyTown:
+            let car = toyCar()
+            return (car, car)
+        case .wildWest:
+            let a = arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60)
+            return (a, a)
+        case .classic:
+            let a = classic()
+            return (a, a)
+        }
+    }
+
+    /// Marker der Nutzer-Grafik scharf (ohne Glätten) auf 60 pt
+    static func pixel(_ img: UIImage?) -> UIImage {
+        guard let img else { return RouteOverlay.arrowImage() }
+        return UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { ctx in
+            ctx.cgContext.interpolationQuality = .none
+            img.draw(in: CGRect(x: 12, y: 6, width: 36, height: 48))
+        }
+    }
+
+    static func arrow(fill: UIColor, rim: UIColor, size: CGFloat) -> UIImage {
+        UIGraphicsImageRenderer(size: CGSize(width: size, height: size)).image { ctx in
+            let k = size / 30
+            let p = UIBezierPath()
+            p.move(to: CGPoint(x: 15 * k, y: 3 * k)); p.addLine(to: CGPoint(x: 25 * k, y: 26 * k))
+            p.addLine(to: CGPoint(x: 15 * k, y: 20.5 * k)); p.addLine(to: CGPoint(x: 5 * k, y: 26 * k)); p.close()
+            p.lineJoinStyle = .round
+            ctx.cgContext.setShadow(offset: CGSize(width: 0, height: 1.5 * k), blur: 3 * k, color: UIColor.black.withAlphaComponent(0.5).cgColor)
+            fill.setFill(); p.fill()
+            ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
+            rim.setStroke(); p.lineWidth = 2 * k; p.stroke()
+        }
+    }
+
+    static func classic() -> UIImage {
+        UIGraphicsImageRenderer(size: CGSize(width: 44, height: 44)).image { ctx in
+            ctx.cgContext.setShadow(offset: CGSize(width: 0, height: 1.5), blur: 3, color: UIColor.black.withAlphaComponent(0.35).cgColor)
+            UIColor.white.setFill(); ctx.cgContext.fillEllipse(in: CGRect(x: 4, y: 4, width: 36, height: 36))
+            ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
+            let p = UIBezierPath()
+            p.move(to: CGPoint(x: 22, y: 11)); p.addLine(to: CGPoint(x: 31, y: 31)); p.addLine(to: CGPoint(x: 22, y: 26)); p.addLine(to: CGPoint(x: 13, y: 31)); p.close()
+            StyleTheme.hex(0x1a73e8).setFill(); p.fill()
+        }
+    }
+
+    /// Rotes Spielzeugauto von oben (Toy Town, Zielbild)
+    static func toyCar() -> UIImage {
+        UIGraphicsImageRenderer(size: CGSize(width: 44, height: 60)).image { ctx in
+            let g = ctx.cgContext
+            let ink = StyleTheme.hex(0x2f3640)
+            ink.setFill()
+            for (x, y) in [(5.0, 12.0), (35.0, 12.0), (5.0, 36.0), (35.0, 36.0)] { UIBezierPath(roundedRect: CGRect(x: x, y: y, width: 5, height: 11), cornerRadius: 1.5).fill() }
+            g.setShadow(offset: CGSize(width: 0, height: 2), blur: 3, color: UIColor.black.withAlphaComponent(0.35).cgColor)
+            let body = UIBezierPath(roundedRect: CGRect(x: 9, y: 4, width: 26, height: 52), cornerRadius: 10)
+            StyleTheme.hex(0xe23b2e).setFill(); body.fill()
+            g.setShadow(offset: .zero, blur: 0, color: nil)
+            ink.setStroke(); body.lineWidth = 2.5; body.stroke()
+            StyleTheme.hex(0xa8dcff).setFill()
+            for r in [CGRect(x: 13, y: 14, width: 18, height: 10), CGRect(x: 13, y: 38, width: 18, height: 8)] {
+                let w = UIBezierPath(roundedRect: r, cornerRadius: 3); w.fill(); w.lineWidth = 1.5; w.stroke()
+            }
+        }
     }
 }

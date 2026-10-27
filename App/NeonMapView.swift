@@ -110,8 +110,9 @@ final class RouteOverlay {
         style.addLayer(altLayer)
 
         let edge = MLNLineStyleLayer(identifier: "ez-route-edge", source: main)
-        edge.lineColor = NSExpression(forConstantValue: theme.routeEdge)
-        edge.lineWidth = NSExpression(forConstantValue: 9)
+        // GM-057: Neon City flach und breit wie der Waypoint-Pfad der Vorlage (kein dunkler Rand)
+        edge.lineColor = NSExpression(forConstantValue: mapStyle == .neonCity ? theme.route : theme.routeEdge)
+        edge.lineWidth = NSExpression(forConstantValue: mapStyle == .neonCity ? 11 : 9)
         edge.lineCap = NSExpression(forConstantValue: "round")
         edge.lineJoin = NSExpression(forConstantValue: "round")
         style.addLayer(edge)
@@ -242,24 +243,28 @@ final class RouteOverlay {
                 UIColor.white.setStroke(); pin.lineWidth = 2.5; pin.stroke()
                 UIColor.white.setFill(); UIBezierPath(ovalIn: CGRect(x: 19, y: 13, width: 10, height: 10)).fill()
             case .neonCity:
-                let d = UIBezierPath(roundedRect: CGRect(x: 11, y: 11, width: 26, height: 26), cornerRadius: 6)
-                d.apply(CGAffineTransform(translationX: -24, y: -24).concatenating(CGAffineTransform(rotationAngle: .pi / 4)).concatenating(CGAffineTransform(translationX: 24, y: 24)))
-                g.setShadow(offset: .zero, blur: 9, color: NeonColors.route.withAlphaComponent(0.9).cgColor)
+                // GM-057: flacher lila Vierstern ohne Leuchten (Zielbild Neon City)
+                let d = UIBezierPath()
+                d.move(to: CGPoint(x: 24, y: 7))
+                d.addCurve(to: CGPoint(x: 41, y: 24), controlPoint1: CGPoint(x: 28, y: 18), controlPoint2: CGPoint(x: 30, y: 20))
+                d.addCurve(to: CGPoint(x: 24, y: 41), controlPoint1: CGPoint(x: 30, y: 28), controlPoint2: CGPoint(x: 28, y: 30))
+                d.addCurve(to: CGPoint(x: 7, y: 24), controlPoint1: CGPoint(x: 20, y: 30), controlPoint2: CGPoint(x: 18, y: 28))
+                d.addCurve(to: CGPoint(x: 24, y: 7), controlPoint1: CGPoint(x: 18, y: 20), controlPoint2: CGPoint(x: 20, y: 18))
+                d.close()
                 NeonColors.route.setFill(); d.fill()
-                g.setShadow(offset: .zero, blur: 0, color: nil)
-                UIColor.white.setStroke(); d.lineWidth = 3; d.stroke()
-                let ring = UIBezierPath(ovalIn: CGRect(x: 18, y: 18, width: 12, height: 12))
-                ring.lineWidth = 3; ring.stroke()
+                StyleTheme.hex(0x5a1d8c).setStroke(); d.lineWidth = 1.5; d.stroke()
             case .wildWest:
-                let ink = StyleTheme.hex(0x3a2414)
-                let c1 = UIBezierPath(arcCenter: CGPoint(x: 24, y: 24), radius: 18, startAngle: 0.3, endAngle: 2 * .pi - 0.2, clockwise: true)
-                let c2 = UIBezierPath(arcCenter: CGPoint(x: 24.8, y: 23.4), radius: 17.2, startAngle: 1.2, endAngle: 2 * .pi + 0.6, clockwise: true)
-                ink.setStroke(); c1.lineWidth = 2.2; c1.stroke(); c2.lineWidth = 1.2; c2.stroke()
+                // GM-057: nur rotes X wie auf der Papierkarte
                 let x = UIBezierPath()
                 x.move(to: CGPoint(x: 14, y: 14)); x.addLine(to: CGPoint(x: 34, y: 34))
                 x.move(to: CGPoint(x: 34.5, y: 13.5)); x.addLine(to: CGPoint(x: 13.5, y: 34.5))
                 StyleTheme.hex(0xc0261f).setStroke(); x.lineWidth = 6; x.stroke()
             case .pixelQuest:
+                if let flag = UIImage(named: "px-flag") { // GM-057: rote Fahne des Nutzers
+                    g.interpolationQuality = .none
+                    flag.draw(in: CGRect(x: 4, y: 4, width: 40, height: 40))
+                    return
+                }
                 func px(_ x: Int, _ y: Int, _ w: Int, _ h: Int, _ c: Int) { StyleTheme.hex(c).setFill(); g.fill(CGRect(x: 6 + x * 3, y: y * 3, width: w * 3, height: h * 3)) }
                 px(2, 1, 2, 15, 0x1b1206); px(3, 1, 1, 14, 0x8a5a2b)           // Stange mit Rand
                 px(4, 1, 9, 7, 0x1b1206); px(4, 2, 8, 5, 0xe8453c); px(5, 3, 3, 2, 0xffcc33)   // Fahne
@@ -277,57 +282,56 @@ final class RouteOverlay {
         }
     }
 
-    /// GM-026: Kartensymbole wie in der Vorlage – weißes Symbol mit schwarzem Rand (Namen passen zu build_style.py POI)
+    /// GM-057: Kartensymbol-Arten (Name `ez-poi-<art><stil>`, passend zu build_style.py POI) mit SF Symbol und Neon-Farbe.
+    /// check_style.py liest diese Liste und poiSuffixes – beide hier als einfache Literale lassen.
+    static let poiKinds: [String: (String, UIColor)] = [
+        "shop": ("basket.fill", .white), "cross": ("cross.fill", StyleTheme.hex(0xff5fa2)), "fuel": ("fuelpump.fill", .white),
+        "parking": ("parkingsign", .white), "food": ("fork.knife", .white), "fastfood": ("takeoutbag.and.cup.and.straw.fill", .white),
+        "coffee": ("cup.and.saucer.fill", StyleTheme.hex(0x4fd4e8)), "charge": ("bolt.car.fill", StyleTheme.hex(0x5fd068)),
+        "shirt": ("tshirt.fill", .white), "cash": ("banknote.fill", StyleTheme.hex(0xf2c94c)), "cinema": ("film.fill", .white),
+        "barber": ("scissors", .white), "hotel": ("bed.double.fill", .white), "school": ("book.fill", .white),
+        "church": ("bell.fill", .white), "playground": ("figure.play", .white)
+    ]
+    static let poiSuffixes = ["", "-neon", "-west", "-px", "-toy"]
+
+    /// GM-026/057: Kartensymbole je Stil – Klassik/Neon weiße (Neon teils farbige) Silhouette mit schwarzem Rand,
+    /// Wild West schwarzer Knopf, Pixel Quest Item-Grafiken des Nutzers (Assets PixelQuest/px-<art>), Toy Town bunte Knöpfe
     static func poiImages() -> [String: UIImage] {
-        let white = UIColor(white: 0.96, alpha: 1)
-        let pink = UIColor(red: 0xff / 255.0, green: 0x5f / 255.0, blue: 0xa2 / 255.0, alpha: 1)
-        let green = UIColor(red: 0x5f / 255.0, green: 0xd0 / 255.0, blue: 0x68 / 255.0, alpha: 1)
-        let symbols: [String: (String, UIColor)] = [
-            "ez-poi-shop": ("basket.fill", white), "ez-poi-cross": ("cross.fill", white), "ez-poi-fuel": ("fuelpump.fill", white),
-            "ez-poi-parking": ("parkingsign", white), "ez-poi-food": ("fork.knife", white), "ez-poi-charge": ("bolt.car.fill", white),
-            // GM-045: Neon City – farbige Symbole wie auf der Übersichtskarte der Vorlage (eigene Zeichnung, SF Symbols)
-            // GM-048: wie die Pausenkarten-Bilder meist weiß, nur Krankenhaus (rosa) und Laden-Säule (grün) farbig
-            "ez-poi-shop-neon": ("basket.fill", white), "ez-poi-cross-neon": ("cross.fill", pink), "ez-poi-fuel-neon": ("fuelpump.fill", white),
-            "ez-poi-parking-neon": ("parkingsign", white), "ez-poi-food-neon": ("fork.knife", white), "ez-poi-charge-neon": ("bolt.car.fill", green),
-        ]
         var out: [String: UIImage] = [:]
         let cfg = UIImage.SymbolConfiguration(pointSize: 30, weight: .heavy)
-        // GM-049: Wild West – schwarzer runder Knopf mit weißem Zeichen (Papierkarten-Look, eigene Zeichnung aus SF Symbols)
-        let west = ["ez-poi-shop-west": "basket.fill", "ez-poi-cross-west": "cross.fill", "ez-poi-fuel-west": "fuelpump.fill",
-                    "ez-poi-parking-west": "parkingsign", "ez-poi-food-west": "fork.knife", "ez-poi-charge-west": "bolt.fill"]
-        for (name, sym) in west {
-            guard let glyph = UIImage(systemName: sym, withConfiguration: UIImage.SymbolConfiguration(pointSize: 17, weight: .bold)) else { continue }
-            out[name] = UIGraphicsImageRenderer(size: CGSize(width: 40, height: 40)).image { _ in
-                let ring = UIBezierPath(ovalIn: CGRect(x: 2, y: 2, width: 36, height: 36))
-                UIColor(red: 0x1b / 255.0, green: 0x14 / 255.0, blue: 0x0e / 255.0, alpha: 1).setFill()
-                ring.fill()
-                UIColor(red: 0xf2 / 255.0, green: 0xe4 / 255.0, blue: 0xbf / 255.0, alpha: 1).setStroke()
-                ring.lineWidth = 1.5
-                ring.stroke()
-                let g = glyph.withTintColor(UIColor(white: 0.97, alpha: 1), renderingMode: .alwaysOriginal)
-                g.draw(at: CGPoint(x: 20 - g.size.width / 2, y: 20 - g.size.height / 2))
-            }
-        }
-        // GM-050: Pixel Quest – Pixel-Schilder; Toy Town – runde bunte Knöpfe
-        let px = ["ez-poi-shop-px": "shop", "ez-poi-cross-px": "cross", "ez-poi-fuel-px": "fuel",
-                  "ez-poi-parking-px": "parking", "ez-poi-food-px": "food", "ez-poi-charge-px": "charge"]
-        for (name, kind) in px { out[name] = StylePatterns.pixelSign(kind) }
-        let toy = ["ez-poi-shop-toy": ("shop", "cart.fill"), "ez-poi-cross-toy": ("cross", "cross.fill"), "ez-poi-fuel-toy": ("fuel", "fuelpump.fill"),
-                   "ez-poi-parking-toy": ("parking", "parkingsign"), "ez-poi-food-toy": ("food", "fork.knife"), "ez-poi-charge-toy": ("charge", "bolt.fill")]
-        for (name, (kind, sym)) in toy { out[name] = StylePatterns.toyBadge(kind, symbol: sym) }
-        for (name, (sym, color)) in symbols {
-            guard let base = UIImage(systemName: sym, withConfiguration: cfg) else { continue }
+        func outlined(_ sym: String, _ color: UIColor) -> UIImage? {
+            guard let base = UIImage(systemName: sym, withConfiguration: cfg) else { return nil }
             let size = CGSize(width: base.size.width + 10, height: base.size.height + 10)
-            out[name] = UIGraphicsImageRenderer(size: size).image { _ in
+            return UIGraphicsImageRenderer(size: size).image { _ in
                 let black = base.withTintColor(.black, renderingMode: .alwaysOriginal)
-                let white = base.withTintColor(color, renderingMode: .alwaysOriginal)
+                let fill = base.withTintColor(color, renderingMode: .alwaysOriginal)
                 for dx in stride(from: -3.0, through: 3.0, by: 1.5) {
                     for dy in stride(from: -3.0, through: 3.0, by: 1.5) where dx * dx + dy * dy <= 9 {
                         black.draw(at: CGPoint(x: 5 + dx, y: 5 + dy))
                     }
                 }
-                white.draw(at: CGPoint(x: 5, y: 5))
+                fill.draw(at: CGPoint(x: 5, y: 5))
             }
+        }
+        func westBadge(_ sym: String) -> UIImage? {
+            guard let glyph = UIImage(systemName: sym, withConfiguration: UIImage.SymbolConfiguration(pointSize: 15, weight: .bold)) else { return nil }
+            return UIGraphicsImageRenderer(size: CGSize(width: 36, height: 36)).image { _ in
+                let ring = UIBezierPath(ovalIn: CGRect(x: 2, y: 2, width: 32, height: 32))
+                StyleTheme.hex(0x2b231b).setFill()
+                ring.fill()
+                StyleTheme.hex(0xe9d5b6).setStroke()
+                ring.lineWidth = 1.5
+                ring.stroke()
+                let g = glyph.withTintColor(UIColor(white: 0.97, alpha: 1), renderingMode: .alwaysOriginal)
+                g.draw(at: CGPoint(x: 18 - g.size.width / 2, y: 18 - g.size.height / 2))
+            }
+        }
+        for (kind, (sym, neon)) in poiKinds {
+            out["ez-poi-" + kind] = outlined(sym, UIColor(white: 0.96, alpha: 1))
+            out["ez-poi-" + kind + "-neon"] = outlined(sym, neon)
+            out["ez-poi-" + kind + "-west"] = westBadge(sym)
+            out["ez-poi-" + kind + "-px"] = UIImage(named: "px-" + kind).map(StylePatterns.pixelIcon) ?? StylePatterns.pixelSign(kind)
+            out["ez-poi-" + kind + "-toy"] = StylePatterns.toyBadge(kind, symbol: sym)
         }
         return out
     }
@@ -418,6 +422,7 @@ struct NeonMapView: UIViewRepresentable {
             c.overlay?.switchStyle(style)
             c.crosshair?.isHidden = true
         }
+        c.camera?.setStyle(style) // GM-057: Fahr-Pfeil je Stil
         if c.trailCount != trail.count {
             c.trailCount = trail.count
             c.overlay?.showTrail(trail)
@@ -447,6 +452,7 @@ struct NeonMapView: UIViewRepresentable {
             cam.target = { AppModel.shared.screen == .navigating ? AppModel.shared.cameraTarget : nil }
             cam.glow = { true }
             c.camera = cam
+            cam.setStyle(style)
         }
         if c.allowed != locationAllowed {
             c.allowed = locationAllowed
@@ -501,6 +507,7 @@ struct NeonMapView: UIViewRepresentable {
                         crosshair = v
                     }
                     crosshair?.color = color
+                    crosshair?.fade = style != .wildWest
                     crosshair?.isHidden = false
                 }
             }
@@ -517,6 +524,8 @@ struct NeonMapView: UIViewRepresentable {
 /// nach außen ausgeblendet – nicht über den ganzen Bildschirm. Neon City weiß, Wild West dunkelrot.
 final class CrosshairView: UIView {
     var color: UIColor = .white { didSet { setNeedsDisplay() } }
+    /// GM-057: Neon City blendet aus, Wild West durchgehende Striche
+    var fade = true { didSet { setNeedsDisplay() } }
 
     static func color(for style: MapStyle) -> UIColor? {
         switch style {
@@ -537,15 +546,15 @@ final class CrosshairView: UIView {
 
     override func draw(_ rect: CGRect) {
         let c = CGPoint(x: bounds.midX, y: bounds.midY)
-        let gap: CGFloat = 9, arm: CGFloat = min(110, bounds.width * 0.26), steps = 14
+        let gap: CGFloat = fade ? 9 : 12, arm: CGFloat = fade ? min(110, bounds.width * 0.26) : 60, steps = 14
         for (dx, dy) in [(1.0, 0.0), (-1.0, 0.0), (0.0, 1.0), (0.0, -1.0)] {
             for i in 0..<steps {
                 let a0 = gap + arm * CGFloat(i) / CGFloat(steps), a1 = gap + arm * CGFloat(i + 1) / CGFloat(steps)
                 let p = UIBezierPath()
                 p.move(to: CGPoint(x: c.x + dx * a0, y: c.y + dy * a0))
                 p.addLine(to: CGPoint(x: c.x + dx * a1, y: c.y + dy * a1))
-                p.lineWidth = 1.6
-                color.withAlphaComponent(color.cgColor.alpha * (1 - CGFloat(i) / CGFloat(steps))).setStroke()
+                p.lineWidth = fade ? 1.6 : 2
+                color.withAlphaComponent(fade ? color.cgColor.alpha * (1 - CGFloat(i) / CGFloat(steps)) : color.cgColor.alpha).setStroke()
                 p.stroke()
             }
         }
@@ -570,12 +579,27 @@ struct OSMAttribution: View {
 final class PlayerLocationView: MLNUserLocationAnnotationView {
     private let arrow = UIImageView(image: PlayerLocationView.image)
     private var lastHeading: Double = 0
+    private var shownStyle: MapStyle?
+    private var shownGreen = false
 
     override func update() {
         if arrow.superview == nil {
             frame = CGRect(x: 0, y: 0, width: 30, height: 30)
             arrow.frame = bounds
             addSubview(arrow)
+        }
+        // GM-057: Marker je Stil (Neon heller Pfeil, Pixel Quest Marker des Nutzers, Toy Town Auto, Klassik blau …)
+        let style = MainActor.assumeIsolated { AppModel.shared.activeStyle }
+        let green = MainActor.assumeIsolated { AppModel.shared.settings.pixelMarkerGreen }
+        if style != shownStyle || green != shownGreen {
+            shownStyle = style
+            shownGreen = green
+            arrow.image = style == .neonCity ? PlayerLocationView.image : PlayerMarker.images(for: style).plain
+            let size: CGFloat = style == .neonCity ? 30 : 34
+            frame.size = CGSize(width: size, height: size)
+            arrow.frame = bounds
+            arrow.contentMode = .scaleAspectFit
+            arrow.layer.magnificationFilter = style == .pixelQuest ? .nearest : .linear
         }
         if let l = userLocation?.location, l.course >= 0, l.speed > 1 {
             lastHeading = l.course
@@ -640,8 +664,8 @@ enum StylePatterns {
 
     static func all() -> [String: UIImage] {
         var out: [String: UIImage] = [:]
-        // Pixel Quest – Blockwelt (16 × 16 Kunstpixel je Block)
-        out["ez-pat-grass-px"] = pixelTile(16) { x, y in
+        // Pixel Quest – Blockwelt (16 × 16 Kunstpixel je Block); GM-057: Gras, Bruchstein, Wasser, Schiene = Grafiken des Nutzers
+        out["ez-pat-grass-px-own"] = pixelTile(16) { x, y in
             let h = hash(x, y, 1)
             return h < 0.18 ? rgb(79, 138, 46) : h < 0.42 ? rgb(106, 173, 63) : h > 0.93 ? rgb(121, 189, 74) : rgb(93, 155, 55)
         }
@@ -649,7 +673,7 @@ enum StylePatterns {
             let h = hash(x, y, 3)
             return h < 0.25 ? rgb(30, 74, 22) : h < 0.55 ? rgb(47, 107, 34) : h > 0.9 ? rgb(72, 140, 50) : rgb(38, 92, 28)
         }
-        out["ez-pat-water-px"] = pixelTile(16) { x, y in
+        out["ez-pat-water-px-own"] = pixelTile(16) { x, y in
             let h = hash(x, y, 4)
             return (y % 5 == 1 && (x + y) % 7 < 3) ? rgb(110, 160, 245) : h < 0.3 ? rgb(56, 104, 214) : rgb(63, 118, 228)
         }
@@ -660,7 +684,7 @@ enum StylePatterns {
             let h = hash(x, y, 6)
             return h < 0.2 ? rgb(110, 110, 110) : h > 0.85 ? rgb(160, 160, 160) : rgb(138, 138, 138)
         }
-        out["ez-pat-road-px"] = pixelTile(8) { x, y in
+        out["ez-pat-road-px-own"] = pixelTile(8) { x, y in
             let h = hash(x, y, 7)
             return h < 0.25 ? rgb(118, 118, 118) : h > 0.85 ? rgb(170, 170, 170) : rgb(143, 143, 143)
         }
@@ -681,6 +705,10 @@ enum StylePatterns {
             let mortar = y % 4 == 3 || (x + (y / 4) % 2 * 4) % 8 == 7
             return mortar ? rgb(196, 180, 170) : hash(x, y, 11) < 0.3 ? rgb(160, 70, 52) : rgb(146, 60, 44)
         }
+        out["ez-pat-grass-px"] = UIImage(named: "px-tex-grass") ?? out["ez-pat-grass-px-own"]
+        out["ez-pat-road-px"] = UIImage(named: "px-tex-cobble") ?? out["ez-pat-road-px-own"]
+        out["ez-pat-water-px"] = UIImage(named: "px-tex-water") ?? out["ez-pat-water-px-own"]
+        out["ez-pat-rail-px"] = UIImage(named: "px-tex-rail") ?? out["ez-pat-road-px-own"]
         // Toy Town
         out["ez-pat-lawn-toy"] = UIGraphicsImageRenderer(size: CGSize(width: 64, height: 64)).image { ctx in
             rgb(141, 198, 63).setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 64, height: 64))
@@ -713,6 +741,18 @@ enum StylePatterns {
 
     /// Pixel-Schild: farbiges Quadrat, weißer Rahmen, schwarze Kante, Pixel-Zeichen (wie das „P“ im Prototyp)
     static func pixelSign(_ kind: String) -> UIImage {
+        if kind == "cross" {
+            return pixelIcon(pixelSprite(["......kk........", ".....kbbk.......", "......kk........", ".....kwwk.......", ".....kwwk.......",
+                                          "....kwwwwk......", "...kwrrrrwk.....", "..kwrrRrrrrk....", "..krrRRrrrrk....", "..krrrrrrrrk....",
+                                          "..krrrrrrrrk....", "...krrrrrrk.....", "....kkkkkk......"].map { "  " + $0 },
+                                         ["k": rgb(27, 27, 27), "b": rgb(138, 90, 43), "w": rgb(207, 232, 255), "r": rgb(212, 42, 58), "R": rgb(255, 138, 154)]))
+        }
+        if kind == "parking" {
+            return pixelIcon(pixelSprite(["", ".kkkkkkkkkkkkk..", ".kwwwwwwwwwwwk..", ".kwwkkkkkwwwwk..", ".kwwkwwwwkwwwk..", ".kwwkwwwwkwwwk..",
+                                          ".kwwkkkkkwwwwk..", ".kwwkwwwwwwwwk..", ".kwwkwwwwwwwwk..", ".kwwwwwwwwwwwk..", ".kkkkkkkkkkkkk..",
+                                          "......kbk.......", "......kbk.......", "......kbk.......", ".....kkkkk......"],
+                                         ["k": rgb(42, 28, 14), "w": rgb(184, 148, 92), "b": rgb(108, 84, 48)]))
+        }
         let rows = pixelGlyphs[kind] ?? []
         let bg = pixelColors[kind] ?? .gray
         return pixelTile(13) { x, y in
@@ -725,7 +765,28 @@ enum StylePatterns {
     }
 
     static let toyColors: [String: UIColor] = ["food": rgb(76, 175, 80), "parking": rgb(31, 111, 224), "shop": rgb(245, 184, 0),
-                                               "cross": rgb(232, 69, 60), "fuel": rgb(255, 122, 0), "charge": rgb(43, 181, 160)]
+                                               "cross": rgb(232, 69, 60), "fuel": rgb(255, 122, 0), "charge": rgb(43, 181, 160),
+                                               "fastfood": rgb(229, 115, 32), "coffee": rgb(141, 92, 62), "shirt": rgb(156, 89, 209),
+                                               "cash": rgb(46, 160, 67), "cinema": rgb(60, 60, 70), "barber": rgb(0, 150, 199),
+                                               "hotel": rgb(63, 81, 181), "school": rgb(255, 160, 0), "church": rgb(121, 85, 72),
+                                               "playground": rgb(233, 30, 99)]
+
+    /// GM-057: Item-Grafik (Pixel Quest) mit hartem Schatten, 28 pt
+    static func pixelIcon(_ item: UIImage) -> UIImage {
+        UIGraphicsImageRenderer(size: CGSize(width: 32, height: 32)).image { ctx in
+            ctx.cgContext.interpolationQuality = .none
+            ctx.cgContext.setShadow(offset: CGSize(width: 1.5, height: 1.5), blur: 0, color: UIColor.black.withAlphaComponent(0.6).cgColor)
+            item.draw(in: CGRect(x: 2, y: 2, width: 28, height: 28))
+        }
+    }
+
+    /// GM-057: Heiltrank (Krankenhaus) und Holzschild mit P (Parken), selbst gepixelt – keine Nutzer-Grafik vorhanden
+    static func pixelSprite(_ rows: [String], _ pal: [Character: UIColor]) -> UIImage {
+        pixelTile(16) { x, y in
+            guard y < rows.count, x < rows[y].count else { return .clear }
+            return pal[Array(rows[y])[x]] ?? .clear
+        }
+    }
 
     /// Toy-Town-Knopf: farbiger Kreis, weißer Rand, weißes Zeichen
     static func toyBadge(_ kind: String, symbol: String) -> UIImage {
