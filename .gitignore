@@ -21,6 +21,8 @@ Secrets.xcconfig
 Thumbs.db
 
 tools/prototype/fonts/
+# GM-043: Pricedown nur lokal (mac_build.sh kopiert sie aus ~/EzMapsPrivate)
+App/Fonts/Pricedown.otf
 
 # OSM-Rohdaten (groß) und lokal lizenzierte Schrift
 tools/prototype/raw/

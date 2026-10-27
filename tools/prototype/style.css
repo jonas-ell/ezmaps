@@ -5,6 +5,11 @@
 .t-neon    { --accent: #a13df0; --accent2: #d9ad3a; --ok: #58b05f; --panel: rgba(0,0,0,.82); --fg: #fff; --muted: #a9a9ad; --selbg: #fff; --selfg: #000; --head: Pricedown, Impact, sans-serif; --body: Inter, sans-serif; --edge: 0 solid transparent; --radius: 0px; --line: rgba(255,255,255,.12); --hs: 1; --bs: 1; --status: #fff; --solid: #141416; --shadow: none; }
 .t-western { --accent: #c0261f; --accent2: #b8862b; --ok: #c0261f; --panel: #efe2c0; --fg: #2e1e10; --muted: #6b5236; --selbg: #2e1e10; --selfg: #f2e4bf; --head: Rye, serif; --body: Inter, sans-serif; --edge: 3px double #4a3220; --radius: 2px; --line: rgba(74,50,32,.25); --hs: .74; --bs: 1; --status: #2e1e10; --solid: #e6d3a8; --shadow: 0 3px 10px rgba(60,35,15,.3); }
 .t-pixel   { --accent: #ffcc33; --accent2: #ff6b3d; --ok: #ffcc33; --panel: #1a2a6c; --fg: #fff; --muted: #b8c4ff; --selbg: #ffcc33; --selfg: #1a1a1a; --head: 'Press Start 2P', monospace; --body: VT323, monospace; --edge: 2px solid #fff; --radius: 2px; --line: rgba(255,255,255,.2); --hs: .5; --bs: 1.32; --status: #fff; --solid: #101a48; --shadow: 0 0 0 2px #000, inset 0 0 0 2px #0d1640; }
+.t-classic { --accent: #1a73e8; --accent2: #f29900; --ok: #1e8e3e; --panel: #ffffff; --fg: #1f2933; --muted: #6b7280; --selbg: #1a73e8; --selfg: #fff; --head: Inter, sans-serif; --body: Inter, sans-serif; --edge: 0 solid transparent; --radius: 12px; --line: rgba(0,0,0,.1); --hs: .8; --bs: 1; --status: #1f2933; --solid: #e8eef6; --shadow: 0 2px 10px rgba(0,0,0,.15); } /* GM-025: Gratis-Stil */
+.t-classic .head { font-weight: 800; letter-spacing: -.5px; }
+.t-classic { --osmshadow: rgba(255,255,255,.8); --statusbg: rgba(255,255,255,.75); }
+.st-classic .sw { background: linear-gradient(135deg, #f2efe9 40%, #1a73e8 40% 55%, #f2efe9 55%); }
+.sf-classic { font-family: Inter; font-weight: 800; }
 .t-toy     { --accent: #ff7a00; --accent2: #1f6fe0; --ok: #2fb94a; --panel: #fff; --fg: #2f3640; --muted: #6b7280; --selbg: #ffd23f; --selfg: #2f3640; --head: Fredoka, sans-serif; --body: Fredoka, Inter, sans-serif; --edge: 2.5px solid #2f3640; --radius: 14px; --line: rgba(47,54,64,.15); --hs: .82; --bs: 1.04; --status: #2f3640; --solid: #bfe6ff; --shadow: 0 3px 0 #2f3640; }
 
 /* ---------------- Seite ---------------- */

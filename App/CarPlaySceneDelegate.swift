@@ -52,7 +52,10 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         ]
         mapTemplate = template
         interfaceController.setRootTemplate(template, animated: false, completion: nil)
-        MainActor.assumeIsolated { observe() }
+        MainActor.assumeIsolated {
+            model.carPlayConnected = true // GM-043: Stil-Test zählt auch im Auto
+            observe()
+        }
     }
 
     func templateApplicationScene(
@@ -66,6 +69,11 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         mapController = nil
         self.interfaceController = nil
         self.carWindow = nil
+        MainActor.assumeIsolated {
+            model.carPlayConnected = false
+            model.saveTrialNow()
+            model.parkCar() // GM-043: „Wo hab ich geparkt?“ – Standort beim Trennen merken
+        }
     }
 
     private func mapButton(_ symbol: String, action: @escaping () -> Void) -> CPMapButton {
@@ -85,6 +93,9 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
             _ = model.selectedRoute
             _ = model.isRouting
             _ = model.navCoordinate
+            _ = model.activeStyle
+            _ = model.trail
+            _ = model.trialRemaining
         } onChange: { [weak self] in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated {
@@ -101,6 +112,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         mapController?.show(routes: model.routes, selected: model.selectedRoute, destination: model.destination?.coordinate,
                             revision: model.routeRevision, navigating: model.screen == .navigating, limit: model.settings.showSpeedLimit ? model.nav?.speedLimit : nil,
                             follow: model.navCoordinate, heading: model.navHeading, speedKmh: model.navSpeedKmh)
+        mapController?.update(style: model.activeStyle, trail: model.trail, trialRemaining: model.trialRemaining)
         switch model.screen {
         case .preview:
             if !model.routes.isEmpty && shownRevision != model.routeRevision, let t = makeTrip() {
@@ -260,11 +272,16 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     private var selected = -1
     private var navigating = false
     private var camera: FollowCamera?
+    /// GM-043: Kartenstil im Auto (gleich wie auf dem iPhone, inkl. Stil-Test)
+    private var shownStyle: MapStyle = .classic
+    private var trailCount = 0
+    private let trialLabel = UILabel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = NeonColors.background
-        let map = NeonMap.make(frame: view.bounds, zoom: 15)
+        shownStyle = AppModel.shared.activeStyle
+        let map = NeonMap.make(frame: view.bounds, zoom: 15, style: shownStyle)
         map.isPitchEnabled = false
         map.compassView.isHidden = true // GM-024: kein Kompass im Auto (Norden steht ohnehin über die Fahrtrichtung fest)
         map.attributionButton.isHidden = true // Hinweis steht als Text unten rechts
@@ -282,7 +299,26 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         cam.restoreUserLocation = false // GM-027: im Auto nie den GPS-Punkt von MapLibre
         camera = cam
         cam.start()
-        overlay = RouteOverlay(map: map)
+        let ov = RouteOverlay(map: map)
+        ov.theme = StyleTheme.of(shownStyle)
+        overlay = ov
+
+        // GM-043: kleine Test-Uhr oben rechts unter dem Hinweis („Test 4:12“), nur während eines Stil-Tests
+        trialLabel.font = .monospacedDigitSystemFont(ofSize: 13, weight: .bold)
+        trialLabel.textColor = .white
+        trialLabel.textAlignment = .center
+        trialLabel.backgroundColor = UIColor(red: 28 / 255.0, green: 28 / 255.0, blue: 32 / 255.0, alpha: 0.8)
+        trialLabel.layer.cornerRadius = 11
+        trialLabel.clipsToBounds = true
+        trialLabel.isHidden = true
+        trialLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(trialLabel)
+        NSLayoutConstraint.activate([
+            trialLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8),
+            trialLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            trialLabel.heightAnchor.constraint(equalToConstant: 22),
+            trialLabel.widthAnchor.constraint(equalToConstant: 92),
+        ])
 
         let label = UILabel()
         label.text = "© OpenMapTiles\n" + L("© OpenStreetMap-Mitwirkende") // GM-027: zweizeilig, schmal genug für die Ecke
@@ -322,6 +358,25 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
 
     func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
         overlay?.styleLoaded(style)
+    }
+
+    /// GM-043: Stil, Leuchtspur und Test-Uhr (vom CarPlay-Delegate bei jeder Änderung aufgerufen)
+    func update(style: MapStyle, trail: [Coordinate], trialRemaining: TimeInterval?) {
+        if style != shownStyle {
+            shownStyle = style
+            overlay?.switchStyle(style)
+        }
+        if trail.count != trailCount {
+            trailCount = trail.count
+            overlay?.showTrail(trail)
+        }
+        if let r = trialRemaining {
+            let s = Int(r.rounded(.up))
+            trialLabel.text = String(format: L("Test %d:%02d"), s / 60, s % 60)
+            trialLabel.isHidden = false
+        } else {
+            trialLabel.isHidden = true
+        }
     }
 
     func show(routes: [Route], selected: Int, destination: Coordinate?, revision: Int, navigating: Bool, limit: Int?,

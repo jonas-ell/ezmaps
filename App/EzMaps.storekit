@@ -1,0 +1,179 @@
+{
+  "identifier": "725A2CAC-270F-471D-92D4-1B5B0E567849",
+  "nonRenewingSubscriptions": [],
+  "products": [
+    {
+      "displayPrice": "79.99",
+      "familyShareable": true,
+      "internalID": "3177373452",
+      "localizations": [
+        {
+          "description": "Alle Stile und jeder neue Stil, einmal zahlen",
+          "displayName": "EzMaps Plus für immer",
+          "locale": "de"
+        },
+        {
+          "description": "Alle Stile und jeder neue Stil, einmal zahlen",
+          "displayName": "EzMaps Plus für immer",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "ezmaps.plus.lifetime",
+      "referenceName": "EzMaps Plus für immer",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "39.99",
+      "familyShareable": true,
+      "internalID": "2020333209",
+      "localizations": [
+        {
+          "description": "Kartenstil Neon City",
+          "displayName": "Neon City",
+          "locale": "de"
+        },
+        {
+          "description": "Kartenstil Neon City",
+          "displayName": "Neon City",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "ezmaps.style.neon",
+      "referenceName": "Neon City",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29.99",
+      "familyShareable": true,
+      "internalID": "2389660824",
+      "localizations": [
+        {
+          "description": "Kartenstil Wild West",
+          "displayName": "Wild West",
+          "locale": "de"
+        },
+        {
+          "description": "Kartenstil Wild West",
+          "displayName": "Wild West",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "ezmaps.style.western",
+      "referenceName": "Wild West",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29.99",
+      "familyShareable": true,
+      "internalID": "1366613661",
+      "localizations": [
+        {
+          "description": "Kartenstil Pixel Quest",
+          "displayName": "Pixel Quest",
+          "locale": "de"
+        },
+        {
+          "description": "Kartenstil Pixel Quest",
+          "displayName": "Pixel Quest",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "ezmaps.style.pixel",
+      "referenceName": "Pixel Quest",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29.99",
+      "familyShareable": true,
+      "internalID": "1503293759",
+      "localizations": [
+        {
+          "description": "Kartenstil Toy Town",
+          "displayName": "Toy Town",
+          "locale": "de"
+        },
+        {
+          "description": "Kartenstil Toy Town",
+          "displayName": "Toy Town",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "ezmaps.style.toy",
+      "referenceName": "Toy Town",
+      "type": "NonConsumable"
+    }
+  ],
+  "settings": {
+    "_failTransactionsEnabled": false,
+    "_locale": "de_DE",
+    "_storefront": "DEU",
+    "_storeKitErrors": []
+  },
+  "subscriptionGroups": [
+    {
+      "id": "dd30a468",
+      "localizations": [],
+      "name": "EzMaps Plus",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "29.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "2362678097",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Alle Stile und jeder neue Stil",
+              "displayName": "EzMaps Plus Jahr",
+              "locale": "de"
+            },
+            {
+              "description": "Alle Stile und jeder neue Stil",
+              "displayName": "EzMaps Plus Jahr",
+              "locale": "en_US"
+            }
+          ],
+          "productID": "ezmaps.plus.yearly",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "EzMaps Plus Jahr",
+          "subscriptionGroupID": "dd30a468",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "4.99",
+          "familyShareable": false,
+          "groupNumber": 2,
+          "internalID": "3336168922",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Alle Stile und jeder neue Stil",
+              "displayName": "EzMaps Plus Monat",
+              "locale": "de"
+            },
+            {
+              "description": "Alle Stile und jeder neue Stil",
+              "displayName": "EzMaps Plus Monat",
+              "locale": "en_US"
+            }
+          ],
+          "productID": "ezmaps.plus.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "EzMaps Plus Monat",
+          "subscriptionGroupID": "dd30a468",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        }
+      ]
+    }
+  ],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}

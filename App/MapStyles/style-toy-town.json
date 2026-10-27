@@ -1,0 +1,1697 @@
+{
+ "version": 8,
+ "name": "EzMaps Toy Town",
+ "metadata": {
+  "ezmaps:source": "tools/maplibre/build_style.py – Werte aus tools/prototype/js/map.js"
+ },
+ "sources": {
+  "openmaptiles": {
+   "type": "vector",
+   "url": "https://tiles.openfreemap.org/planet",
+   "attribution": "<a href=\"https://openfreemap.org\">OpenFreeMap</a> · © <a href=\"https://www.openmaptiles.org/\">OpenMapTiles</a> · © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap-Mitwirkende</a>"
+  }
+ },
+ "glyphs": "asset://Glyphs/{fontstack}/{range}.pbf",
+ "layers": [
+  {
+   "id": "land",
+   "type": "background",
+   "paint": {
+    "background-color": "#8dc63f"
+   }
+  },
+  {
+   "id": "farm",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landcover",
+   "paint": {
+    "fill-color": "#b9d86a",
+    "fill-antialias": true
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "farmland"
+   ]
+  },
+  {
+   "id": "forest",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landcover",
+   "paint": {
+    "fill-color": "#62b235",
+    "fill-antialias": true
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "wood"
+   ]
+  },
+  {
+   "id": "grass",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landcover",
+   "paint": {
+    "fill-color": "#7cc142",
+    "fill-antialias": true
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "grass"
+   ]
+  },
+  {
+   "id": "park",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "park",
+   "paint": {
+    "fill-color": "#7cc142",
+    "fill-antialias": true
+   }
+  },
+  {
+   "id": "residential",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#a3d65a",
+    "fill-antialias": true
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "residential",
+      "suburb",
+      "neighbourhood"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "industrial",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cfd0d2",
+    "fill-antialias": true
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "industrial",
+      "commercial",
+      "retail",
+      "railway",
+      "garages"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "landuse-green",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#7cc142",
+    "fill-antialias": true
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "cemetery",
+      "pitch",
+      "playground",
+      "park",
+      "zoo"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "water",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "water",
+   "paint": {
+    "fill-color": "#4ab0ea",
+    "fill-antialias": true
+   },
+   "filter": [
+    "!=",
+    [
+     "get",
+     "class"
+    ],
+    "swimming_pool"
+   ]
+  },
+  {
+   "id": "river",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "waterway",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#4ab0ea",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     1,
+     5,
+     1,
+     6,
+     1,
+     7,
+     1,
+     8,
+     1,
+     9,
+     1,
+     10,
+     1,
+     11,
+     1,
+     12,
+     1,
+     13,
+     1.481,
+     14,
+     2.962,
+     15,
+     5.923,
+     16,
+     11.847,
+     17,
+     23.694,
+     18,
+     47.388,
+     19,
+     94.776,
+     20,
+     189.552,
+     21,
+     379.104,
+     22,
+     758.208
+    ]
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "river",
+      "canal"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "stream",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "waterway",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#4ab0ea",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     0.6,
+     5,
+     0.6,
+     6,
+     0.6,
+     7,
+     0.6,
+     8,
+     0.6,
+     9,
+     0.6,
+     10,
+     0.6,
+     11,
+     0.6,
+     12,
+     0.6,
+     13,
+     0.6,
+     14,
+     0.987,
+     15,
+     1.974,
+     16,
+     3.949,
+     17,
+     7.898,
+     18,
+     15.796,
+     19,
+     31.592,
+     20,
+     63.184,
+     21,
+     126.368,
+     22,
+     252.736
+    ]
+   },
+   "filter": [
+    "!",
+    [
+     "in",
+     [
+      "get",
+      "class"
+     ],
+     [
+      "literal",
+      [
+       "river",
+       "canal"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "building",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "paint": {
+    "fill-color": "#f6d743",
+    "fill-antialias": true,
+    "fill-outline-color": "#2f3640"
+   }
+  },
+  {
+   "id": "rail",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "butt",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#2f3640",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     1,
+     5,
+     1,
+     6,
+     1,
+     7,
+     1,
+     8,
+     1,
+     9,
+     1,
+     10,
+     1,
+     11,
+     1,
+     12,
+     1,
+     13,
+     1,
+     14,
+     1,
+     15,
+     1,
+     16,
+     1.974,
+     17,
+     3.949,
+     18,
+     7.898,
+     19,
+     15.796,
+     20,
+     31.592,
+     21,
+     63.184,
+     22,
+     126.368
+    ]
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "rail",
+      "transit"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "road-service-casing",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#c9cbce",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     2.6,
+     5,
+     2.6,
+     6,
+     2.6,
+     7,
+     2.6,
+     8,
+     2.6,
+     9,
+     2.6,
+     10,
+     2.6,
+     11,
+     2.6,
+     12,
+     2.6,
+     13,
+     2.6,
+     14,
+     2.6,
+     15,
+     4.393,
+     16,
+     8.787,
+     17,
+     17.573,
+     18,
+     35.146,
+     19,
+     70.292,
+     20,
+     140.584,
+     21,
+     281.169,
+     22,
+     562.337
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "service"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ],
+   "minzoom": 14
+  },
+  {
+   "id": "road-minor-casing",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#c9cbce",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     3.0,
+     5,
+     3.0,
+     6,
+     3.0,
+     7,
+     3.0,
+     8,
+     3.0,
+     9,
+     3.0,
+     10,
+     3.0,
+     11,
+     3.0,
+     12,
+     3.0,
+     13,
+     3.0,
+     14,
+     3.406,
+     15,
+     6.812,
+     16,
+     13.624,
+     17,
+     27.248,
+     18,
+     54.496,
+     19,
+     108.992,
+     20,
+     217.985,
+     21,
+     435.969,
+     22,
+     871.939
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "minor"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ],
+   "minzoom": 12
+  },
+  {
+   "id": "road-tertiary-casing",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#c9cbce",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     3.6,
+     5,
+     3.6,
+     6,
+     3.6,
+     7,
+     3.6,
+     8,
+     3.6,
+     9,
+     3.6,
+     10,
+     3.6,
+     11,
+     3.6,
+     12,
+     3.6,
+     13,
+     3.6,
+     14,
+     4.097,
+     15,
+     8.194,
+     16,
+     16.388,
+     17,
+     32.777,
+     18,
+     65.553,
+     19,
+     131.107,
+     20,
+     262.213,
+     21,
+     524.427,
+     22,
+     1048.854
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "tertiary"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ],
+   "minzoom": 10.5
+  },
+  {
+   "id": "road-secondary-casing",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#c9cbce",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     4.0,
+     5,
+     4.0,
+     6,
+     4.0,
+     7,
+     4.0,
+     8,
+     4.0,
+     9,
+     4.0,
+     10,
+     4.0,
+     11,
+     4.0,
+     12,
+     4.0,
+     13,
+     4.0,
+     14,
+     4.443,
+     15,
+     8.885,
+     16,
+     17.77,
+     17,
+     35.541,
+     18,
+     71.082,
+     19,
+     142.164,
+     20,
+     284.328,
+     21,
+     568.656,
+     22,
+     1137.311
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "secondary"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ],
+   "minzoom": 9
+  },
+  {
+   "id": "road-primary-casing",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#c9cbce",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     4.6,
+     5,
+     4.6,
+     6,
+     4.6,
+     7,
+     4.6,
+     8,
+     4.6,
+     9,
+     4.6,
+     10,
+     4.6,
+     11,
+     4.6,
+     12,
+     4.6,
+     13,
+     4.6,
+     14,
+     5.134,
+     15,
+     10.267,
+     16,
+     20.535,
+     17,
+     41.07,
+     18,
+     82.139,
+     19,
+     164.278,
+     20,
+     328.557,
+     21,
+     657.113,
+     22,
+     1314.227
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "primary"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ],
+   "minzoom": 7
+  },
+  {
+   "id": "road-trunk-casing",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#c9cbce",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     5.2,
+     5,
+     5.2,
+     6,
+     5.2,
+     7,
+     5.2,
+     8,
+     5.2,
+     9,
+     5.2,
+     10,
+     5.2,
+     11,
+     5.2,
+     12,
+     5.2,
+     13,
+     5.2,
+     14,
+     5.479,
+     15,
+     10.958,
+     16,
+     21.917,
+     17,
+     43.834,
+     18,
+     87.668,
+     19,
+     175.336,
+     20,
+     350.671,
+     21,
+     701.342,
+     22,
+     1402.684
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "trunk"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  },
+  {
+   "id": "road-motorway-casing",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#c9cbce",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     6.0,
+     5,
+     6.0,
+     6,
+     6.0,
+     7,
+     6.0,
+     8,
+     6.0,
+     9,
+     6.0,
+     10,
+     6.0,
+     11,
+     6.0,
+     12,
+     6.0,
+     13,
+     6.0,
+     14,
+     6.516,
+     15,
+     13.032,
+     16,
+     26.063,
+     17,
+     52.127,
+     18,
+     104.254,
+     19,
+     208.507,
+     20,
+     417.014,
+     21,
+     834.028,
+     22,
+     1668.057
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "motorway"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  },
+  {
+   "id": "road-service",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#66686c",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     1,
+     5,
+     1,
+     6,
+     1,
+     7,
+     1,
+     8,
+     1,
+     9,
+     1,
+     10,
+     1,
+     11,
+     1,
+     12,
+     1,
+     13,
+     1,
+     14,
+     1.209,
+     15,
+     2.419,
+     16,
+     4.838,
+     17,
+     9.675,
+     18,
+     19.35,
+     19,
+     38.7,
+     20,
+     77.4,
+     21,
+     154.801,
+     22,
+     309.601
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "service"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ],
+   "minzoom": 14
+  },
+  {
+   "id": "road-minor",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#66686c",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     1.4,
+     5,
+     1.4,
+     6,
+     1.4,
+     7,
+     1.4,
+     8,
+     1.4,
+     9,
+     1.4,
+     10,
+     1.4,
+     11,
+     1.4,
+     12,
+     1.4,
+     13,
+     1.4,
+     14,
+     2.419,
+     15,
+     4.838,
+     16,
+     9.675,
+     17,
+     19.35,
+     18,
+     38.7,
+     19,
+     77.4,
+     20,
+     154.801,
+     21,
+     309.601,
+     22,
+     619.203
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "minor"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ],
+   "minzoom": 12
+  },
+  {
+   "id": "road-tertiary",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#66686c",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     2,
+     5,
+     2,
+     6,
+     2,
+     7,
+     2,
+     8,
+     2,
+     9,
+     2,
+     10,
+     2,
+     11,
+     2,
+     12,
+     2,
+     13,
+     2,
+     14,
+     3.11,
+     15,
+     6.22,
+     16,
+     12.439,
+     17,
+     24.879,
+     18,
+     49.757,
+     19,
+     99.515,
+     20,
+     199.03,
+     21,
+     398.059,
+     22,
+     796.118
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "tertiary"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ],
+   "minzoom": 10.5
+  },
+  {
+   "id": "road-secondary",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#66686c",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     2.4,
+     5,
+     2.4,
+     6,
+     2.4,
+     7,
+     2.4,
+     8,
+     2.4,
+     9,
+     2.4,
+     10,
+     2.4,
+     11,
+     2.4,
+     12,
+     2.4,
+     13,
+     2.4,
+     14,
+     3.455,
+     15,
+     6.911,
+     16,
+     13.821,
+     17,
+     27.643,
+     18,
+     55.286,
+     19,
+     110.572,
+     20,
+     221.144,
+     21,
+     442.288,
+     22,
+     884.576
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "secondary"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ],
+   "minzoom": 9
+  },
+  {
+   "id": "road-primary",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#66686c",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     3,
+     5,
+     3,
+     6,
+     3,
+     7,
+     3,
+     8,
+     3,
+     9,
+     3,
+     10,
+     3,
+     11,
+     3,
+     12,
+     3,
+     13,
+     3,
+     14,
+     4.146,
+     15,
+     8.293,
+     16,
+     16.586,
+     17,
+     33.172,
+     18,
+     66.343,
+     19,
+     132.686,
+     20,
+     265.373,
+     21,
+     530.745,
+     22,
+     1061.491
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "primary"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ],
+   "minzoom": 7
+  },
+  {
+   "id": "road-trunk",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#66686c",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     3.6,
+     5,
+     3.6,
+     6,
+     3.6,
+     7,
+     3.6,
+     8,
+     3.6,
+     9,
+     3.6,
+     10,
+     3.6,
+     11,
+     3.6,
+     12,
+     3.6,
+     13,
+     3.6,
+     14,
+     4.492,
+     15,
+     8.984,
+     16,
+     17.968,
+     17,
+     35.936,
+     18,
+     71.872,
+     19,
+     143.744,
+     20,
+     287.487,
+     21,
+     574.974,
+     22,
+     1149.948
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "trunk"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  },
+  {
+   "id": "road-motorway",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#66686c",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     4.4,
+     5,
+     4.4,
+     6,
+     4.4,
+     7,
+     4.4,
+     8,
+     4.4,
+     9,
+     4.4,
+     10,
+     4.4,
+     11,
+     4.4,
+     12,
+     4.4,
+     13,
+     4.4,
+     14,
+     5.529,
+     15,
+     11.057,
+     16,
+     22.114,
+     17,
+     44.229,
+     18,
+     88.458,
+     19,
+     176.915,
+     20,
+     353.83,
+     21,
+     707.66,
+     22,
+     1415.321
+    ]
+   },
+   "filter": [
+    "all",
+    [
+     "==",
+     [
+      "get",
+      "class"
+     ],
+     "motorway"
+    ],
+    [
+     "!=",
+     [
+      "get",
+      "brunnel"
+     ],
+     "tunnel"
+    ]
+   ]
+  },
+  {
+   "id": "road-names",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "transportation_name",
+   "minzoom": 13.5,
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "primary",
+      "secondary",
+      "tertiary",
+      "minor",
+      "trunk",
+      "service"
+     ]
+    ]
+   ],
+   "layout": {
+    "symbol-placement": "line",
+    "text-field": [
+     "coalesce",
+     [
+      "get",
+      "name:de"
+     ],
+     [
+      "get",
+      "name"
+     ]
+    ],
+    "text-font": [
+     "Barlow Condensed SemiBold"
+    ],
+    "text-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     13.5,
+     10,
+     16,
+     13,
+     18,
+     16
+    ],
+    "text-transform": "uppercase",
+    "text-letter-spacing": 0.12,
+    "text-max-angle": 30,
+    "text-padding": 2,
+    "symbol-spacing": 220
+   },
+   "paint": {
+    "text-color": "#ffffff",
+    "text-halo-color": "#2f3640",
+    "text-halo-width": 1.2
+   }
+  },
+  {
+   "id": "poi-icons",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "poi",
+   "minzoom": 14.5,
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "shop",
+      "grocery",
+      "hospital",
+      "pharmacy",
+      "doctors",
+      "fuel",
+      "parking",
+      "restaurant",
+      "fast_food",
+      "cafe",
+      "charging_station"
+     ]
+    ]
+   ],
+   "layout": {
+    "icon-image": [
+     "match",
+     [
+      "get",
+      "class"
+     ],
+     "shop",
+     "ez-poi-shop",
+     "grocery",
+     "ez-poi-shop",
+     "hospital",
+     "ez-poi-cross",
+     "pharmacy",
+     "ez-poi-cross",
+     "doctors",
+     "ez-poi-cross",
+     "fuel",
+     "ez-poi-fuel",
+     "parking",
+     "ez-poi-parking",
+     "restaurant",
+     "ez-poi-food",
+     "fast_food",
+     "ez-poi-food",
+     "cafe",
+     "ez-poi-food",
+     "charging_station",
+     "ez-poi-charge",
+     ""
+    ],
+    "icon-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     14.5,
+     0.5,
+     17,
+     0.7
+    ],
+    "icon-padding": 22
+   }
+  }
+ ]
+}

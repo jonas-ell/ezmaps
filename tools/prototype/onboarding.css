@@ -1,0 +1,110 @@
+/* GM-031: Onboarding-Entwürfe. Ein Satz Bildschirme, vier Skins (A–D). */
+.f { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 64px 22px 34px; z-index: 5; }
+.f .grow { flex: 1; }
+.f .dim { position: absolute; inset: 0; z-index: -1; }
+.f .steps { display: flex; gap: 6px; margin-bottom: 18px; } .f .steps i { flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,.2); } .f .steps i.on { background: var(--acc); }
+.f .kick { font: 700 12px Inter; letter-spacing: 2px; text-transform: uppercase; color: var(--acc); margin-bottom: 8px; }
+.f .h1 { font: 800 34px/1.05 Inter; letter-spacing: -.8px; }
+.f .sub { font: 500 15px/1.45 Inter; color: rgba(255,255,255,.72); margin-top: 10px; }
+.f .btn { height: 56px; display: grid; place-items: center; font: 800 18px Inter; background: var(--acc); color: #fff; margin-top: 10px; }
+.f .btn2 { height: 46px; display: grid; place-items: center; font: 600 15px Inter; color: rgba(255,255,255,.75); margin-top: 6px; }
+.f .card { background: rgba(10,10,12,.82); padding: 14px; }
+.f .li { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.08); font: 600 15px Inter; }
+.f .li:first-child { border-top: 0; }
+.f .li small { display: block; font: 500 12.5px Inter; color: rgba(255,255,255,.6); }
+.f .li .r { margin-left: auto; color: rgba(255,255,255,.6); font: 600 13px Inter; }
+.f .ic { width: 38px; height: 38px; display: grid; place-items: center; background: rgba(255,255,255,.08); flex: none; }
+.f .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.f .tile { position: relative; height: 150px; overflow: hidden; background: #333; }
+.f .tile .m { position: absolute; inset: 0; }
+.f .tile .t { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 10px 8px; background: linear-gradient(transparent, rgba(0,0,0,.85)); font: 800 15px Inter; }
+.f .tile .t small { display: block; font: 600 10.5px Inter; opacity: .85; }
+.f .tile.sel { box-shadow: 0 0 0 3px var(--acc); }
+.f .tile .pill { position: absolute; right: 6px; top: 6px; font: 800 10px Inter; padding: 3px 6px; background: #34c759; color: #000; }
+.f .tile .pill.pro { background: #d9ad3a; }
+.f .veh { height: 112px; display: grid; place-items: center; background: rgba(255,255,255,.06); position: relative; }
+.f .veh.sel { box-shadow: 0 0 0 3px var(--acc); }
+.f .veh span { position: absolute; bottom: 6px; font: 600 11px Inter; color: rgba(255,255,255,.75); }
+.f .field { display: flex; align-items: center; gap: 10px; padding: 14px; background: rgba(255,255,255,.08); font: 600 15px Inter; color: rgba(255,255,255,.85); }
+.f .stat { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; } .f .stat div { padding: 10px; background: rgba(255,255,255,.07); font: 800 20px Inter; } .f .stat small { display: block; font: 500 11px Inter; color: rgba(255,255,255,.6); }
+.f .bigicon { width: 120px; height: 120px; margin: 0 auto 18px; display: grid; place-items: center; }
+.f .logo { font: 900 52px Inter; letter-spacing: -2px; }
+.f .osm2 { position: absolute; right: 14px; bottom: 14px; font: 500 9px Inter; color: rgba(255,255,255,.6); }
+.f .toggle { width: 46px; height: 28px; border-radius: 14px; background: #34c759; position: relative; flex: none; } .f .toggle::after { content: ''; position: absolute; right: 2px; top: 2px; width: 24px; height: 24px; border-radius: 12px; background: #fff; } .f .toggle.off { background: #3a3a3c; } .f .toggle.off::after { right: auto; left: 2px; }
+.f .xp { height: 10px; background: rgba(255,255,255,.12); position: relative; overflow: hidden; } .f .xp i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--acc); }
+
+/* ---- A HUD ---- */
+.A .f { --acc: #b44dff; }
+.A .f .h1, .A .f .logo { font-family: 'Barlow Condensed'; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 800; }
+.A .f .h1 { font-size: 40px; } .A .f .logo { font-size: 64px; }
+.A .f .btn { font-family: 'Barlow Condensed'; letter-spacing: 3px; text-transform: uppercase; font-size: 22px; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); }
+.A .f .card, .A .f .field, .A .f .tile, .A .f .veh { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); border: 1px solid rgba(255,255,255,.14); }
+.A .f .stat div { font-family: 'JetBrains Mono'; }
+.A .f .steps i { border-radius: 0; height: 3px; }
+.A .f .kick { font-family: 'JetBrains Mono'; letter-spacing: 1px; }
+.A .f .tile .t, .A .f .li { font-family: 'Barlow Condensed'; font-size: 17px; text-transform: uppercase; letter-spacing: .8px; }
+.A .f .li small, .A .f .tile .t small { text-transform: none; letter-spacing: 0; font-family: Inter; }
+
+/* ---- B Glas ---- */
+.B .f { --acc: #a33ff0; }
+.B .f .btn { border-radius: 18px; background: linear-gradient(135deg, #b44dff, #7a2bd8); box-shadow: 0 8px 24px rgba(160,60,240,.45); }
+.B .f .card, .B .f .field, .B .f .stat div { border-radius: 20px; background: rgba(28,28,32,.62); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: .5px solid rgba(255,255,255,.16); }
+.B .f .field, .B .f .stat div { border-radius: 14px; }
+.B .f .tile, .B .f .veh { border-radius: 18px; } .B .f .ic { border-radius: 12px; } .B .f .tile .pill { border-radius: 8px; }
+.B .f .sheet { border-radius: 28px; background: rgba(28,28,32,.66); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); padding: 20px; border: .5px solid rgba(255,255,255,.16); }
+.B .f .xp { border-radius: 5px; } .B .f .xp i { border-radius: 5px; }
+
+/* ---- C Minimal ---- */
+.C .f { --acc: #b44dff; background: #0b0b0d; }
+.C .f.onmap { background: none; }
+.C .f .h1 { font-weight: 700; font-size: 30px; }
+.C .f .btn { border-radius: 999px; }
+.C .f .btn2 { border-radius: 999px; }
+.C .f .card { background: #151518; border-radius: 18px; } .C .f .field { border-radius: 999px; background: #1b1b1f; }
+.C .f .tile, .C .f .veh { border-radius: 16px; } .C .f .ic { border-radius: 19px; background: #1b1b1f; } .C .f .stat div { border-radius: 14px; background: #151518; }
+.C .f .tile .pill { border-radius: 99px; }
+
+/* ---- D Sticker ---- */
+.D .f { --acc: #b44dff; }
+.D .f .h1 { font-weight: 900; font-size: 40px; letter-spacing: -1.5px; }
+.D .f .logo { font-weight: 900; }
+.D .f .btn { background: #ffd23f; color: #111; border: 3px solid #111; border-radius: 14px; box-shadow: 4px 4px 0 #111; font-weight: 900; }
+.D .f .btn2 { color: #fff; }
+.D .f .card, .D .f .field, .D .f .stat div { background: #fff; color: #111; border: 3px solid #111; border-radius: 14px; box-shadow: 4px 4px 0 #111; }
+.D .f .card .li { border-top-color: rgba(0,0,0,.12); } .D .f .card .li small, .D .f .card .li .r, .D .f .stat small { color: rgba(0,0,0,.6); }
+.D .f .field { color: #111; }
+.D .f .ic { background: #ffd23f; border: 2.5px solid #111; border-radius: 10px; }
+.D .f .tile, .D .f .veh { border: 3px solid #111; border-radius: 14px; box-shadow: 3px 3px 0 #111; } .D .f .veh { background: #fff; } .D .f .veh span { color: #111; font-weight: 800; }
+.D .f .tile.sel, .D .f .veh.sel { box-shadow: 0 0 0 4px #b44dff, 3px 3px 0 #111; }
+.D .f .kick { display: inline-block; align-self: flex-start; background: #ffd23f; color: #111; border: 2.5px solid #111; border-radius: 8px; padding: 2px 8px; letter-spacing: 1px; }
+.D .f .steps i { height: 8px; border: 2px solid #111; background: #fff; border-radius: 6px; } .D .f .steps i.on { background: #b44dff; }
+.D .f .xp { border: 2.5px solid #111; border-radius: 8px; background: #fff; height: 16px; }
+.D .f .sub { color: rgba(255,255,255,.85); }
+
+/* GM-034: Name „Neon City“ immer in der Stil-Schrift (Pricedown, nur lokal; Ersatz Impact), schwarze Kontur */
+.nname { font-family: Pricedown, Impact, Anton, sans-serif; font-weight: 400; letter-spacing: .5px; font-size: 1.18em; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 0 #000; }
+/* GM-035: Stil-Namen in den Projekt-Schriften (wie style.css .sf-*): Neon Pricedown, Wild West Rye, Pixel Quest Press Start 2P, Toy Town Fredoka */
+.pname { font-family: 'Press Start 2P', monospace; font-weight: 400; font-size: .72em; letter-spacing: 0; text-shadow: 2px 2px 0 #000; }
+.wname { font-family: Rye, serif; font-weight: 400; letter-spacing: .3px; }
+.tname { font-family: Fredoka, sans-serif; font-weight: 700; }
+
+/* GM-036: Glas-Knöpfe – Hauptknopf lila Glas (durchscheinend, Lichtkante oben), Nebenknöpfe/Preise/Chips helles Glas */
+.B .f .btn { background: linear-gradient(135deg, rgba(190,95,255,.78), rgba(122,43,216,.72)); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); border: .5px solid rgba(255,255,255,.38); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(0,0,0,.25), inset 0 0 18px rgba(255,255,255,.08), 0 8px 24px rgba(160,60,240,.35); }
+.B .f .btn2 { border-radius: 16px; background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); height: 44px; }
+.B .f .price { border-radius: 12px; background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); }
+.B .f .price.own { background: linear-gradient(180deg, rgba(88,176,95,.35), rgba(88,176,95,.18)); color: #9be3a2; }
+.B .f .ropt { background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); }
+.B .f .ropt.on { background: linear-gradient(180deg, rgba(180,77,255,.32), rgba(180,77,255,.16)); box-shadow: inset 0 0 0 1.5px #b44dff, inset 0 1px 0 rgba(255,255,255,.35); }
+.B .f .chip, .B .chip { background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); }
+.B .f .banner .price { background: linear-gradient(135deg, rgba(190,95,255,.8), rgba(122,43,216,.75)); }
+/* GM-038: 5 Stile im Onboarding (Klassik breit), echte Tastatur-Attrappe */
+.f .grid2 .tile.wide { grid-column: span 2; height: 120px; }
+.B .f .grid2 .tile { height: 128px; }
+.B .f .grid2 .tile.wide { height: 112px; }
+.f .kb { margin: 0 -22px -34px; padding: 8px 4px 40px; background: rgba(40,40,44,.96); display: flex; flex-direction: column; gap: 9px; }
+.f .kb div { display: flex; gap: 5px; padding: 0 2px; }
+.f .kb i { flex: 1; height: 42px; border-radius: 6px; background: #6b6b70; display: grid; place-items: center; font: 400 20px Inter; font-style: normal; color: #fff; }
+.f .kb i.sp { flex: 1.4; background: #46464b; font-size: 14px; }
+.f .kb i.go { background: #b44dff; font-weight: 700; }
+/* GM-038: .logo aus style.css (108px-Kasten mit Schatten) nicht auf den Schriftzug anwenden */
+.f .logo { width: auto; height: auto; border-radius: 0; box-shadow: none; }

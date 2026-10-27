@@ -2,6 +2,578 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-044 – Fahrt-Replay im CarPlay-Format (Querformat 16:9)
+
+**Ziel:** Nutzer: „das video soll im carplay format sein“. Bisher Hochformat 9:16, jetzt Querformat wie der CarPlay-Bildschirm.
+
+**Dateien:** `Core/Sources/EzMapsCore/ReplayPlanner.swift` + Test, `tools/prototype/js/{replay,aufdecken}.js`, `tools/prototype/aufdecken.css`, `App/ReplayExporter.swift`, `docs/previews/replay-gm044-carplay.mp4` (neu, ersetzt `replay-gm041.mp4` als Vorlage)
+
+**Geändert:**
+- `ReplayPlanner`: Standard 1920 × 1080 (Mirror `replay.js`). Test angepasst.
+- Aufbau wie CarPlay:
+  - Titel-Tafel lila links oben („Fahrt zum Hexenturm · 1,9 km · 6 Min“, wie die Abbiegekarte).
+  - Ergebnis-Tafel links unten („+56 % neue Straßen“, Stufe).
+  - „EzMaps“ rechts oben, OSM-Hinweis rechts unten.
+  - Auto bei 62 % der Breite (rechts der Tafeln); Überblick am Ende nur in der Kartenfläche rechts.
+- App-Export (`ReplayExporter`): 960 × 540 pt × 2 = 1920 × 1080. Kamera-Mittelpunkt quer zur Blickrichtung versetzt (Snapshotter kennt keinen Anker). Player im Blatt 16:9.
+
+**Tatsächlich geprüft:**
+- `swift test` Core: 53 grün.
+- Prototyp-Video 300 Bilder ohne Fehler, MP4 erzeugt, Standbilder angesehen.
+- `swiftc -parse` für `ReplayExporter.swift`.
+
+**Ungetestet:** App-Export auf dem Mac (nicht gebaut, siehe GM-043).
+
+## GM-043 – Alles in Code: GM-029 bis GM-042 in Swift umgesetzt (ungebaut) – Auftrag für den lokalen Claude: bauen und Fehler beheben
+
+**Ziel:** Nutzer: „code alles zuende“. Die Aufträge GM-029 bis GM-042 waren nur Prototyp und Text, die App stand bei GM-028 (nur Neon, kein Shop). Jetzt ist alles als Swift-Code da. Die Cloud hat keinen Zugang zum Mac-Gate (`~/.ssh` leer): **Die App ist nicht gebaut.** Erste Aufgabe ist Bauen und Compilerfehler beheben.
+
+**Dateien:**
+- **Core (getestet):** `MapStyle.swift` (Klassik gratis, 5 Stile), `Purchases.swift` (Produkt-IDs, `StyleAccess`, `PlanMath`), `Autobahn.swift` (Autobahn GmbH, Filter „vor mir auf der Route“), `Journal.swift` (Fahrten, Favoriten, Zuhause/Arbeit, Parkplatz, Abzeichen, Wochenmission), Tests `StoreAndJournalTests.swift`
+- **Kartenstile:** `tools/maplibre/build_style.py` erzeugt jetzt `App/MapStyles/style-{classic,neon-city,wild-west,pixel-quest,toy-town}.json`. Neon ist unverändert, byte-gleich geprüft.
+- **App (neu):**
+  - `Glass.swift` (Glas-Bausteine GM-032/036)
+  - `StyleTheme.swift` (Farben je Stil, `StyleName` in Projekt-Schrift)
+  - `PurchaseManager.swift` (StoreKit 2)
+  - `EzMaps.storekit` (Testdatei, Preise GM-038/039, kein Einführungsangebot GM-042)
+  - `OnboardingView.swift`, `ShopScreens.swift`, `ExploreScreens.swift`, `ReplayExporter.swift`, `Shortcuts.swift`
+  - `Fonts/` (Rye, Press Start 2P, Fredoka Bold, Anton, alle OFL, mit `OFL.txt`)
+  - `Assets.xcassets/AppIconPreview`
+- **App (geändert):** `AppModel.swift`, `ContentView.swift` (komplett im Glas-Look), `NeonMapView.swift` (Stilwechsel, Leuchtspur), `CarPlaySceneDelegate.swift`, `SettingsScreen.swift`, `SpeechService.swift`, `GameStorage.swift`, `PrivacyInfo.xcprivacy` (SystemBootTime 35F9.1), `en.lproj/Localizable.strings` (+174)
+- **Projekt:** `project.yml` (UIAppFonts, StoreKit-Testdatei im Schema), `tools/mac_build.sh` (kopiert Pricedown aus `~/EzMapsPrivate/Fonts/` falls vorhanden), `.gitignore` (`App/Fonts/Pricedown.otf`)
+
+**Was jetzt in der App ist:**
+- **5 Kartenstile** (alle in der 1.0, GM-041). Klassik gratis, die anderen über Plus oder Einzelkauf. Stil wechselt auf iPhone und CarPlay gleich, Routenfarben je Stil.
+- **Shop „EzMaps Plus“**:
+  - Für immer 79,99 € (Anker), Jährlich 29,99 € (als €/Monat, vorausgewählt, „Beliebt · spare X %“), Monatlich 4,99 €.
+  - Einzelstil Neon 39,99 €, andere 29,99 €.
+  - Apple-Pflichtangaben, Wiederherstellen, Abo verwalten. Kein Gratis-Zeitraum.
+- **Stil-Test 10 Minuten** je Stil:
+  - zählt auf iPhone und CarPlay, nie mitten in der Fahrt beendet;
+  - Schlüsselbund + iCloud, mit Systemlaufzeit gemessen;
+  - Uhr im Startblatt, in der Navigation und in CarPlay;
+  - danach Blatt „Test vorbei“, nie in CarPlay.
+- **Onboarding** (3 Schritte + Willkommen): Standortfrage erst nach Erklärung, Stilwahl mit Klassik vorausgewählt, Zuhause/Arbeit per Suche, Sprachansagen.
+- **Glas-Oberfläche**:
+  - Startblatt mit Wochenmission und Schnellzielen (Zuhause, Arbeit, Favoriten, Dein Auto).
+  - Runde Knöpfe: Standort, Stile, Entdecken, Einstellungen.
+  - Suche mit Meine Orte, Favoriten, Zuletzt.
+  - Vorschau mit Stern, „Als Zuhause/Arbeit speichern“, „+X % neue Straßen“ je Route.
+  - Navigation mit lila Abbiegekarte, Baustellen-Banner und rundem Ende-Knopf.
+  - Uhrzeit-Verlauf oben (Scrim).
+- **Stadt aufdecken**:
+  - Fahrt wird aufgezeichnet, Leuchtspur hinter dem Auto (iPhone und CarPlay).
+  - Ankunft mit „+X % neue Straßen“, gefahren, entdeckt, neue Abzeichen, Mission geschafft.
+  - Tab **Entdecken**: Karte mit Nebel und Leuchtpunkten; „Dieses Gebiet“ = Anteil der Straßen im Kartenausschnitt (aus MapLibre); Stufe, Abzeichen, Mission, Meine Fahrten.
+- **Fahrt-Replay als MP4** (1080 × 1920, 10 s): MapLibre-Bilder mit Kamera aus `ReplayPlanner`, Titel, Ergebnis, Wasserzeichen, OSM-Hinweis. Teilen per ShareLink.
+- **Meine Fahrten** (lokal, löschbar, abschaltbar).
+- **Wo hab ich geparkt?**: Standort beim Trennen von CarPlay, Blatt mit „Zu Fuß hin“ (Apple Karten), Teilen, Vergessen.
+- **Baustellen/Sperrungen**: Autobahn GmbH für die Autobahnen der Route; Banner ab 5 km; Ansage einmal ab 2 km. Keine Blitzer.
+- **Stimme** wählbar (alle deutschen iOS-Stimmen), **Sprechtempo**.
+- **Siri/Kurzbefehle**: „Mit EzMaps nach Hause“, „… zur Arbeit“, „Wo hab ich geparkt?“.
+
+**Tatsächlich geprüft:**
+- `swift test` in Core (Linux): **53 Tests grün**.
+- Alle 21 App-Dateien mit `swiftc -parse`: nur Syntax, **kein Typ-Check, kein Build**.
+- Die 5 Stil-JSONs in MapLibre GL JS (Browser) gerendert: `docs/previews/maplibre-5-stile-gm043.png`.
+- StoreKit-Datei und PrivacyInfo als JSON/Plist gültig.
+
+**Ungetestet:**
+- Die ganze App, weil nicht gebaut. Mit Compilerfehlern ist zu rechnen (MapLibre-API-Namen, Observation, Concurrency).
+- StoreKit-Käufe.
+- Schlüsselbund/iCloud.
+- Replay-Export (Laufzeit pro Bild unbekannt).
+- „Dieses Gebiet“ (`visibleFeatures`).
+- Siri-Phrasen.
+
+**Bewusst noch nicht gemacht:**
+- **Widgets**: braucht ein Widget-Extension-Ziel in `project.yml`.
+- **Ortsteile mit Namen und Grenzen**: statt dessen „Dieses Gebiet“ = Kartenausschnitt.
+- **Fahrspur-Pfeile, Live-Aktivität/Dynamic Island, Spritpreise.**
+- **iOS 26 `.glassEffect()`**: SDK-abhängig, bei Xcode 26 mit `if #available` ergänzen.
+
+### Auftrag (Swift) – lokaler Claude
+1. `ssh mac-ezmaps clean && git archive HEAD | ssh mac-ezmaps extract && ssh mac-ezmaps build` und **alle Compilerfehler beheben**, ohne Funktionen zu streichen. Typische Stellen:
+   - `ExploreScreens.swift` (`NSExpression mgl_interpolate`, `visibleFeatures`, `getCoordinates`)
+   - `ReplayExporter.swift` (`MLNMapSnapshotOptions`, `MLNAltitudeForZoomLevel`)
+   - `AppModel` (@Observable-Init-Reihenfolge)
+   - `Shortcuts.swift` (AppIntents Swift-6-Warnungen)
+2. Im Simulator mit StoreKit-Testdatei durchgehen:
+   - Onboarding
+   - Stil testen bis zum Ende, auch in CarPlay
+   - Plus kaufen, kündigen, wiederherstellen
+   - Einzelkauf
+   - Demo-Fahrt: Ankunft „+100 %“, Replay erzeugen und teilen
+   - Entdecken
+   - Baustelle auf der A3 (Ziel Frankfurt)
+   - Parkplatz nach CarPlay-Trennen
+3. **App Store Connect:** Abo-Gruppe „EzMaps Plus“ (`ezmaps.plus.yearly` 29,99 €, `ezmaps.plus.monthly` 4,99 €, **ohne** Einführungsangebot), Nicht-Verbrauchsartikel `ezmaps.plus.lifetime` 79,99 €, `ezmaps.style.neon` 39,99 €, `ezmaps.style.western/.pixel/.toy` je 29,99 €; Familienfreigabe für Einmalkäufe an.
+4. **iCloud Key-Value Storage** als Capability anlegen (`com.apple.developer.ubiquity-kvstore-identifier`). Ohne das zählt nur der Schlüsselbund.
+5. Store-Screenshots neu (`tools/mac_screens.sh`). Das Onboarding wird im Screenshot-Modus übersprungen.
+6. Danach: Widget-Extension (Zuhause/Arbeit mit Fahrzeit, Dein Auto).
+
+## GM-042 – Replay-Video als echte Datei, kein 7-Tage-Test mehr – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer: zeigen, wie das Replay-Video aussieht; „7 Tage testen“ raus.
+
+**Dateien:** `tools/prototype/js/{aufdecken,glas}.js`, `tools/prototype/aufdecken.css`, `docs/previews/replay-gm041.mp4` (neu)
+
+**Geändert:**
+- **Kein Gratis-Zeitraum mehr im Abo.** Shop: Knopf „Jährlich starten“ statt „7 Tage gratis testen“, Zeile „29,99 € im Jahr“. Einzelkauf und „Test vorbei“: „Plus holen“. Testen geht nur noch über den 10-Minuten-Stil-Test (GM-041). **Ersetzt** in GM-038 Punkt 1 „Einführungsangebot 1 Woche gratis“ und „isEligibleForIntroOffer“, in GM-039 „Plus 7 Tage gratis testen“.
+- **Replay-Video**: `aufdecken.html?video` zeichnet das Video Bild für Bild (405 × 720 pt, 300 Bilder, 10 s), Export mit ffmpeg als MP4 (Vorlage `docs/previews/replay-gm041.mp4`). Ablauf:
+  1. 0 bis 1,5 s: Titel „Fahrt zum Hexenturm · 1,9 km · 6 Min“
+  2. Kamera fliegt schräg mit, gefahrene Strecke als kräftige lila Leuchtlinie, neue Straßen heller
+  3. Ab 72 %: Herauszoomen auf die ganze Strecke, Ziel-Punkt
+  4. Ab 8 s: „+56 % neue Straßen“ groß mit Leuchten und Glas-Karte „Idstein-Kenner · Stufe 3“ mit Balken
+  - Immer zu sehen: „EzMaps“ oben links und „© OpenMapTiles · © OpenStreetMap-Mitwirkende“ unten rechts
+  - Nebel im Video leichter (schmaler Ausschnitt), damit die Schrägansicht ruhig bleibt
+
+**Tatsächlich geprüft:** Playwright: 300 Bilder ohne Fehler, MP4 erzeugt und Standbilder angesehen.
+
+**Ungetestet:** Nichts in Swift.
+
+### Auftrag (Swift)
+1. StoreKit: **kein** Einführungsangebot anlegen; Paywall-Knopf je Plan „Jährlich starten“ / „Monatlich starten“ / „Für immer freischalten“
+2. Replay-Video genau wie `docs/previews/replay-gm041.mp4` (Ablauf oben, Werte in `aufdecken.js` → `videoPlayer`)
+
+## GM-041 – Stadt aufdecken (Konzept + Logik), Stil-Test nicht umgehbar, Fahrt-Replay – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer zu GM-040:
+- Alle 5 jetzigen Stile kommen in die 1.0, neue Stile danach.
+- Design-Konzept für „Stadt aufdecken“ machen.
+- Keine Probezeit, aber kurzes Testen, auch in CarPlay, nicht durch Neuinstallieren umgehbar.
+- Fahrt-Replay: ja.
+- Alles in Code umsetzen.
+
+**Dateien:**
+- `Core/Sources/EzMapsCore/{Exploration,StyleTrial,ReplayPlanner}.swift` + Tests
+- `tools/prototype/js/{explore,replay,aufdecken}.js`, `tools/prototype/aufdecken.{html,css}`
+- `App/GameStorage.swift` (neu), `App/AppModel.swift`, `App/ContentView.swift`, `App/en.lproj/Localizable.strings`
+- `docs/KONZEPT_IDEEN.md`
+
+**Geändert:**
+- **Logik Aufdecken** (`Exploration.swift`, gespiegelt in `explore.js`):
+  - Gefahrene Strecke wird zu Straßenzellen (Kacheln Zoom 20, ~24 m). Das geht in ganz Deutschland, ohne eigene Straßendaten und ohne Server.
+  - GPS-Lücken über 400 m (Tunnel) decken nichts dazwischen auf.
+  - `TripReveal` (+X % neue Straßen), Anteil je Ortsteil, Stufen 0/10/25/50/75 % (Neu hier, Unterwegs, Kenner, Insider, Legende), 10 Abzeichen mit eigenen Namen.
+- **Stil-Test** (`StyleTrial.swift`):
+  - 10 Min je Kauf-Stil, einmal.
+  - Zählt, solange der Stil auf iPhone **oder** CarPlay sichtbar ist (gleichzeitig nur einmal).
+  - Läuft nie in einer Fahrt ab, erst nach der Ankunft.
+  - `merge` nimmt den größeren Verbrauch aus Schlüsselbund und iCloud. Löschen und Neuinstallieren bringt keinen neuen Test.
+- **Fahrt-Replay** (`ReplayPlanner.swift`, gespiegelt in `replay.js`):
+  - 10 s, 30 Bilder/s, 9:16.
+  - Kamera folgt der Strecke (weich gedreht), am Ende Überblick über die ganze Strecke.
+- **App:**
+  - `GameStorage`: Aufdecken als Datei; Testzeit in Schlüsselbund und `NSUbiquitousKeyValueStore`.
+  - `AppModel` zeichnet die Fahrt auf (Genauigkeit ≤ 30 m, alle 10 m; Demo-Fahrt nur in Debug-Builds) und deckt bei Ankunft oder Abbruch auf.
+  - Ankunft zeigt „+X % neue Straßen“ (DE und EN).
+- **Prototyp `aufdecken.html`**, 9 Screens im Glas-Look:
+  - Meine Stadt (Nebel)
+  - Ortsteil
+  - Fahrt iPhone (nur dünnes Leuchten, „+3 neu“)
+  - Ankunft mit Aufleuchten
+  - Abzeichen (goldener Rand)
+  - Wochenmission
+  - Fahrt-Replay (läuft als Animation)
+  - Stil-Test vorbei
+  - CarPlay mit Test-Uhr
+
+**Tatsächlich geprüft:**
+- `swift test` in Core (Linux): 46 Tests grün, davon 19 neu.
+- `swiftc -parse` für die 3 geänderten App-Dateien.
+- Playwright: `aufdecken.html` ohne Fehler, alle Screens angesehen.
+- `explore.js` gegen Swift-Werte gegengerechnet.
+
+**Ungetestet:**
+- App nicht auf dem Mac gebaut: Schlüsselbund, iCloud, Ankunftszeile.
+- Ob Schlüsselbund-Einträge nach dem Löschen der App bleiben, ist von Apple nicht garantiert (heute: ja).
+
+### Auftrag (Swift)
+1. **Bauen und prüfen**: `GameStorage.swift` und die Änderungen in `AppModel`/`ContentView` auf dem Mac bauen. Demo-Fahrt im Simulator (Debug): Bei Ankunft muss „+100 % neue Straßen“ stehen, bei derselben Fahrt nochmal „+0 %“.
+2. **Tab/Ansicht „Entdecken“** wie Prototyp „Meine Stadt“ und „Ortsteil“:
+   - Nebel als MapLibre-Ebene: dunkle Fläche, gefahrene Zellen als Linien-Layer ausgeschnitten (GeoJSON-Quelle aus `ExploreCell.center` der Zellen, zusammenhängende Zellen als Linien).
+   - Ortsteile: Grenzen aus OSM `place=suburb/quarter/village` (Photon `reverse` oder Kachel-Ebene `place`), Straßenzellen je Ortsteil per `querySourceFeatures` der Straßen-Ebene → `ExploreCell.cells(along:)` → `ExplorationStore.share(of:)`.
+3. **Ankunft** wie Prototyp „Ankunft · Aufleuchten“: neue Zellen 0,8 s nacheinander aufleuchten, Kacheln „+X % neue Straßen / Abschnitte / Ort“, Stufenbalken, Knöpfe „Replay“ und „Fertig“. Nur im Stand. „Bewegung reduzieren“ beachten.
+4. **Während der Fahrt** (iPhone und CarPlay): nur dünnes Leuchten der frisch gefahrenen neuen Strecke, kleine Zahl „+3 neu“ in der unteren Leiste (iPhone). Keine Meldungen, keine Abzeichen während der Fahrt.
+5. **Abzeichen und Stufe**: `Badge.earned(...)` nach der Ankunft; neue Abzeichen als eigener Moment nach dem Ankunft-Blatt, Teilen-Knopf.
+6. **Stil-Test**: `StyleTrial` im `AppModel` halten (`GameStorage.loadTrial()` beim Start). Jede Sekunde `tick(seconds:visible:navigating:)`; `visible` = Stil auf iPhone im Vordergrund **oder** in CarPlay. Zeit über `ProcessInfo.processInfo.systemUptime` messen, nicht über die Uhrzeit. Speichern alle 10 s und beim Wechsel in den Hintergrund. In CarPlay kleine Uhr „Test 4:12“ (Kartenleiste/Hinweis). Bei `.expired`: zurück zu Klassik, dann Blatt „Test vorbei“ (Prototyp), nie in CarPlay. iCloud-Schlüsselwerte: Capability „iCloud → Key-value storage“ in `project.yml`/Entitlements ergänzen.
+7. **Fahrt-Replay**: `ReplayPlanner().frames(for: track)` → je Bild MapLibre-Kamera setzen (`MLNMapSnapshotter` oder Offscreen-`MLNMapView`), Strecke bis `progress` als Linie, neue Zellen hell. Mit `AVAssetWriter` (H.264, 1080 × 1920, 30 fps) speichern, Wasserzeichen „EzMaps“ und „© OpenStreetMap-Mitwirkende“ ins Bild. Teilen über `ShareLink`. Ab 2 Minuten Fahrt anbieten.
+8. **Datenschutz**: Aufdecken und Fahrten bleiben auf dem Gerät. Testzeit liegt in iCloud (Apple). `docs/legal` und Datenschutzangaben im Store prüfen. Einstellungen: „Entdeckte Karte zurücksetzen“ (`ExplorationStore.reset()`), setzt die Testzeit **nicht** zurück.
+
+## GM-040 – Gesamtblick: Konzept- und Verbesserungsideen
+
+**Ziel:** Nutzer: ganze App ansehen und Ideen sammeln, wie alles besser wird, auch vom Konzept her.
+
+**Dateien:** `docs/KONZEPT_IDEEN.md` (neu)
+
+**Geändert:** Nur Doku. Ist-Stand (Swift bei GM-028, nur Neon, kein StoreKit; GM-029 bis GM-039 offen), Konzept-Vorschläge (1.0 klein: Klassik + Neon + Plus, weitere Stile als Updates; Aufdecken als echter Unterschied; Reverse Trial 3 Tage Neon; Paywall-Zeitpunkte; Fahrt-Replay-Video; eigene Server vor Werbung; fehlender Live-Verkehr; anonyme Zählung), Produkt-Ideen, Arbeitsreihenfolge, Top 5.
+
+**Tatsächlich geprüft:** Swift-Dateien, Prototyp, TODO und Doku gelesen. Nichts gebaut.
+
+**Ungetestet:** –
+
+### Auftrag
+Noch keiner – erst entscheidet der Nutzer, welche Ideen umgesetzt werden. Die Arbeitsreihenfolge in Abschnitt 3 gilt nur, wenn der Nutzer sie freigibt.
+
+## GM-039 – Einzelkäufe von Stilen wieder da (teuer, neben Plus) – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer will auch Einzelkäufe einzelner Karten. Ergänzt GM-038 (Punkt 1 „Einzelstil-Produkte nicht anlegen“ ist damit aufgehoben).
+
+**Dateien:** `tools/prototype/js/glas.js`
+
+**Geändert (Prototyp):**
+- Neuer Screen „Einzelkauf“ (Stil-Seite): großes Kartenbild des Stils, Merkmale als Chips, darunter zuerst Plus (lila, „Besser · alle 4 Stile“, 2,50 €/Monat, „Plus 7 Tage gratis testen“), dann Nebenknopf „Nur Neon City · 39,99 € einmalig“
+- Shop: Link „Nur einen Stil kaufen ›“; Tipp auf eine Stil-Kachel öffnet die Stil-Seite
+- Preise einmalig: **Neon City 39,99 €**, **Wild West / Pixel Quest / Toy Town je 29,99 €**. Absichtlich teuer: ein Stil kostet so viel wie mehr als ein Jahr Plus, alle vier einzeln 129,96 € gegen 79,99 € „Für immer“
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler, Shop und Stil-Seite angesehen.
+
+**Ungetestet:** Nichts in Swift.
+
+### Auftrag (Swift)
+1. Nicht-Verbrauchsartikel `ezmaps.style.neon` 39,99 €, `ezmaps.style.western`/`.pixel`/`.toy` je 29,99 € (StoreKit-Testdatei + App Store Connect). Freischaltung je Stil: Plus (Abo oder Lifetime) **oder** der passende Einzelkauf
+2. `StyleDetailView` wie Prototyp; Plus immer oben und vorausgewählt, Einzelkauf als `GlassButton` (GM-036) darunter; Preise aus `Product.displayPrice`
+3. Wer einen Einzelstil hat und Plus kündigt, behält diesen Stil. Im Shop gekaufte Stile mit Haken statt Preis
+4. Familienfreigabe für Einzelkäufe und Lifetime an, Text „Wiederherstellen“ deckt alles ab
+
+## GM-038 – EzMaps Plus (Abo mit teurem Einmalkauf als Anker) + UI-Fehler behoben – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer: Einmalpreise sehr teuer machen, damit das Monatsabo günstig wirkt (Preispsychologie). Alle UIs prüfen, manches sah schief aus. **Ersetzt die Preise aus GM-035 und GM-037** (keine Einzelstile mehr).
+
+**Dateien:** `tools/prototype/js/{glas,onboarding,designs,glasfix}.js`, `tools/prototype/{glas,onboarding,designs}.css`
+
+**Preismodell „EzMaps Plus“ (alle Stile, iPhone + CarPlay, jeder neue Stil inklusive):**
+| Angebot | Preis | Rolle |
+|---|---|---|
+| Für immer | **79,99 €** einmalig | Anker: steht oben, macht das Abo billig |
+| Jährlich | **29,99 €/Jahr**, angezeigt als **2,50 €/Monat**, 7 Tage gratis | vorausgewählt, Schild „Beliebt · spare 50 %“ |
+| Monatlich | **4,99 €/Monat** | Einstieg, Vergleichswert für „spare 50 %“ |
+- Konkurrenz (GM-037): Abos 5,99 bis 14,99 €/Monat bzw. 34,99 bis 69,99 €/Jahr → wir sind bei Monat und Jahr günstiger. Den Einmalkauf machen wir absichtlich teuer.
+- Psychologie: Anker zuerst, Mitte vorausgewählt, Preis pro Monat statt pro Jahr, Gratis-Woche im Knopf („7 Tage gratis testen“), Rabatt in Prozent, nur 3 Wahlmöglichkeiten.
+- Klassik und die ganze Navigation bleiben gratis (Ansagen, CarPlay mit Klassik).
+
+**UI-Korrekturen (Prototyp):**
+1. Kartenhinweis „© OpenStreetMap-Mitwirkende“ lag auf oder in Blättern und Leisten (feste Abstände) → wird jetzt gemessen und sitzt immer 6 pt über dem unteren Blatt (`glasfix.js`)
+2. Uhrzeit oben war auf hellen Kartenstellen kaum lesbar → weicher dunkler Verlauf hinter der Statusleiste
+3. Willkommen: leerer Kasten mit Lila-Leuchten hinter „EzMaps“ (alte `.logo`-Regel) entfernt, App-Icon mit feinem Rand und Schatten
+4. Parkplatz: Fußgänger-Symbol stand über dem Text im Knopf → nebeneinander
+5. Shop: Schild „Beliebtester Stil“ brach um → eine Zeile; Stilnamen in den Kacheln wieder in den Stil-Schriften
+6. Kein Netz: Hinweis zu lang (lief bis an den Rand) → „Offline · Route bleibt gespeichert“
+7. Stil wählen: Toy Town fehlte → alle 5 Stile, Klassik breit oben, Schild „PLUS“ statt „PREMIUM“
+8. „Wohin fährst du oft?“: Karte schien unruhig durch den Text → dunkler
+9. Suche: grauer Kasten „Tastatur“ → echte deutsche Tastatur-Attrappe mit „Los“-Taste
+10. „Neon City gehört dir“ → „Plus ist aktiv“; „Kaufen“ im Testbanner → „Plus holen“
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler, alle 20 Glas-Screens einzeln angesehen.
+
+**Ungetestet:** Nichts in Swift, keine Abos in App Store Connect.
+
+### Auftrag (Swift)
+1. **StoreKit 2, Abo-Gruppe „EzMaps Plus“:** `ezmaps.plus.yearly` 29,99 € mit Einführungsangebot 1 Woche gratis, `ezmaps.plus.monthly` 4,99 €; dazu Nicht-Verbrauchsartikel `ezmaps.plus.lifetime` 79,99 €. Alte Einzelstil-Produkte aus GM-035 nicht anlegen. Freischaltung: `Transaction.currentEntitlements` enthält eins der drei → alle Stile frei. StoreKit-Testdatei anpassen.
+2. **Paywall** genau wie Prototyp (`glas.html`, Screen „Shop (EzMaps Plus)“): 2×2-Stil-Kacheln, drei Plan-Zeilen (Für immer, Jährlich vorausgewählt, Monatlich), Knopf ändert Text je Plan („7 Tage gratis testen“, „Monatlich starten“, „Für immer freischalten“). Alle Preise aus `Product.displayPrice`; „2,50 € pro Monat“ aus `price / 12` mit `priceFormatStyle`; „spare 50 %“ aus Monat×12 gegen Jahr berechnen. Gratis-Woche nur zeigen, wenn `isEligibleForIntroOffer`.
+3. **Apple-Pflichten (Richtlinie 3.1.2):** Abo-Titel, Laufzeit, Preis und Verlängerungshinweis direkt über dem Knopf; Links zu Nutzungsbedingungen (EULA) und Datenschutz; „Käufe wiederherstellen“; Kündigen-Hinweis. Kein Countdown-Druck, kein versteckter Schließen-Knopf.
+4. **Dauerhafter Nutzen fürs Abo (sonst lehnt Apple es eventuell ab):** neue Stile regelmäßig (z. B. alle 2 bis 3 Monate), im App-Store-Text so nennen. Baustellen-Anzeige je Stil und Fotomodus dürfen Plus-Vorteile sein, Navigation und Sicherheit nicht.
+5. **Testmodus / Stil testen (GM-033)** bleibt, Banner-Knopf „Plus holen“ öffnet die Paywall.
+6. **UI-Korrekturen 1 bis 10** übernehmen: Attribution per Layout direkt über dem unteren Blatt (`safeAreaInset`/`overlay(alignment: .bottomTrailing)` am Blatt, keine festen Werte); Statusleisten-Verlauf (`LinearGradient` schwarz 55 % → klar, 58 pt, `.ignoresSafeArea`); Knopf-Inhalt immer `HStack`; Labels `lineLimit(1)` + `minimumScaleFactor(0.85)`; Onboarding mit 5 Stilen.
+7. `docs/APPSTORE_TEXTE.md`: „Kein Abo“ aus GM-037 streichen, stattdessen „Navigation gratis, Plus für alle Stile“.
+
+## GM-037 – Preise höher, aber unter der Konkurrenz (Spiel-Karten-Apps) – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer: Preise viel teurer machen, aber günstiger als die Konkurrenz bleiben. Außerdem prüfen, ob die Konkurrenz-Apps Rechte an den Spielen haben.
+
+**Dateien:** `tools/prototype/js/glas.js`
+
+**Marktvergleich (App Store DE, Oktober 2026):**
+- MapSkins GPS: Premium 7,99 € / 44,99 €, Jahr 39,99 bis 44,99 €; CarPlay ja
+- Game Maps IRL: Mappr: Lifetime 22,99 € / 34,99 €, Monat 5,99 bis 9,99 €, Jahr bis 69,99 €; CarPlay ja
+- Game Maps: Car Maps: Jahr 9,99 €, aber CarPlay extra 59,99 € im Jahr
+- Pixel Maps – Game Maps IRL: Monat 6,99 €, Lifetime 22,99 €
+- Game Maps – Play the IRL Map: Woche 7,99 €, Monat 14,99 €, Jahr 44,99 €
+- Günstigster Einmalkauf für alles: 22,99 €
+
+**Geändert (Prototyp, Shop):** Neon City **12,99 €** (vorher 7,99 €), Wild West / Pixel Quest / Toy Town je **9,99 €** (vorher 5,99 €), Alle Stile **21,99 €** „statt 42,96 €“ (vorher 19,99 €). Damit ist „Alle Stile“ der günstigste Einmalkauf am Markt, die Einzelstile lohnen sich kaum, das Paket wird zum Hauptkauf.
+
+**Rechte der Konkurrenz (Recherche, keine Rechtsberatung):** Keine der Apps nennt eine Lizenz von Spiele-Herstellern. „Game Maps: Car Maps“ schreibt selbst „nicht verbunden mit Spiele-Herstellern“, Mappr nennt seine Stile „eigene künstlerische Designs“. Trotzdem nutzen einige Spielnamen in Texten und Versionshinweisen. Der Hersteller der bekanntesten Gangster-Spielreihe lässt Fan-Projekte mit seinen Karten regelmäßig per DMCA entfernen. Ob er gegen diese Apps vorgeht, ist nicht bekannt. Folge für uns: so bleiben wie bisher – keine Spielnamen, keine Spiel-Grafiken, eigene Stilnamen, Pricedown nur mit App-Lizenz (GM-035). Das ist ein Vorteil gegenüber Apps, die jederzeit aus dem Store fliegen können.
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler, Shop angesehen.
+
+**Ungetestet:** Nichts in Swift. Preise nicht in App Store Connect angelegt.
+
+### Auftrag (Swift)
+1. App Store Connect und StoreKit-Testdatei: `ezmaps.style.neon` 12,99 €, `ezmaps.style.western`/`.pixel`/`.toy` je 9,99 €, `ezmaps.styles.all` 21,99 € (ersetzt die Preise aus GM-035 Punkt 1). Anzeige weiter aus `Product.displayPrice`, „statt …“ aus der Summe berechnet
+2. Im Shop „Alle Stile“ stärker zeigen: Text „Kein Abo · einmal zahlen“ und „CarPlay inklusive“ sichtbar lassen
+3. `docs/APPSTORE_TEXTE.md`: Werbetext ohne Spielnamen, mit „Kein Abo“, „CarPlay inklusive“, „Navigation und Ansagen gratis“
+
+## GM-036 – Knöpfe auch im Glas-Look – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer: Glas-Look fehlte bei den Knöpfen (waren volle Farbflächen).
+
+**Dateien:** `tools/prototype/designs.css`, `tools/prototype/onboarding.css`
+
+**Geändert (Prototyp):**
+- Hauptknopf („Los“, „Neon City · 7,99 €“, „Standort erlauben“ …): **lila Glas** statt Vollfarbe – Verlauf `rgba(190,95,255,.78)` → `rgba(122,43,216,.72)`, Hintergrund-Unschärfe 20 px + Sättigung 1,6, Rand 0,5 pt weiß 38 %, Lichtkante oben (innen 1 px weiß 50 %), dunkle Kante unten (innen 1 px schwarz 25 %), leichtes inneres Leuchten, Schatten lila 35 % (Radius 24, y 8)
+- Nebenknöpfe, Preis-Schilder, „Alle Stile“-Zeile, Routen-Zeilen, Chips, runde Knöpfe: **helles Glas** – Verlauf weiß 16 % → 6 % von oben nach unten, Unschärfe 20 px, Rand 0,5 pt weiß 28 %, Lichtkante oben (innen 1 px weiß 35 %), Schatten schwarz 25 %
+- Gewählte Route: lila Glas 32 % → 16 % + 1,5 pt Akzent-Rand; gekauft-Schild grünes Glas
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler: Shop, Onboarding, Startkarte/Vorschau/Navigation (Glas) angesehen.
+
+**Ungetestet:** Nichts in Swift.
+
+### Auftrag (Swift, ersetzt die Knopf-Angaben in GM-032 Block 1)
+- `PrimaryButton`: `.ultraThinMaterial` + darüber `LinearGradient` (Werte oben, 135°), `RoundedRectangle(18, .continuous)`, `.strokeBorder` weiß 38 % 0,5 pt, Lichtkante als oberer innerer Rand (Overlay mit Verlauf weiß 50 % → klar über die ersten 2 pt), Schatten lila 35 %
+- `GlassButton` (neu, für Nebenknöpfe, Preise, „Alle Stile“, Chips, runde Knöpfe): `.ultraThinMaterial` + Verlauf weiß 16 % → 6 %, Rand weiß 28 %, Lichtkante weiß 35 %
+- Ende-Knopf (rot) und Kauf-Schild im Stil-Test-Banner gleiches Glas-Prinzip mit Rot bzw. Lila
+- Gedrückt: Deckkraft −15 %, Skalierung 0,97 (`ButtonStyle`); „Transparenz reduzieren“ → feste Farben ohne Unschärfe
+- Auf iOS 26: wenn verfügbar `.glassEffect()` (Liquid Glass) nutzen, sonst die Nachbildung oben (`if #available`)
+
+## GM-035 – Neue Preise, Pricedown für Neon City, Pixel-Schrift für Pixel Quest – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer: Preise viel zu günstig. Name „Neon City“ in der Pricedown-Schrift aus dem Projekt, „Pixel Quest“ in einer Minecraft-artigen Pixel-Schrift.
+
+**Dateien:** `tools/prototype/{glas,onboarding}.{html,css}`, `tools/prototype/js/{glas,onboarding}.js`
+
+**Geändert (Prototyp):**
+- Shop: Neon City **7,99 €**, Wild West / Pixel Quest / Toy Town je **5,99 €**, Alle Stile **19,99 €** („statt 25,96 €“, enthält auch künftige Stile). Klassik gratis
+- Stil-Namen in den Projekt-Schriften: Neon City Pricedown (`.nname`, in der Cloud Ersatz Anton), Wild West Rye, Pixel Quest Press Start 2P, Toy Town Fredoka
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler, Shop und Onboarding-Stilwahl angesehen.
+
+**Ungetestet:** Nichts in Swift. Preise nicht mit App Store Connect abgeglichen (Preisstufen).
+
+### Auftrag (Swift)
+1. **Preise** in App Store Connect / StoreKit-Testdatei: `ezmaps.style.neon` 7,99 €, `ezmaps.style.western`/`.pixel`/`.toy` je 5,99 €, `ezmaps.styles.all` 19,99 €. Nächstliegende Apple-Preisstufen wählen; Anzeige immer aus `Product.displayPrice`. Text „statt …“ aus der Summe der Einzelpreise berechnen, nicht fest einbauen. `docs/APPSTORE_TEXTE.md` anpassen
+2. **Pricedown für den Namen „Neon City“** (Wunsch des Nutzers). Bedingungen:
+   - Nur mit **App-Lizenz** von Typodermic (die vorhandene Datei hat nur Desktop-Lizenz). Nutzer kauft sie; bis dahin Anton (GM-034)
+   - Schriftdatei **nie ins Repo** (Repo ist öffentlich, `tools/prototype/fonts/` bleibt in `.gitignore`). Stattdessen: `tools/mac_build.sh` kopiert, falls vorhanden, `~/EzMapsPrivate/Fonts/pricedown.otf` vor dem Build nach `App/Fonts/` (dort in `.gitignore`); `UIAppFonts` enthält beide Namen, Code nimmt Pricedown, wenn `UIFont(name:)` sie findet, sonst Anton
+   - Nur der Name, sonst keine Texte in Pricedown; keine Spielnamen in Texten (Markenrecht, App-Review 4.1 – die Schrift ist stark mit einem bekannten Spiel verbunden, deshalb nur für den Stilnamen)
+3. **Korrektur (Nutzer): die Projekt-Schriften benutzen, keine neuen.** Stil-Namen genau in den Schriften, die der Prototyp seit GM-003/GM-004 für die Stile nutzt (`tools/prototype/style.css`, `.sf-*`):
+   - Neon City → **Pricedown** (siehe Punkt 2), schwarze Kontur
+   - Wild West → **Rye**
+   - Pixel Quest → **Press Start 2P** (die Pixel-Schrift des Stils; nicht Silkscreen, nicht die Minecraft-Originalschrift), harter Schatten 2 pt, Größe ×0,72
+   - Toy Town → **Fredoka** Bold
+   - Klassik → SF Pro
+   Rye, Press Start 2P und Fredoka sind SIL OFL (Google Fonts): TTF + `OFL.txt` in `App/Fonts/` (dürfen ins Repo), `UIAppFonts`. Im Baustein `StyleName` (GM-034) einsetzen; Lizenzen in Einstellungen → Über. Prototyp angepasst (`.nname`, `.wname`, `.pname`, `.tname` in `glas.css`/`onboarding.css`)
+
+## GM-034 – Name „Neon City“ wieder in der Stil-Schrift – Auftrag für den lokalen Claude
+
+**Ziel:** Der Nutzer will, dass der Name „Neon City“ überall in seiner eigenen Schrift steht (wie früher im Prototyp mit Pricedown).
+
+**Dateien:** `tools/prototype/{glas,onboarding}.{html,css}`, `tools/prototype/js/{glas,onboarding}.js`
+
+**Geändert (Prototyp):**
+- Neue Klasse `.nname`: Schrift Pricedown (nur lokal), Ersatz Impact, dann **Anton** (Google Fonts, SIL OFL), schwarze Kontur 1,5 px, etwas größer (1,18 em). Angewendet auf jeden „Neon City“: Shop (große Karte, Kauf-Knopf), Stil-Test-Banner, „Neon City gehört dir“, Onboarding-Kachel, Einstellungen
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler, Shop/Test/Freigeschaltet/Onboarding/Einstellungen angesehen. In der Cloud fehlt Pricedown, dort ist Anton zu sehen.
+
+**Ungetestet:** Nichts in Swift.
+
+### Auftrag (Swift)
+- Überall, wo der **Name** „Neon City“ erscheint (Stilwahl im Onboarding, Shop, Stil-Test-Banner, Freigeschaltet, Einstellungen, Stile-Seite), eigene Schrift statt SF Pro, mit schwarzer Kontur (2 Schatten oder `.stroke`-Text in SwiftUI) und Größe ×1,18. Nur der Name, nicht ganze Sätze oder Knöpfe drumherum
+- **Lizenz:** Pricedown hat nur eine Desktop-Lizenz und darf **nicht** in die App, solange der Nutzer keine App-Lizenz (Typodermic) gekauft hat. Bis dahin **Anton** (SIL OFL 1.1, frei auch für Apps): `App/Fonts/Anton-Regular.ttf` + `OFL.txt` ins Repo, in `project.yml` unter `UIAppFonts` eintragen, Lizenz in Einstellungen → Über nennen
+- Baustein `StyleName(style:)` in `App/Design/`: Neon City → Anton/Pricedown, Wild West → Rye (OFL), Pixel Quest → „Press Start 2P“ (OFL), Toy Town → Fredoka (OFL), Klassik → SF Pro. Gleiche Regeln (nur Namen)
+- Mit Dynamic Type skalieren (`.relativeTo(.title2)`), Kontur auch bei kleinen Größen lesbar
+
+## GM-033 – Glas-Design: weitere Screens (Shop, Stil testen, Fahrten …) und Logik-Prüfung – Auftrag für den lokalen Claude
+
+**Ziel:** Hinweis „Kein Konto, kein Tracking“ raus; weitere Screens 1:1 im Glas-Look zeigen; alle Abläufe auf Logik prüfen.
+
+**Dateien:** `tools/prototype/glas.html`, `tools/prototype/glas.css`, `tools/prototype/js/glas.js` (neu), `tools/prototype/js/onboarding.js`, `CHANGELOG.md` (GM-032 angepasst)
+
+**Geändert (Prototyp):**
+- Neue Seite `http://localhost:8765/tools/prototype/glas.html` mit 10 Screens: Shop, Stil testen, Freigeschaltet, Meine Fahrten, Favorit merken, Wo hab ich geparkt, Baustelle voraus, Neu berechnen, Kein GPS / kein Netz, Standort aus
+- Onboarding: „Kein Konto, kein Tracking“ und „Dein Standort bleibt auf dem iPhone“ entfernt, stattdessen „Ansagen laufen weiter“; Stil-Schritt wählt Klassik vor („Weiter mit Klassik“); Losfahr-Hinweis aus dem Onboarding genommen
+
+**Logik-Prüfung (Befunde, alle im Auftrag unten berücksichtigt):**
+1. „Dein Standort bleibt auf dem iPhone“ war **falsch**: Start/Ziel gehen an Valhalla/Photon → Satz gestrichen (auch rechtlich heikel)
+2. Onboarding „Weiter mit Neon City“, obwohl Neon Premium ist → Klassik vorgewählt; Premium-Kachel startet „Stil testen“, nicht einen Kauf
+3. Stil-Test darf **nie während einer Fahrt ablaufen** (plötzlicher Stilwechsel = Ablenkung) → Ende erst nach Ankunft/Beenden
+4. Kategorie „Favoriten“ in der Suche hatte keinen Weg, Orte zu merken → Stern in der Routen-Vorschau
+5. „Zuhause · 14 Min“ setzt eine berechnete Route voraus → Minuten nur zeigen, wenn eine Route jünger als 15 Min vorliegt, sonst nur „Zuhause“
+6. Losfahr-Hinweis braucht Mitteilungen + Routing im Hintergrund (iOS führt das nicht verlässlich aus) → nicht in Version 1, raus aus dem Onboarding
+7. Ankunft „neue Straßen / Stufe“ setzt Entdecken voraus, das in Swift fehlt → ausblenden, bis Entdecken gebaut ist
+8. Einstellungen ohne „Demo-Fahrt“ → Apple-Prüfer braucht sie (siehe `docs/APPSTORE_TEXTE.md`) → bleibt in den Einstellungen
+9. Shop ohne „Käufe wiederherstellen“ wird von Apple abgelehnt → Pflicht-Link
+10. „Alle Stile, auch künftige“ ist ein Versprechen → technisch: Freischaltung `ezmaps.styles.all` gilt für jeden Stil in Code, nicht nur für eine Liste
+11. Fahrten-Verlauf speichert Wege (inkl. Wohnort) → nur lokal, abschaltbar, löschbar; im Fotomodus Start/Ziel ausblendbar (GM-029)
+12. Standort abgelehnt → App darf nicht leer sein: Karte und Suche gehen, „Los“ führt zu den iOS-Einstellungen
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Skriptfehler, alle 10 neuen Screens und das geänderte Onboarding als Bild angesehen.
+
+**Ungetestet:** Nichts in Swift.
+
+### Auftrag (Swift, nach GM-032, gleiche Glas-Bausteine)
+
+Vorlage: `glas.html`. Je Punkt eigener Eintrag, Logik in Core mit Tests wo möglich.
+
+1. **Shop** (`StoreView`): Kopf „Stile“ + Schließen; große Karte Neon City mit Schild „Beliebtester Stil“ und Live-Mini-Karte; Liste der Stile (Vorschau 54 pt, Name, Satz, Preis aus `Product.displayPrice` bzw. ✓ wenn gekauft); `PrimaryButton` „<Stil> · Preis“, darunter Zeile „Alle Stile · Preis einmalig“; Feintext „Einmalkauf, kein Abo. Gilt für iPhone und CarPlay.“; Link „Käufe wiederherstellen“ (`AppStore.sync()`). StoreKit 2 wie GM-029 Punkt 1
+2. **Stil testen**: 10 Min je Premium-Stil, einmal pro Stil (in UserDefaults merken). Glas-Banner oben „Neon City · Vorschau, noch m:ss“ + „Kaufen“. Ablauf: wenn keine Navigation läuft, zurück zu Klassik + Shop-Blatt; während der Navigation erst nach Ende. Logik in Core `StyleTrial` (Test: läuft nicht ab, solange `isNavigating`)
+3. **Freigeschaltet**: Blatt mit Haken, „<Stil> gehört dir“, „Losfahren“, „Andere Stile ansehen“; Stil sofort aktiv (auch CarPlay)
+4. **Meine Fahrten**: Liste nach Tagen, Mini-Karte je Fahrt, Summe Monat (km, Fahrten, Zeit), Teilen → Fotomodus. Core `TripLog` (Codable, nur lokal, max. 200 Fahrten), Einstellung „Fahrten speichern“ (an) + „Alle löschen“. Spur aus `NavigationSession` (GM-029 Punkt 8)
+5. **Favoriten**: Stern-Knopf in der Routen-Vorschau, Chip „Als Favorit gemerkt“; Kategorie „Favoriten“ in der Suche zeigt sie; Löschen per Wischen
+6. **Parkplatz** im Glas-Look wie Bild (GM-029 Punkt 3 gilt weiter)
+7. **Baustelle voraus**: oranges Glas-Banner (`#FF9F1C` 82 %) unter dem Abbiegehinweis, „Baustelle in 1,8 km“ + Satz aus der Meldung (GM-029 Punkt 4)
+8. **Neu berechnen**: lila Glas-Banner „Route wird neu berechnet · Du bist anders gefahren“, Ankunftszeit grau + „wird aktualisiert …“ bis die neue Route da ist (kein Vollbild)
+9. **Kein GPS / kein Netz**: Chips „Kein GPS · Position geschätzt“ (nach 5 s ohne Fix während der Fahrt, Fortschritt mit letzter Geschwindigkeit schätzen, Core-Test) und „Offline · Route bleibt“ (`NWPathMonitor`); Tacho zeigt „–“
+10. **Standort aus**: Blatt „Standort ist aus · In Einstellungen erlauben“ (`UIApplication.openSettingsURLString`) + Suche bleibt nutzbar; Kartenmitte Idstein bzw. letzter bekannter Ort
+11. Logik-Befunde 1–12 oben in Code und Texten umsetzen; `docs/legal/index.md` um Fahrten-Verlauf (lokal) ergänzen
+
+## GM-032 – Entscheidung: UI-Richtung „B · Glas“ – Auftrag für den lokalen Claude
+
+**Ziel:** Der Nutzer hat sich für das Glas-Design entschieden (GM-030 Richtung B, GM-031 Onboarding Richtung B). Die ganze iPhone-Oberfläche wird darauf umgestellt. A, C, D werden nicht umgesetzt.
+
+**Dateien:** `CHANGELOG.md` (nur Auftrag, kein Code)
+
+**Tatsächlich geprüft:** Nichts gebaut. Vorlagen: `docs/previews/designs/B-glas.png`, `http://localhost:8765/tools/prototype/designs.html` (Abschnitt B), `http://localhost:8765/tools/prototype/onboarding.html` (Abschnitt B). Werte stammen aus `tools/prototype/designs.css` (`.B …`) und `tools/prototype/onboarding.css` (`.B .f …`).
+
+**Ungetestet:** Alles, Umsetzung steht aus.
+
+### Auftrag (Swift, iPhone; CarPlay bleibt bei Apples Vorlagen)
+
+Vor dem Start `docs/LESSONS_SWIFT.md` lesen. Je Block eigener Eintrag GM-0xx, nach jedem Block Mac-Build + Screenshots (`tools/mac_screens.sh`) und mit den Vorlagen vergleichen. Keine Gedankenstriche in UI-Texten (GM-023). Deutsch + Englisch.
+
+**1. Design-Bausteine (`App/Design/Glass.swift`, neu)**
+- Farben: Akzent `#B44DFF`, Verlauf bis `#7A2BD8` (135°), Ende/Gefahr `#FF3B4E`, Text weiß, Nebentext `#A9A9B2`, Erfolg `#58B05F`
+- Glas-Fläche `GlassCard`: `.ultraThinMaterial` (dunkel), darüber `rgb(28,28,32)` mit 45 % Deckkraft, Rand 0,5 pt weiß 18 %, Ecken 26 pt (Blätter) / 20 pt (Karten) / 14 pt (Felder, Zeilen), `.continuous`; Schatten schwarz 35 %, Radius 30, y 10
+- `GlassChip` (Kapsel, Innenabstand 8×13 pt, 14 pt semibold, Symbol in Akzentfarbe), `GlassRoundButton` (48-pt-Kreis), `PrimaryButton` (Höhe 56, Ecken 18, Verlauf, Schatten Akzent 45 % Radius 24 y 8, 19 pt heavy), `SecondaryButton` (Text 15 pt, weiß 75 %), `SheetGrabber` (38 × 5 pt, weiß 35 %)
+- Schrift: SF Pro (System), Titel 28 pt heavy, Laufweite −0,6; Zahlen `.monospacedDigit()`
+- „Transparenz reduzieren“ an: feste Fläche `#1C1C20` statt Material. „Bewegung reduzieren“ beachten
+- Alle Bausteine mit `#Preview`
+
+**2. Startkarte** (Vorlage B, Bild 1)
+- Suche **unten** im Daumenbereich als Glas-Blatt mit Griff: Feld „Wohin?“ + Mikrofon, darunter Chips „Zuhause · 14 Min“, „Arbeit · 22 Min“, „Tanken“, „Parken“ (Zuhause/Arbeit nur wenn festgelegt; Minuten aus dem letzten Routing, sonst ohne Zeit)
+- Rechts oben zwei `GlassRoundButton`: Zentrieren, Einstellungen
+- Hochziehen oder Tippen öffnet die Suche im selben Blatt (Blatt wird hoch, Tastatur), kein Vollbild-Wechsel
+- OSM-Hinweis über dem Blatt rechts
+
+**3. Suche** (Onboarding-Seite B, Bild 6)
+- Feld oben im Blatt mit Akzent-Rand 1,5 pt. Ohne Eingabe: 4 Kategorie-Kacheln (Tanken, Parken, Essen, Favoriten) und „Zuletzt“ als Glas-Liste (Symbol in 38-pt-Kachel mit 12 pt Ecken, Titel, Untertitel, Entfernung rechts)
+
+**4. Routen-Vorschau** (B, Bild 2)
+- Zurück als runder Glas-Knopf oben links (kein Balken mehr)
+- Glas-Blatt unten: Titel 28 pt heavy, Untertitel, Schließen-Kreis 36 pt oben rechts
+- Routen als Zeilen (Ecken 16): **Minuten groß zuerst**, darunter „Schnellste · 1,9 km · an 9:47“. Gewählte Zeile: Akzent 22 % Fläche + 1,5 pt Rand Akzent; erste Route mit Chip „Empfohlen“
+- `PrimaryButton` „Los“
+- Karte so einpassen, dass die Route über dem Blatt liegt (Blatthöhe messen, nicht schätzen)
+
+**5. Navigation** (B, Bild 3)
+- Abbiegehinweis oben als Glas-Karte mit Akzent-Tönung (`#7C28C8` 72 % über Material): Pfeil 46 pt, Entfernung 40 pt heavy, Straße 18 pt bold
+- Darunter links Chip „danach links · Wiesbadener Str.“, rechts Tempolimit-Schild 56 pt (Zeichen 282 bei unbegrenzt bleibt, GM-022)
+- Unten eine Glas-Leiste: links runder Tacho (km/h in 48-pt-Kreis, weiß 8 %), Mitte Ankunftszeit 24 pt heavy + „5 Min · 1,1 km“, rechts runder Ende-Knopf `#FF3B4E` mit ×. Zentrieren nur, wenn die Karte verschoben wurde
+- „Musik leiser“ als kleiner Chip, wenn aktiv
+
+**6. Ankunft** (Onboarding B, Bild 7)
+- Glas-Blatt: „Angekommen · 9:47“ (Akzent, klein, Großbuchstaben), Zielname, 3 Werte-Kacheln (km, Min, neue Straßen grün), Stufen-Balken nur wenn Entdecken aktiv ist; „Fertig“ + runder Teilen-Knopf
+
+**7. Onboarding (neu, nur beim ersten Start)** (Onboarding B, Bild 1, 2, 3, 5; Bild 4 „Fahrzeug“ gestrichen)
+- 1 Willkommen: Karte im Hintergrund (langsame Kamerafahrt, bei „Bewegung reduzieren“ still), App-Icon, „EzMaps“, ein Satz, „Los geht's“, „Ich habe schon EzMaps“ (= überspringen)
+- 2 Standort: Erklärung (zwei Zeilen „Karte zeigt dich“, „Ansagen laufen weiter“; **kein** Hinweis „Kein Konto, kein Tracking“ und **nicht** „Standort bleibt auf dem iPhone“, siehe GM-033), **erst nach Tipp auf „Standort erlauben“** `requestWhenInUseAuthorization`; „Später“ geht weiter. Abgelehnt → später Hinweis mit Knopf zu den iOS-Einstellungen
+- 3 Stil wählen: 2×2 Kacheln mit echter Mini-Karte (MapLibre-Schnappschuss, gecacht), Klassik „Gratis“, andere „Premium · Kostenlos testen“ (StoreKit siehe GM-029 Punkt 1; bis dahin nur vorhandene Stile)
+- ~~Fahrzeug wählen~~: **gestrichen (Nutzer-Entscheidung), nicht umsetzen.** Spieler-Symbol bleibt der Pfeil. Das Onboarding hat damit nur 4 Schritte
+- 4 Zuhause/Arbeit + Schalter Sprachansagen und Losfahr-Hinweis (Mitteilungs-Erlaubnis nur fragen, wenn eingeschaltet)
+- Fortschritt oben als 3 Striche (Akzent) + „Schritt x von 3“ (Standort, Stil, Zuhause/Arbeit). `AppSettings.onboardingDone`; Screenshot-Modus überspringt das Onboarding
+
+**8. Einstellungen**
+- Eigene Glas-Liste statt `Form`: oben Karte „Stil“ mit Mini-Vorschau, dann Gruppen Navigation (Stimme, Autobahn meiden, Tempolimit anzeigen …), Orte (Zuhause, Arbeit), Daten und Recht. Schalter in Akzentfarbe, alles scrollbar
+
+**9. Prüfen**
+- Kleine Geräte 375 × 667 (LESSONS_SWIFT 2): nichts abgeschnitten, Blätter scrollen
+- App bleibt dunkel; auf hellem Kartenstil (Klassik) muss Glas lesbar bleiben (dann `.regularMaterial` + 60 % Fläche)
+- VoiceOver-Beschriftungen für alle runden Knöpfe
+- Store-Screenshots neu (`tools/mac_screens.sh`), zusätzlich Onboarding Bild 1–3
+
+## GM-031 – Onboarding und weitere Screens in den vier UI-Richtungen
+
+**Ziel:** Nutzer will auch Onboarding usw. sehen; Ideen aus anderen Navi-Apps einbeziehen.
+
+**Dateien:** `tools/prototype/onboarding.html`, `tools/prototype/onboarding.css`, `tools/prototype/js/onboarding.js` (neu), `tools/prototype/js/vorschau.js` (startet nur noch auf der eigenen Seite)
+
+**Geändert:**
+- Neue Seite `http://localhost:8765/tools/prototype/onboarding.html`: 8 Screens (Willkommen, Standort mit Erklärung vor der iOS-Frage, Stil wählen, Fahrzeug wählen, Zuhause/Arbeit + Ansagen, Suche ohne Eingabe, Ankunft mit Stufe, Einstellungen) je Richtung A–D. Gleiches HTML, Aussehen nur per CSS-Skin
+- Ideen aus der Recherche: Standort bei Navi-Apps gleich zu Beginn, aber mit Erklär-Bildschirm vorher (Waze-Muster; abgelehnte iOS-Abfrage lässt sich nur über Einstellungen zurückholen); Fahrzeug-Symbol wählbar wie bei Waze/Google Maps
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Skriptfehler, alle 32 Screens als Bild angesehen.
+
+**Ungetestet:** Nichts in Swift; Auswahl der Richtung durch den Nutzer steht aus. Bilder nicht im Repo (zu groß), Seite selbst öffnen.
+
+## GM-030 – UI-Entwürfe A bis D (HUD, Glas, Minimal, Sticker)
+
+**Ziel:** Der Nutzer mag das jetzige UI nicht; vier Richtungen zum Auswählen zeigen.
+
+**Dateien:** `tools/prototype/designs.html`, `tools/prototype/designs.css`, `tools/prototype/js/designs.js` (neu), `docs/previews/designs/{A-hud,B-glas,C-minimal,D-sticker}.png` (neu)
+
+**Geändert:**
+- Neue Prototyp-Seite `http://localhost:8765/tools/prototype/designs.html`: je Richtung Startkarte, Routen-Vorschau, Navigation auf der echten Neon-Karte
+- A HUD (Barlow Condensed, Monospace-Zahlen, abgeschrägte Ecken), B Glas (iOS-nah, Bedienung unten), C Minimal (Pillen), D Sticker (dicke Konturen, Gelb)
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Skriptfehler, alle 12 Bildschirme als Bild angesehen.
+
+**Ungetestet:** Nichts in Swift. Auswahl durch den Nutzer steht aus, danach Auftrag für den lokalen Claude.
+
+## GM-029 – Ideen-Vorschau (Parkplatz, Baustellen, Stimmen, Widgets, Fotomodus, Route sofort) + neuer Gratis-Stil „Klassik“ – mit Auftrag für Swift
+
+**Ziel:** Die vom Nutzer gewählten Ideen im Prototyp zeigen (die Radar-Minikarte war zuerst dabei und ist auf Wunsch des Nutzers wieder gestrichen) und so genau beschreiben, dass der lokale Claude sie in Swift umsetzen kann. Neon City ist der beliebteste Stil und wird deshalb Premium; gratis ist ab jetzt der neue Stil „Klassik“.
+
+**Dateien:** `tools/prototype/vorschau.html`, `tools/prototype/vorschau.css`, `tools/prototype/js/vorschau.js` (alle neu), `tools/prototype/data/autobahn_a3_idstein.json` (neu, echte Meldungen), `tools/prototype/js/{map,phone,carplay}.js`, `tools/prototype/style.css`, `Assets/Generated/Ideen/*.png` (neu, 15 Symbole), `docs/previews/ideen/*.jpg` (neu, 7 Bilder), `docs/TODO_PROTOTYP_REVIEW.md`
+
+**Geändert (Prototyp):**
+- Neue Seite **Ideen-Vorschau**: `python tools/prototype/serve.py` → `http://localhost:8765/tools/prototype/vorschau.html`. Alle Bilder mit dem echten Karten-Renderer; Bilder auch in `docs/previews/ideen/`
+- Neuer Stil **Klassik** (`STYLES.classic`, `free: true`, Palette `CLASSIC` in `js/map.js`): heller Stadtplan – Land `#f2efe9`, Wohnen `#ece7e0`, Gewerbe `#ebe3e8`, Feld `#eef0d6`, Park `#d4ebc8`, Wald `#c3dfb4`, Wasser `#aad3df`, Gebäude `#ddd5cc` (Kante `#cbc0b5`), Straßen weiß mit Rand `#c9c1b6`, Hauptstraßen `#fde7a6`, Autobahn `#f7c56b`, Bahn `#a3a3a3`, Breite ×1,15, Route `#1a73e8` (Rand `#0b3d91`). Theme `.t-classic` (weiß, blau, Inter). Stilwahl, Stile-Seite und CarPlay zeigen „Gratis“ nur noch für Klassik, sonst „Premium · Vorschau testen“
+- Symbole je Stil als PNG (@3x) für die App: `Assets/Generated/Ideen/parked-car-{classic,neon,western,pixel,toy}@3x.png` (60 × 90 pt), `roadworks-{stil}@3x.png` und `closure-{stil}@3x.png` (40 × 40 pt). Quelle/Spiegel: `drawParkedCar`, `drawWorkIcon` in `tools/prototype/js/vorschau.js`
+- Kleinigkeiten im klickbaren Prototyp: Text der Stilwahl („Klassik ist gratis …“), Symbole von Zuhause/Arbeit in hellen Stilen sichtbar
+
+**Tatsächlich geprüft:** Playwright (Chromium): Vorschau-Seite ohne Skriptfehler, alle Abschnitte als Bild angesehen; klickbarer Prototyp mit Stil „Klassik“ (Stilwahl, Karte iPhone + CarPlay) ohne Fehler. Autobahn-API live abgefragt (CORS offen, JSON wie unten). Routing-Zeiten gemessen: Valhalla FOSSGIS 0,5–1,0 s (mit/ohne Alternativen gleich), Photon 0,6 s.
+
+**Ungetestet:** Nichts davon ist in Swift gebaut. Auf dem Mac nichts geprüft.
+
+### Auftrag für den lokalen Claude (Swift) – Reihenfolge = Priorität
+
+Allgemein: vor jedem Punkt `docs/LESSONS_SWIFT.md`; Logik in `Core/` mit Tests (`swift test` geht auch unter Linux); Texte deutsch + englisch; je Punkt eigener Eintrag GM-0xx; nach jedem Punkt Mac-Build. Bilder zum Vergleich: `docs/previews/ideen/`.
+
+**1. Gratis-Stil „Klassik“, Neon City Premium (vor der Veröffentlichung nötig)**
+- `MapStyle`: neuer Fall `.classic = "classic"`, `titleKey` „Klassik“ (en „Classic“), `MapStyle.free = .classic`. Alle `switch` über `MapStyle` nachziehen (grep). `MapStyleTests` anpassen (genau ein Gratis-Stil = classic)
+- `tools/maplibre/build_style.py` um Klassik erweitern (Werte oben, aus `CLASSIC` in `js/map.js`), erzeugt `App/MapStyles/style-classic.json` (nie von Hand). Route in Klassik `#1a73e8`/`#0b3d91` (in `NeonColors` → besser `StyleColors` je Stil)
+- Neue Nutzer starten mit Klassik. Neon City „Vorschau testen“: Demo-Fahrt im Stil (oder 10 Minuten freie Nutzung), danach zurück zu Klassik mit Kauf-Hinweis
+- StoreKit 2, nicht verbrauchbar: `ezmaps.style.neon`, `ezmaps.style.western`, `ezmaps.style.pixel`, `ezmaps.style.toy`, `ezmaps.styles.all` (alle, auch künftige). Preise nur aus StoreKit; „Käufe wiederherstellen“ in den Einstellungen; `Transaction.updates` beim Start abhören. StoreKit-Testdatei für den Simulator
+- Stile-Seite wie `docs/previews/ideen/9-gratis-klassik.jpg`: Neon groß zuerst mit „Beliebtester Stil“, Pillen „Gratis“/„Premium“, unten „Alle Stile – Freischalten“
+- `docs/APPSTORE_TEXTE.md` anpassen: Klassik gratis, Neon City & Co. als In-App-Kauf; In-App-Käufe in App Store Connect anlegen
+
+**2. Route ohne Wartezeit** (Bild `8-route-sofort.jpg`)
+- Beim Antippen eines Treffers sofort `.preview` mit Ziel, gestrichelter Luftlinie und Schätzung „≈ x Min“ (Luftlinie × 1,35 / 45 km/h) – kein Vollbild-Ladefenster mehr, nur kleiner Hinweis „Route kommt …“. Route und Alternativen ersetzen die Linie, sobald da
+- Vorab rechnen: Wenn Suchtreffer da sind, Route zum obersten Treffer im Hintergrund holen (Task, bei neuer Eingabe abbrechen; max. 1 Anfrage je 2 s – Fair-Use)
+- Cache: Antworten 5 Min merken (Schlüssel: Ziel + Start auf 50 m gerundet + Optionen). Logik in Core (`RouteCache`) mit Tests
+- Ziel: < 300 ms bis zur Route bei Cache-Treffer, sonst ≤ 1 s. Zeit messen und im Log ausgeben
+
+**3. „Wo hab ich geparkt?“** (Bild `3-parkplatz.jpg`, Symbole `parked-car-*.png`)
+- Merken, wenn sich CarPlay trennt (`didDisconnect`) und die letzte Position < 5 Min alt ist; zusätzlich „Hier geparkt“ von Hand (lange auf den Standort drücken) und „Auto vergessen“
+- Core `ParkedCar` (Koordinate, Zeit, Adresse) Codable, gespeichert in UserDefaults der App-Gruppe (für Widgets); Adresse per Photon `/reverse`
+- Karte: Auto-Symbol des aktiven Stils, **Schnauze nach oben** (nicht mitdrehen), Schild „Dein Auto · seit 14:32“. Karte unten: Adresse, Entfernung, Fußweg (Entfernung / 1,3 m/s), Knöpfe „Zu Fuß hin“ (Apple Karten, `MKLaunchOptionsDirectionsModeWalking`), „Teilen“, „✕“
+- Auch im CarPlay-Kartenfenster sichtbar
+
+**4. Baustellen und Sperrungen (Autobahn GmbH)** (Bild `4-baustellen.jpg`, Symbole `roadworks-*`/`closure-*`)
+- API: `GET https://verkehr.autobahn.de/o/autobahn/` (Liste), `…/{Straße}/services/roadworks`, `…/closure`, `…/warning`. Felder: `display_type` (ROADWORKS, SHORT_TERM_ROADWORKS, CLOSURE, WARNING …), `title`, `subtitle` (Richtung), `coordinate {lat, long}` (Text), `geometry` (LineString, lon/lat), `isBlocked` („true“/„false“), `startTimestamp`, `description` (Liste). Beispiel: `tools/prototype/data/autobahn_a3_idstein.json`. **Keine** Blitzer o. Ä. übernehmen (§ 23 StVO); Nutzungsbedingungen der API vor dem Start prüfen und Quelle „Verkehrsdaten: Autobahn GmbH des Bundes“ in den Einstellungen nennen
+- Core `AutobahnClient` (über `HTTPClient`, Tests mit Attrappe) + `IncidentMatcher`: nur Meldungen, deren Linie ≤ 30 m an der Route liegt **und** in Fahrtrichtung (Winkel Meldung ↔ Route < 60°). Straßen aus den Routennamen (`A 3`/`A3`), Abfrage beim Routen und alle 10 Min
+- Karte je Stil (Werte aus `drawWork`): Linie auf der Fahrbahn, Grund + Strichlinie: Klassik weiß/`#e8710a`, Neon `#0b0b0c`/`#ff9f1c` mit Leuchten (Sperrung `#ff2d55`), Western `#f2e4bf`/`#c0261f`, Pixel schwarz/`#ffcc33` eckig, Toy weiß/`#ff6b00`; Sperrung jeweils rot. Symbol (PNG) in der sichtbaren Mitte. MapLibre: `MLNLineStyleLayer` mit `lineDashPattern`, Neon zusätzlich `lineBlur`; `MLNSymbolStyleLayer` mit den PNGs
+- Warnung 2 km vorher (Autobahn), 1 km sonst: Banner unter dem Abbiegehinweis im Stil (Bild `4-baustellen.jpg` rechts) + Ansage „Achtung, Baustelle in 2 Kilometern.“; CarPlay: `CPNavigationAlert` (8 s)
+
+**5. Stimmen-Auswahl (allgemein, nicht je Stil)** (Bild `5-stimmen.jpg`)
+- Einstellungen → „Stimme“: alle `AVSpeechSynthesisVoice.speechVoices()` mit Sprache `de*`, sortiert Premium > Erweitert > Standard, mit Probehören (Satz „In 300 Metern rechts abbiegen auf Hauptstraße.“), Häkchen, Hinweis wie Premium-Stimmen in iOS geladen werden
+- Sprechtempo-Regler (0,40–0,60, Standard 0,50). `AppSettings.voiceIdentifier`, `speechRate`; `SpeechService` nimmt sie, Ersatz `de-DE`
+
+**6. ~~Radar-Minikarte~~ – gestrichen (Nutzer-Entscheidung), nicht umsetzen.**
+
+**7. Widgets und Kurzbefehle** (Bild `6-widgets-kurzbefehle.jpg`)
+- Vorher nötig: „Zuhause“/„Arbeit“ in den Einstellungen festlegen (Suche wiederverwenden)
+- Widget-Erweiterung (WidgetKit, neues Target in `project.yml`, App-Gruppe `group.<Bundle-ID>`): klein „Nach Hause“ (Fahrzeit, Ankunft), klein „Dein Auto“ (Entfernung, Adresse), mittel „Zur Arbeit“ (Fahrzeit, Baustellen-Hinweis, Knopf „Losfahren“ = `ezmaps://route?to=work`), Sperrbildschirm rund + rechteckig. Kartenbild nicht im Widget rendern (Speichergrenze) – die App legt ein Vorschaubild (PNG) in die App-Gruppe; Fahrzeit aus dem letzten Wert, Aktualisierung höchstens alle 15–30 Min
+- App Intents + `AppShortcutsProvider` (Deutsch, mit `\(.applicationName)`): „Navigiere nach Hause“, „Navigiere zur Arbeit“, „Navigiere zu …“ (Ort), „Wo ist mein Auto?“, „Fahrzeit nach Hause“ (Antwort ohne App), „Tankstelle in der Nähe“. Navigation-Intents öffnen die App und starten direkt (auch für CarPlay)
+
+**8. Fotomodus** (Bild `7-fotomodus.jpg`)
+- Core: `NavigationSession` merkt die gefahrene Spur (Punkt alle 20 m) – Test
+- Knopf „Foto“ im Ankunfts-Blatt (und später „Meine Fahrten“). Editor: Format Story 1080 × 1920 / Quadrat 1080 × 1080 / Breit 1920 × 1080, Stil (eigene Stile; fremde mit Wasserzeichen „Premium“), Schalter Werte/Titel/Datum/„Start und Ziel ausblenden“ (je 300 m abschneiden – Wohnort schützen)
+- Bild: `MLNMapSnapshotter` (Kamera auf die Spur eingepasst) + darüber Route, Start/Ziel, Titel, Werte (km, Min, später „neue Straßen“), Logo als Bild-Asset (**nicht** Pricedown – keine App-Lizenz), Hinweis „© OpenMapTiles · © OpenStreetMap-Mitwirkende“ immer im Bild
+- Teilen über `ShareLink`; „Sichern“ braucht `NSPhotoLibraryAddUsageDescription`
+
+**Danach:** `docs/legal/index.md` um Autobahn GmbH ergänzen (übermittelt: befahrene Autobahnen, IP), `PrivacyInfo.xcprivacy` prüfen (keine neuen Datenarten), `docs/VEROEFFENTLICHUNG.md` (In-App-Käufe, Widget-Target, App-Gruppe) nachziehen.
 ## GM-028 – Straßennamen in schmaler Fettschrift, weniger Rechenlast
 
 **Ziel:** Straßennamen wie im Foto des Nutzers; Ruckeln verringern.

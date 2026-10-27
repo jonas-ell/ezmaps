@@ -1,0 +1,61 @@
+/* GM-030: UI-Entwürfe – eigene Seite, ändert den klickbaren Prototyp nicht */
+body.dz { background: #0e0e10; color: #ddd; }
+.dz-head { display: flex; gap: 18px; flex-wrap: wrap; align-items: baseline; padding: 14px 24px; border-bottom: 1px solid #222; font-size: 13px; }
+.dz-head span { color: #888; }
+#dz { display: flex; flex-direction: column; gap: 50px; padding: 26px 24px 80px; }
+.dsec h2 { font: 800 24px Inter; color: #fff; }
+.dsec p { color: #9a9aa0; font-size: 13.5px; line-height: 1.5; max-width: 980px; margin: 6px 0 14px; }
+.drow { display: flex; gap: 30px; flex-wrap: wrap; }
+.dph { position: relative; width: 393px; height: 852px; border-radius: 55px; overflow: hidden; background: #3b3c3e; box-shadow: 0 0 0 12px #111113, 0 0 0 14px #77746f; margin: 14px; font-family: Inter, sans-serif; color: #fff; }
+.dph .fill { position: absolute; inset: 0; }
+.dph .isl { position: absolute; left: 133.5px; top: 11px; width: 126px; height: 37px; border-radius: 19px; background: #000; z-index: 50; }
+.dph .sb { position: absolute; left: 0; width: 133px; top: 18px; text-align: center; font: 600 17px Inter; z-index: 50; }
+.dph .hbar { position: absolute; left: 129.5px; bottom: 8px; width: 134px; height: 5px; border-radius: 3px; background: #fff; z-index: 50; }
+.cap { color: #8a8a90; font-size: 12px; margin: 0 14px; }
+.abs { position: absolute; }
+.osm { position: absolute; font: 500 9px Inter; color: rgba(255,255,255,.75); text-shadow: 0 0 3px #000; }
+
+/* ---------- A · HUD (Spiel-Overlay) ---------- */
+.A { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .3px; }
+.A .p { background: linear-gradient(180deg, rgba(8,8,10,.82), rgba(8,8,10,.7)); border: 1px solid rgba(255,255,255,.14); clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+.A .br { position: absolute; width: 14px; height: 14px; border: 2px solid #b44dff; }
+.A .mono { font-family: 'JetBrains Mono', monospace; }
+.A .acc { color: #c27bff; }
+.A .lbl { font: 600 12px 'Barlow Condensed'; letter-spacing: 2px; color: #9d9da6; text-transform: uppercase; }
+.A .btn { background: #b44dff; color: #fff; font: 800 22px 'Barlow Condensed'; letter-spacing: 3px; text-transform: uppercase; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); display: grid; place-items: center; }
+.A .tick { height: 3px; background: repeating-linear-gradient(90deg, #b44dff 0 10px, transparent 10px 14px); }
+.A .opt { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; border-left: 3px solid transparent; font: 700 18px 'Barlow Condensed'; text-transform: uppercase; letter-spacing: 1px; }
+.A .opt.on { border-left-color: #b44dff; background: rgba(180,77,255,.16); }
+.A .opt small { display: block; font: 500 12px Inter; color: #9d9da6; text-transform: none; letter-spacing: 0; }
+
+/* ---------- B · Glas (iOS-nah, weich) ---------- */
+.B .g { background: rgba(28,28,32,.62); backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4); border: .5px solid rgba(255,255,255,.18); border-radius: 26px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+.B .chip { display: inline-flex; gap: 6px; align-items: center; padding: 8px 13px; border-radius: 18px; background: rgba(28,28,32,.62); backdrop-filter: blur(18px); border: .5px solid rgba(255,255,255,.16); font: 600 14px Inter; }
+.B .cta { border-radius: 18px; font: 800 19px Inter; display: grid; place-items: center; background: linear-gradient(135deg, rgba(190,95,255,.78), rgba(122,43,216,.72)); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); border: .5px solid rgba(255,255,255,.38); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(0,0,0,.25), inset 0 0 18px rgba(255,255,255,.08), 0 8px 24px rgba(160,60,240,.35); } /* GM-036: Knöpfe auch aus Glas */
+.B .grab { width: 38px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.35); margin: 0 auto 12px; }
+.B .ropt { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 16px; background: rgba(255,255,255,.06); margin-top: 8px; }
+.B .ropt.on { background: rgba(180,77,255,.22); box-shadow: inset 0 0 0 1.5px #b44dff; }
+.B .ropt small { display: block; color: #a9a9b2; font: 500 13px Inter; }
+.B .round { width: 48px; height: 48px; border-radius: 24px; display: grid; place-items: center; }
+.B .g.round { background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); }
+
+/* ---------- C · Minimal (Karte zuerst) ---------- */
+.C .pill { background: rgba(0,0,0,.78); border-radius: 999px; }
+.C .dot { width: 8px; height: 8px; border-radius: 4px; background: #b44dff; display: inline-block; }
+.C .sheet { background: #0c0c0e; border-radius: 22px 22px 0 0; }
+.C .seg { display: flex; gap: 6px; } .C .seg span { flex: 1; text-align: center; padding: 10px 0; border-radius: 12px; background: #1b1b1f; font: 700 14px Inter; } .C .seg span.on { background: #fff; color: #000; }
+.C .seg small { display: block; font: 500 11px Inter; opacity: .7; }
+
+/* ---------- D · Sticker (kräftig, verspielt) ---------- */
+.D { font-family: Inter, sans-serif; }
+.D .st { background: #fff; color: #111; border: 3px solid #111; border-radius: 14px; box-shadow: 4px 4px 0 #111; }
+.D .y { background: #ffd23f; }
+.D .v { background: #b44dff; color: #fff; }
+.D .tilt { transform: rotate(-2deg); }
+.D .big { font: 900 44px Inter; letter-spacing: -1.5px; }
+.D .tag { display: inline-block; padding: 3px 8px; border: 2.5px solid #111; border-radius: 8px; font: 800 12px Inter; background: #ffd23f; color: #111; }
+.D .row3 { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 2.5px solid #111; border-radius: 12px; margin-top: 8px; background: #fff; color: #111; font: 800 16px Inter; }
+.D .row3.on { background: #b44dff; color: #fff; box-shadow: 3px 3px 0 #111; }
+.D .row3 small { display: block; font: 600 12px Inter; opacity: .7; }
+/* GM-038: Uhrzeit oben auf hellen Karten lesbar (wie iOS: weicher Verlauf hinter der Statusleiste) */
+.dph.B::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 58px; background: linear-gradient(rgba(0,0,0,.55), transparent); z-index: 49; pointer-events: none; }

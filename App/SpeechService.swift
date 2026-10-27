@@ -6,6 +6,9 @@ import AVFoundation
 final class SpeechService: NSObject, AVSpeechSynthesizerDelegate {
     var enabled = true
     var duckOthers = true
+    /// GM-043: gewählte Stimme (nil = beste deutsche) und Sprechtempo (0,8 … 1,2 × normal)
+    var voiceIdentifier: String?
+    var rateFactor: Float = 1
     var onSpeakingChange: ((Bool) -> Void)?
     private let synthesizer = AVSpeechSynthesizer()
 
@@ -21,8 +24,8 @@ final class SpeechService: NSObject, AVSpeechSynthesizerDelegate {
         try? session.setCategory(.playback, mode: .voicePrompt, options: options)
         try? session.setActive(true)
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = Self.bestGermanVoice
-        utterance.rate = AVSpeechUtteranceDefaultSpeechRate
+        utterance.voice = voiceIdentifier.flatMap { AVSpeechSynthesisVoice(identifier: $0) } ?? Self.bestGermanVoice
+        utterance.rate = min(AVSpeechUtteranceMaximumSpeechRate, AVSpeechUtteranceDefaultSpeechRate * rateFactor)
         synthesizer.speak(utterance)
         onSpeakingChange?(true)
     }
@@ -33,6 +36,13 @@ final class SpeechService: NSObject, AVSpeechSynthesizerDelegate {
         let de = AVSpeechSynthesisVoice.speechVoices().filter { $0.language == "de-DE" }
         let best = de.max { a, b in a.quality.rawValue < b.quality.rawValue }
         return best ?? AVSpeechSynthesisVoice(language: "de-DE")
+    }
+
+    /// GM-043: alle installierten deutschen Stimmen für die Auswahl (beste zuerst)
+    static var germanVoices: [AVSpeechSynthesisVoice] {
+        AVSpeechSynthesisVoice.speechVoices()
+            .filter { $0.language.hasPrefix("de") }
+            .sorted { a, b in a.quality.rawValue != b.quality.rawValue ? a.quality.rawValue > b.quality.rawValue : a.name < b.name }
     }
 
     func stop() {

@@ -4,9 +4,8 @@ import UIKit
 import MapLibre
 import EzMapsCore
 
-/// Karte „Neon City“ mit MapLibre Native. Stil: App/MapStyles/style-neon-city.json
-/// (erzeugt von tools/maplibre/build_style.py aus den Prototyp-Werten), Kacheln vorerst von OpenFreeMap.
-/// Wild West, Pixel Quest und Toy Town folgen später.
+/// Karte mit MapLibre Native. Stile: App/MapStyles/style-*.json (GM-043: alle 5, erzeugt von
+/// tools/maplibre/build_style.py aus den Prototyp-Werten), Kacheln von OpenFreeMap.
 enum MapStyleResource {
     static func url(for style: MapStyle) -> URL? {
         let name = (style.styleFileName as NSString).deletingPathExtension
@@ -29,10 +28,10 @@ enum NeonColors {
 /// Gemeinsamer Aufbau für iPhone und CarPlay
 enum NeonMap {
     // GM-027: Startzoom 15 (vorher 13), damit der Spiel-Look sichtbar ist
-    static func make(frame: CGRect = .zero, zoom: Double = 15) -> MLNMapView {
-        let map = MLNMapView(frame: frame, styleURL: MapStyleResource.url(for: .neonCity))
+    static func make(frame: CGRect = .zero, zoom: Double = 15, style: MapStyle = .classic) -> MLNMapView {
+        let map = MLNMapView(frame: frame, styleURL: MapStyleResource.url(for: style))
         map.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        map.backgroundColor = NeonColors.background
+        map.backgroundColor = StyleTheme.of(style).background
         map.setCenter(MapStyleResource.idstein, zoomLevel: zoom, animated: false)
         map.showsUserLocation = true
         map.logoView.isHidden = true
@@ -50,8 +49,23 @@ final class RouteOverlay {
     private var styleReady = false
     private var pending: (routes: [Route], selected: Int, destination: Coordinate?)?
     private var pendingMe: (Coordinate?, Double)?
+    /// GM-043: zuletzt gezeigte Daten – nach einem Stilwechsel (neuer Stil = leere Karte) wieder zeichnen
+    private var lastShown: (routes: [Route], selected: Int, destination: Coordinate?)?
+    private var lastTrail: [Coordinate] = []
+    /// GM-043: Routenfarben je Stil
+    var theme = StyleTheme.of(.classic)
 
     init(map: MLNMapView) { self.map = map }
+
+    /// GM-043: Stil wechseln – MapLibre lädt neu, `styleLoaded` legt die Ebenen wieder an
+    func switchStyle(_ style: MapStyle) {
+        guard let map = map, let url = MapStyleResource.url(for: style) else { return }
+        theme = StyleTheme.of(style)
+        styleReady = false
+        if pending == nil { pending = lastShown }
+        map.backgroundColor = theme.background
+        map.styleURL = url
+    }
 
     func styleLoaded(_ style: MLNStyle) {
         styleReady = true
@@ -64,22 +78,39 @@ final class RouteOverlay {
         style.addSource(main)
         style.addSource(dest)
 
+        // GM-043: frisch gefahrene Strecke – dünnes Leuchten hinter dem Auto (Stadt aufdecken, GM-041)
+        let trail = MLNShapeSource(identifier: "ez-trail", shape: empty, options: nil)
+        style.addSource(trail)
+        let trailGlow = MLNLineStyleLayer(identifier: "ez-trail-glow", source: trail)
+        trailGlow.lineColor = NSExpression(forConstantValue: UIColor(red: 0.77, green: 0.47, blue: 1, alpha: 0.35))
+        trailGlow.lineWidth = NSExpression(forConstantValue: 12)
+        trailGlow.lineBlur = NSExpression(forConstantValue: 6)
+        trailGlow.lineCap = NSExpression(forConstantValue: "round")
+        trailGlow.lineJoin = NSExpression(forConstantValue: "round")
+        style.addLayer(trailGlow)
+        let trailLine = MLNLineStyleLayer(identifier: "ez-trail-line", source: trail)
+        trailLine.lineColor = NSExpression(forConstantValue: UIColor(red: 0.85, green: 0.65, blue: 1, alpha: 0.9))
+        trailLine.lineWidth = NSExpression(forConstantValue: 3)
+        trailLine.lineCap = NSExpression(forConstantValue: "round")
+        trailLine.lineJoin = NSExpression(forConstantValue: "round")
+        style.addLayer(trailLine)
+
         let altLayer = MLNLineStyleLayer(identifier: "ez-alt-line", source: alt)
-        altLayer.lineColor = NSExpression(forConstantValue: NeonColors.alternative)
+        altLayer.lineColor = NSExpression(forConstantValue: theme.alternative)
         altLayer.lineWidth = NSExpression(forConstantValue: 5)
         altLayer.lineCap = NSExpression(forConstantValue: "round")
         altLayer.lineJoin = NSExpression(forConstantValue: "round")
         style.addLayer(altLayer)
 
         let edge = MLNLineStyleLayer(identifier: "ez-route-edge", source: main)
-        edge.lineColor = NSExpression(forConstantValue: NeonColors.routeEdge)
+        edge.lineColor = NSExpression(forConstantValue: theme.routeEdge)
         edge.lineWidth = NSExpression(forConstantValue: 9)
         edge.lineCap = NSExpression(forConstantValue: "round")
         edge.lineJoin = NSExpression(forConstantValue: "round")
         style.addLayer(edge)
 
         let line = MLNLineStyleLayer(identifier: "ez-route-line", source: main)
-        line.lineColor = NSExpression(forConstantValue: NeonColors.route)
+        line.lineColor = NSExpression(forConstantValue: theme.route)
         line.lineWidth = NSExpression(forConstantValue: 6)
         line.lineCap = NSExpression(forConstantValue: "round")
         line.lineJoin = NSExpression(forConstantValue: "round")
@@ -107,10 +138,24 @@ final class RouteOverlay {
         style.addLayer(arrow)
 
         if let p = pendingMe { showPosition(p.0, heading: p.1) }
-        if let p = pending { show(routes: p.routes, selected: p.selected, destination: p.destination) }
+        if let p = pending ?? lastShown { show(routes: p.routes, selected: p.selected, destination: p.destination) }
+        if !lastTrail.isEmpty { showTrail(lastTrail) }
+    }
+
+    /// GM-043: gefahrene Strecke als Leuchtlinie (leer = aus)
+    func showTrail(_ coords: [Coordinate]) {
+        lastTrail = coords
+        guard styleReady, let style = map?.style else { return }
+        var shapes: [MLNShape & MLNFeature] = []
+        if coords.count > 1 {
+            var c: [CLLocationCoordinate2D] = coords.map { CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude) }
+            shapes.append(MLNPolylineFeature(coordinates: &c, count: UInt(c.count)))
+        }
+        (style.source(withIdentifier: "ez-trail") as? MLNShapeSource)?.shape = MLNShapeCollectionFeature(shapes: shapes)
     }
 
     func show(routes: [Route], selected: Int, destination: Coordinate?) {
+        lastShown = (routes, selected, destination)
         guard styleReady, let style = map?.style else {
             pending = (routes, selected, destination)
             return
@@ -244,19 +289,33 @@ struct NeonMapView: UIViewRepresentable {
     var padding: UIEdgeInsets
     /// GM-028: false, wenn die iPhone-Oberfläche nicht zu sehen ist (gesperrt, Hintergrund, nur CarPlay) – dann nicht zeichnen
     var visible: Bool = true
+    /// GM-043: Kartenstil und gefahrene Strecke (Leuchtlinie)
+    var style: MapStyle = .classic
+    var trail: [Coordinate] = []
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeUIView(context: Context) -> MLNMapView {
-        let map = NeonMap.make()
+        let map = NeonMap.make(style: style)
         map.delegate = context.coordinator
-        context.coordinator.overlay = RouteOverlay(map: map)
+        let overlay = RouteOverlay(map: map)
+        overlay.theme = StyleTheme.of(style)
+        context.coordinator.overlay = overlay
+        context.coordinator.style = style
         map.userTrackingMode = .follow
         return map
     }
 
     func updateUIView(_ map: MLNMapView, context: Context) {
         let c = context.coordinator
+        if c.style != style {
+            c.style = style
+            c.overlay?.switchStyle(style)
+        }
+        if c.trailCount != trail.count {
+            c.trailCount = trail.count
+            c.overlay?.showTrail(trail)
+        }
         if c.revision != revision || c.selected != selected {
             let isNew = c.revision != revision
             c.revision = revision
@@ -300,6 +359,8 @@ struct NeonMapView: UIViewRepresentable {
         var navigating = false
         var recenter = 0
         var camera: FollowCamera?
+        var style: MapStyle = .classic
+        var trailCount = 0
 
         func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
             overlay?.styleLoaded(style)

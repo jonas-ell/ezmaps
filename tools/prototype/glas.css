@@ -1,0 +1,46 @@
+/* GM-033: weitere Screens im Glas-Design (Ergänzung zu designs.css / onboarding.css, Richtung B) */
+.B .f .price { font: 800 15px Inter; padding: 8px 12px; border-radius: 12px; background: rgba(255,255,255,.1); white-space: nowrap; }
+.B .f .price.own { background: rgba(88,176,95,.22); color: #7fd287; }
+.B .f .hero { position: relative; height: 230px; border-radius: 22px; overflow: hidden; }
+.B .f .hero .m { position: absolute; inset: 0; }
+.B .f .hero .t { position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 14px 12px; background: linear-gradient(transparent, rgba(0,0,0,.85)); }
+.B .f .hero .t b { font: 800 24px Inter; display: block; } .B .f .hero .t small { font: 600 12px Inter; opacity: .85; }
+.B .f .badge { position: absolute; left: 10px; top: 10px; font: 800 11px Inter; padding: 4px 9px; border-radius: 9px; background: #b44dff; }
+.B .f .srow { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: .5px solid rgba(255,255,255,.1); }
+.B .f .srow:first-child { border-top: 0; }
+.B .f .thumb { width: 54px; height: 54px; border-radius: 14px; overflow: hidden; position: relative; flex: none; }
+.B .f .thumb .m { position: absolute; inset: 0; }
+.B .f .srow b { font: 700 15px Inter; display: block; } .B .f .srow small { font: 500 12.5px Inter; color: #a9a9b2; }
+.B .f .fine { font: 500 11px/1.4 Inter; color: #8e8e96; text-align: center; margin-top: 8px; }
+.B .f .link { font: 600 13px Inter; color: #c27bff; text-align: center; margin-top: 8px; }
+.B .f .banner { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 18px; }
+.B .f .banner b { font: 800 15px Inter; display: block; } .B .f .banner small { font: 500 12.5px Inter; opacity: .85; }
+.B .f .warn { background: rgba(255,159,28,.82); color: #1a1000; }
+.B .f .err { background: rgba(255,59,78,.8); }
+.B .f .info { background: rgba(124,40,200,.78); }
+.B .f .confetti { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 30%, rgba(180,77,255,.35), transparent 55%); }
+.B .f .day { font: 700 12px Inter; letter-spacing: 1.5px; text-transform: uppercase; color: #8e8e96; margin: 14px 0 6px; }
+.B .f .sum { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.B .f .sum div { padding: 10px; border-radius: 14px; background: rgba(28,28,32,.62); border: .5px solid rgba(255,255,255,.16); font: 800 19px Inter; } .B .f .sum small { display: block; font: 500 11px Inter; color: #a9a9b2; }
+
+/* GM-034: Name „Neon City“ immer in der Stil-Schrift (Pricedown, nur lokal; Ersatz Impact), schwarze Kontur */
+.nname { font-family: Pricedown, Impact, Anton, sans-serif; font-weight: 400; letter-spacing: .5px; font-size: 1.18em; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 0 #000; }
+/* GM-035: Stil-Namen in den Projekt-Schriften (wie style.css .sf-*): Neon Pricedown, Wild West Rye, Pixel Quest Press Start 2P, Toy Town Fredoka */
+.pname { font-family: 'Press Start 2P', monospace; font-weight: 400; font-size: .72em; letter-spacing: 0; text-shadow: 2px 2px 0 #000; }
+.wname { font-family: Rye, serif; font-weight: 400; letter-spacing: .3px; }
+.tname { font-family: Fredoka, sans-serif; font-weight: 700; }
+
+/* GM-038: Plus-Shop (Abo + teurer Einmalkauf als Anker) */
+.B .f .sgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.B .f .stile { position: relative; height: 150px; border-radius: 18px; overflow: hidden; border: .5px solid rgba(255,255,255,.16); }
+.B .f .stile .m { position: absolute; inset: 0; }
+.B .f .stile > span { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 10px 8px; background: linear-gradient(transparent, rgba(0,0,0,.85)); font: 800 15px Inter; }
+.B .f .plan { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; margin-top: 8px; border-radius: 16px; background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05)); border: .5px solid rgba(255,255,255,.24); box-shadow: inset 0 1px 0 rgba(255,255,255,.3); }
+.B .f .plan b { font: 800 16px Inter; display: block; } .B .f .plan small { font: 500 12px Inter; color: #a9a9b2; display: block; }
+.B .f .plan .pp { text-align: right; white-space: nowrap; }
+.B .f .plan.on { margin-top: 16px; background: linear-gradient(180deg, rgba(180,77,255,.34), rgba(180,77,255,.14)); box-shadow: inset 0 0 0 1.5px #b44dff, inset 0 1px 0 rgba(255,255,255,.35); }
+.B .f .plan.on small { color: #d9c2ef; }
+.B .f .plan .tag { position: absolute; left: 12px; top: -10px; font: 800 10.5px Inter; padding: 3px 8px; border-radius: 8px; background: #b44dff; white-space: nowrap; }
+/* GM-038: Korrekturen */
+.B .f .badge { white-space: nowrap; }
+.B .cta { display: flex !important; align-items: center; justify-content: center; gap: 8px; }
