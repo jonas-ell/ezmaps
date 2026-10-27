@@ -87,3 +87,13 @@
 .pname { font-family: 'Press Start 2P', monospace; font-weight: 400; font-size: .72em; letter-spacing: 0; text-shadow: 2px 2px 0 #000; }
 .wname { font-family: Rye, serif; font-weight: 400; letter-spacing: .3px; }
 .tname { font-family: Fredoka, sans-serif; font-weight: 700; }
+
+/* GM-036: Glas-Knöpfe – Hauptknopf lila Glas (durchscheinend, Lichtkante oben), Nebenknöpfe/Preise/Chips helles Glas */
+.B .f .btn { background: linear-gradient(135deg, rgba(190,95,255,.78), rgba(122,43,216,.72)); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); border: .5px solid rgba(255,255,255,.38); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(0,0,0,.25), inset 0 0 18px rgba(255,255,255,.08), 0 8px 24px rgba(160,60,240,.35); }
+.B .f .btn2 { border-radius: 16px; background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); height: 44px; }
+.B .f .price { border-radius: 12px; background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); }
+.B .f .price.own { background: linear-gradient(180deg, rgba(88,176,95,.35), rgba(88,176,95,.18)); color: #9be3a2; }
+.B .f .ropt { background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); }
+.B .f .ropt.on { background: linear-gradient(180deg, rgba(180,77,255,.32), rgba(180,77,255,.16)); box-shadow: inset 0 0 0 1.5px #b44dff, inset 0 1px 0 rgba(255,255,255,.35); }
+.B .f .chip, .B .chip { background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); }
+.B .f .banner .price { background: linear-gradient(135deg, rgba(190,95,255,.8), rgba(122,43,216,.75)); }

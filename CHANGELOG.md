@@ -2,6 +2,28 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-036 – Knöpfe auch im Glas-Look – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer: Glas-Look fehlte bei den Knöpfen (waren volle Farbflächen).
+
+**Dateien:** `tools/prototype/designs.css`, `tools/prototype/onboarding.css`
+
+**Geändert (Prototyp):**
+- Hauptknopf („Los“, „Neon City · 7,99 €“, „Standort erlauben“ …): **lila Glas** statt Vollfarbe – Verlauf `rgba(190,95,255,.78)` → `rgba(122,43,216,.72)`, Hintergrund-Unschärfe 20 px + Sättigung 1,6, Rand 0,5 pt weiß 38 %, Lichtkante oben (innen 1 px weiß 50 %), dunkle Kante unten (innen 1 px schwarz 25 %), leichtes inneres Leuchten, Schatten lila 35 % (Radius 24, y 8)
+- Nebenknöpfe, Preis-Schilder, „Alle Stile“-Zeile, Routen-Zeilen, Chips, runde Knöpfe: **helles Glas** – Verlauf weiß 16 % → 6 % von oben nach unten, Unschärfe 20 px, Rand 0,5 pt weiß 28 %, Lichtkante oben (innen 1 px weiß 35 %), Schatten schwarz 25 %
+- Gewählte Route: lila Glas 32 % → 16 % + 1,5 pt Akzent-Rand; gekauft-Schild grünes Glas
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler: Shop, Onboarding, Startkarte/Vorschau/Navigation (Glas) angesehen.
+
+**Ungetestet:** Nichts in Swift.
+
+### Auftrag (Swift, ersetzt die Knopf-Angaben in GM-032 Block 1)
+- `PrimaryButton`: `.ultraThinMaterial` + darüber `LinearGradient` (Werte oben, 135°), `RoundedRectangle(18, .continuous)`, `.strokeBorder` weiß 38 % 0,5 pt, Lichtkante als oberer innerer Rand (Overlay mit Verlauf weiß 50 % → klar über die ersten 2 pt), Schatten lila 35 %
+- `GlassButton` (neu, für Nebenknöpfe, Preise, „Alle Stile“, Chips, runde Knöpfe): `.ultraThinMaterial` + Verlauf weiß 16 % → 6 %, Rand weiß 28 %, Lichtkante weiß 35 %
+- Ende-Knopf (rot) und Kauf-Schild im Stil-Test-Banner gleiches Glas-Prinzip mit Rot bzw. Lila
+- Gedrückt: Deckkraft −15 %, Skalierung 0,97 (`ButtonStyle`); „Transparenz reduzieren“ → feste Farben ohne Unschärfe
+- Auf iOS 26: wenn verfügbar `.glassEffect()` (Liquid Glass) nutzen, sonst die Nachbildung oben (`if #available`)
+
 ## GM-035 – Neue Preise, Pricedown für Neon City, Pixel-Schrift für Pixel Quest – Auftrag für den lokalen Claude
 
 **Ziel:** Nutzer: Preise viel zu günstig. Name „Neon City“ in der Pricedown-Schrift aus dem Projekt, „Pixel Quest“ in einer Minecraft-artigen Pixel-Schrift.

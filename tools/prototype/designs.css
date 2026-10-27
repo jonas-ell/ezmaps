@@ -31,12 +31,13 @@ body.dz { background: #0e0e10; color: #ddd; }
 /* ---------- B · Glas (iOS-nah, weich) ---------- */
 .B .g { background: rgba(28,28,32,.62); backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4); border: .5px solid rgba(255,255,255,.18); border-radius: 26px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
 .B .chip { display: inline-flex; gap: 6px; align-items: center; padding: 8px 13px; border-radius: 18px; background: rgba(28,28,32,.62); backdrop-filter: blur(18px); border: .5px solid rgba(255,255,255,.16); font: 600 14px Inter; }
-.B .cta { border-radius: 18px; background: linear-gradient(135deg, #b44dff, #7a2bd8); font: 800 19px Inter; display: grid; place-items: center; box-shadow: 0 8px 24px rgba(160,60,240,.45); }
+.B .cta { border-radius: 18px; font: 800 19px Inter; display: grid; place-items: center; background: linear-gradient(135deg, rgba(190,95,255,.78), rgba(122,43,216,.72)); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); border: .5px solid rgba(255,255,255,.38); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(0,0,0,.25), inset 0 0 18px rgba(255,255,255,.08), 0 8px 24px rgba(160,60,240,.35); } /* GM-036: Knöpfe auch aus Glas */
 .B .grab { width: 38px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.35); margin: 0 auto 12px; }
 .B .ropt { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 16px; background: rgba(255,255,255,.06); margin-top: 8px; }
 .B .ropt.on { background: rgba(180,77,255,.22); box-shadow: inset 0 0 0 1.5px #b44dff; }
 .B .ropt small { display: block; color: #a9a9b2; font: 500 13px Inter; }
 .B .round { width: 48px; height: 48px; border-radius: 24px; display: grid; place-items: center; }
+.B .g.round { background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); }
 
 /* ---------- C · Minimal (Karte zuerst) ---------- */
 .C .pill { background: rgba(0,0,0,.78); border-radius: 999px; }
