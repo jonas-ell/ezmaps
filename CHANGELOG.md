@@ -2,6 +2,20 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-031 – Onboarding und weitere Screens in den vier UI-Richtungen
+
+**Ziel:** Nutzer will auch Onboarding usw. sehen; Ideen aus anderen Navi-Apps einbeziehen.
+
+**Dateien:** `tools/prototype/onboarding.html`, `tools/prototype/onboarding.css`, `tools/prototype/js/onboarding.js` (neu), `tools/prototype/js/vorschau.js` (startet nur noch auf der eigenen Seite)
+
+**Geändert:**
+- Neue Seite `http://localhost:8765/tools/prototype/onboarding.html`: 8 Screens (Willkommen, Standort mit Erklärung vor der iOS-Frage, Stil wählen, Fahrzeug wählen, Zuhause/Arbeit + Ansagen, Suche ohne Eingabe, Ankunft mit Stufe, Einstellungen) je Richtung A–D. Gleiches HTML, Aussehen nur per CSS-Skin
+- Ideen aus der Recherche: Standort bei Navi-Apps gleich zu Beginn, aber mit Erklär-Bildschirm vorher (Waze-Muster; abgelehnte iOS-Abfrage lässt sich nur über Einstellungen zurückholen); Fahrzeug-Symbol wählbar wie bei Waze/Google Maps
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Skriptfehler, alle 32 Screens als Bild angesehen.
+
+**Ungetestet:** Nichts in Swift; Auswahl der Richtung durch den Nutzer steht aus. Bilder nicht im Repo (zu groß), Seite selbst öffnen.
+
 ## GM-030 – UI-Entwürfe A bis D (HUD, Glas, Minimal, Sticker)
 
 **Ziel:** Der Nutzer mag das jetzige UI nicht; vier Richtungen zum Auswählen zeigen.

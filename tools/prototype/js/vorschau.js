@@ -308,4 +308,4 @@ async function boot() {
   styleShop(section('7 · Neuer Gratis-Stil, Neon City als Premium', 'Stile-Seite mit Gratis/Premium.'));
   window.__ready = true;
 }
-boot().catch(e => { console.error(e); document.body.insertAdjacentHTML('beforeend', `<pre style="color:#f66">${e.stack}</pre>`); });
+if (document.getElementById('vz')) boot().catch(e => { console.error(e); document.body.insertAdjacentHTML('beforeend', `<pre style="color:#f66">${e.stack}</pre>`); });
