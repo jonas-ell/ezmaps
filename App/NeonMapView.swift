@@ -385,7 +385,8 @@ struct NeonMapView: UIViewRepresentable {
         /// GM-045: Nutzer wischt/zoomt in der Navigation → Kamera hält an, Pfeil bleibt auf der Fahrposition (vorher wanderte er mit)
         func mapView(_ mapView: MLNMapView, regionWillChangeWith reason: MLNCameraChangeReason, animated: Bool) {
             let gestures: MLNCameraChangeReason = [.gesturePan, .gesturePinch, .gestureRotate, .gestureZoomIn, .gestureZoomOut, .gestureOneFingerZoom, .gestureTilt]
-            if !reason.intersection(gestures).isEmpty, camera?.isRunning == true { camera?.detach() }
+            guard !reason.intersection(gestures).isEmpty else { return }
+            MainActor.assumeIsolated { if camera?.isRunning == true { camera?.detach() } }
         }
     }
 }

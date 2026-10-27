@@ -41,7 +41,7 @@ final class FollowCamera: NSObject {
     /// GM-045: Nutzer schaut sich um (Wischen, CarPlay-Verschieben) – Karte bleibt, wo sie ist, Pfeil sitzt auf der Fahrposition
     private(set) var detached = false
 
-    static var locationAllowed: Bool {
+    nonisolated static var locationAllowed: Bool {
         let s = CLLocationManager().authorizationStatus
         return s == .authorizedWhenInUse || s == .authorizedAlways
     }
