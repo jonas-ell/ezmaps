@@ -346,8 +346,9 @@ struct NeonMapView: UIViewRepresentable {
         }
         // GM-025: Navigation – Kamera gleitet weich, fester Pfeil (unteres Drittel)
         if c.camera == nil {
-            let cam = FollowCamera(map: map, pitch: 55)
-            cam.arrowY = 0.68
+            // GM-045: wie CarPlay und das Foto des Nutzers – flach von oben statt 55° schräg
+            let cam = FollowCamera(map: map, pitch: 0)
+            cam.arrowY = 0.62
             cam.target = { AppModel.shared.screen == .navigating ? AppModel.shared.cameraTarget : nil }
             cam.glow = { true }
             c.camera = cam

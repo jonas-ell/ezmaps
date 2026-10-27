@@ -138,8 +138,17 @@ struct StyleTile: View {
 struct StyleSwatch: View {
     let style: MapStyle
     var body: some View {
+        // GM-045: Stil-Bild von Codex (Assets/Generated/StyleTiles), gezeichnete Fläche nur als Ersatz
+        if UIImage(named: "style-" + style.rawValue) != nil {
+            SwiftUI.Color.clear.overlay(Image("style-" + style.rawValue).resizable().scaledToFill()).clipped()
+        } else {
+            drawn
+        }
+    }
+
+    private var drawn: some View {
         let t = StyleTheme.of(style)
-        Canvas { ctx, size in
+        return Canvas { ctx, size in
             ctx.fill(Path(CGRect(origin: .zero, size: size)), with: .color(SwiftUI.Color(uiColor: t.background)))
             let block = SwiftUI.Color(uiColor: t.background).opacity(0.2)
             for i in 0..<9 {

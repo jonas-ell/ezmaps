@@ -83,7 +83,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
 
     private func mapButton(_ symbol: String, action: @escaping () -> Void) -> CPMapButton {
         let b = CPMapButton { _ in action() }
-        b.image = UIImage(systemName: symbol)
+        b.image = GlassRoundButton.hud[symbol].flatMap { UIImage(named: $0) } ?? UIImage(systemName: symbol) // GM-045: HUD-Knöpfe
         return b
     }
 
