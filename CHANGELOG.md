@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-059 – Verbesserungen nach Gerätetest: Pixel Quest ruhiger und Wasser animiert, Wild West wie Papierkarte
+
+**Ziel:** Nutzer: „ja deine Verbesserungen“ (Liste aus GM-058).
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `App/Assets.xcassets/PixelQuest/px-tex-water-0…7` (neu, Bilder aus dem Wasser-GIF des Nutzers), `App/Assets.xcassets/StyleTiles/*`
+
+**Geändert:**
+- Pixel Quest: Gebäude als 4 Ebenen mit festem Muster je Höhe (Muster-Ausdruck zeichnete auf dem iPhone lückenhaft, Gras schien durch), kleine Straßen später, weit weg Straßen ohne dunklen Rand, Straßenschrift kleiner, Wasser animiert (8 Bilder, alle 0,2 s).
+- Wild West: kleine Straßen später, Linien weit weg dünner, Bahn erst ab Zoom 11 und Querstriche fein erst ab 13, Häuser fast ohne Kontrast, Papierfasern als Hintergrund, Wald mit Tinten-Baumtupfen.
+- `with_min` kennt Mindest-Zoom je Stil (`minzoom_shift`).
+
+**Tatsächlich geprüft:** STIL OK; Vorschauen gerendert.
+
+**Ungetestet:** Gerät (Gras durch Häuser nur auf dem iPhone sichtbar gewesen).
+
 ## GM-058 – Ortsnamen, Weizenfeld, kein Fadenkreuz in der Navigation
 
 **Ziel:** Nutzer (Gerätetest): beim Rauszoomen keine Stadtnamen, Fadenkreuz in der Navigation, neue Weizen-Grafik für Felder.

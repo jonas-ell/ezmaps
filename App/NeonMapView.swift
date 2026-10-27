@@ -73,8 +73,27 @@ final class RouteOverlay {
         map.styleURL = url
     }
 
+    /// GM-059: Pixel-Quest-Wasser animiert – Bilder des GIFs nacheinander als Muster setzen (MapLibre kann keine GIFs)
+    private var waterTimer: Timer?
+    private var waterFrame = 0
+    private static let waterFrames: [UIImage] = (0..<8).compactMap { UIImage(named: "px-tex-water-\($0)") }
+
+    private func animateWater(_ on: Bool) {
+        waterTimer?.invalidate()
+        waterTimer = nil
+        guard on, !Self.waterFrames.isEmpty else { return }
+        waterTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self, self.styleReady, let style = self.map?.style else { return }
+                self.waterFrame = (self.waterFrame + 1) % Self.waterFrames.count
+                style.setImage(Self.waterFrames[self.waterFrame], forName: "ez-pat-water-px")
+            }
+        }
+    }
+
     func styleLoaded(_ style: MLNStyle) {
         styleReady = true
+        animateWater(mapStyle == .pixelQuest)
         for (name, image) in RouteOverlay.poiImages() { style.setImage(image, forName: name) } // GM-026
         for (name, image) in StylePatterns.all() { style.setImage(image, forName: name) } // GM-050: Muster Pixel Quest / Toy Town
         let empty = MLNShapeCollectionFeature(shapes: [])
@@ -711,6 +730,25 @@ enum StylePatterns {
         out["ez-pat-water-px"] = UIImage(named: "px-tex-water") ?? out["ez-pat-water-px-own"]
         out["ez-pat-rail-px"] = UIImage(named: "px-tex-rail") ?? out["ez-pat-road-px-own"]
         if let wheat = UIImage(named: "px-tex-wheat") { out["ez-pat-farm-px"] = wheat } // GM-058: Weizenfeld
+        // GM-059: Wild West – feine Papierfasern und Wald als Tinten-Baumtupfen (bis Codex-Grafiken da sind)
+        out["ez-pat-paper-west"] = UIGraphicsImageRenderer(size: CGSize(width: 128, height: 128)).image { ctx in
+            StyleTheme.hex(0xe4c9a8).setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 128, height: 128))
+            for i in 0..<70 {
+                let x = hash(i, 1, 40) * 128, y = hash(i, 2, 40) * 128, l = 3 + hash(i, 3, 40) * 7
+                UIColor(red: 0.55, green: 0.42, blue: 0.3, alpha: 0.08 + hash(i, 4, 40) * 0.08).setStroke()
+                let p = UIBezierPath(); p.move(to: CGPoint(x: x, y: y)); p.addLine(to: CGPoint(x: x + l, y: y + l * 0.3)); p.lineWidth = 0.6; p.stroke()
+            }
+        }
+        out["ez-pat-forest-west"] = UIGraphicsImageRenderer(size: CGSize(width: 40, height: 40)).image { ctx in
+            StyleTheme.hex(0xdcc29e).setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 40, height: 40))
+            for (x, y) in [(10.0, 12.0), (30.0, 30.0)] {
+                let t = UIBezierPath()
+                t.move(to: CGPoint(x: x - 5, y: y)); t.addQuadCurve(to: CGPoint(x: x + 5, y: y), controlPoint: CGPoint(x: x, y: y - 10))
+                t.close()
+                StyleTheme.hex(0xb79c74).setFill(); t.fill()
+                StyleTheme.hex(0x4a3b2c).setStroke(); t.lineWidth = 0.9; t.stroke()
+            }
+        }
         // Toy Town
         out["ez-pat-lawn-toy"] = UIGraphicsImageRenderer(size: CGSize(width: 64, height: 64)).image { ctx in
             rgb(141, 198, 63).setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 64, height: 64))

@@ -40,7 +40,9 @@ CLASSIC = dict(land="#f2efe9", residential="#ece7e0", industrial="#ebe3e8", farm
 # GM-057: Wild West nach den Red-Dead-Karten des Nutzers (Zielbild Runde 3, Farben gemessen): helles Pfirsich-Papier,
 # Straßen nur dünne dunkelbraune Linien, Wasser graugrün mit weichem Rand, Häuser kaum sichtbar, Schrift Old Standard TT (OFL).
 WESTERN = dict(land="#e4c9a8", residential="#e4c9a8", industrial="#e0c4a2", farm="#e4c9a8", park="#dec5a2", forest="#dcc29e",
-               water="#aaa392", building="#e9d1b2", buildingEdge="#a48c6c", rail="#4a3b2c", casing="#4a3b2c", label="#4a3b2c",
+               water="#aaa392", building="#e8cfae", buildingEdge="#e8cfae",
+               pat=dict(land="ez-pat-paper-west", forest="ez-pat-forest-west"),
+               minzoom_shift={"secondary": 10, "tertiary": 11.5, "minor": 13.5, "service": 15}, rail_minzoom=11, rail="#4a3b2c", casing="#4a3b2c", label="#4a3b2c",
                road=lambda r: "#4a3b2c", widen=1.0, ink_lines={0: 3.2, 1: 3.0, 2: 2.6, 3: 2.2, 4: 1.8, 5: 1.3, 6: 1.0, 7: 0.8},
                water_soft=True, rail_ticks=True, label_halo="#e4c9a8", label_halo_width=2,
                font="Old Standard TT Regular", label_scale=0.85, letter_spacing=0.18,
@@ -48,6 +50,21 @@ WESTERN = dict(land="#e4c9a8", residential="#e4c9a8", industrial="#e0c4a2", farm
 # GM-050: Pixel Quest und Toy Town wieder eigenständig wie im Prototyp (js/map.js drawPixel/drawToy, docs/previews/c4-*):
 # eigene Muster (Bilder zeichnet die App: RouteOverlay.patternImages, Website: js/poi.js), eigene Schrift, eigene Symbole.
 # Nutzer: „du kannst die Maps doch nicht alle im selben Stil machen“.
+def building_layers(P, steps=(7, 10, 14)):
+    """GM-059: je Höhenbereich eine eigene Ebene mit festem Muster – MapLibre auf dem iPhone zeichnete Muster-Ausdrücke
+    lückenhaft (Gras schien durch die Häuser, Nutzer-Screenshot). Erste Ebene heißt „building“ (Prüfskripte)."""
+    pats, out, lo = P["building_pattern"], [], None
+    bounds = [None, *steps, None]
+    h = ["coalesce", ["get", "render_height"], 0]
+    for i, pat in enumerate(pats):
+        f = ["all"]
+        if bounds[i] is not None: f.append([">=", h, bounds[i]])
+        if bounds[i + 1] is not None: f.append(["<", h, bounds[i + 1]])
+        out.append(fill("building" if i == 0 else f"building-{i}", "building", P["building"], f if len(f) > 1 else None,
+                        {"fill-outline-color": P["buildingEdge"]}, pattern=pat))
+    return out
+
+
 def by_height(values, steps=(7, 10, 14)):
     """Wert je Gebäude nach Höhe. Die Kacheln fassen gleich hohe Nachbarhäuser zu einem Objekt zusammen – nach ID
     verteilt bekam deshalb fast die ganze Stadt dieselbe Farbe (GM-050, im Browser gemessen)."""
@@ -63,9 +80,10 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              pat=dict(land="ez-pat-grass-px", residential="ez-pat-grass-px", forest="ez-pat-leaves-px", park="ez-pat-grass-px",
                       water="ez-pat-water-px", farm="ez-pat-farm-px", industrial="ez-pat-stone-px"),
              road_pattern="ez-pat-road-px", rail_pattern="ez-pat-rail-px",
-             building_pattern=by_height(["ez-pat-oak-px", "ez-pat-spruce-px", "ez-pat-brick-px", "ez-pat-cobble-px"]),
+             far_simple=True, minzoom_shift={"tertiary": 12, "minor": 13.5, "service": 15},
+             building_pattern=["ez-pat-oak-px", "ez-pat-spruce-px", "ez-pat-brick-px", "ez-pat-cobble-px"],
              building_shadow=True,
-             font="Press Start 2P Regular", label_scale=0.62, text_transform="none", letter_spacing=0, label_halo_width=1.6,
+             font="Press Start 2P Regular", label_scale=0.5, text_transform="none", letter_spacing=0, label_halo_width=1.6,
              poi_suffix="-px", poi_minzoom=14, place_color="#ffffff", place_halo="#000000", place_halo_width=2, place_transform="none")
 TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b9d86a", park="#7cc142", forest="#62b235",
            water="#4ab0ea", building=by_height(["#e3412f", "#ef7d2d", "#3d78c9", "#8b8f96"]),
@@ -126,7 +144,8 @@ def build(P, title):
         line("stream", "waterway", P["water"], meters(3, 0.6), ["!", ["in", ["get", "class"], ["literal", ["river", "canal"]]]]),
         # GM-050: Block-Schatten (Pixel Quest) – dunkle Kopie leicht versetzt, wirkt wie ein Block von oben
         *([fill("building-shadow", "building", "rgba(0,0,0,0.38)", None, {"fill-translate": [2.5, 2.5], "fill-antialias": False})] if P.get("building_shadow") else []),
-        fill("building", "building", P["building"], None, {"fill-outline-color": P["buildingEdge"]}, pattern=P.get("building_pattern")),
+        *(building_layers(P) if isinstance(P.get("building_pattern"), list) else
+          [fill("building", "building", P["building"], None, {"fill-outline-color": P["buildingEdge"]}, pattern=P.get("building_pattern"))]),
         line("rail", "transportation", P["rail"], meters(1.5, 1), ["in", ["get", "class"], ["literal", ["rail", "transit"]]], cap="butt"),
     ]
     # Straßen: erst alle dunklen Ränder, dann die hellen Flächen (so verschmelzen Kreuzungen sauber), große obenauf
@@ -138,14 +157,15 @@ def build(P, title):
         if thin and r >= 5:
             continue
         casing = P.get("casing_minor", P["casing"]) if r >= 4 else P["casing"]
-        layers.append(with_min(line(f"road-{cls}-casing", "transportation", casing, meters(WIDTH[r] * 0.75 * widen + 3, MIN_PX[r] + 1.6), road_filter(cls)), cls))
+        layers.append(with_min(line(f"road-{cls}-casing", "transportation", casing, meters(WIDTH[r] * 0.75 * widen + 3, MIN_PX[r] + 1.6), road_filter(cls)), cls, P))
+        if P.get("far_simple"): layers[-1]["paint"]["line-opacity"] = ["interpolate", ["linear"], ["zoom"], 12, 0, 14, 1]  # GM-059: weit weg ohne Rand
     for cls, r in (order if ink else []):
         px = ink[r]
         layers.append(with_min(line(f"road-{cls}", "transportation", P["road"](r),
-                                    ["interpolate", ["linear"], ["zoom"], 10, px * 0.6, 15, px, 18, px * 1.6], road_filter(cls)), cls))
+                                    ["interpolate", ["linear"], ["zoom"], 8, px * 0.3, 12, px * 0.6, 15, px, 18, px * 1.6], road_filter(cls)), cls, P))
     for cls, r in (order if not ink else []):
         w = meters(WIDTH[r] * 0.75 * widen * (0.42 if thin and r >= 5 else 1), MIN_PX[r] * (2.4 * 0.42 if thin and r >= 5 else 1))
-        layers.append(with_min(line(f"road-{cls}", "transportation", P["road"](r), w, road_filter(cls)), cls))
+        layers.append(with_min(line(f"road-{cls}", "transportation", P["road"](r), w, road_filter(cls)), cls, P))
         if P.get("road_pattern"): layers[-1]["paint"]["line-pattern"] = P["road_pattern"]  # GM-050: Steinstraße (Pixel Quest)
     # GM-050: Toy Town – weiße Mittellinie auf größeren Straßen, Sandrand am Wasser, dunkle Kontur um die Häuser
     if P.get("road_dash"):
@@ -161,9 +181,11 @@ def build(P, title):
         layers.insert(i, soft)
     rail_i = next(k for k, l in enumerate(layers) if l["id"] == "rail")
     if P.get("rail_ticks"):  # GM-057: Bahn mit Querstrichen (Wild West)
-        t = line("rail-ticks", "transportation", P["rail"], 6, ["in", ["get", "class"], ["literal", ["rail", "transit"]]], cap="butt")
-        t["paint"]["line-dasharray"] = [0.25, 1.4]
+        t = line("rail-ticks", "transportation", P["rail"], 4, ["in", ["get", "class"], ["literal", ["rail", "transit"]]], cap="butt")
+        t["paint"]["line-dasharray"] = [0.2, 2.2]
+        t["minzoom"] = 13  # GM-059: Querstriche erst nah, fein
         layers.insert(rail_i + 1, t)
+    if P.get("rail_minzoom"): layers[rail_i]["minzoom"] = P["rail_minzoom"]
     if P.get("rail_pattern"):  # GM-057: Schienen-Grafik (Pixel Quest)
         layers[rail_i]["paint"]["line-pattern"] = P["rail_pattern"]
         layers[rail_i]["minzoom"] = 13  # GM-058: weit weg nur Rauschen
@@ -208,8 +230,9 @@ def build(P, title):
 road_filter = lambda cls: ["all", ["==", ["get", "class"], cls], ["!=", ["get", "brunnel"], "tunnel"]]
 # GM-027: kleine Straßen erst beim Heranzoomen – sonst wird die Übersicht (Routen-Vorschau) eine weiße Fläche
 MINZOOM = {"motorway": 0, "trunk": 0, "primary": 7, "secondary": 9, "tertiary": 10.5, "minor": 12, "service": 14}
-def with_min(l, cls):
-    if MINZOOM[cls]: l["minzoom"] = MINZOOM[cls]
+def with_min(l, cls, P=None):
+    z = max(MINZOOM[cls], (P or {}).get("minzoom_shift", {}).get(cls, 0))  # GM-059: je Stil kleine Straßen später
+    if z: l["minzoom"] = z
     return l
 
 
