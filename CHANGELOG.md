@@ -2,6 +2,30 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-042 – Replay-Video als echte Datei, kein 7-Tage-Test mehr – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer: zeigen, wie das Replay-Video aussieht; „7 Tage testen“ raus.
+
+**Dateien:** `tools/prototype/js/{aufdecken,glas}.js`, `tools/prototype/aufdecken.css`, `docs/previews/replay-gm041.mp4` (neu)
+
+**Geändert:**
+- **Kein Gratis-Zeitraum mehr im Abo.** Shop: Knopf „Jährlich starten“ statt „7 Tage gratis testen“, Zeile „29,99 € im Jahr“. Einzelkauf und „Test vorbei“: „Plus holen“. Testen geht nur noch über den 10-Minuten-Stil-Test (GM-041). **Ersetzt** in GM-038 Punkt 1 „Einführungsangebot 1 Woche gratis“ und „isEligibleForIntroOffer“, in GM-039 „Plus 7 Tage gratis testen“.
+- **Replay-Video**: `aufdecken.html?video` zeichnet das Video Bild für Bild (405 × 720 pt, 300 Bilder, 10 s), Export mit ffmpeg als MP4 (Vorlage `docs/previews/replay-gm041.mp4`). Ablauf:
+  1. 0 bis 1,5 s: Titel „Fahrt zum Hexenturm · 1,9 km · 6 Min“
+  2. Kamera fliegt schräg mit, gefahrene Strecke als kräftige lila Leuchtlinie, neue Straßen heller
+  3. Ab 72 %: Herauszoomen auf die ganze Strecke, Ziel-Punkt
+  4. Ab 8 s: „+56 % neue Straßen“ groß mit Leuchten und Glas-Karte „Idstein-Kenner · Stufe 3“ mit Balken
+  - Immer zu sehen: „EzMaps“ oben links und „© OpenMapTiles · © OpenStreetMap-Mitwirkende“ unten rechts
+  - Nebel im Video leichter (schmaler Ausschnitt), damit die Schrägansicht ruhig bleibt
+
+**Tatsächlich geprüft:** Playwright: 300 Bilder ohne Fehler, MP4 erzeugt und Standbilder angesehen.
+
+**Ungetestet:** Nichts in Swift.
+
+### Auftrag (Swift)
+1. StoreKit: **kein** Einführungsangebot anlegen; Paywall-Knopf je Plan „Jährlich starten“ / „Monatlich starten“ / „Für immer freischalten“
+2. Replay-Video genau wie `docs/previews/replay-gm041.mp4` (Ablauf oben, Werte in `aufdecken.js` → `videoPlayer`)
+
 ## GM-041 – Stadt aufdecken (Konzept + Logik), Stil-Test nicht umgehbar, Fahrt-Replay – Auftrag für den lokalen Claude
 
 **Ziel:** Nutzer zu GM-040:

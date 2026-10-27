@@ -189,8 +189,8 @@ const SCREENS = [
     mapInto(ph.querySelector('.fill'), 'classic', { center: [-500, 300], heading: 0, scale: 0.6, tilt: 0, anchor: [0.5, 0.4] }, (u, v) => { drawBlips(u, v, scene, 'classic', {}); drawPlayer(u, v, scene.presets.start, 0, 'classic', 12); });
     ph.append($(`<div class="f" style="padding:0"><div class="grow"></div><div class="sheet" style="margin:0 10px 22px"><div class="grab"></div>
       <div style="display:flex;gap:12px;align-items:center"><div class="thumbx"><div class="m"></div></div><div><div class="ekick">Test vorbei</div><b style="font:800 20px Inter"><span class="nname">Neon City</span> behalten?</b><div style="color:#a9a9b2;font:500 13px Inter">Du bist jetzt wieder in Klassik.</div></div></div>
-      <div class="plan on" style="margin-top:18px"><span class="tag">Alle Stile</span><span><b>Mit Plus</b><small>7 Tage gratis, dann 29,99 € im Jahr</small></span><span class="pp"><b>2,50 €</b><small>pro Monat</small></span></div>
-      <div class="btn" style="margin-top:12px">Plus 7 Tage gratis testen</div><div class="btn2" style="margin-top:8px"><span>Nur <span class="nname">Neon City</span> · 39,99 €</span></div><div class="link">Später</div></div>${osm}</div>`));
+      <div class="plan on" style="margin-top:18px"><span class="tag">Alle Stile</span><span><b>Mit Plus</b><small>29,99 € im Jahr</small></span><span class="pp"><b>2,50 €</b><small>pro Monat</small></span></div>
+      <div class="btn" style="margin-top:12px">Plus holen</div><div class="btn2" style="margin-top:8px"><span>Nur <span class="nname">Neon City</span> · 39,99 €</span></div><div class="link">Später</div></div>${osm}</div>`));
     requestAnimationFrame(() => { const m = ph.querySelector('.thumbx .m'); mapInto(m, 'neon', { center: [40, -20], heading: 0.4, scale: 0.7, tilt: 45, anchor: [0.5, 0.6] }, (u, v) => drawRoute(u, v, R, 0, 'neon', { width: 6 })); });
   }],
 ];
@@ -206,6 +206,47 @@ const CAR = [
   }],
 ];
 
+/** Nebel fürs Video: dunkler Schleier, gefahrene Straßen schmal ausgeschnitten (bleibt auch schräg ruhig) */
+function fogLite(u, v, ls) {
+  u.save(); u.fillStyle = 'rgba(8,8,10,.62)'; u.fillRect(0, 0, v.W, v.H);
+  u.globalCompositeOperation = 'destination-out'; u.lineCap = 'round'; u.lineJoin = 'round';
+  for (const [w, a] of [[40, 0.35], [22, 1]]) { u.strokeStyle = `rgba(0,0,0,${a})`; u.lineWidth = w * v.cam.scale; u.beginPath(); for (const pts of ls) { let on = false; for (const p of pts) { const q = v.project(p); if (q[2] <= 0) { on = false; continue; } on ? u.lineTo(q[0], q[1]) : u.moveTo(q[0], q[1]); on = true; } } u.stroke(); }
+  u.restore();
+}
+
+/** GM-041: Replay-Video in voller Größe (9:16) – Bild für Bild über window.__rvDraw(i), für den Export mit ffmpeg */
+function videoPlayer() {
+  document.body.style.background = '#000';
+  const nw = new Set(newOnTrip()), newPct = Math.round(newOnTrip().reduce((t, k) => t + info.get(k).len, 0) / R.length * 100);
+  const share = cityShare(explored), lv = levelFor(share), was = cityShare(before);
+  const el = $(`<div id="rv" class="dph B" style="width:405px;height:720px;border-radius:0;box-shadow:none;margin:0"><div class="fill"></div>
+    <div class="rvtop"><b>EzMaps</b></div>
+    <div class="rvtitle"><small>Fahrt zum</small><b>Hexenturm</b><span>1,9 km · 6 Min</span></div>
+    <div class="rvend"><div class="rvbig">+${newPct} %</div><div class="rvsub">neue Straßen</div><div class="rvlv"><span>Idstein-${lv.title} · Stufe ${lv.number}</span><div class="rvbar"><i style="width:${share / (lv.next ?? 1) * 100}%"></i><s style="left:${was / (lv.next ?? 1) * 100}%"></s></div></div></div>
+    <div class="rvosm">© OpenMapTiles · © OpenStreetMap-Mitwirkende</div></div>`);
+  main.replaceWith(el);
+  const v = new MapView(el.querySelector('.fill')); v.setTexture(tex.neon, 'neon');
+  const frames = planReplay(R.pts, { W: 405, H: 720, followScale: 1.5, duration: 10, fps: 30 });
+  const title = el.querySelector('.rvtitle'), end = el.querySelector('.rvend');
+  window.__rvCount = frames.length;
+  window.__rvDraw = i => {
+    const fr = frames[i], t = i / (frames.length - 1), u = v.apply({ center: fr.center, heading: fr.heading, scale: fr.scale, tilt: fr.tilt, anchor: [0.5, 0.62] });
+    fogLite(u, v, lines(before)); glow(u, v, lines(before), [196, 120, 255], 0.45, 1.6);
+    const upto = fr.progress * R.length, seg = [];
+    for (let k = 1; k < R.pts.length && R.cum[k - 1] < upto; k++) seg.push([R.pts[k - 1], R.pts[k], nw.has(R.edges[k - 1])]);
+    if (seg.length) seg.push([seg.at(-1)[1], pointAt(R.pts, R.cum, upto).p, seg.at(-1)[2]]);
+    glow(u, v, seg.filter(x => !x[2]).map(x => [x[0], x[1]]), [170, 80, 240], 1, 6);
+    glow(u, v, seg.filter(x => x[2]).map(x => [x[0], x[1]]), [214, 140, 255], 1, 7);
+    if (fr.progress >= 1) drawDestination(u, v, R.pts.at(-1), 'neon', 9);
+    else drawPlayer(u, v, pointAt(R.pts, R.cum, upto).p, fr.heading, 'neon', 13);
+    const a = t < 0.12 ? 1 : Math.max(0, 1 - (t - 0.12) / 0.06);
+    title.style.opacity = a; title.style.transform = `translateY(${(1 - a) * -12}px)`;
+    const b = Math.min(1, Math.max(0, (t - 0.8) / 0.1));
+    end.style.opacity = b; end.style.transform = `scale(${0.92 + 0.08 * b})`;
+  };
+  window.__rvDraw(0);
+}
+
 async function boot() {
   await loadAssets();
   scene = await (await fetch('data/idstein.json')).json();
@@ -213,6 +254,7 @@ async function boot() {
   for (const s of ['neon', 'classic']) tex[s] = await renderTexture(scene, s);
   setup();
   await document.fonts.ready;
+  if (location.search.includes('video')) { videoPlayer(); window.__ready = true; return; }
   const s = $(`<section class="dsec"><h2>Stadt aufdecken · Design-Konzept</h2><p>Grundregel: Belohnung nur im Stand, während der Fahrt (iPhone und CarPlay) nur ein dünnes Leuchten hinter dir. Logik in js/explore.js und Core/Exploration.swift (Straßenzellen ~24 m, ganz Deutschland, ohne eigene Server).</p><div class="drow"></div></section>`); main.append(s);
   for (const [name, cap, fn] of SCREENS) fn(phone(s.lastElementChild, `<b>${name}</b> · ${cap}`));
   const c = $(`<section class="dsec"><h2>CarPlay</h2><p>Gleiche Regeln im Auto: nichts Neues aufploppen lassen.</p><div class="drow"></div></section>`); main.append(c);

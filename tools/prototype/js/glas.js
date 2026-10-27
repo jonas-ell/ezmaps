@@ -37,7 +37,7 @@ const sheet = inner => `<div class="f" style="padding:0"><div style="flex:1"></d
 
 // ------------------------------------------------------------ Screens
 const SCREENS = [
-  ['Shop (EzMaps Plus)', 'Ein Abo „Plus“ für alle Stile. Psychologie: teurer Einmalkauf oben als Anker, Jahresabo vorausgewählt mit Preis pro Monat, Gratis-Woche, Monatsabo als Einstieg. Apple-Pflichten: Preis und Verlängerung klar, Kündigen-Hinweis, Bedingungen, Datenschutz, Wiederherstellen.', ph => {
+  ['Shop (EzMaps Plus)', 'Ein Abo „Plus“ für alle Stile. Psychologie: teurer Einmalkauf oben als Anker, Jahresabo vorausgewählt mit Preis pro Monat, Monatsabo als Einstieg. Kein Gratis-Zeitraum (nur 10 Min Stil-Test). Apple-Pflichten: Preis und Verlängerung klar, Kündigen-Hinweis, Bedingungen, Datenschutz, Wiederherstellen.', ph => {
     ph.querySelector('.fill').style.background = '#0b0b0d';
     const styles = [['neon', '<span class="nname">Neon City</span>'], ['western', '<span class="wname">Wild West</span>'], ['pixel', '<span class="pname">Pixel Quest</span>'], ['toy', '<span class="tname">Toy Town</span>']];
     const f = $(`<div class="f" style="padding-top:56px"><div style="display:flex;justify-content:space-between;align-items:center"><div class="h1" style="font-size:28px">EzMaps <span style="color:#c27bff">Plus</span></div><div class="g round" style="width:36px;height:36px">${icon(I.x, 16)}</div></div>
@@ -45,10 +45,10 @@ const SCREENS = [
       <div class="sgrid">${styles.map(([s, n]) => `<div class="stile" style="height:138px"><div class="m" data-s="${s}"></div><span>${n}</span></div>`).join('')}</div>
       <div class="grow"></div>
       <div class="plan"><span><b>Für immer</b><small>einmal zahlen</small></span><span class="pp"><b>79,99 €</b></span></div>
-      <div class="plan on"><span class="tag">Beliebt · spare 50 %</span><span><b>Jährlich</b><small>7 Tage gratis, dann 29,99 € im Jahr</small></span><span class="pp"><b>2,50 €</b><small>pro Monat</small></span></div>
+      <div class="plan on"><span class="tag">Beliebt · spare 50 %</span><span><b>Jährlich</b><small>29,99 € im Jahr</small></span><span class="pp"><b>2,50 €</b><small>pro Monat</small></span></div>
       <div class="plan"><span><b>Monatlich</b><small>jederzeit kündbar</small></span><span class="pp"><b>4,99 €</b><small>pro Monat</small></span></div>
-      <div class="btn" style="margin-top:12px">7 Tage gratis testen</div>
-      <div class="fine">Danach 29,99 € pro Jahr, verlängert sich automatisch. Kündigen jederzeit in den iPhone-Einstellungen, spätestens 24 h vor Ablauf. Klassik und Navigation bleiben gratis.</div>
+      <div class="btn" style="margin-top:12px">Jährlich starten</div>
+      <div class="fine">29,99 € pro Jahr, verlängert sich automatisch. Kündigen jederzeit in den iPhone-Einstellungen, spätestens 24 h vor Ablauf. Klassik und Navigation bleiben gratis.</div>
       <div class="link">Nur einen Stil kaufen ›</div><div class="link" style="margin-top:4px;opacity:.75">Käufe wiederherstellen · Bedingungen · Datenschutz</div></div>`);
     ph.append(f);
     requestAnimationFrame(() => f.querySelectorAll('.m').forEach(m => { const s = m.dataset.s; mapInto(m, s, { center: [40, -20], heading: 0.4, scale: 0.8, tilt: 45, anchor: [0.5, 0.6] }, (u, v) => { drawRoute(u, v, R, 0, s, { width: 6 }); drawPlayer(u, v, R.pts[0], 0, s, 9); }); }));
@@ -61,7 +61,7 @@ const SCREENS = [
       <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip">Eigene Symbole</span><span class="chip">Nachtmodus</span><span class="chip">Baustellen im Stil</span></div>
       <div class="grow"></div>
       <div class="plan on" style="margin-top:0"><span class="tag">Besser · alle 4 Stile</span><span><b>Mit Plus</b><small>alle Stile + jeder neue Stil</small></span><span class="pp"><b>2,50 €</b><small>pro Monat</small></span></div>
-      <div class="btn" style="margin-top:12px">Plus 7 Tage gratis testen</div>
+      <div class="btn" style="margin-top:12px">Plus holen</div>
       <div class="btn2" style="margin-top:10px;height:52px"><span>Nur <span class="nname">Neon City</span> · 39,99 € einmalig</span></div>
       <div class="fine">Einzelkauf gehört dir für immer, nur dieser Stil. Wild West, Pixel Quest, Toy Town je 29,99 €. Wer später Plus nimmt, behält den Stil.</div></div></div>`);
     ph.append(f);
