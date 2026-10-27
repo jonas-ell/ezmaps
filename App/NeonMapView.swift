@@ -448,5 +448,5 @@ final class PlayerLocationView: MLNUserLocationAnnotationView {
         ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
         UIColor(white: 0.95, alpha: 1).setFill()
         p.fill()
-    }()
+    }
 }
