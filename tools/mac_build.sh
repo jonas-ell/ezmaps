@@ -172,7 +172,7 @@ if [ -f tools/.do_testshots ]; then
   OUT=/tmp/eztests; rm -rf "$OUT"; mkdir -p "$OUT"
   shoot() { # Gerät-ID, Name, Zustand, Sprache, Wartezeit
     xcrun simctl terminate "$1" "$BID" 2>/dev/null
-    xcrun simctl launch "$1" "$BID" -EZShot "$3" -AppleLanguages "($4)" -AppleLocale "$4" >/dev/null
+    xcrun simctl launch "$1" "$BID" -EZShot "$3" ${6:+-EZStyle $6} -AppleLanguages "($4)" -AppleLocale "$4" >/dev/null
     sleep "$5"
     xcrun simctl io "$1" screenshot --type=png "$OUT/$2.png" >/dev/null 2>&1 && echo "Bild: $2"
     # GM-030: läuft die App noch? Sonst Absturz melden
@@ -203,6 +203,8 @@ if [ -f tools/.do_testshots ]; then
     xcrun simctl privacy "$BIG" revoke location "$BID"
     shoot "$BIG" "verweigert-karte" karte de 8
     xcrun simctl privacy "$BIG" grant location "$BID"
+    # GM-051: jeder Stil auf dem großen iPhone (gegen die Referenzen des Nutzers prüfen – Stile nie gleich)
+    for ST in classic wild-west pixel-quest toy-town; do shoot "$BIG" "stil-$ST-karte" karte de 12 "$ST"; shoot "$BIG" "stil-$ST-navigation" navigation de 28 "$ST"; done
   fi
   # GM-030: Absturzberichte der letzten Stunde
   find "$HOME/Library/Logs/DiagnosticReports" -name "EzMaps*" -mmin -60 2>/dev/null | while read -r R; do
