@@ -708,12 +708,14 @@ enum StylePatterns {
             let h = hash(x, y, 7)
             return h < 0.25 ? rgb(118, 118, 118) : h > 0.85 ? rgb(170, 170, 170) : rgb(143, 143, 143)
         }
-        out["ez-pat-oak-px"] = pixelTile(16) { x, y in      // Holzbretter
+        out["ez-pat-oak-px"] = pixelTile(16) { x, y in      // Holzbretter; GM-060: Blockkante rechts/unten
+            if x == 15 || y == 15 { return rgb(70, 50, 26) }
             if y % 4 == 3 { return rgb(84, 62, 34) }
             if (x + (y / 4) * 5) % 8 == 0 { return rgb(98, 72, 40) }
             return hash(x, y, 8) < 0.25 ? rgb(150, 116, 66) : rgb(139, 106, 62)
         }
         out["ez-pat-spruce-px"] = pixelTile(16) { x, y in   // dunkles Holz
+            if x == 15 || y == 15 { return rgb(40, 27, 14) }
             if y % 4 == 3 { return rgb(52, 36, 20) }
             return hash(x, y, 9) < 0.25 ? rgb(104, 76, 46) : rgb(92, 66, 38)
         }

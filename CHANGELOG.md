@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-060 – Pixel Quest: Häuser als Blöcke von oben
+
+**Ziel:** Nutzer: „die Häuser sind noch nicht fertig bei der Pixel-Map“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `App/NeonMapView.swift`, `tools/prototype/js/poi.js`
+
+**Geändert:** dunkle Außenkante und helle Innenkante je Haus (`building-edge`, `building-highlight` mit `line-offset`), Schatten wächst mit dem Zoom (1 → 9 pt), Dach-Muster mit Blockkante je 16er-Block.
+
+**Tatsächlich geprüft:** STIL OK; Browser-Render Idstein Bahnhof Zoom 17,5 angesehen.
+
+**Ungetestet:** Gerät.
+
 ## GM-059 – Verbesserungen nach Gerätetest: Pixel Quest ruhiger und Wasser animiert, Wild West wie Papierkarte
 
 **Ziel:** Nutzer: „ja deine Verbesserungen“ (Liste aus GM-058).

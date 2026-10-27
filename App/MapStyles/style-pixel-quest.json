@@ -352,8 +352,30 @@
     "fill-color": "rgba(0,0,0,0.38)",
     "fill-antialias": false,
     "fill-translate": [
-     2.5,
-     2.5
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     14,
+     [
+      "literal",
+      [
+       1,
+       1
+      ]
+     ],
+     18,
+     [
+      "literal",
+      [
+       9,
+       9
+      ]
+     ]
     ]
    }
   },
@@ -488,6 +510,77 @@
      14
     ]
    ]
+  },
+  {
+   "id": "building-highlight",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "miter"
+   },
+   "paint": {
+    "line-color": "#d2a868",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     14,
+     0.6,
+     18,
+     3
+    ],
+    "line-offset": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     14,
+     0.8,
+     18,
+     4
+    ],
+    "line-opacity": 0.8
+   },
+   "minzoom": 15
+  },
+  {
+   "id": "building-edge",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "miter"
+   },
+   "paint": {
+    "line-color": "#2a1d0e",
+    "line-width": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     14,
+     0.8,
+     18,
+     3.5
+    ]
+   },
+   "minzoom": 14
   },
   {
    "id": "rail",

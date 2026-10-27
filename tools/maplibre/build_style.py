@@ -82,7 +82,7 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              road_pattern="ez-pat-road-px", rail_pattern="ez-pat-rail-px",
              far_simple=True, minzoom_shift={"tertiary": 12, "minor": 13.5, "service": 15},
              building_pattern=["ez-pat-oak-px", "ez-pat-spruce-px", "ez-pat-brick-px", "ez-pat-cobble-px"],
-             building_shadow=True,
+             building_shadow=True, block_edges=("#2a1d0e", "#d2a868"),
              font="Press Start 2P Regular", label_scale=0.5, text_transform="none", letter_spacing=0, label_halo_width=1.6,
              poi_suffix="-px", poi_minzoom=14, place_color="#ffffff", place_halo="#000000", place_halo_width=2, place_transform="none")
 TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b9d86a", park="#7cc142", forest="#62b235",
@@ -143,7 +143,8 @@ def build(P, title):
         line("river", "waterway", P["water"], meters(9, 1), ["in", ["get", "class"], ["literal", ["river", "canal"]]]),
         line("stream", "waterway", P["water"], meters(3, 0.6), ["!", ["in", ["get", "class"], ["literal", ["river", "canal"]]]]),
         # GM-050: Block-Schatten (Pixel Quest) – dunkle Kopie leicht versetzt, wirkt wie ein Block von oben
-        *([fill("building-shadow", "building", "rgba(0,0,0,0.38)", None, {"fill-translate": [2.5, 2.5], "fill-antialias": False})] if P.get("building_shadow") else []),
+        *([fill("building-shadow", "building", "rgba(0,0,0,0.38)", None, {"fill-translate": ["interpolate", ["exponential", 2], ["zoom"], 14, ["literal", [1, 1]], 18, ["literal", [9, 9]]],
+                                                                                    "fill-antialias": False})] if P.get("building_shadow") else []),
         *(building_layers(P) if isinstance(P.get("building_pattern"), list) else
           [fill("building", "building", P["building"], None, {"fill-outline-color": P["buildingEdge"]}, pattern=P.get("building_pattern"))]),
         line("rail", "transportation", P["rail"], meters(1.5, 1), ["in", ["get", "class"], ["literal", ["rail", "transit"]]], cap="butt"),
@@ -193,6 +194,17 @@ def build(P, title):
     if P.get("water_edge"):
         i = next(k for k, l in enumerate(layers) if l["id"] == "water")
         layers.insert(i + 1, line("water-edge", "water", P["water_edge"], meters(2.5, 1.2), ["!=", ["get", "class"], "swimming_pool"]))
+    if P.get("block_edges"):  # GM-060: Pixel Quest – Häuser wie Blöcke von oben: dunkle Außenkante, helle Innenkante
+        i = max(k for k, l in enumerate(layers) if l["id"].startswith("building"))
+        dark, light = P["block_edges"]
+        w = lambda a, b: ["interpolate", ["exponential", 2], ["zoom"], 14, a, 18, b]
+        hi = {**line("building-highlight", "building", light, w(0.6, 3)), "minzoom": 15}
+        hi["paint"]["line-offset"] = w(0.8, 4)   # Ringe der Kacheln laufen im Uhrzeigersinn → positiv = innen
+        hi["paint"]["line-opacity"] = 0.8
+        hi["layout"]["line-join"] = "miter"
+        edge = {**line("building-edge", "building", dark, w(0.8, 3.5)), "minzoom": 14}
+        edge["layout"]["line-join"] = "miter"
+        layers[i + 1:i + 1] = [hi, edge]
     if P.get("building_ink"):
         i = next(k for k, l in enumerate(layers) if l["id"] == "building")
         layers.insert(i + 1, {**line("building-ink", "building", P["building_ink"], ["interpolate", ["linear"], ["zoom"], 14, 0.6, 18, 1.8]), "minzoom": 14})

@@ -93,8 +93,8 @@ const PATTERNS = {
   'ez-pat-farm-px': () => pixelTile(16, (x, y) => y % 4 === 3 ? rgbS(110, 72, 40) : patHash(x, y, 5) < 0.3 ? rgbS(214, 190, 80) : rgbS(181, 154, 69)),
   'ez-pat-stone-px': () => pixelTile(16, (x, y) => { const h = patHash(x, y, 6); return h < 0.2 ? rgbS(110, 110, 110) : h > 0.85 ? rgbS(160, 160, 160) : rgbS(138, 138, 138); }),
   'ez-pat-road-px': () => pixelTile(8, (x, y) => { const h = patHash(x, y, 7); return h < 0.25 ? rgbS(118, 118, 118) : h > 0.85 ? rgbS(170, 170, 170) : rgbS(143, 143, 143); }),
-  'ez-pat-oak-px': () => pixelTile(16, (x, y) => y % 4 === 3 ? rgbS(84, 62, 34) : (x + Math.floor(y / 4) * 5) % 8 === 0 ? rgbS(98, 72, 40) : patHash(x, y, 8) < 0.25 ? rgbS(150, 116, 66) : rgbS(139, 106, 62)),
-  'ez-pat-spruce-px': () => pixelTile(16, (x, y) => y % 4 === 3 ? rgbS(52, 36, 20) : patHash(x, y, 9) < 0.25 ? rgbS(104, 76, 46) : rgbS(92, 66, 38)),
+  'ez-pat-oak-px': () => pixelTile(16, (x, y) => (x === 15 || y === 15) ? rgbS(70, 50, 26) : y % 4 === 3 ? rgbS(84, 62, 34) : (x + Math.floor(y / 4) * 5) % 8 === 0 ? rgbS(98, 72, 40) : patHash(x, y, 8) < 0.25 ? rgbS(150, 116, 66) : rgbS(139, 106, 62)),
+  'ez-pat-spruce-px': () => pixelTile(16, (x, y) => (x === 15 || y === 15) ? rgbS(40, 27, 14) : y % 4 === 3 ? rgbS(52, 36, 20) : patHash(x, y, 9) < 0.25 ? rgbS(104, 76, 46) : rgbS(92, 66, 38)),
   'ez-pat-cobble-px': () => pixelTile(16, (x, y) => ((x + (Math.floor(y / 4) % 2) * 2) % 4 === 0 || y % 4 === 0) ? rgbS(80, 80, 80) : patHash(x, y, 10) < 0.3 ? rgbS(150, 150, 150) : rgbS(124, 124, 124)),
   'ez-pat-brick-px': () => pixelTile(16, (x, y) => (y % 4 === 3 || (x + (Math.floor(y / 4) % 2) * 4) % 8 === 7) ? rgbS(196, 180, 170) : patHash(x, y, 11) < 0.3 ? rgbS(160, 70, 52) : rgbS(146, 60, 44)),
   'ez-pat-lawn-toy': () => canvasTile(64, g => { g.fillStyle = rgbS(141, 198, 63); g.fillRect(0, 0, 64, 64); g.fillStyle = rgbS(163, 214, 90);
