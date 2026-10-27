@@ -80,3 +80,6 @@
 .D .f .steps i { height: 8px; border: 2px solid #111; background: #fff; border-radius: 6px; } .D .f .steps i.on { background: #b44dff; }
 .D .f .xp { border: 2.5px solid #111; border-radius: 8px; background: #fff; height: 16px; }
 .D .f .sub { color: rgba(255,255,255,.85); }
+
+/* GM-034: Name „Neon City“ immer in der Stil-Schrift (Pricedown, nur lokal; Ersatz Impact), schwarze Kontur */
+.nname { font-family: Pricedown, Impact, Anton, sans-serif; font-weight: 400; letter-spacing: .5px; font-size: 1.18em; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 0 #000; }

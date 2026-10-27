@@ -2,6 +2,25 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-034 – Name „Neon City“ wieder in der Stil-Schrift – Auftrag für den lokalen Claude
+
+**Ziel:** Der Nutzer will, dass der Name „Neon City“ überall in seiner eigenen Schrift steht (wie früher im Prototyp mit Pricedown).
+
+**Dateien:** `tools/prototype/{glas,onboarding}.{html,css}`, `tools/prototype/js/{glas,onboarding}.js`
+
+**Geändert (Prototyp):**
+- Neue Klasse `.nname`: Schrift Pricedown (nur lokal), Ersatz Impact, dann **Anton** (Google Fonts, SIL OFL), schwarze Kontur 1,5 px, etwas größer (1,18 em). Angewendet auf jeden „Neon City“: Shop (große Karte, Kauf-Knopf), Stil-Test-Banner, „Neon City gehört dir“, Onboarding-Kachel, Einstellungen
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler, Shop/Test/Freigeschaltet/Onboarding/Einstellungen angesehen. In der Cloud fehlt Pricedown, dort ist Anton zu sehen.
+
+**Ungetestet:** Nichts in Swift.
+
+### Auftrag (Swift)
+- Überall, wo der **Name** „Neon City“ erscheint (Stilwahl im Onboarding, Shop, Stil-Test-Banner, Freigeschaltet, Einstellungen, Stile-Seite), eigene Schrift statt SF Pro, mit schwarzer Kontur (2 Schatten oder `.stroke`-Text in SwiftUI) und Größe ×1,18. Nur der Name, nicht ganze Sätze oder Knöpfe drumherum
+- **Lizenz:** Pricedown hat nur eine Desktop-Lizenz und darf **nicht** in die App, solange der Nutzer keine App-Lizenz (Typodermic) gekauft hat. Bis dahin **Anton** (SIL OFL 1.1, frei auch für Apps): `App/Fonts/Anton-Regular.ttf` + `OFL.txt` ins Repo, in `project.yml` unter `UIAppFonts` eintragen, Lizenz in Einstellungen → Über nennen
+- Baustein `StyleName(style:)` in `App/Design/`: Neon City → Anton/Pricedown, Wild West → Rye (OFL), Pixel Quest → „Press Start 2P“ (OFL), Toy Town → Fredoka (OFL), Klassik → SF Pro. Gleiche Regeln (nur Namen)
+- Mit Dynamic Type skalieren (`.relativeTo(.title2)`), Kontur auch bei kleinen Größen lesbar
+
 ## GM-033 – Glas-Design: weitere Screens (Shop, Stil testen, Fahrten …) und Logik-Prüfung – Auftrag für den lokalen Claude
 
 **Ziel:** Hinweis „Kein Konto, kein Tracking“ raus; weitere Screens 1:1 im Glas-Look zeigen; alle Abläufe auf Logik prüfen.

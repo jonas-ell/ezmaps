@@ -39,10 +39,10 @@ const SCREENS = [
   ['Shop', 'Stile-Shop im Glas-Look. Neon groß als beliebtester Stil, Einzelkauf oder alle. „Käufe wiederherstellen“ ist Apple-Pflicht. Preise aus StoreKit.', ph => {
     ph.querySelector('.fill').style.background = '#0b0b0d';
     const f = $(`<div class="f" style="padding-top:58px"><div style="display:flex;justify-content:space-between;align-items:center"><div class="h1" style="font-size:30px">Stile</div><div class="g round" style="width:38px;height:38px">${icon(I.x, 16)}</div></div>
-      <div class="hero" style="margin-top:12px"><div class="m" data-s="neon"></div><span class="badge">Beliebtester Stil</span><div class="t"><b>Neon City</b><small>Dunkle Open-World-Karte · auch in CarPlay</small></div></div>
+      <div class="hero" style="margin-top:12px"><div class="m" data-s="neon"></div><span class="badge">Beliebtester Stil</span><div class="t"><b><span class="nname">Neon City</span></b><small>Dunkle Open-World-Karte · auch in CarPlay</small></div></div>
       <div class="card" style="margin-top:12px;padding:4px 14px">${[['classic', 'Klassik', 'Aktiv · inklusive', 'own'], ['western', 'Wild West', 'Papierkarte, rote Route', ''], ['pixel', 'Pixel Quest', 'Retro-Oberwelt', ''], ['toy', 'Toy Town', 'Spielteppich', '']].map(([s, n, d, own]) => `<div class="srow"><div class="thumb"><div class="m" data-s="${s}"></div></div><div style="flex:1"><b>${n}</b><small>${d}</small></div><span class="price ${own}">${own ? '✓' : '2,99 €'}</span></div>`).join('')}</div>
       <div class="grow"></div>
-      <div class="btn" style="margin-top:12px">Neon City · 2,99 €</div>
+      <div class="btn" style="margin-top:12px;white-space:nowrap"><span><span class="nname">Neon City</span>&nbsp;· 2,99 €</span></div>
       <div class="ropt" style="justify-content:center;font:700 14px Inter;margin-top:8px">Alle Stile · 6,99 € <span style="opacity:.6;font-weight:500">&nbsp;einmalig</span></div>
       <div class="fine">Einmalkauf, kein Abo. Gilt für iPhone und CarPlay.</div><div class="link">Käufe wiederherstellen</div></div>`);
     ph.append(f);
@@ -50,14 +50,14 @@ const SCREENS = [
   }],
   ['Stil testen', 'Premium-Stil 10 Minuten auf der echten Karte testen. Läuft nie während einer Fahrt ab (erst nach Ankunft zurück zu Klassik).', ph => {
     mapInto(ph.querySelector('.fill'), 'neon', { center: [-500, 300], heading: 0, scale: 0.6, tilt: 0, anchor: [0.5, 0.45] }, (u, v) => { drawBlips(u, v, scene, 'neon', {}); drawPlayer(u, v, R.pts[0], 0, 'neon', 12); });
-    ph.append($(`<div class="f"><div class="banner g" style="border-radius:18px"><div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#b44dff,#7a2bd8);display:grid;place-items:center;font:800 13px Inter">9:42</div><div style="flex:1"><b>Neon City · Vorschau</b><small>Noch 9 Min 42 s</small></div><span class="price" style="background:#b44dff">Kaufen</span></div>
+    ph.append($(`<div class="f"><div class="banner g" style="border-radius:18px"><div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#b44dff,#7a2bd8);display:grid;place-items:center;font:800 13px Inter">9:42</div><div style="flex:1"><b><span class="nname">Neon City</span> · Vorschau</b><small>Noch 9 Min 42 s</small></div><span class="price" style="background:#b44dff">Kaufen</span></div>
       <div class="grow"></div><div class="g" style="padding:12px 14px"><div class="grab"></div><div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border-radius:14px;padding:12px 14px">${icon(I.search, 20, '#c9c9d0')}<span style="font:600 18px Inter;color:#d0d0d6">Wohin?</span></div></div>${osm(140)}</div>`));
   }],
   ['Freigeschaltet', 'Nach dem Kauf (Apple zeigt das Bezahlfenster selbst). Kurz feiern, Stil sofort aktiv.', ph => {
     mapInto(ph.querySelector('.fill'), 'neon', { center: [40, -20], heading: 0.5, scale: 1.2, tilt: 50, anchor: [0.5, 0.45] }, (u, v) => { drawRoute(u, v, R, 0, 'neon', { width: 8 }); drawPlayer(u, v, R.pts[0], 0, 'neon', 14); });
     ph.append($(`<div class="f"><div class="confetti"></div><div class="grow"></div><div class="sheet" style="text-align:center"><div class="grab"></div>
       <div style="width:64px;height:64px;border-radius:32px;margin:6px auto 12px;background:linear-gradient(135deg,#b44dff,#7a2bd8);display:grid;place-items:center">${icon(I.check, 30, '#fff', 3)}</div>
-      <div class="h1" style="font-size:26px">Neon City gehört dir</div><div class="sub" style="margin-top:6px">Auf dem iPhone und in CarPlay aktiv.</div>
+      <div class="h1" style="font-size:26px"><span class="nname">Neon City</span> gehört dir</div><div class="sub" style="margin-top:6px">Auf dem iPhone und in CarPlay aktiv.</div>
       <div class="btn">Losfahren</div><div class="btn2">Andere Stile ansehen</div></div></div>`));
   }],
   ['Meine Fahrten', 'Lokaler Verlauf (nur auf dem iPhone). Von hier: Fotomodus, Strecke nochmal fahren, löschen.', ph => {

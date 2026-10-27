@@ -41,7 +41,7 @@ const SCREENS = [
   ['3 Stil wählen', 'Echte Karten-Vorschau je Stil. Klassik gratis, Premium mit „Testen“.', ph => {
     ph.querySelector('.fill').style.background = '#0b0b0d';
     const f = $(`<div class="f">${steps(2)}<div class="kick">Schritt 2 von 3</div><div class="h1">Wie soll deine Welt aussehen?</div><div class="sub">Du kannst jederzeit wechseln.</div>
-      <div class="grid2" style="margin-top:16px">${['classic', 'neon', 'western', 'pixel'].map((s, i) => `<div class="tile ${s === 'classic' ? 'sel' : ''}"><div class="m" data-s="${s}"></div><span class="pill ${STYLES[s].free ? '' : 'pro'}">${STYLES[s].free ? 'GRATIS' : 'PREMIUM'}</span><div class="t">${STYLES[s].name}<small>${STYLES[s].free ? 'Inklusive' : 'Kostenlos testen'}</small></div></div>`).join('')}</div>
+      <div class="grid2" style="margin-top:16px">${['classic', 'neon', 'western', 'pixel'].map((s, i) => `<div class="tile ${s === 'classic' ? 'sel' : ''}"><div class="m" data-s="${s}"></div><span class="pill ${STYLES[s].free ? '' : 'pro'}">${STYLES[s].free ? 'GRATIS' : 'PREMIUM'}</span><div class="t">${s === 'neon' ? '<span class="nname">Neon City</span>' : STYLES[s].name}<small>${STYLES[s].free ? 'Inklusive' : 'Kostenlos testen'}</small></div></div>`).join('')}</div>
       <div class="grow"></div><div class="btn">Weiter mit Klassik</div></div>`);
     ph.append(f);
     requestAnimationFrame(() => f.querySelectorAll('.m').forEach(m => { const s = m.dataset.s; mapInto(m, s, { center: [40, -20], heading: 0.4, scale: 1.1, tilt: 45, anchor: [0.5, 0.6] }, (u, v) => { drawRoute(u, v, R, 0, s, { width: 6 }); drawPlayer(u, v, R.pts[0], 0, s, 9); }); }));
@@ -73,7 +73,7 @@ const SCREENS = [
   ['7 Einstellungen', 'Gruppiert, kurz, mit Stil oben. Rechtliches unten.', ph => {
     ph.querySelector('.fill').style.background = '#0b0b0d';
     ph.append($(`<div class="f" style="padding-top:60px"><div class="h1">Einstellungen</div>
-      <div class="card" style="margin-top:16px;display:flex;gap:12px;align-items:center"><canvas width="88" height="120" style="width:44px;height:60px" id="setcar"></canvas><div><div style="font:800 17px Inter">Neon City</div><div style="font:500 13px Inter;opacity:.6">Stil ändern</div></div><span style="margin-left:auto;opacity:.5">${icon(I.chev, 18)}</span></div>
+      <div class="card" style="margin-top:16px;display:flex;gap:12px;align-items:center"><canvas width="88" height="120" style="width:44px;height:60px" id="setcar"></canvas><div><div style="font:800 17px Inter"><span class="nname">Neon City</span></div><div style="font:500 13px Inter;opacity:.6">Stil ändern</div></div><span style="margin-left:auto;opacity:.5">${icon(I.chev, 18)}</span></div>
       <div class="kick" style="margin-top:18px">Navigation</div>
       <div class="card"><div class="li"><span class="ic">${icon(I.vol, 18)}</span><span>Stimme<small>Helena · Erweitert</small></span><span class="r">${icon(I.chev, 16)}</span></div><div class="li"><span class="ic">${icon(I.car, 18)}</span><span>Autobahn meiden</span><span class="toggle off" style="margin-left:auto"></span></div><div class="li"><span class="ic">${icon(I.shield, 18)}</span><span>Tempolimit anzeigen</span><span class="toggle" style="margin-left:auto"></span></div></div>
       <div class="kick" style="margin-top:18px">Orte</div>

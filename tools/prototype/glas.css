@@ -22,3 +22,6 @@
 .B .f .day { font: 700 12px Inter; letter-spacing: 1.5px; text-transform: uppercase; color: #8e8e96; margin: 14px 0 6px; }
 .B .f .sum { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .B .f .sum div { padding: 10px; border-radius: 14px; background: rgba(28,28,32,.62); border: .5px solid rgba(255,255,255,.16); font: 800 19px Inter; } .B .f .sum small { display: block; font: 500 11px Inter; color: #a9a9b2; }
+
+/* GM-034: Name „Neon City“ immer in der Stil-Schrift (Pricedown, nur lokal; Ersatz Impact), schwarze Kontur */
+.nname { font-family: Pricedown, Impact, Anton, sans-serif; font-weight: 400; letter-spacing: .5px; font-size: 1.18em; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 0 #000; }
