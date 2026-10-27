@@ -133,8 +133,8 @@ return "an"
 OSA
   sleep 4
   xcrun simctl terminate "$SID" "$BID" 2>/dev/null
-  xcrun simctl launch "$SID" "$BID" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
-  sleep 6
+  xcrun simctl launch "$SID" "$BID" -EZStyle "${DRIVE_STYLE:-neon-city}" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null  # GM-061: Stil wählbar
+  sleep 8
   osascript <<'OSA' 2>&1 | sed 's/^/Antippen: /'
 tell application "System Events" to tell process "Simulator"
   set w to first window whose name contains "CarPlay"
@@ -142,7 +142,10 @@ tell application "System Events" to tell process "Simulator"
   set {ww, wh} to size of w
   set k to ww / 800
   set top to wh - 480 * k
-  click at {px + 52 * k, py + top + 200 * k}
+  repeat 3 times
+    click at {px + 52 * k, py + top + 200 * k}
+    delay 3
+  end repeat
 end tell
 return "ok"
 OSA
@@ -154,8 +157,8 @@ OSA
   while [ "$(date +%s)" -lt "$END" ]; do
     F=$(printf "%03d" $N)
     xcrun simctl io "$SID" screenshot --display=external --type=jpeg "$OUT/car-$F.jpg" >/dev/null 2>&1
-    xcrun simctl io "$SID" screenshot --type=jpeg "$OUT/phone-$F.jpg" >/dev/null 2>&1
-    N=$((N+1)); sleep 4
+    [ "${DRIVE_PHONE:-1}" = 1 ] && xcrun simctl io "$SID" screenshot --type=jpeg "$OUT/phone-$F.jpg" >/dev/null 2>&1
+    N=$((N+1)); sleep "${DRIVE_EVERY:-4}"  # GM-061: Takt und iPhone-Bilder einstellbar (Clip)
   done
   xcrun simctl location "$SID" clear
   echo "Bilder: $N"

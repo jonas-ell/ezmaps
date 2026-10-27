@@ -13,6 +13,8 @@ TMP=$(mktemp -d); mkdir -p "$TMP/src"
 git archive --format=tar HEAD App Core Resources project.yml tools/mac_build.sh | tar -x -C "$TMP/src"
 cp "$WPF" "$TMP/src/tools/drive.txt"; touch "$TMP/src/tools/.do_freedrive"
 sed -i "s/DRIVE_SECONDS:-360/DRIVE_SECONDS:-$SECS/" "$TMP/src/tools/mac_build.sh"
+# GM-061: optional Stil, Takt (Sekunden), Tempo (m/s), iPhone-Bilder 0/1 – z. B. STYLE=pixel-quest EVERY=1 PHONE=0
+sed -i "s/DRIVE_STYLE:-neon-city/DRIVE_STYLE:-${STYLE:-neon-city}/; s/DRIVE_EVERY:-4/DRIVE_EVERY:-${EVERY:-4}/; s/DRIVE_PHONE:-1/DRIVE_PHONE:-${PHONE:-1}/; s/DRIVE_SPEED:-14/DRIVE_SPEED:-${SPEED:-14}/" "$TMP/src/tools/mac_build.sh"
 ssh "$H" clean >/dev/null && tar -cf - -C "$TMP/src" . | ssh "$H" extract >/dev/null || exit 1
 echo "Fahre $NAME ($SECS s) …"
 ssh "$H" build > "$TMP/raw.txt"
@@ -29,6 +31,6 @@ for line in open(sys.argv[1], encoding="utf-8", errors="ignore"):
 print(n, "Bilder in", out)
 PY
 for K in car phone; do
-  ls "$OUTDIR"/$K-*.jpg >/dev/null 2>&1 && ffmpeg -loglevel error -y -framerate 4 -i "$OUTDIR/$K-%03d.jpg" -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -pix_fmt yuv420p "$OUTDIR/$K.mp4" && echo "Video: $OUTDIR/$K.mp4"
+  ls "$OUTDIR"/$K-*.jpg >/dev/null 2>&1 && ffmpeg -loglevel error -y -framerate ${FPS:-4} -i "$OUTDIR/$K-%03d.jpg" -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -pix_fmt yuv420p "$OUTDIR/$K.mp4" && echo "Video: $OUTDIR/$K.mp4"
 done
 rm -rf "$TMP"
