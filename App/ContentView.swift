@@ -438,22 +438,29 @@ struct NavigationHUD: View {
 
     var body: some View {
         let s = model.nav
+        let look = NavPanelLook.of(model.activeStyle)
         VStack(spacing: 8) {
             HStack(spacing: 14) {
                 Image(systemName: Self.symbol(for: s?.maneuver?.kind))
                     .font(.system(size: 40, weight: .bold))
+                    .foregroundStyle(look.symbol)
                     .frame(width: 56)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(s.map { Formatting.distance($0.distanceToManeuver) } ?? "…")
-                        .font(.system(size: 38, weight: .heavy)).minimumScaleFactor(0.6).lineLimit(1)
-                    Text(Self.street(s)).font(.system(size: 17, weight: .bold)).lineLimit(1).minimumScaleFactor(0.7)
+                        .font(look.distanceFont).minimumScaleFactor(0.6).lineLimit(1)
+                    Text(look.uppercaseStreet ? Self.street(s).uppercased() : Self.street(s))
+                        .font(look.streetFont).lineLimit(1).minimumScaleFactor(0.6)
+                    // GM-051: Abbiege-Text als dritte Zeile wie in den Referenzen (Wild West, Pixel Quest, Toy Town)
+                    if look.showsAction, let m = s?.maneuver, !Self.street(s).isEmpty {
+                        Text(m.text).font(look.actionFont).opacity(0.75).lineLimit(1)
+                    }
                 }
                 Spacer(minLength: 0)
             }
-            .foregroundStyle(.white)
+            .foregroundStyle(look.text)
             .padding(.horizontal, 18)
             .padding(.vertical, 14)
-            .glass(GlassTokens.sheet, tint: SwiftUI.Color(red: 124 / 255.0, green: 40 / 255.0, blue: 200 / 255.0))
+            .modifier(NavPanel(look: look))
             .accessibilityElement(children: .combine)
 
             if let n = model.roadNotice { RoadNoticeBanner(ahead: n) }
@@ -692,5 +699,76 @@ struct BadgeChip: View {
         .padding(.trailing, 12)
         .padding(4)
         .neutralGlass(20)
+    }
+}
+
+/// GM-051: Abbiegetafel je Stil wie die abgenommenen Prototyp-Bilder (docs/previews/07-navigation-*.png):
+/// Neon City lila Glas, Klassik blaues Glas, Wild West Pergament mit Doppelrahmen und Western-Schrift,
+/// Pixel Quest dunkelblau mit weißem Rahmen und Pixelschrift, Toy Town weiß mit dunklem Rand und runder Schrift.
+struct NavPanelLook {
+    enum Kind { case glass(SwiftUI.Color), parchment, pixel, toy }
+    let kind: Kind
+    let text: SwiftUI.Color
+    let symbol: SwiftUI.Color
+    let distanceFont: Font
+    let streetFont: Font
+    let actionFont: Font
+    let uppercaseStreet: Bool
+    let showsAction: Bool
+
+    static func of(_ style: MapStyle) -> NavPanelLook {
+        let ink = SwiftUI.Color(red: 0x2e / 255.0, green: 0x1e / 255.0, blue: 0x10 / 255.0)
+        let toyInk = SwiftUI.Color(red: 0x2f / 255.0, green: 0x36 / 255.0, blue: 0x40 / 255.0)
+        switch style {
+        case .neonCity:
+            return NavPanelLook(kind: .glass(SwiftUI.Color(red: 124 / 255.0, green: 40 / 255.0, blue: 200 / 255.0)), text: .white, symbol: .white,
+                                distanceFont: .system(size: 38, weight: .heavy), streetFont: .system(size: 17, weight: .bold),
+                                actionFont: .system(size: 13, weight: .semibold), uppercaseStreet: false, showsAction: false)
+        case .classic:
+            return NavPanelLook(kind: .glass(SwiftUI.Color(red: 26 / 255.0, green: 115 / 255.0, blue: 232 / 255.0)), text: .white, symbol: .white,
+                                distanceFont: .system(size: 38, weight: .heavy), streetFont: .system(size: 17, weight: .bold),
+                                actionFont: .system(size: 13, weight: .semibold), uppercaseStreet: false, showsAction: false)
+        case .wildWest:
+            return NavPanelLook(kind: .parchment, text: ink, symbol: SwiftUI.Color(red: 0xc0 / 255.0, green: 0x26 / 255.0, blue: 0x1f / 255.0),
+                                distanceFont: .custom("Rye-Regular", size: 32), streetFont: .system(size: 15, weight: .heavy),
+                                actionFont: .system(size: 12, weight: .medium), uppercaseStreet: true, showsAction: true)
+        case .pixelQuest:
+            return NavPanelLook(kind: .pixel, text: .white, symbol: .white,
+                                distanceFont: .custom("PressStart2P-Regular", size: 24), streetFont: .custom("PressStart2P-Regular", size: 10),
+                                actionFont: .custom("PressStart2P-Regular", size: 8), uppercaseStreet: true, showsAction: true)
+        case .toyTown:
+            return NavPanelLook(kind: .toy, text: toyInk, symbol: toyInk,
+                                distanceFont: .custom("Fredoka-Bold", size: 36), streetFont: .custom("Fredoka-Bold", size: 16),
+                                actionFont: .system(size: 12, weight: .semibold), uppercaseStreet: true, showsAction: true)
+        }
+    }
+}
+
+struct NavPanel: ViewModifier {
+    let look: NavPanelLook
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        switch look.kind {
+        case .glass(let tint):
+            content.glass(GlassTokens.sheet, tint: tint)
+        case .parchment:
+            let brown = SwiftUI.Color(red: 0x3a / 255.0, green: 0x24 / 255.0, blue: 0x14 / 255.0)
+            content
+                .background(SwiftUI.Color(red: 0xef / 255.0, green: 0xe2 / 255.0, blue: 0xc0 / 255.0), in: RoundedRectangle(cornerRadius: 6))
+                .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(brown, lineWidth: 2.5))
+                .overlay(RoundedRectangle(cornerRadius: 3).strokeBorder(brown.opacity(0.6), lineWidth: 1).padding(5))
+                .shadow(color: .black.opacity(0.35), radius: 8, y: 4)
+        case .pixel:
+            content
+                .background(SwiftUI.Color(red: 0x1a / 255.0, green: 0x2a / 255.0, blue: 0x6c / 255.0))
+                .overlay(Rectangle().strokeBorder(.white, lineWidth: 3))
+                .overlay(Rectangle().strokeBorder(.black, lineWidth: 1.5).padding(-1.5))
+        case .toy:
+            content
+                .background(.white, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(SwiftUI.Color(red: 0x2f / 255.0, green: 0x36 / 255.0, blue: 0x40 / 255.0), lineWidth: 2.5))
+                .shadow(color: .black.opacity(0.25), radius: 6, y: 3)
+        }
     }
 }
