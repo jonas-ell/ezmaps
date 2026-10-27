@@ -348,6 +348,25 @@ Destination toy-flag: checkered finish flag on a short pole, 64x64, anchor at th
 Einbau: Häuser als Symbol auf jedem Gebäude (MapLibre `symbol` auf dem Gebäude-Mittelpunkt, Größe nach Grundfläche),
 Kacheln als `fill-pattern`, Marker wie bei den anderen Stilen.
 
+## 11. Wild West wie eine handgezeichnete Papierkarte (GM-061)
+
+Referenzen (lokal, nicht im Repo): `tools/prototype/referenzen/west-karte-1.png` … `-3.png`.
+
+```
+Style: hand-drawn 1890s frontier survey map, sepia ink on aged peach paper (#E4C9A8), ink #3A2D20,
+fine pen strokes, slightly irregular, no text, no logos, original artwork (not copied from any game).
+Transparent PNG @1x/@2x/@3x + 1024 master, folder Assets/Generated/WildWest/, plus index.html.
+
+1. paper-tile: seamless 512x512 paper texture, very subtle fibers and faint stains, no strong vignette.
+2. forest-stamps: 6 small tree clump stamps (top-down, ink outline + light hatching), 32x32.
+3. hill-hatch: seamless 256x256 tile of short hachure strokes for hills/forest areas, transparent background.
+4. water-edge: seamless 256x256 tile of faint horizontal pen lines for lakes/rivers, transparent.
+5. poi-badges: 16 round black badges 36x36 with thin cream rim and white pictogram: food, fast food, coffee,
+   shop, fuel, charging, parking, hospital, bank, hotel, school, church, cinema, barber, clothing, playground.
+6. player-arrow: cream arrowhead with dark ink outline, 64x64, pointing up.
+7. waypoint-x: hand-inked red X, 48x48.
+```
+
 ## Nicht von Codex
 
 - **Schriften:**
