@@ -20,12 +20,15 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
   - Unterschiede, die bleiben: Kartensymbole sind in der App SF Symbols (hier nachgezeichnet); graue iOS-Teile in CarPlay nachgebaut; keine Tempolimits, Sprachansagen, Käufe.
 - `serve.py` öffnet jetzt `live.html`.
 - Store- und CarPlay-Screenshots zeigen Neon City (`-EZStyle neon-city`, wirkt nur im Screenshot-Modus). Test-Bilder bleiben Klassik.
+- Neon City weit weg: Straßen nach Art gestaffelt (Autobahn #bdbdbd, Bundesstraße #959595, Landstraße #727272, klein #5f5f5f) – Übersicht vorher zu hell und unruhig (Screenshot Vorschau).
 
 **Tatsächlich geprüft:**
 - Browser (Chromium/Playwright): Start, Freie Fahrt (5×), Suche „Römerberg Frankfurt“, Vorschau mit 3 Routen auf beiden Bildschirmen, Navigation mit Abbiegekarte, Ankunftsbox und Kamera. Keine Fehler in der Konsole.
 - Mac-Prüflauf vor dieser Änderung (GM-045/046): STIL OK, 59/59 Tests, 5 iPhone + 5 CarPlay + 10 Test-Bilder ohne Fehler (CarPlay-Ankunft wieder mit Karte).
 
-**Ungetestet:** Neon-Store-Bilder (`-EZStyle`) noch nicht auf dem Mac gelaufen.
+- Mac-Prüflauf mit `-EZStyle`: STIL OK, 59/59 Tests, alle 20 Bilder in Neon City bzw. Klassik (Tests), keine Fehler.
+
+**Ungetestet:** gestaffelte Straßenfarben nur im Browser angesehen, noch nicht auf dem Mac.
 
 ## GM-046 – Plan „Freunde auf der Karte“ (Crew über iCloud)
 

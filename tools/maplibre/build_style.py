@@ -29,7 +29,7 @@ NEON = dict(land=zc("#232425", "#3b3c3e"), residential=zc("#323335", "#3b3c3e"),
             farm=zc("#212223", "#38393b"), park=zc("#202322", "#36383a"), forest=zc("#1e2120", "#333537"),
             water=zc("#4b5155", "#5d6870"), building="#5b5c5f", buildingEdge="#4a4b4e", urban="#3b3c3e", rail="#2b2c2e",
             casing=zc("#232425", "#151617"), label="#1d1e20", poi_suffix="-neon", poi_minzoom=13.5)
-NEON.update(road=lambda r: zc("#bdbdbd" if r <= 1 else "#979797" if r <= 4 else "#7e7e7e", "#ececec" if r <= 4 else "#dcdcdc" if r <= 6 else "#c4c4c4"),
+NEON.update(road=lambda r: zc("#bdbdbd" if r <= 1 else "#959595" if r <= 2 else "#727272" if r <= 4 else "#5f5f5f", "#ececec" if r <= 4 else "#dcdcdc" if r <= 6 else "#c4c4c4"),
             widen=1.5, label_halo=None)
 CLASSIC = dict(land="#f2efe9", residential="#ece7e0", industrial="#ebe3e8", farm="#eef0d6", park="#d4ebc8", forest="#c3dfb4",
                water="#aad3df", building="#ddd5cc", buildingEdge="#cbc0b5", rail="#a3a3a3", casing="#c9c1b6", label="#4a4a4a",
