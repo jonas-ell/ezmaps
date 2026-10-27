@@ -2,6 +2,70 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-032 – Entscheidung: UI-Richtung „B · Glas“ – Auftrag für den lokalen Claude
+
+**Ziel:** Der Nutzer hat sich für das Glas-Design entschieden (GM-030 Richtung B, GM-031 Onboarding Richtung B). Die ganze iPhone-Oberfläche wird darauf umgestellt. A, C, D werden nicht umgesetzt.
+
+**Dateien:** `CHANGELOG.md` (nur Auftrag, kein Code)
+
+**Tatsächlich geprüft:** Nichts gebaut. Vorlagen: `docs/previews/designs/B-glas.png`, `http://localhost:8765/tools/prototype/designs.html` (Abschnitt B), `http://localhost:8765/tools/prototype/onboarding.html` (Abschnitt B). Werte stammen aus `tools/prototype/designs.css` (`.B …`) und `tools/prototype/onboarding.css` (`.B .f …`).
+
+**Ungetestet:** Alles, Umsetzung steht aus.
+
+### Auftrag (Swift, iPhone; CarPlay bleibt bei Apples Vorlagen)
+
+Vor dem Start `docs/LESSONS_SWIFT.md` lesen. Je Block eigener Eintrag GM-0xx, nach jedem Block Mac-Build + Screenshots (`tools/mac_screens.sh`) und mit den Vorlagen vergleichen. Keine Gedankenstriche in UI-Texten (GM-023). Deutsch + Englisch.
+
+**1. Design-Bausteine (`App/Design/Glass.swift`, neu)**
+- Farben: Akzent `#B44DFF`, Verlauf bis `#7A2BD8` (135°), Ende/Gefahr `#FF3B4E`, Text weiß, Nebentext `#A9A9B2`, Erfolg `#58B05F`
+- Glas-Fläche `GlassCard`: `.ultraThinMaterial` (dunkel), darüber `rgb(28,28,32)` mit 45 % Deckkraft, Rand 0,5 pt weiß 18 %, Ecken 26 pt (Blätter) / 20 pt (Karten) / 14 pt (Felder, Zeilen), `.continuous`; Schatten schwarz 35 %, Radius 30, y 10
+- `GlassChip` (Kapsel, Innenabstand 8×13 pt, 14 pt semibold, Symbol in Akzentfarbe), `GlassRoundButton` (48-pt-Kreis), `PrimaryButton` (Höhe 56, Ecken 18, Verlauf, Schatten Akzent 45 % Radius 24 y 8, 19 pt heavy), `SecondaryButton` (Text 15 pt, weiß 75 %), `SheetGrabber` (38 × 5 pt, weiß 35 %)
+- Schrift: SF Pro (System), Titel 28 pt heavy, Laufweite −0,6; Zahlen `.monospacedDigit()`
+- „Transparenz reduzieren“ an: feste Fläche `#1C1C20` statt Material. „Bewegung reduzieren“ beachten
+- Alle Bausteine mit `#Preview`
+
+**2. Startkarte** (Vorlage B, Bild 1)
+- Suche **unten** im Daumenbereich als Glas-Blatt mit Griff: Feld „Wohin?“ + Mikrofon, darunter Chips „Zuhause · 14 Min“, „Arbeit · 22 Min“, „Tanken“, „Parken“ (Zuhause/Arbeit nur wenn festgelegt; Minuten aus dem letzten Routing, sonst ohne Zeit)
+- Rechts oben zwei `GlassRoundButton`: Zentrieren, Einstellungen
+- Hochziehen oder Tippen öffnet die Suche im selben Blatt (Blatt wird hoch, Tastatur), kein Vollbild-Wechsel
+- OSM-Hinweis über dem Blatt rechts
+
+**3. Suche** (Onboarding-Seite B, Bild 6)
+- Feld oben im Blatt mit Akzent-Rand 1,5 pt. Ohne Eingabe: 4 Kategorie-Kacheln (Tanken, Parken, Essen, Favoriten) und „Zuletzt“ als Glas-Liste (Symbol in 38-pt-Kachel mit 12 pt Ecken, Titel, Untertitel, Entfernung rechts)
+
+**4. Routen-Vorschau** (B, Bild 2)
+- Zurück als runder Glas-Knopf oben links (kein Balken mehr)
+- Glas-Blatt unten: Titel 28 pt heavy, Untertitel, Schließen-Kreis 36 pt oben rechts
+- Routen als Zeilen (Ecken 16): **Minuten groß zuerst**, darunter „Schnellste · 1,9 km · an 9:47“. Gewählte Zeile: Akzent 22 % Fläche + 1,5 pt Rand Akzent; erste Route mit Chip „Empfohlen“
+- `PrimaryButton` „Los“
+- Karte so einpassen, dass die Route über dem Blatt liegt (Blatthöhe messen, nicht schätzen)
+
+**5. Navigation** (B, Bild 3)
+- Abbiegehinweis oben als Glas-Karte mit Akzent-Tönung (`#7C28C8` 72 % über Material): Pfeil 46 pt, Entfernung 40 pt heavy, Straße 18 pt bold
+- Darunter links Chip „danach links · Wiesbadener Str.“, rechts Tempolimit-Schild 56 pt (Zeichen 282 bei unbegrenzt bleibt, GM-022)
+- Unten eine Glas-Leiste: links runder Tacho (km/h in 48-pt-Kreis, weiß 8 %), Mitte Ankunftszeit 24 pt heavy + „5 Min · 1,1 km“, rechts runder Ende-Knopf `#FF3B4E` mit ×. Zentrieren nur, wenn die Karte verschoben wurde
+- „Musik leiser“ als kleiner Chip, wenn aktiv
+
+**6. Ankunft** (Onboarding B, Bild 7)
+- Glas-Blatt: „Angekommen · 9:47“ (Akzent, klein, Großbuchstaben), Zielname, 3 Werte-Kacheln (km, Min, neue Straßen grün), Stufen-Balken nur wenn Entdecken aktiv ist; „Fertig“ + runder Teilen-Knopf
+
+**7. Onboarding (neu, nur beim ersten Start)** (Onboarding B, Bild 1–5)
+- 1 Willkommen: Karte im Hintergrund (langsame Kamerafahrt, bei „Bewegung reduzieren“ still), App-Icon, „EzMaps“, ein Satz, „Los geht's“, „Ich habe schon EzMaps“ (= überspringen)
+- 2 Standort: Erklärung (zwei Zeilen „Karte zeigt dich“, „Kein Konto, kein Tracking“), **erst nach Tipp auf „Standort erlauben“** `requestWhenInUseAuthorization`; „Später“ geht weiter. Abgelehnt → später Hinweis mit Knopf zu den iOS-Einstellungen
+- 3 Stil wählen: 2×2 Kacheln mit echter Mini-Karte (MapLibre-Schnappschuss, gecacht), Klassik „Gratis“, andere „Premium · Kostenlos testen“ (StoreKit siehe GM-029 Punkt 1; bis dahin nur vorhandene Stile)
+- 4 Fahrzeug wählen: 3×2 Kacheln (Pfeil, Wagen, Flitzer, Kombi, Oldtimer, gesperrt „ab Stufe 3“ halbdurchsichtig), Symbole aus `Assets/Generated/Ideen/parked-car-*.png`; `AppSettings.vehicle`, Spieler-Symbol auf der Karte entsprechend (Schnauze in Fahrtrichtung)
+- 5 Zuhause/Arbeit + Schalter Sprachansagen und Losfahr-Hinweis (Mitteilungs-Erlaubnis nur fragen, wenn eingeschaltet)
+- Fortschritt oben als 4 Striche (Akzent) + „Schritt x von 4“. `AppSettings.onboardingDone`; Screenshot-Modus überspringt das Onboarding
+
+**8. Einstellungen**
+- Eigene Glas-Liste statt `Form`: oben Karte „Stil · Fahrzeug“ mit Symbol, dann Gruppen Navigation (Stimme, Autobahn meiden, Tempolimit anzeigen …), Orte (Zuhause, Arbeit), Daten und Recht. Schalter in Akzentfarbe, alles scrollbar
+
+**9. Prüfen**
+- Kleine Geräte 375 × 667 (LESSONS_SWIFT 2): nichts abgeschnitten, Blätter scrollen
+- App bleibt dunkel; auf hellem Kartenstil (Klassik) muss Glas lesbar bleiben (dann `.regularMaterial` + 60 % Fläche)
+- VoiceOver-Beschriftungen für alle runden Knöpfe
+- Store-Screenshots neu (`tools/mac_screens.sh`), zusätzlich Onboarding Bild 1–3
+
 ## GM-031 – Onboarding und weitere Screens in den vier UI-Richtungen
 
 **Ziel:** Nutzer will auch Onboarding usw. sehen; Ideen aus anderen Navi-Apps einbeziehen.
