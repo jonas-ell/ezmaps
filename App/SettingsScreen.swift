@@ -79,6 +79,9 @@ struct SettingsScreen: View {
                 Section(L("Käufe")) {
                     LabeledContent(L("EzMaps Plus"), value: model.purchases.access.hasPlus ? L("aktiv") : L("nicht aktiv"))
                     Button(L("Käufe wiederherstellen")) { Task { await model.purchases.restore() } }
+                    if model.purchases.testMode {
+                        Button(L("Testkäufe zurücksetzen"), role: .destructive) { model.purchases.resetTestPurchases() }
+                    }
                     Button(L("Abo verwalten")) { manageSubs = true }
                 }
                 Section {

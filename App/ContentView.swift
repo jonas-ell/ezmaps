@@ -113,6 +113,7 @@ struct MapHome: View {
                 Spacer()
                 VStack(spacing: 10) {
                     GlassRoundButton(systemImage: "location.north.line", label: L("Auf meinen Standort zentrieren")) { model.recenter() }
+                        .padding(.top, 54) // GM-050: Platz für den Kompass oben rechts (überlappte vorher)
                     GlassRoundButton(systemImage: "paintpalette", label: L("Stile")) { model.shopRequest = .classic }
                     GlassRoundButton(systemImage: "map", label: L("Entdecken")) { showExplore = true }
                     GlassRoundButton(systemImage: "gearshape", label: L("Einstellungen")) { showSettings = true }
@@ -473,7 +474,12 @@ struct NavigationHUD: View {
                         .padding(.horizontal, 8).padding(.vertical, 5).neutralGlass(10)
                 }
                 Spacer()
-                GlassRoundButton(systemImage: "location.north.line", label: L("Auf meinen Standort zentrieren")) { model.recenter() }
+                VStack(spacing: 10) {
+                    // GM-050: Ansagen während der Fahrt aus/an
+                    GlassRoundButton(systemImage: model.settings.voice ? "speaker.wave.2.fill" : "speaker.slash.fill",
+                                     label: model.settings.voice ? L("Ansagen aus") : L("Ansagen an")) { model.toggleVoice() }
+                    GlassRoundButton(systemImage: "location.north.line", label: L("Auf meinen Standort zentrieren")) { model.recenter() }
+                }
             }
             HStack { Spacer(); OSMAttribution() }
             HStack(spacing: 12) {

@@ -13,7 +13,7 @@ const THEME = {
   'classic': { route: '#1a73e8', edge: '#0b3d91', alt: 'rgba(90,110,140,.5)', bg: '#f2efe9' },
   'neon-city': { route: '#a13df0', edge: '#4b1a73', alt: 'rgba(200,200,205,.55)', bg: '#181818' },
   'wild-west': { route: '#c0261f', edge: '#4a0d0a', alt: 'rgba(90,60,30,.45)', bg: '#c4ac80' },
-  'pixel-quest': { route: '#ffcc33', edge: '#7a4a00', alt: 'rgba(255,255,255,.6)', bg: '#60a83a' },
+  'pixel-quest': { route: '#e0362b', edge: '#4a0d08', alt: 'rgba(255,255,255,.6)', bg: '#60a83a' },
   'toy-town': { route: '#ff7a00', edge: '#ffffff', alt: 'rgba(255,255,255,.75)', bg: '#8dc63f' },
 };
 const DEST = '#f5d742';
@@ -121,7 +121,11 @@ function addOverlay(map) { // RouteOverlay.styleLoaded
   L('ez-alt-line', 'ez-alt', { 'line-color': t.alt, 'line-width': 5 });
   L('ez-route-edge', 'ez-route', { 'line-color': t.edge, 'line-width': 9 });
   L('ez-route-line', 'ez-route', { 'line-color': t.route, 'line-width': 6 });
-  if (!map.getLayer('ez-dest-dot')) map.addLayer({ id: 'ez-dest-dot', type: 'circle', source: 'ez-dest', paint: { 'circle-color': DEST, 'circle-radius': 8, 'circle-stroke-color': '#000', 'circle-stroke-width': 2 } });
+  // GM-050: Ziel-Symbol je Stil (RouteOverlay.destinationImage)
+  if (map.hasImage('ez-dest-icon')) map.removeImage('ez-dest-icon');
+  map.addImage('ez-dest-icon', drawDest(S.style), { pixelRatio: 2 });
+  if (!map.getLayer('ez-dest-dot')) map.addLayer({ id: 'ez-dest-dot', type: 'symbol', source: 'ez-dest',
+    layout: { 'icon-image': 'ez-dest-icon', 'icon-anchor': DEST_STANDS[S.style] ? 'bottom' : 'center', 'icon-allow-overlap': true, 'icon-ignore-placement': true } });
   pushOverlay(map);
 }
 const line = pts => ({ type: 'Feature', geometry: { type: 'LineString', coordinates: pts.map(p => [p[1], p[0]]) } });
@@ -137,7 +141,7 @@ function pushOverlay(map) {
 function makeMap(el, pixelRatio = devicePixelRatio) {
   const map = new maplibregl.Map({ container: el, pixelRatio, interactive: true, center: [IDSTEIN[1], IDSTEIN[0]], zoom: 15, attributionControl: false, pitchWithRotate: false, dragRotate: false });
   map.on('styleimagemissing', e => {
-    const img = poiImage(e.id); if (img && !map.hasImage(e.id)) map.addImage(e.id, img, { pixelRatio: 1 }); // App: ~40 pt Bild × icon-size
+    const img = styleImage(e.id); if (img && !map.hasImage(e.id)) map.addImage(e.id, img.data, { pixelRatio: img.pixelRatio }); // App: ~40 pt Bild × icon-size
   });
   map.on('style.load', () => addOverlay(map));
   return map;
@@ -164,7 +168,7 @@ class FollowCamera {
     const goal = altitudeForKmh(t.kmh) * this.factor;
     if (!this.has) { Object.assign(this, { lat: t.p[0], lon: t.p[1], heading: t.h, alt: goal, has: true }); }
     else {
-      const kPos = 1 - Math.exp(-dt * 6), kRot = 1 - Math.exp(-dt * 4), kAlt = 1 - Math.exp(-dt * 1.5);
+      const kPos = 1 - Math.exp(-dt * 12), kRot = 1 - Math.exp(-dt * 7)  /* GM-050 */, kAlt = 1 - Math.exp(-dt * 1.5);
       this.lat += (t.p[0] - this.lat) * kPos; this.lon += (t.p[1] - this.lon) * kPos;
       let dh = (t.h - this.heading) % 360; if (dh > 180) dh -= 360; else if (dh < -180) dh += 360;
       this.heading = (this.heading + dh * kRot + 360) % 360; this.alt += (goal - this.alt) * kAlt;
@@ -335,22 +339,31 @@ $('free').addEventListener('click', async () => {
   S.pos = { p: pts[0], h: bearing(pts[0], pts[1]), kmh: 50 }; tracking = true; ccam.start(); render();
 });
 
+// GM-050: Fadenkreuz wie CrosshairView – vier Arme (Lücke 9, Länge 110), nach außen ausgeblendet
+let xhairColor = null;
+function crosshairSVG(c) {
+  const g = (id, x1, y1, x2, y2) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"><stop offset="0" stop-color="${c}"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient>`;
+  return `<svg viewBox="-120 -120 240 240"><defs>${g('xr', 9, 0, 119, 0)}${g('xl', -9, 0, -119, 0)}${g('xd', 0, 9, 0, 119)}${g('xu', 0, -9, 0, -119)}</defs>
+    <g stroke-width="1.6"><line x1="9" y1="0" x2="119" y2="0" stroke="url(#xr)"/><line x1="-9" y1="0" x2="-119" y2="0" stroke="url(#xl)"/>
+    <line x1="0" y1="9" x2="0" y2="119" stroke="url(#xd)"/><line x1="0" y1="-9" x2="0" y2="-119" stroke="url(#xu)"/></g></svg>`;
+}
+
 // Haupttakt: Simulation, Kameras, Punkt
 let last = performance.now();
 function frame(now) {
   const dt = Math.min(0.1, (now - last) / 1000); last = now;
   stepSim(dt); stepManual(dt);
-  // AppModel.cameraTarget: in der Navigation die Stelle auf der Route, sonst das GPS
-  const target = S.screen === 'navigating' && S.navCoord ? { p: S.navCoord, h: S.navHeading, kmh: S.navKmh } : S.pos ? { p: S.pos.p, h: S.pos.h, kmh: S.pos.kmh } : null;
+  const target = cameraTarget();   // AppModel.cameraTarget (js/navcore.js)
   ccam.tick(dt, target);
   if (S.screen === 'navigating') pcam.tick(dt, target);
   const dot = $('pdot');
   if (S.pos && S.screen !== 'navigating') {
     const p = pmap.project([S.pos.p[1], S.pos.p[0]]); dot.style.left = p.x + 'px'; dot.style.top = p.y + 'px'; dot.style.transform = `rotate(${S.pos.h - pmap.getBearing()}deg)`; dot.style.display = 'block';
   } else dot.style.display = 'none';
-  const west = S.style === 'wild-west';
-  $('pxh').style.display = west && (S.screen === 'navigating' ? pcam.detached : !tracking) ? 'block' : 'none';
-  $('cxh').style.display = west && ccam.detached ? 'block' : 'none';
+  const xc = { 'neon-city': 'rgba(255,255,255,.9)', 'wild-west': 'rgba(155,22,18,.9)' }[S.style];   // CrosshairView.color(for:)
+  if (xc && xhairColor !== xc) { xhairColor = xc; for (const id of ['pxh', 'cxh']) $(id).innerHTML = crosshairSVG(xc); }
+  $('pxh').style.display = xc && (S.screen === 'navigating' ? pcam.detached : !tracking) ? 'block' : 'none';
+  $('cxh').style.display = xc && ccam.detached ? 'block' : 'none';
   requestAnimationFrame(frame);
 }
 setInterval(() => { if (tracking && S.pos && (S.screen === 'map' || S.screen === 'search')) pmap.easeTo({ center: [S.pos.p[1], S.pos.p[0]], duration: 900, easing: x => x }); }, 1000);

@@ -18,6 +18,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     private var shownRevision = -1
     private var lastManeuverKey = ""
     private var searchTask: Task<Void, Never>?
+    private var shownVoice = true
 
     @MainActor private var model: AppModel { AppModel.shared }
 
@@ -45,6 +46,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
             MainActor.assumeIsolated { self?.showDestinations() }
         }
         template.leadingNavigationBarButtons = [destinations]
+        MainActor.assumeIsolated { template.trailingNavigationBarButtons = [voiceButton()] } // GM-050: Ansagen aus/an
         template.mapButtons = [
             mapButton("plus.magnifyingglass") { [weak self] in self?.mapController?.zoom(by: 1) },
             mapButton("minus.magnifyingglass") { [weak self] in self?.mapController?.zoom(by: -1) },
@@ -81,6 +83,12 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         }
     }
 
+    @MainActor private func voiceButton() -> CPBarButton {
+        shownVoice = model.settings.voice
+        let img = UIImage(systemName: shownVoice ? "speaker.wave.2.fill" : "speaker.slash.fill") ?? UIImage()
+        return CPBarButton(image: img) { [weak self] _ in MainActor.assumeIsolated { self?.model.toggleVoice() } }
+    }
+
     private func mapButton(_ symbol: String, action: @escaping () -> Void) -> CPMapButton {
         let b = CPMapButton { _ in action() }
         b.image = GlassRoundButton.hud[symbol].flatMap { UIImage(named: $0) } ?? UIImage(systemName: symbol) // GM-045: HUD-Knöpfe
@@ -102,6 +110,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
             _ = model.trail
             _ = model.trialRemaining
             _ = model.rerouting
+            _ = model.settings.voice
         } onChange: { [weak self] in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated {
@@ -115,6 +124,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
 
     @MainActor private func sync() {
         guard let template = mapTemplate else { return }
+        if shownVoice != model.settings.voice { template.trailingNavigationBarButtons = [voiceButton()] }
         mapController?.show(routes: model.routes, selected: model.selectedRoute, destination: model.destination?.coordinate,
                             revision: model.routeRevision, navigating: model.screen == .navigating, limit: model.settings.showSpeedLimit ? model.nav?.speedLimit : nil,
                             follow: model.navCoordinate, heading: model.navHeading, speedKmh: model.navSpeedKmh)
@@ -340,6 +350,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         cam.start()
         let ov = RouteOverlay(map: map)
         ov.theme = StyleTheme.of(shownStyle)
+        ov.mapStyle = shownStyle
         overlay = ov
 
         // GM-043: kleine Test-Uhr oben rechts unter dem Hinweis („Test 4:12“), nur während eines Stil-Tests

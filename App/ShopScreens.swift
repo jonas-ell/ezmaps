@@ -57,13 +57,14 @@ struct ShopScreen: View {
                             }
                         }
                         .buttonStyle(PrimaryGlassButtonStyle(height: 56))
-                        .disabled(store.isBusy || store.products[plan] == nil)
+                        .disabled(store.isBusy || !store.canBuy(plan))
                         .padding(.top, 4)
 
                         Text(fineText).font(.system(size: 11)).foregroundStyle(GlassTokens.secondary).multilineTextAlignment(.center)
                             .frame(maxWidth: .infinity)
                     }
                     if let e = store.errorText { Text(e).font(.footnote).foregroundStyle(GlassTokens.danger) }
+                    if store.testMode { TestModeNote() }
 
                     VStack(spacing: 10) {
                         Button(L("Nur einen Stil kaufen ›")) { detail = focus ?? .neonCity }
@@ -173,46 +174,39 @@ struct StyleSwatch: View {
     }
 }
 
-/// Echte MapLibre-Karte im Stil (Stil-Seite), nicht bedienbar
+/// Echte MapLibre-Karte im Stil (Stil-Seite), nicht bedienbar. GM-050: flach von oben wie in CarPlay, mit Pfeil
 struct StylePreviewMap: UIViewRepresentable {
     let style: MapStyle
     func makeUIView(context: Context) -> MLNMapView {
         let center = AppModel.shared.currentCoordinate.map { CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude) } ?? MapStyleResource.idstein
-        let map = NeonMap.make(zoom: 15.2, style: style)
-        map.setCenter(center, zoomLevel: 15.2, animated: false)
+        let map = NeonMap.make(zoom: 16.2, style: style)
+        map.setCenter(center, zoomLevel: 16.2, animated: false)
         map.isUserInteractionEnabled = false
         map.showsUserLocation = false
-        let cam = map.camera
-        cam.pitch = 45
-        map.setCamera(cam, animated: false)
+        map.compassView.isHidden = true
         return map
     }
     func updateUIView(_ map: MLNMapView, context: Context) {}
 }
 
-/// GM-039: Stil-Seite – Plus oben (besser), Einzelkauf darunter (teuer). Oder „10 Minuten testen“, solange noch Zeit da ist.
+/// GM-050: Stil-Seite neu (Nutzer: „Plus holen sieht sehr trocken aus“) – großes Vorschaubild wie im Auto,
+/// was man bekommt, zwei wählbare Angebote (Plus hervorgehoben, Einzelkauf), ein Knopf passend zur Wahl, Test als eigener Knopf.
+/// Apple 3.1.2: Preis, Laufzeit und Verlängerung stehen direkt unter dem Knopf.
 struct StyleDetailView: View {
     let model: AppModel
     let style: MapStyle
     var onDone: () -> Void
+    @State private var choosePlus = true
 
     private var store: PurchaseManager { model.purchases }
+    private var singleID: String? { ProductID.single(style) }
+    private var accent: SwiftUI.Color { SwiftUI.Color(uiColor: StyleTheme.of(style).route) }
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
-                ZStack(alignment: .bottomLeading) {
-                    StylePreviewMap(style: style)
-                    LinearGradient(colors: [.clear, .black.opacity(0.85)], startPoint: .center, endPoint: .bottom)
-                    VStack(alignment: .leading, spacing: 4) {
-                        StyleName(style: style, size: 34)
-                        Text(L(style.subtitleKey) + " · " + L("auch in CarPlay")).font(.system(size: 14, weight: .semibold)).opacity(0.85)
-                    }
-                    .padding(16)
-                }
-                .frame(height: 330)
-                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-
+            VStack(alignment: .leading, spacing: 16) {
+                hero
+                features
                 if model.isUnlocked(style) {
                     Button(model.activeStyle == style ? L("Aktiv") : L("Diesen Stil benutzen")) {
                         model.selectStyle(style)
@@ -221,48 +215,154 @@ struct StyleDetailView: View {
                     .buttonStyle(PrimaryGlassButtonStyle(height: 56))
                     .disabled(model.activeStyle == style)
                 } else {
-                    PlanRow(title: L("Mit Plus"), sub: L("alle Stile + jeder neue Stil"), price: store.yearlyPerMonth ?? "–", per: L("pro Monat"),
-                            tag: L("Besser · alle Stile"), selected: true) {}
-                        .padding(.top, 8)
-                    Button(L("Plus holen")) {
-                        Task {
-                            if await store.purchase(ProductID.yearly) { model.purchaseCompleted(for: style); onDone() }
+                    offers
+                    Button(action: buy) {
+                        HStack(spacing: 6) {
+                            if store.isBusy { ProgressView().tint(.white) }
+                            if choosePlus { Text(L("Plus holen")) } else { Text(L("Kaufen")); StyleName(style: style, size: 17) }
                         }
                     }
-                    .buttonStyle(PrimaryGlassButtonStyle(height: 56))
-                    .disabled(store.isBusy)
-                    if let id = ProductID.single(style) {
-                        Button {
-                            Task {
-                                if await store.purchase(id) { model.purchaseCompleted(for: style); onDone() }
-                            }
-                        } label: {
-                            HStack(spacing: 4) {
-                                Text(L("Nur"))
-                                StyleName(style: style, size: 15)
-                                Text("· " + (store.price(id) ?? "–") + " " + L("einmalig"))
-                            }
-                        }
-                        .buttonStyle(GlassButtonStyle(height: 52, radius: 18))
-                        .disabled(store.isBusy)
-                    }
+                    .buttonStyle(PrimaryGlassButtonStyle(height: 58))
+                    .disabled(store.isBusy || !store.canBuy(choosePlus ? ProductID.yearly : (singleID ?? "")))
+                    Text(fineText).font(.system(size: 11)).foregroundStyle(GlassTokens.secondary)
+                        .multilineTextAlignment(.center).frame(maxWidth: .infinity)
                     if model.trial.canStart(style.trialKey) {
-                        Button(String(format: L("%@ 10 Minuten testen"), L(style.titleKey))) {
+                        Button {
                             model.selectStyle(style)
                             onDone()
+                        } label: {
+                            Label(String(format: L("%@ 10 Minuten kostenlos testen"), L(style.titleKey)), systemImage: "play.fill")
+                                .font(.system(size: 15, weight: .bold))
+                                .frame(maxWidth: .infinity).frame(height: 48)
+                                .overlay(Capsule().strokeBorder(accent.opacity(0.8), lineWidth: 1.5))
                         }
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(GlassTokens.accentLight)
-                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(.white)
                     }
-                    Text(L("Einzelkauf gehört dir für immer, nur dieser Stil. Wer später Plus nimmt, behält den Stil."))
-                        .font(.system(size: 11)).foregroundStyle(GlassTokens.secondary).multilineTextAlignment(.center).frame(maxWidth: .infinity)
+                    if store.testMode { TestModeNote() }
+                    if let e = store.errorText { Text(e).font(.footnote).foregroundStyle(GlassTokens.danger).frame(maxWidth: .infinity) }
                 }
             }
             .padding(18)
         }
         .background(SwiftUI.Color(red: 11 / 255.0, green: 11 / 255.0, blue: 13 / 255.0).ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    /// Großes Vorschaubild: echte Karte im Stil, Pfeil, Name in der Stil-Schrift
+    private var hero: some View {
+        ZStack(alignment: .bottomLeading) {
+            StylePreviewMap(style: style)
+            Image(style == .neonCity ? "PlayerNeonGlow" : "PlayerNeon").resizable().frame(width: 54, height: 54)
+                .frame(maxWidth: .infinity, maxHeight: .infinity).offset(y: 30)
+            LinearGradient(colors: [.black.opacity(0.35), .clear, .clear, .black.opacity(0.9)], startPoint: .top, endPoint: .bottom)
+            VStack(alignment: .leading, spacing: 6) {
+                Label(L("Auch in CarPlay"), systemImage: "car.fill")
+                    .font(.system(size: 12, weight: .heavy)).textCase(.uppercase)
+                    .padding(.horizontal, 10).padding(.vertical, 6)
+                    .background(.black.opacity(0.55), in: Capsule())
+                Spacer()
+                StyleName(style: style, size: 40)
+                Text(L(style.subtitleKey)).font(.system(size: 15, weight: .semibold)).opacity(0.9)
+            }
+            .padding(16)
+        }
+        .frame(height: 380)
+        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(accent.opacity(0.55), lineWidth: 1.5))
+        .shadow(color: accent.opacity(0.35), radius: 18, y: 8)
+    }
+
+    /// Was man bekommt
+    private var features: some View {
+        HStack(spacing: 8) {
+            feature("map.fill", L("Eigene Karte"))
+            feature("mappin.and.ellipse", L("Eigenes Ziel"))
+            feature("car.fill", "CarPlay")
+        }
+    }
+
+    private func feature(_ icon: String, _ text: String) -> some View {
+        VStack(spacing: 6) {
+            Image(systemName: icon).font(.system(size: 18, weight: .bold)).foregroundStyle(accent)
+            Text(text).font(.system(size: 11.5, weight: .semibold)).lineLimit(1).minimumScaleFactor(0.8)
+        }
+        .frame(maxWidth: .infinity).frame(height: 64)
+        .background(SwiftUI.Color.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+
+    /// Zwei Angebote nebeneinander
+    private var offers: some View {
+        HStack(spacing: 10) {
+            OfferCard(selected: choosePlus, accent: GlassTokens.accent, badge: L("Bester Deal"),
+                      title: Text("Plus"), sub: L("alle 5 Stile + jeder neue"),
+                      price: store.yearlyPerMonth ?? "–", per: L("pro Monat"),
+                      note: String(format: L("%@ im Jahr"), store.price(ProductID.yearly) ?? "–")) { choosePlus = true }
+            if let id = singleID {
+                OfferCard(selected: !choosePlus, accent: accent, badge: nil,
+                          title: Text(L("Nur dieser Stil")), sub: L("gehört dir für immer"),
+                          price: store.price(id) ?? "–", per: L("einmalig"), note: L("kein Abo")) { choosePlus = false }
+            }
+        }
+    }
+
+    private var fineText: String {
+        if choosePlus {
+            return String(format: L("%@ pro Jahr, verlängert sich automatisch. Kündigen jederzeit in den iPhone-Einstellungen, spätestens 24 h vor Ablauf. Klassik und Navigation bleiben gratis."), store.price(ProductID.yearly) ?? "–")
+        }
+        return L("Einzelkauf gehört dir für immer, nur dieser Stil. Wer später Plus nimmt, behält den Stil.")
+    }
+
+    private func buy() {
+        let id = choosePlus ? ProductID.yearly : (singleID ?? ProductID.yearly)
+        Task { if await store.purchase(id) { model.purchaseCompleted(for: style); onDone() } }
+    }
+}
+
+/// GM-050: wählbares Angebot (Stil-Seite)
+struct OfferCard: View {
+    let selected: Bool
+    let accent: SwiftUI.Color
+    let badge: String?
+    let title: Text
+    let sub: String
+    let price: String
+    let per: String
+    let note: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    title.font(.system(size: 17, weight: .heavy))
+                    Spacer(minLength: 4)
+                    Image(systemName: selected ? "checkmark.circle.fill" : "circle").foregroundStyle(selected ? accent : .white.opacity(0.35))
+                }
+                Text(sub).font(.system(size: 11.5)).foregroundStyle(GlassTokens.secondary).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 6)
+                Text(price).font(.system(size: 24, weight: .heavy)).minimumScaleFactor(0.7).lineLimit(1)
+                Text(per).font(.system(size: 11, weight: .semibold)).foregroundStyle(GlassTokens.secondary)
+                Text(note).font(.system(size: 11)).foregroundStyle(.white.opacity(0.55))
+            }
+            .padding(14)
+            .frame(maxWidth: .infinity, minHeight: 168, alignment: .topLeading)
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(selected ? AnyShapeStyle(LinearGradient(colors: [accent.opacity(0.45), accent.opacity(0.12)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                   : AnyShapeStyle(SwiftUI.Color.white.opacity(0.06)))
+            )
+            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(selected ? accent : .white.opacity(0.12), lineWidth: selected ? 2.5 : 1))
+            .overlay(alignment: .topLeading) {
+                if let b = badge {
+                    Text(b).font(.system(size: 10, weight: .heavy)).textCase(.uppercase)
+                        .padding(.horizontal, 8).padding(.vertical, 4)
+                        .background(GlassTokens.gold, in: Capsule()).foregroundStyle(.black)
+                        .offset(x: 12, y: -10)
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }
 
@@ -339,5 +439,15 @@ struct TrialEndedSheet: View {
     /// Shop erst öffnen, wenn dieses Blatt zu ist (zwei Blätter gleichzeitig zeigt SwiftUI nicht)
     private func open(_ s: MapStyle) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { model.shopRequest = s }
+    }
+}
+
+/// GM-050: Hinweis im Test-Modus – Käufe sind nur simuliert
+struct TestModeNote: View {
+    var body: some View {
+        Label(L("Testkauf: kein echtes Geld, nur auf diesem Gerät"), systemImage: "testtube.2")
+            .font(.system(size: 12, weight: .semibold))
+            .foregroundStyle(GlassTokens.gold)
+            .frame(maxWidth: .infinity)
     }
 }

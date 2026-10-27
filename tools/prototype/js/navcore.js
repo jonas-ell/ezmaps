@@ -140,12 +140,13 @@ function startNav() {
   startRouteSim();                                          // Demo-Fahrt (Einstellung „Demo-Fahrt“ der App)
   pcam.start(); ccam.start(); for (const m of maps()) pushOverlay(m); render();
 }
-function feed(pos, speed, course) {
+function feed(pos, speed, course, simFactor = 1) {
   if (!session) return;
   const u = session.update(pos, speed); S.nav = u.state;
   const r = session.route;   // GM-049: neben der Route folgt der Pfeil dem Auto (wie AppModel.feed)
   S.navCoord = u.state.offRoute ? pos : coordAt(r, u.state.progress); S.navHeading = u.state.offRoute ? (course == null ? S.navHeading : course) : headingAt(r, u.state.progress);
   S.navKmh = r.speeds[segIndex(r, u.state.progress)] || 50;
+  S.navAnchor = { progress: u.state.progress, mps: (speed == null ? S.navKmh / 3.6 : speed) * simFactor, t: performance.now() };   // GM-050
   if (u.announcement) say(u.announcement);
   if (u.shouldReroute) reroute(pos, course);
   if (u.state.arrived && S.screen === 'navigating') { sim = null; manual = null; S.screen = 'arrived'; }
@@ -168,10 +169,11 @@ function navState() { return S.nav; }
 
 // ---------- GPS-Quelle: Demo-Fahrt, feste Strecke, Tastatur ----------
 let sim = null, manual = null, gpsTimer = 0; const keys = {};
-function onFix(p, h, kmh) {                                 // AppModel.handleGPS: Richtung nur ab 1,5 m/s
+function onFix(p, h, kmh, simFactor = 1) {                 // AppModel.handleGPS: Richtung nur ab 1,5 m/s
   S.pos = { p, h: kmh > 5.4 || !S.pos ? h : S.pos.h, kmh };
+  S.driveAnchor = { p, mps: kmh / 3.6 * simFactor, t: performance.now() };   // GM-050
   S.trail.push(p); if (S.trail.length > 600) S.trail.shift();
-  feed(p, kmh / 3.6, h);
+  feed(p, kmh / 3.6, h, simFactor);
   for (const m of maps()) pushOverlay(m); render();
 }
 function startPathSim(pts, kmhAt) { manual = null; sim = { kind: 'path', pts, cum: cumul(pts), d: 0, kmhAt }; gpsTimer = 1; }
@@ -189,7 +191,7 @@ function stepSim(dt) {
     const q2 = at(sim.pts, sim.cum, sim.d); p = q2.p; h = q2.h; endLen = sim.cum[sim.cum.length - 1];
   }
   gpsTimer += dt;
-  if (gpsTimer >= 1) { gpsTimer = 0; onFix(p, h, kmh); }    // GPS 1×/s, Kamera gleitet dazwischen
+  if (gpsTimer >= 1) { gpsTimer = 0; onFix(p, h, kmh, S.speed); }    // GPS 1×/s, Kamera rechnet dazwischen weiter
   if (sim && sim.kind === 'path' && sim.d >= endLen) sim = null;
 }
 // Tastatur: W/S oder ↑/↓ Gas/Bremse, A/D oder ←/→ lenken. In der Navigation: abweichen → Neuberechnung wie in der App;
@@ -220,4 +222,24 @@ async function driveTo(lngLat) {
     const [r] = await valhallaRoutes(S.pos.p, [lngLat.lat, lngLat.lng], { alternates: 0 });
     startPathSim(r.shape, i => r.speeds[Math.max(0, i)] || 50); tracking = true; ccam.attach(); ccam.start();
   } catch (e) { show('Keine Straße dorthin'); }
+}
+
+// GM-050: AppModel.cameraTarget – in jedem Bild weiterrechnen statt den 1×/s-Punkten hinterherzugleiten
+function cameraTarget() {
+  const now = performance.now();
+  if (S.screen === 'navigating' && S.navCoord) {
+    const a = S.navAnchor;
+    if (a && session && !(S.nav && S.nav.offRoute)) {
+      const r = session.route, d = Math.min(r.length, a.progress + a.mps * Math.min(1.5, (now - a.t) / 1000));
+      return { p: coordAt(r, d), h: bearing(coordAt(r, d - 12), coordAt(r, d + 12)), kmh: S.navKmh };
+    }
+    return { p: S.navCoord, h: S.navHeading, kmh: S.navKmh };
+  }
+  if (!S.pos) return null;
+  const a = S.driveAnchor;
+  if (a && a.mps > 1.5) {
+    const m = a.mps * Math.min(1.2, (now - a.t) / 1000), h = S.pos.h * rad;
+    return { p: [a.p[0] + m * Math.cos(h) / 110540, a.p[1] + m * Math.sin(h) / (111320 * Math.cos(a.p[0] * rad))], h: S.pos.h, kmh: S.pos.kmh };
+  }
+  return { p: S.pos.p, h: S.pos.h, kmh: S.pos.kmh };
 }

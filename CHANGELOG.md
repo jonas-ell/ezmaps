@@ -2,6 +2,36 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-050 – Pfeil flüssig, Pixel Quest als Blockwelt, Toy Town als Spielteppich, Ziel-Symbole je Stil, Fadenkreuz wie GTA, Test-Käufe, neue Stil-Seite
+
+**Ziel:** Gerätetest des Nutzers: Pfeil ruckelt und nimmt Kurven schlecht, Kamera fliegt beim Start von Idstein her, Stimme roboterhaft und bricht ab, Ansagen nicht stummschaltbar, Knopf oben rechts überdeckt den Kompass, gelber Ziel-Punkt „lame“ (jeder Stil ein eigenes Ziel), Stil-Seite „Plus holen“ zu trocken, Preise und simulierte Käufe in die echte App, Unterlagen für App Store Connect. Dazu: Fadenkreuz wie in GTA (nicht über den ganzen Bildschirm) und „Pixel Quest und Toy Town sehen gar nicht mehr aus wie sie sollen – die Maps nicht alle im selben Stil“, Pixel Quest wie die Blockwelt-Karten aus den Videos des Nutzers.
+
+**Dateien:** `App/AppModel.swift`, `App/FollowCamera.swift`, `App/NeonMapView.swift` (StylePatterns, Ziel-Symbole, Fadenkreuz, Symbole -px/-toy), `App/ContentView.swift`, `App/CarPlaySceneDelegate.swift`, `App/SpeechService.swift`, `App/PurchaseManager.swift`, `App/ShopScreens.swift` (StyleDetailView neu, OfferCard, TestModeNote), `App/SettingsScreen.swift`, `App/StyleTheme.swift`, `App/ScreenshotMode.swift`, `App/en.lproj/Localizable.strings`, `Core/Sources/EzMapsCore/Coordinate.swift`, `Core/Sources/EzMapsCore/TestStore.swift` (neu) + Tests `CoordinateMotionTests`, `TestStoreTests`, `tools/maplibre/build_style.py`, `tools/maplibre/check_style.py`, `App/MapStyles/*.json`, `Resources/Glyphs/Press Start 2P Regular`, `Resources/Glyphs/Fredoka Bold` (neu), `tools/mac_build.sh`, `tools/store_iap_images.py` (neu), `docs/IN_APP_KAEUFE.md` (neu), `docs/store/iap/*.png`, `docs/store/stile/*.png`, `App/Assets.xcassets/StyleTiles/*`, Website `tools/prototype/js/{live,navcore,poi,stylepreview}.js`, `live.css`
+
+**Geändert:**
+- Pfeil/Kamera: Kamera bekam nur 1–2 Punkte pro Sekunde und glitt hinterher (Kurven geschnitten, Drehung zu spät). Jetzt rechnet `AppModel.cameraTarget` in jedem Bild weiter: in der Navigation entlang der Route aus Fortschritt und Tempo (max. 1,5 s), Richtung über ±12 m gemittelt (runde Kurven); frei entlang des GPS-Kurses (max. 1,2 s). Kamera folgt enger (12/7 statt 6/4). Demo-Fahrt meldet ihr doppeltes Tempo. Geräte-Build jetzt optimiert (Release statt Debug). Gleich auf der Website.
+- Start direkt am letzten bekannten Standort (vorher Flug von Idstein).
+- Knöpfe oben rechts eine Stufe tiefer (Kompass).
+- Ansagen an/aus: Knopf in der Navigation (iPhone) und in der CarPlay-Leiste; Hinweis „Ansagen aus/an“.
+- Stimme: Audio-Sitzung erst 0,6 s nach dem Ende freigeben (vorher brach die nächste Ansage ab), etwas ruhiger. Natürlicher klingt sie nur mit einer Premium-Stimme (iOS-Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch).
+- Ziel-Symbol je Stil (eigene Formen): Klassik rote Stecknadel, Neon City leuchtende lila Raute, Wild West rotes Tinten-X im Kreis, Pixel Quest Pixel-Fahne, Toy Town karierte Spielzeug-Fahne. Gleich auf der Website.
+- Fadenkreuz beim Umschauen wie die Pausenkarte: vier kurze Arme mit Lücke, nach außen ausgeblendet; Neon City weiß, Wild West rot (vorher Linien über den ganzen Bildschirm).
+- Pixel Quest neu als Blockwelt: Gras-Block-Textur, Blätterwald, Wasser-Textur, Felder, graue Steinstraßen (Linien-Muster), Häuser als Holz/Fichte/Ziegel/Bruchstein-Blöcke mit Block-Schatten, weiße Pixelschrift (Press Start 2P, eigene Glyphen) mit schwarzem Rand, Pixel-Schilder als Symbole, rote Route. Alle Texturen selbst gezeichnet (`StylePatterns`).
+- Toy Town neu als Spielteppich: Rasen mit Flecken, runde Bäume im Wald/Park, Asphalt mit hellem Gehweg-Rand und weißer Mittellinie, Wasser mit Sandrand, Häuser mit dunkler Kontur, runde Schrift (Fredoka), runde bunte Symbol-Knöpfe.
+- Gebäudefarben nach Höhe: die Kacheln fassen gleich hohe Nachbarhäuser zu einem Objekt zusammen, nach ID verteilt war deshalb fast alles eine Farbe (im Browser gemessen).
+- `check_style.py` prüft jetzt auch alle Muster (fill-/line-/background-pattern).
+- Test-Käufe: Preise aus `TestStore` (gleich wie StoreKit-Datei, getestet), Kauf schaltet ohne Geld frei, Hinweis „Testkauf“, Zurücksetzen in den Einstellungen. Nur in Test-Builds (Debug oder EZTEST aus `mac_device.sh`), nie im App-Store-Build; echte StoreKit-Produkte haben Vorrang.
+- Stil-Seite neu: großes Vorschaubild (echte Karte flach wie im Auto, Pfeil, „Auch in CarPlay“, Name groß in Stil-Schrift, Rand in Stilfarbe), drei Kacheln „was du bekommst“, zwei wählbare Angebote (Plus „Bester Deal“ / Nur dieser Stil), ein Knopf passend zur Wahl, Apple-Pflichttext darunter, „10 Minuten kostenlos testen“ als eigener Knopf.
+- App Store Connect: `docs/IN_APP_KAEUFE.md` (Abo-Gruppe, 7 Produkte mit Texten DE/EN in Apple-Längen, Prüfhinweis, Reihenfolge), Werbebilder `docs/store/iap/` (1024 × 1024, `tools/store_iap_images.py`), Prüf-Screenshot über neuen Screenshot-Zustand `stil`.
+
+**Tatsächlich geprüft:**
+- `check_style.py`: STIL OK (3 Schriften, alle Muster und Symbole gezeichnet).
+- Stil-Vorschauen aller 5 Stile gerendert und angesehen (Pixel Quest Blockwelt, Toy Town Spielteppich).
+- Gebäudefarben-Verteilung im Browser gemessen (4 Formeln).
+- Website: Skripte syntaktisch geprüft.
+
+**Ungetestet:** gesamter Swift-Teil bis zum Mac-Build; Kurvenverhalten und Stimme nur auf dem Gerät prüfbar.
+
 ## GM-049 – Website wirklich 1:1 (CarPlay-Maßstab, Logik der App), freies Fahren, Stil-Vorschauen aus echten Karten, Wild West mit runden Symbolen und Fadenkreuz
 
 **Ziel:** Nutzer: „die Website ist nicht 1 zu 1 wie die App und genauso wenig wie das CarPlay“, „ich will freies Fahren auch simulieren können“, „die Logik der echten App auf die 1:1-Seite, arbeite den Swift-Code ab und spiegel es“, „die Stil-Vorschauen sollen so sein, dass man sie im Einsatz in CarPlay sieht“, für Wild West Symbole wie im Bild und ein rotes Fadenkreuz beim Verschieben.

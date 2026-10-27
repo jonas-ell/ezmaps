@@ -110,8 +110,9 @@ final class FollowCamera: NSObject {
             hasState = true
         } else {
             // weich nachführen: Position schnell, Richtung etwas langsamer (kein Zittern in Kurven)
-            let kPos: Double = 1 - exp(-dt * 6)
-            let kRot: Double = 1 - exp(-dt * 4)
+            // GM-050: Ziel wird in jedem Bild weitergerechnet (AppModel.cameraTarget) → enger folgen, kein Kurvenschneiden
+            let kPos: Double = 1 - exp(-dt * 12)
+            let kRot: Double = 1 - exp(-dt * 7)
             let kAlt: Double = 1 - exp(-dt * 1.5)
             lat += (t.coordinate.latitude - lat) * kPos
             lon += (t.coordinate.longitude - lon) * kPos

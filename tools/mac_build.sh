@@ -77,11 +77,11 @@ PY2
   [ -n "$DEV" ] || { echo "KEIN IPHONE GEFUNDEN (gekoppelt? entsperrt? im selben WLAN oder per Kabel?)"; exit 1; }
   echo "Gerät: $DEV"
   rm -rf build/device
-  xcodebuild -project EzMaps.xcodeproj -scheme EzMaps -destination "id=$DEV" -configuration Debug \
+  xcodebuild -project EzMaps.xcodeproj -scheme EzMaps -destination "id=$DEV" -configuration Release SWIFT_ACTIVE_COMPILATION_CONDITIONS=EZTEST \
     -derivedDataPath build/device -allowProvisioningUpdates -allowProvisioningDeviceRegistration "${AUTH[@]}" build > /tmp/ezmaps_device.log 2>&1 \
     || { grep -E "error:" /tmp/ezmaps_device.log | head -30; tail -n 20 /tmp/ezmaps_device.log; echo "GERÄTE-BUILD FEHLGESCHLAGEN"; exit 1; }
   echo "GERÄTE-BUILD OK"
-  APP=$(ls -d build/device/Build/Products/Debug-iphoneos/EzMaps.app)
+  APP=$(ls -d build/device/Build/Products/Release-iphoneos/EzMaps.app)
   xcrun devicectl device install app --device "$DEV" "$APP" 2>&1 | tail -5 || { echo "INSTALLATION FEHLGESCHLAGEN"; exit 1; }
   BID=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$APP/Info.plist")
   xcrun devicectl device process launch --device "$DEV" "$BID" 2>&1 | tail -3
@@ -328,7 +328,7 @@ if [ -f tools/.do_screens ]; then
   xcrun simctl spawn "$SID" defaults write com.apple.keyboard.preferences DidShowContinuousPathIntroduction -bool true
   OUT=/tmp/ezshots; rm -rf "$OUT"; mkdir -p "$OUT"
   # Zustand:Wartezeit in Sekunden (Kacheln und Routen kommen aus dem Netz)
-  for ENTRY in karte:10 suche:9 vorschau:14 navigation:26 einstellungen:6; do
+  for ENTRY in karte:10 suche:9 vorschau:14 navigation:26 einstellungen:6 stil:10; do  # GM-050: stil = Stil-Seite (Prüf-Screenshot Käufe)
     NAME=${ENTRY%%:*}; WAIT=${ENTRY##*:}
     xcrun simctl terminate "$SID" "$BID" 2>/dev/null
     xcrun simctl launch "$SID" "$BID" -EZShot "$NAME" -EZStyle neon-city -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null || { echo "Start fehlgeschlagen: $NAME"; continue; }

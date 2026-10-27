@@ -11,6 +11,7 @@ final class SpeechService: NSObject, AVSpeechSynthesizerDelegate {
     var rateFactor: Float = 1
     var onSpeakingChange: ((Bool) -> Void)?
     private let synthesizer = AVSpeechSynthesizer()
+    private var releaseTask: Task<Void, Never>?
 
     override init() {
         super.init()
@@ -19,13 +20,16 @@ final class SpeechService: NSObject, AVSpeechSynthesizerDelegate {
 
     func say(_ text: String) {
         guard enabled else { return }
+        releaseTask?.cancel()
         let session = AVAudioSession.sharedInstance()
         let options: AVAudioSession.CategoryOptions = duckOthers ? [.duckOthers, .interruptSpokenAudioAndMixWithOthers] : []
         try? session.setCategory(.playback, mode: .voicePrompt, options: options)
         try? session.setActive(true)
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = voiceIdentifier.flatMap { AVSpeechSynthesisVoice(identifier: $0) } ?? Self.bestGermanVoice
-        utterance.rate = min(AVSpeechUtteranceMaximumSpeechRate, AVSpeechUtteranceDefaultSpeechRate * rateFactor)
+        utterance.rate = min(AVSpeechUtteranceMaximumSpeechRate, AVSpeechUtteranceDefaultSpeechRate * 0.96 * rateFactor) // GM-050: etwas ruhiger
+        utterance.pitchMultiplier = 1.03
+        utterance.postUtteranceDelay = 0.15
         synthesizer.speak(utterance)
         onSpeakingChange?(true)
     }
@@ -57,9 +61,15 @@ final class SpeechService: NSObject, AVSpeechSynthesizerDelegate {
         Task { @MainActor in self.release() }
     }
 
+    /// GM-050: erst 0,6 s nach dem Ende freigeben – vorher wurde die Sitzung zwischen zwei Ansagen abgeschaltet und
+    /// die nächste brach ab („bricht manchmal ab“)
     private func release() {
-        guard !synthesizer.isSpeaking else { return }
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        onSpeakingChange?(false)
+        releaseTask?.cancel()
+        releaseTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 600_000_000)
+            guard let self, !Task.isCancelled, !self.synthesizer.isSpeaking else { return }
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            self.onSpeakingChange?(false)
+        }
     }
 }

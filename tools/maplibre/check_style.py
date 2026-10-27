@@ -25,7 +25,7 @@ for p in STYLES:
     if p.read_bytes().replace(bytes([13, 10]), bytes([10])) != before[p].replace(bytes([13, 10]), bytes([10])):
         errors.append(f"{p.name} war nicht aktuell (build_style.py neu ausgeführt – bitte committen)")
 swift = (ROOT / "App" / "NeonMapView.swift").read_text(encoding="utf-8")
-drawn = set(re.findall(r'"(ez-poi-[a-z-]+)"', swift))
+drawn = set(re.findall(r'"(ez-(?:poi|pat)-[a-z-]+)"', swift))  # GM-050: auch Muster (fill-pattern, background-pattern)
 fonts_all = set()
 for STYLE in STYLES:
     style = json.loads(STYLE.read_text(encoding="utf-8"))
@@ -46,9 +46,9 @@ for STYLE in STYLES:
         errors.append(f"{STYLE.name}: glyphs zeigt nicht auf das App-Bundle (asset://)")
     used = set()
     for l in style["layers"]:
-        expr = l.get("layout", {}).get("icon-image")
-        if expr:
-            used.update(x for x in json.dumps(expr).split('"') if x.startswith("ez-poi-"))
+        expr = [l.get("layout", {}).get("icon-image"), l.get("paint", {})]  # GM-050: auch fill-/line-/background-pattern
+        if any(expr):
+            used.update(x for x in json.dumps(expr).split('"') if x.startswith(("ez-poi-", "ez-pat-")))
     for name in sorted(used - drawn):
         errors.append(f"{STYLE.name}: Symbol {name} wird nicht in poiImages gezeichnet")
     if "OpenStreetMap" not in json.dumps(style["sources"]):
