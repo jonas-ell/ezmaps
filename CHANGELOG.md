@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-046 – Plan „Freunde auf der Karte“ (Crew über iCloud)
+
+**Ziel:** Nutzer: „du erstellst jetzt einen detaillierten Plan, wie du das angehst“, nach der Entscheidung für iCloud mit Live-Gefühl.
+
+**Dateien:** `docs/FREUNDE_PLAN.md` (neu)
+
+**Geändert:**
+- Plan in 7 Phasen: Prototyp, Kernlogik mit Weiterrechnen (Core, getestet), CloudKit (Zone pro Crew, Zonen-Freigabe, Abholen alle 3 s, Senden gedrosselt), Bildschirme, Karte und CarPlay, Prüfen (Demo-Freunde für Screenshots, echter Test mit zweitem iPhone), Veröffentlichung.
+- Schutz vor Missbrauch zuerst: freiwillig, immer sichtbar, Auto-Aus, kein Verlauf, Entwickler kann nichts lesen.
+- Abhängigkeit: Bundle-ID muss vor dem iCloud-Container feststehen (Container ist dauerhaft).
+
+**Tatsächlich geprüft:** nichts gebaut, nur Plan.
+
+**Ungetestet:** alles (noch nicht umgesetzt).
+
 ## GM-045 – Reif für den CarPlay-Antrag: Karte verschieben, Neuberechnung im Auto, App aufs iPhone, Prüflauf stabiler
 
 **Ziel:** Nutzer: „arbeite so lange bis die app reif ist um sich für carplay zu bewerben“ und „die app kannst du zum testen auf das gerät jonas vom mac aus laden“. Dazu die Merge-Nacharbeit (lokal GM-029 bis GM-031 trafen auf Cloud GM-022 bis GM-044, Nummern doppelt; ab hier geht es mit GM-045 weiter).
