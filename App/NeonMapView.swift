@@ -348,7 +348,7 @@ final class RouteOverlay {
         for (kind, (sym, neon)) in poiKinds {
             out["ez-poi-" + kind] = outlined(sym, UIColor(white: 0.96, alpha: 1))
             out["ez-poi-" + kind + "-neon"] = outlined(sym, neon)
-            out["ez-poi-" + kind + "-west"] = westBadge(sym)
+            out["ez-poi-" + kind + "-west"] = UIImage(named: "west-poi-" + kind) ?? westBadge(sym) // GM-062: Codex-Knöpfe, wo vorhanden
             out["ez-poi-" + kind + "-px"] = UIImage(named: "px-" + kind).map(StylePatterns.pixelIcon) ?? StylePatterns.pixelSign(kind)
             out["ez-poi-" + kind + "-toy"] = StylePatterns.toyBadge(kind, symbol: sym)
         }

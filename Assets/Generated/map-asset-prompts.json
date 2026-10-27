@@ -1,0 +1,592 @@
+[
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "paper-tile",
+    "w": 512,
+    "h": 512,
+    "description": "Seamless repeatable very subtle paper fibers and faint peach-brown stains, no vignette, no border, no isolated central motif. Transparent delicate texture overlay intended over solid #E4C9A8 paper. All four edges must join invisibly.",
+    "tile": true,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named paper-tile. Seamless repeatable very subtle paper fibers and faint peach-brown stains, no vignette, no border, no isolated central motif. Transparent delicate texture overlay intended over solid #E4C9A8 paper. All four edges must join invisibly. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Fill square texture canvas edge to edge, no padding. Master canvas 1024x1024. Must be readable at 512x512 pixels."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-1",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 1: three rounded overlapping oak crowns. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-1. Top-down tree crown clump, variant 1: three rounded overlapping oak crowns. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-2",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 2: five small loose rounded crowns in crescent arrangement. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-2. Top-down tree crown clump, variant 2: five small loose rounded crowns in crescent arrangement. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-3",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 3: two elongated irregular crowns diagonally placed. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-3. Top-down tree crown clump, variant 3: two elongated irregular crowns diagonally placed. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-4",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 4: four scalloped crowns forming an asymmetric diamond. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-4. Top-down tree crown clump, variant 4: four scalloped crowns forming an asymmetric diamond. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-5",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 5: three airy crowns in a narrow horizontal cluster. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-5. Top-down tree crown clump, variant 5: three airy crowns in a narrow horizontal cluster. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-6",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 6: four tiny lobed crowns in an L shaped cluster. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-6. Top-down tree crown clump, variant 6: four tiny lobed crowns in an L shaped cluster. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "hill-hatch",
+    "w": 256,
+    "h": 256,
+    "description": "Seamless sparse pattern of short fine sepia hachure pen strokes in small gently curving groups, faint and low contrast, lots of transparent negative space. No terrain silhouettes, no border. All four edges join.",
+    "tile": true,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named hill-hatch. Seamless sparse pattern of short fine sepia hachure pen strokes in small gently curving groups, faint and low contrast, lots of transparent negative space. No terrain silhouettes, no border. All four edges join. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Fill square texture canvas edge to edge, no padding. Master canvas 1024x1024. Must be readable at 256x256 pixels."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "water-edge",
+    "w": 256,
+    "h": 256,
+    "description": "Seamless very faint horizontal sepia pen lines, short irregular parallel ripples, sparse spacing, transparent negative space. No coast silhouette, no border. All edges join.",
+    "tile": true,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named water-edge. Seamless very faint horizontal sepia pen lines, short irregular parallel ripples, sparse spacing, transparent negative space. No coast silhouette, no border. All edges join. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Fill square texture canvas edge to edge, no padding. Master canvas 1024x1024. Must be readable at 256x256 pixels."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-food",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE fork and knife pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-food. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE fork and knife pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-fast-food",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE burger pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-fast-food. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE burger pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-coffee",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE coffee cup pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-coffee. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE coffee cup pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-shop",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE shopping basket pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-shop. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE shopping basket pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-fuel",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE fuel pump pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-fuel. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE fuel pump pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-charging",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE electrical plug with lightning bolt pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-charging. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE electrical plug with lightning bolt pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-parking",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE P parking symbol pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-parking. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE P parking symbol pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-hospital",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE medical cross pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-hospital. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE medical cross pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-bank",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE classical bank pediment and columns pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-bank. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE classical bank pediment and columns pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-hotel",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE bed pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-hotel. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE bed pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-school",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE open book pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-school. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE open book pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-church",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE church with cross pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-church. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE church with cross pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-cinema",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE film strip pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-cinema. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE film strip pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-barber",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE scissors pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-barber. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE scissors pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-clothing",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE T shirt pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-clothing. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE T shirt pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-playground",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE swing pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-playground. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE swing pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "player-arrow",
+    "w": 64,
+    "h": 64,
+    "description": "Cream #F6EAD6 navigation arrowhead pointing straight up, symmetrical pointed tip, indented lower notch, dark sepia ink outline, small soft shadow. Clear silhouette, no compass ornament.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named player-arrow. Cream #F6EAD6 navigation arrowhead pointing straight up, symmetrical pointed tip, indented lower notch, dark sepia ink outline, small soft shadow. Clear silhouette, no compass ornament. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "waypoint-x",
+    "w": 48,
+    "h": 48,
+    "description": "Hand inked red #A8261F X, two slightly uneven broad diagonal pen strokes, distinctive tapered ends, centered with generous padding.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named waypoint-x. Hand inked red #A8261F X, two slightly uneven broad diagonal pen strokes, distinctive tapered ends, centered with generous padding. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 48x48 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-house-1",
+    "w": 64,
+    "h": 64,
+    "description": "red gabled roof, cream wall, two blue windows and centered door",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-house-1. red gabled roof, cream wall, two blue windows and centered door Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-house-2",
+    "w": 64,
+    "h": 64,
+    "description": "blue hipped roof, white walls, side chimney",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-house-2. blue hipped roof, white walls, side chimney Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-house-3",
+    "w": 64,
+    "h": 64,
+    "description": "yellow gabled roof, salmon walls, porch",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-house-3. yellow gabled roof, salmon walls, porch Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-house-4",
+    "w": 64,
+    "h": 64,
+    "description": "grey gambrel roof, light blue wall, two upstairs windows",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-house-4. grey gambrel roof, light blue wall, two upstairs windows Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-house-5",
+    "w": 64,
+    "h": 64,
+    "description": "red cross gable roof, white wall, small attached garage",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-house-5. red cross gable roof, white wall, small attached garage Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-house-6",
+    "w": 64,
+    "h": 64,
+    "description": "blue asymmetrical roof, cream wall, bay window",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-house-6. blue asymmetrical roof, cream wall, bay window Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-shop",
+    "w": 64,
+    "h": 64,
+    "description": "small store, red white striped awning, yellow roof, shop window, no lettering",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-shop. small store, red white striped awning, yellow roof, shop window, no lettering Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-school",
+    "w": 64,
+    "h": 64,
+    "description": "school, yellow roof, cream wall, small round analog clock above door",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-school. school, yellow roof, cream wall, small round analog clock above door Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-hospital",
+    "w": 64,
+    "h": 64,
+    "description": "white hospital, red cross on roof, blue windows",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-hospital. white hospital, red cross on roof, blue windows Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-fire-station",
+    "w": 64,
+    "h": 64,
+    "description": "red fire station, two large garage doors, grey roof, no lettering",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-fire-station. red fire station, two large garage doors, grey roof, no lettering Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-police",
+    "w": 64,
+    "h": 64,
+    "description": "blue police station, white trim, blue roof, no lettering",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-police. blue police station, white trim, blue roof, no lettering Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "buildings",
+    "name": "toy-apartment",
+    "w": 64,
+    "h": 64,
+    "description": "three floor apartment building, salmon walls, grey roof, repeated blue windows",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-apartment. three floor apartment building, salmon walls, grey roof, repeated blue windows Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow. Building slight front-facing 3/4 view, roof on top, front wall windows and door visible, front faces DOWN, centered footprint. Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "nature",
+    "name": "toy-tree-round-small",
+    "w": 32,
+    "h": 32,
+    "description": "Round green tree canopy with three simple overlapping rounded lobes, tiny visible brown trunk pointing down, top-down play mat tree, clean dark outline.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-tree-round-small. Round green tree canopy with three simple overlapping rounded lobes, tiny visible brown trunk pointing down, top-down play mat tree, clean dark outline. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "nature",
+    "name": "toy-tree-round-medium",
+    "w": 48,
+    "h": 48,
+    "description": "Round green tree canopy with three simple overlapping rounded lobes, tiny visible brown trunk pointing down, top-down play mat tree, clean dark outline.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-tree-round-medium. Round green tree canopy with three simple overlapping rounded lobes, tiny visible brown trunk pointing down, top-down play mat tree, clean dark outline. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 48x48 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "nature",
+    "name": "toy-tree-round-large",
+    "w": 64,
+    "h": 64,
+    "description": "Round green tree canopy with three simple overlapping rounded lobes, tiny visible brown trunk pointing down, top-down play mat tree, clean dark outline.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-tree-round-large. Round green tree canopy with three simple overlapping rounded lobes, tiny visible brown trunk pointing down, top-down play mat tree, clean dark outline. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "nature",
+    "name": "toy-bush-group",
+    "w": 64,
+    "h": 48,
+    "description": "cluster of three low rounded cheerful green bushes",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-bush-group. cluster of three low rounded cheerful green bushes Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024, artwork occupies centered 64:48 aspect ratio area. Must be readable at 64x48 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "nature",
+    "name": "toy-flower-bed",
+    "w": 64,
+    "h": 48,
+    "description": "oval flower bed with red yellow and white simple flowers, soil rim",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-flower-bed. oval flower bed with red yellow and white simple flowers, soil rim Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024, artwork occupies centered 64:48 aspect ratio area. Must be readable at 64x48 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "nature",
+    "name": "toy-pond",
+    "w": 96,
+    "h": 96,
+    "description": "rounded irregular blue pond, light cream rim, a few light wave strokes, no objects outside pond",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-pond. rounded irregular blue pond, light cream rim, a few light wave strokes, no objects outside pond Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 96x96 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "nature",
+    "name": "toy-football-pitch",
+    "w": 128,
+    "h": 96,
+    "description": "rectangular top down green football pitch, white boundary, halfway line, center circle, two penalty areas, simple goal frames",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-football-pitch. rectangular top down green football pitch, white boundary, halfway line, center circle, two penalty areas, simple goal frames Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024, artwork occupies centered 128:96 aspect ratio area. Must be readable at 128x96 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "nature",
+    "name": "toy-playground",
+    "w": 96,
+    "h": 96,
+    "description": "small playground with one colorful slide and one swing set, top down slight three quarter view, simple clean shapes",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-playground. small playground with one colorful slide and one swing set, top down slight three quarter view, simple clean shapes Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 96x96 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "nature",
+    "name": "toy-parking-lot",
+    "w": 128,
+    "h": 64,
+    "description": "top down grey parking lot, exactly four parking bays marked with white lines and one blue parking P square",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-parking-lot. top down grey parking lot, exactly four parking bays marked with white lines and one blue parking P square Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands, except explicitly requested P symbol. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024, artwork occupies centered 128:64 aspect ratio area. Must be readable at 128x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "tiles",
+    "name": "toy-grass",
+    "w": 256,
+    "h": 256,
+    "description": "Seamless repeat texture overlay: bright grass green #3EB34A, extremely subtle lighter patches and very tiny sparse flowers. Low contrast, no border, no vignette, no central composition, all four edges repeat invisibly. Transparent gaps reveal matching flat color base.",
+    "tile": true,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-grass. Seamless repeat texture overlay: bright grass green #3EB34A, extremely subtle lighter patches and very tiny sparse flowers. Low contrast, no border, no vignette, no central composition, all four edges repeat invisibly. Transparent gaps reveal matching flat color base. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Fill square texture canvas edge to edge, no padding. Master canvas 1024x1024. Must be readable at 256x256 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "tiles",
+    "name": "toy-asphalt",
+    "w": 256,
+    "h": 256,
+    "description": "Seamless repeat texture overlay: flat asphalt grey #9A9A9A with extremely fine subtle speckles, no road lines. Low contrast, no border, no vignette, no central composition, all four edges repeat invisibly. Transparent gaps reveal matching flat color base.",
+    "tile": true,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-asphalt. Seamless repeat texture overlay: flat asphalt grey #9A9A9A with extremely fine subtle speckles, no road lines. Low contrast, no border, no vignette, no central composition, all four edges repeat invisibly. Transparent gaps reveal matching flat color base. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Fill square texture canvas edge to edge, no padding. Master canvas 1024x1024. Must be readable at 256x256 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "tiles",
+    "name": "toy-water",
+    "w": 256,
+    "h": 256,
+    "description": "Seamless repeat texture overlay: bright cheerful blue with few light horizontal wave strokes. Low contrast, no border, no vignette, no central composition, all four edges repeat invisibly. Transparent gaps reveal matching flat color base.",
+    "tile": true,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-water. Seamless repeat texture overlay: bright cheerful blue with few light horizontal wave strokes. Low contrast, no border, no vignette, no central composition, all four edges repeat invisibly. Transparent gaps reveal matching flat color base. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Fill square texture canvas edge to edge, no padding. Master canvas 1024x1024. Must be readable at 256x256 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "markers",
+    "name": "toy-poi-food",
+    "w": 48,
+    "h": 48,
+    "description": "Round green badge with white rim, subtle soft drop shadow, centered WHITE fork and knife pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-poi-food. Round green badge with white rim, subtle soft drop shadow, centered WHITE fork and knife pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 48x48 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "markers",
+    "name": "toy-poi-parking",
+    "w": 48,
+    "h": 48,
+    "description": "Round blue badge with white rim, subtle soft drop shadow, centered WHITE P pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-poi-parking. Round blue badge with white rim, subtle soft drop shadow, centered WHITE P pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands, except explicitly requested P symbol. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 48x48 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "markers",
+    "name": "toy-poi-shop",
+    "w": 48,
+    "h": 48,
+    "description": "Round yellow badge with white rim, subtle soft drop shadow, centered WHITE shopping basket pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-poi-shop. Round yellow badge with white rim, subtle soft drop shadow, centered WHITE shopping basket pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 48x48 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "markers",
+    "name": "toy-poi-hospital",
+    "w": 48,
+    "h": 48,
+    "description": "Round red badge with white rim, subtle soft drop shadow, centered WHITE medical cross pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-poi-hospital. Round red badge with white rim, subtle soft drop shadow, centered WHITE medical cross pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 48x48 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "markers",
+    "name": "toy-poi-fuel",
+    "w": 48,
+    "h": 48,
+    "description": "Round orange badge with white rim, subtle soft drop shadow, centered WHITE fuel pump pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-poi-fuel. Round orange badge with white rim, subtle soft drop shadow, centered WHITE fuel pump pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 48x48 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "markers",
+    "name": "toy-poi-charge",
+    "w": 48,
+    "h": 48,
+    "description": "Round teal badge with white rim, subtle soft drop shadow, centered WHITE plug with lightning bolt pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-poi-charge. Round teal badge with white rim, subtle soft drop shadow, centered WHITE plug with lightning bolt pictogram. Simple bold recognizable at 48px. Circle fills 88% canvas. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 48x48 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "markers",
+    "name": "toy-car-red",
+    "w": 64,
+    "h": 64,
+    "description": "Cute red toy car viewed STRAIGHT ABOVE pointing straight UP, light blue windshield and rear window, four black tires, visible hood at top, no perspective, no text.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-car-red. Cute red toy car viewed STRAIGHT ABOVE pointing straight UP, light blue windshield and rear window, four black tires, visible hood at top, no perspective, no text. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  },
+  {
+    "style": "ToyTown",
+    "group": "markers",
+    "name": "toy-flag",
+    "w": 64,
+    "h": 64,
+    "description": "Black and white checkered finish flag on a short dark pole, waving to right, pole bottom at horizontal center and 94% canvas height; anchor at pole bottom, no base.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named toy-flag. Black and white checkered finish flag on a short dark pole, waving to right, pole bottom at horizontal center and 94% canvas height; anchor at pole bottom, no base. Style: printed children's car play mat illustration, flat bright cheerful shapes, clean dark grey #2B2B2B outlines equivalent to 2 px at final sprite size. Palette grass #3EB34A, red #D9342B, blue #2F6FD0, yellow #F0B400, cream #F6E6B4, windows #4AA8E8. No gradients except a small soft drop shadow.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels."
+  }
+]

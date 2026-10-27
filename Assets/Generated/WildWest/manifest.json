@@ -1,0 +1,704 @@
+[
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "paper-tile",
+    "w": 512,
+    "h": 512,
+    "description": "Seamless repeatable very subtle paper fibers and faint peach-brown stains, no vignette, no border, no isolated central motif. Transparent delicate texture overlay intended over solid #E4C9A8 paper. All four edges must join invisibly.",
+    "tile": true,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named paper-tile. Seamless repeatable very subtle paper fibers and faint peach-brown stains, no vignette, no border, no isolated central motif. Transparent delicate texture overlay intended over solid #E4C9A8 paper. All four edges must join invisibly. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Fill square texture canvas edge to edge, no padding. Master canvas 1024x1024. Must be readable at 512x512 pixels.",
+    "files": [
+      "paper-tile.png",
+      "paper-tile@2x.png",
+      "paper-tile@3x.png",
+      "paper-tile-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-1",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 1: three rounded overlapping oak crowns. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-1. Top-down tree crown clump, variant 1: three rounded overlapping oak crowns. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels.",
+    "files": [
+      "forest-stamp-1.png",
+      "forest-stamp-1@2x.png",
+      "forest-stamp-1@3x.png",
+      "forest-stamp-1-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-2",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 2: five small loose rounded crowns in crescent arrangement. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-2. Top-down tree crown clump, variant 2: five small loose rounded crowns in crescent arrangement. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels.",
+    "files": [
+      "forest-stamp-2.png",
+      "forest-stamp-2@2x.png",
+      "forest-stamp-2@3x.png",
+      "forest-stamp-2-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-3",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 3: two elongated irregular crowns diagonally placed. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-3. Top-down tree crown clump, variant 3: two elongated irregular crowns diagonally placed. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels.",
+    "files": [
+      "forest-stamp-3.png",
+      "forest-stamp-3@2x.png",
+      "forest-stamp-3@3x.png",
+      "forest-stamp-3-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-4",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 4: four scalloped crowns forming an asymmetric diamond. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-4. Top-down tree crown clump, variant 4: four scalloped crowns forming an asymmetric diamond. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels.",
+    "files": [
+      "forest-stamp-4.png",
+      "forest-stamp-4@2x.png",
+      "forest-stamp-4@3x.png",
+      "forest-stamp-4-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-5",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 5: three airy crowns in a narrow horizontal cluster. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-5. Top-down tree crown clump, variant 5: three airy crowns in a narrow horizontal cluster. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels.",
+    "files": [
+      "forest-stamp-5.png",
+      "forest-stamp-5@2x.png",
+      "forest-stamp-5@3x.png",
+      "forest-stamp-5-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "forest-stamp-6",
+    "w": 32,
+    "h": 32,
+    "description": "Top-down tree crown clump, variant 6: four tiny lobed crowns in an L shaped cluster. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named forest-stamp-6. Top-down tree crown clump, variant 6: four tiny lobed crowns in an L shaped cluster. Ink outline and sparse light hatching, faint cream interior wash; no triangle silhouettes, no elevation trunks. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 32x32 pixels.",
+    "files": [
+      "forest-stamp-6.png",
+      "forest-stamp-6@2x.png",
+      "forest-stamp-6@3x.png",
+      "forest-stamp-6-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "hill-hatch",
+    "w": 256,
+    "h": 256,
+    "description": "Seamless sparse pattern of short fine sepia hachure pen strokes in small gently curving groups, faint and low contrast, lots of transparent negative space. No terrain silhouettes, no border. All four edges join.",
+    "tile": true,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named hill-hatch. Seamless sparse pattern of short fine sepia hachure pen strokes in small gently curving groups, faint and low contrast, lots of transparent negative space. No terrain silhouettes, no border. All four edges join. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Fill square texture canvas edge to edge, no padding. Master canvas 1024x1024. Must be readable at 256x256 pixels.",
+    "files": [
+      "hill-hatch.png",
+      "hill-hatch@2x.png",
+      "hill-hatch@3x.png",
+      "hill-hatch-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "water-edge",
+    "w": 256,
+    "h": 256,
+    "description": "Seamless very faint horizontal sepia pen lines, short irregular parallel ripples, sparse spacing, transparent negative space. No coast silhouette, no border. All edges join.",
+    "tile": true,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named water-edge. Seamless very faint horizontal sepia pen lines, short irregular parallel ripples, sparse spacing, transparent negative space. No coast silhouette, no border. All edges join. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Fill square texture canvas edge to edge, no padding. Master canvas 1024x1024. Must be readable at 256x256 pixels.",
+    "files": [
+      "water-edge.png",
+      "water-edge@2x.png",
+      "water-edge@3x.png",
+      "water-edge-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-food",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE fork and knife pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-food. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE fork and knife pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-food.png",
+      "west-poi-food@2x.png",
+      "west-poi-food@3x.png",
+      "west-poi-food-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-fast-food",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE burger pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-fast-food. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE burger pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-fast-food.png",
+      "west-poi-fast-food@2x.png",
+      "west-poi-fast-food@3x.png",
+      "west-poi-fast-food-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-coffee",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE coffee cup pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-coffee. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE coffee cup pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-coffee.png",
+      "west-poi-coffee@2x.png",
+      "west-poi-coffee@3x.png",
+      "west-poi-coffee-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-shop",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE shopping basket pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-shop. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE shopping basket pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-shop.png",
+      "west-poi-shop@2x.png",
+      "west-poi-shop@3x.png",
+      "west-poi-shop-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-fuel",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE fuel pump pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-fuel. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE fuel pump pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-fuel.png",
+      "west-poi-fuel@2x.png",
+      "west-poi-fuel@3x.png",
+      "west-poi-fuel-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-charging",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE electrical plug with lightning bolt pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-charging. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE electrical plug with lightning bolt pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-charging.png",
+      "west-poi-charging@2x.png",
+      "west-poi-charging@3x.png",
+      "west-poi-charging-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-parking",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE P parking symbol pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-parking. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE P parking symbol pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-parking.png",
+      "west-poi-parking@2x.png",
+      "west-poi-parking@3x.png",
+      "west-poi-parking-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-hospital",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE medical cross pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-hospital. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE medical cross pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-hospital.png",
+      "west-poi-hospital@2x.png",
+      "west-poi-hospital@3x.png",
+      "west-poi-hospital-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-bank",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE classical bank pediment and columns pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-bank. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE classical bank pediment and columns pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-bank.png",
+      "west-poi-bank@2x.png",
+      "west-poi-bank@3x.png",
+      "west-poi-bank-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-hotel",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE bed pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-hotel. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE bed pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-hotel.png",
+      "west-poi-hotel@2x.png",
+      "west-poi-hotel@3x.png",
+      "west-poi-hotel-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-school",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE open book pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-school. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE open book pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-school.png",
+      "west-poi-school@2x.png",
+      "west-poi-school@3x.png",
+      "west-poi-school-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-church",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE church with cross pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-church. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE church with cross pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-church.png",
+      "west-poi-church@2x.png",
+      "west-poi-church@3x.png",
+      "west-poi-church-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-cinema",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE film strip pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-cinema. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE film strip pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-cinema.png",
+      "west-poi-cinema@2x.png",
+      "west-poi-cinema@3x.png",
+      "west-poi-cinema-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-barber",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE scissors pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-barber. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE scissors pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-barber.png",
+      "west-poi-barber@2x.png",
+      "west-poi-barber@3x.png",
+      "west-poi-barber-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-clothing",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE T shirt pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-clothing. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE T shirt pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-clothing.png",
+      "west-poi-clothing@2x.png",
+      "west-poi-clothing@3x.png",
+      "west-poi-clothing-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "west-poi-playground",
+    "w": 36,
+    "h": 36,
+    "description": "Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE swing pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram.",
+    "tile": false,
+    "prompt": "Create a production navigation UI badge west-poi-playground. Round solid black badge, thin cream #E9D5B6 circular rim, centered simple WHITE swing pictogram. Bold legible icon, consistent circular badge diameter 90% canvas. No text except P if parking. Keep clean and recognizable at 36px; no texture inside white pictogram. STRICT COLORS: solid pure BLACK #000000 disk, thin #E9D5B6 cream circular rim, solid WHITE #FFFFFF pictogram. Flat vector-like raster icon with only subtle hand-ink irregularity at silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes within the solid white symbol. Transparent outside circle. Simple bold pictogram recognizable at 36x36. Centered circle 88% canvas diameter. Canvas 1024x1024. Original artwork.",
+    "files": [
+      "west-poi-playground.png",
+      "west-poi-playground@2x.png",
+      "west-poi-playground@3x.png",
+      "west-poi-playground-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "player-arrow",
+    "w": 64,
+    "h": 64,
+    "description": "Cream #F6EAD6 navigation arrowhead pointing straight up, symmetrical pointed tip, indented lower notch, dark sepia ink outline, small soft shadow. Clear silhouette, no compass ornament.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named player-arrow. Cream #F6EAD6 navigation arrowhead pointing straight up, symmetrical pointed tip, indented lower notch, dark sepia ink outline, small soft shadow. Clear silhouette, no compass ornament. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 64x64 pixels.",
+    "files": [
+      "player-arrow.png",
+      "player-arrow@2x.png",
+      "player-arrow@3x.png",
+      "player-arrow-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  },
+  {
+    "style": "WildWest",
+    "group": "",
+    "name": "waypoint-x",
+    "w": 48,
+    "h": 48,
+    "description": "Hand inked red #A8261F X, two slightly uneven broad diagonal pen strokes, distinctive tapered ends, centered with generous padding.",
+    "tile": false,
+    "prompt": "Use case: stylized-concept. One original production PNG map asset named waypoint-x. Hand inked red #A8261F X, two slightly uneven broad diagonal pen strokes, distinctive tapered ends, centered with generous padding. Style: 1890s frontier survey map, sepia #3A2D20 ink on aged peach #E4C9A8 map, slightly irregular fine pen work.  Genuine transparent alpha background, no checkerboard baked in. No text, logos or brands. Original artwork, do not copy reference designs. Single isolated sprite, 8% clear padding, centered, nothing cropped. Master canvas 1024x1024. Must be readable at 48x48 pixels.",
+    "files": [
+      "waypoint-x.png",
+      "waypoint-x@2x.png",
+      "waypoint-x@3x.png",
+      "waypoint-x-master.png"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "pixelRatio": [
+      1,
+      2,
+      3
+    ],
+    "sdf": false
+  }
+]

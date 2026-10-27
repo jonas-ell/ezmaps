@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-062 – Wild West: Kartensymbole von Codex
+
+**Ziel:** Nutzer: Codex-Ergebnis schon einbauen (Codex-Limit erreicht).
+
+**Dateien:** `Assets/Generated/WildWest/`, `Assets/Generated/ToyTown/` (Codex-Lieferung), `App/Assets.xcassets/WildWest/` (neu), `App/NeonMapView.swift`
+
+**Geändert:** 6 Codex-Knöpfe (Restaurant, Imbiss, Kaffee, Laden, Tankstelle, Ladesäule) ersetzen die gezeichneten Wild-West-Symbole; übrige Arten bleiben gezeichnet. Nicht eingebaut: Wald-Stempel (verschwommen) und Papier/Schraffur/Wasser (kaum sichtbar). Toy Town: Codex hat keine Bilder geliefert.
+
+**Tatsächlich geprüft:** Dateien angesehen.
+
+**Ungetestet:** Gerät.
+
 ## GM-060 – Pixel Quest: Häuser als Blöcke von oben
 
 **Ziel:** Nutzer: „die Häuser sind noch nicht fertig bei der Pixel-Map“.
