@@ -15,9 +15,20 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 - CarPlay-Screenshots: EzMaps-Symbol dreimal mit Pause antippen (vorher zeigten frei/vorschau/navigation oft den CarPlay-Startbildschirm).
 - Neu `bash tools/mac_device.sh`: baut signiert für das iPhone „jonas“, installiert und startet die App (Marker `.do_device`). CarPlay-Berechtigung ist im Geräte-Build nicht drin.
 - Neu `docs/CARPLAY_ANTRAG.md`: Apples Regeln für CarPlay-Navis mit Stand, englischer Formulartext, was vor dem Absenden fehlt.
+- Nach Gerätetest des Nutzers (iPhone 15):
+  - Onboarding: deckender Hintergrund statt halb durchsichtig über der Startkarte (Startkarte darunter ausgeblendet), Karte dahinter in Neon City; „Ich habe schon EzMaps“ und Schritt „Zuhause/Arbeit“ raus (2 Schritte); Neon City vorausgewählt.
+  - Standort: Karte fragte beim Start selbst (MapLibre `showsUserLocation`) – jetzt nur nach Zustimmung; „Später“ → Frage beim Standort-Knopf.
+  - Pfeil: beim Wischen/Zoomen in der Navigation hält die Kamera an und der Pfeil bleibt auf der Fahrposition (`FollowCamera.detach/attach`), „Mitte“ holt zurück. CarPlay-Verschieben nutzt dasselbe.
+  - Neon-City-Name: Code suchte „Pricedown“, die Datei heißt „Pricedown-Black“ – darum immer Ersatzschrift. `mac_device.sh`/`mac_screens.sh` schicken die lokale Datei mit (nie Git); Store-Build ohne, bis die App-Lizenz gekauft ist.
+  - Neon City aus der Entfernung nach Vorlage (Pausenkarte eines Open-World-Spiels): Boden fast schwarz, Orte etwas heller, dünne graue Straßen ohne Rand; ab Zoom 14,5 wie bisher. Farbige Kartensymbole (blau, rot, grün) ab Zoom 13,5.
+  - Codex-Auftrag `docs/ASSETS_CODEX.md` Abschnitt 9: neue Kartenknöpfe (HUD) und Stil-Bilder.
 
 **Tatsächlich geprüft:**
 - Geräte-Build für iPhone 15 „jonas“: GERÄTE-BUILD OK, installiert und gestartet (`com.game.ezmaps`).
+- Mac-Prüflauf: STIL OK, BUILD SUCCEEDED, 59/59 Tests; Einstellungs-Screenshot zeigt jetzt das Blatt.
+- CarPlay-Lauf einzeln: frei, Vorschau, Navigation, Ziele zeigen EzMaps (Verschiebe-Knopf sichtbar). **Ankunft zeigt nur den Hintergrund ohne Karte** – offen.
+- Neon-Stil im Browser (MapLibre GL JS, OpenFreeMap) bei Zoom 10,5 / 12,5 / 15,5 angesehen.
+- Zweiter Geräte-Build mit allen Korrekturen: installiert.
 
 **Ungetestet:** Verschieben und Neuberechnung im CarPlay-Simulator von Hand (Screenshots decken das nicht ab); Verhalten im echten Auto (braucht Apples Freigabe).
 
