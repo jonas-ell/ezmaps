@@ -57,3 +57,5 @@ body.dz { background: #0e0e10; color: #ddd; }
 .D .row3 { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 2.5px solid #111; border-radius: 12px; margin-top: 8px; background: #fff; color: #111; font: 800 16px Inter; }
 .D .row3.on { background: #b44dff; color: #fff; box-shadow: 3px 3px 0 #111; }
 .D .row3 small { display: block; font: 600 12px Inter; opacity: .7; }
+/* GM-038: Uhrzeit oben auf hellen Karten lesbar (wie iOS: weicher Verlauf hinter der Statusleiste) */
+.dph.B::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 58px; background: linear-gradient(rgba(0,0,0,.55), transparent); z-index: 49; pointer-events: none; }

@@ -1,5 +1,6 @@
 // GM-030: UI-Entwürfe – vier Richtungen auf der echten Neon-Karte (map.js). Nur zum Zeigen.
 import { MapView, renderTexture, renderRegion, drawRoute, drawBlips, drawPlayer, drawDestination } from './map.js';
+import { placeAttribution } from './glasfix.js';
 import { Router, pointAt, smoothHeading } from './route.js';
 import { loadAssets } from './assets.js';
 
@@ -166,6 +167,7 @@ async function boot() {
   designB(sec('B · Glas', 'Nah an iOS: weiche Glasflächen, runde Ecken, Bedienung unten im Daumenbereich. Am leichtesten zu bedienen, wirkt hochwertig und ruhig.'));
   designC(sec('C · Minimal', 'Karte zuerst: nur Pillen oben und unten, sehr wenig Text. Die Karte ist der Star, gut für CarPlay-ähnliche Ruhe.'));
   designD(sec('D · Sticker', 'Kräftig und verspielt: dicke schwarze Konturen, harter Schatten, Gelb als Zweitfarbe, leicht schräge Elemente. Sehr eigenständig, fällt in Screenshots auf.'));
+  await new Promise(r => requestAnimationFrame(r)); placeAttribution();
   window.__ready = true;
 }
 boot().catch(e => { console.error(e); document.body.insertAdjacentHTML('beforeend', `<pre style="color:#f66">${e.stack}</pre>`); });

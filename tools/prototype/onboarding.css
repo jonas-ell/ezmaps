@@ -97,3 +97,14 @@
 .B .f .ropt.on { background: linear-gradient(180deg, rgba(180,77,255,.32), rgba(180,77,255,.16)); box-shadow: inset 0 0 0 1.5px #b44dff, inset 0 1px 0 rgba(255,255,255,.35); }
 .B .f .chip, .B .chip { background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: .5px solid rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.25); }
 .B .f .banner .price { background: linear-gradient(135deg, rgba(190,95,255,.8), rgba(122,43,216,.75)); }
+/* GM-038: 5 Stile im Onboarding (Klassik breit), echte Tastatur-Attrappe */
+.f .grid2 .tile.wide { grid-column: span 2; height: 120px; }
+.B .f .grid2 .tile { height: 128px; }
+.B .f .grid2 .tile.wide { height: 112px; }
+.f .kb { margin: 0 -22px -34px; padding: 8px 4px 40px; background: rgba(40,40,44,.96); display: flex; flex-direction: column; gap: 9px; }
+.f .kb div { display: flex; gap: 5px; padding: 0 2px; }
+.f .kb i { flex: 1; height: 42px; border-radius: 6px; background: #6b6b70; display: grid; place-items: center; font: 400 20px Inter; font-style: normal; color: #fff; }
+.f .kb i.sp { flex: 1.4; background: #46464b; font-size: 14px; }
+.f .kb i.go { background: #b44dff; font-weight: 700; }
+/* GM-038: .logo aus style.css (108px-Kasten mit Schatten) nicht auf den Schriftzug anwenden */
+.f .logo { width: auto; height: auto; border-radius: 0; box-shadow: none; }

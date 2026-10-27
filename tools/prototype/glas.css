@@ -29,3 +29,18 @@
 .pname { font-family: 'Press Start 2P', monospace; font-weight: 400; font-size: .72em; letter-spacing: 0; text-shadow: 2px 2px 0 #000; }
 .wname { font-family: Rye, serif; font-weight: 400; letter-spacing: .3px; }
 .tname { font-family: Fredoka, sans-serif; font-weight: 700; }
+
+/* GM-038: Plus-Shop (Abo + teurer Einmalkauf als Anker) */
+.B .f .sgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.B .f .stile { position: relative; height: 150px; border-radius: 18px; overflow: hidden; border: .5px solid rgba(255,255,255,.16); }
+.B .f .stile .m { position: absolute; inset: 0; }
+.B .f .stile > span { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 10px 8px; background: linear-gradient(transparent, rgba(0,0,0,.85)); font: 800 15px Inter; }
+.B .f .plan { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; margin-top: 8px; border-radius: 16px; background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05)); border: .5px solid rgba(255,255,255,.24); box-shadow: inset 0 1px 0 rgba(255,255,255,.3); }
+.B .f .plan b { font: 800 16px Inter; display: block; } .B .f .plan small { font: 500 12px Inter; color: #a9a9b2; display: block; }
+.B .f .plan .pp { text-align: right; white-space: nowrap; }
+.B .f .plan.on { margin-top: 16px; background: linear-gradient(180deg, rgba(180,77,255,.34), rgba(180,77,255,.14)); box-shadow: inset 0 0 0 1.5px #b44dff, inset 0 1px 0 rgba(255,255,255,.35); }
+.B .f .plan.on small { color: #d9c2ef; }
+.B .f .plan .tag { position: absolute; left: 12px; top: -10px; font: 800 10.5px Inter; padding: 3px 8px; border-radius: 8px; background: #b44dff; white-space: nowrap; }
+/* GM-038: Korrekturen */
+.B .f .badge { white-space: nowrap; }
+.B .cta { display: flex !important; align-items: center; justify-content: center; gap: 8px; }

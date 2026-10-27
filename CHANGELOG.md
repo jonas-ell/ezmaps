@@ -2,6 +2,47 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-038 – EzMaps Plus (Abo mit teurem Einmalkauf als Anker) + UI-Fehler behoben – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer: Einmalpreise sehr teuer machen, damit das Monatsabo günstig wirkt (Preispsychologie). Alle UIs prüfen, manches sah schief aus. **Ersetzt die Preise aus GM-035 und GM-037** (keine Einzelstile mehr).
+
+**Dateien:** `tools/prototype/js/{glas,onboarding,designs,glasfix}.js`, `tools/prototype/{glas,onboarding,designs}.css`
+
+**Preismodell „EzMaps Plus“ (alle Stile, iPhone + CarPlay, jeder neue Stil inklusive):**
+| Angebot | Preis | Rolle |
+|---|---|---|
+| Für immer | **79,99 €** einmalig | Anker: steht oben, macht das Abo billig |
+| Jährlich | **29,99 €/Jahr**, angezeigt als **2,50 €/Monat**, 7 Tage gratis | vorausgewählt, Schild „Beliebt · spare 50 %“ |
+| Monatlich | **4,99 €/Monat** | Einstieg, Vergleichswert für „spare 50 %“ |
+- Konkurrenz (GM-037): Abos 5,99 bis 14,99 €/Monat bzw. 34,99 bis 69,99 €/Jahr → wir sind bei Monat und Jahr günstiger. Den Einmalkauf machen wir absichtlich teuer.
+- Psychologie: Anker zuerst, Mitte vorausgewählt, Preis pro Monat statt pro Jahr, Gratis-Woche im Knopf („7 Tage gratis testen“), Rabatt in Prozent, nur 3 Wahlmöglichkeiten.
+- Klassik und die ganze Navigation bleiben gratis (Ansagen, CarPlay mit Klassik).
+
+**UI-Korrekturen (Prototyp):**
+1. Kartenhinweis „© OpenStreetMap-Mitwirkende“ lag auf oder in Blättern und Leisten (feste Abstände) → wird jetzt gemessen und sitzt immer 6 pt über dem unteren Blatt (`glasfix.js`)
+2. Uhrzeit oben war auf hellen Kartenstellen kaum lesbar → weicher dunkler Verlauf hinter der Statusleiste
+3. Willkommen: leerer Kasten mit Lila-Leuchten hinter „EzMaps“ (alte `.logo`-Regel) entfernt, App-Icon mit feinem Rand und Schatten
+4. Parkplatz: Fußgänger-Symbol stand über dem Text im Knopf → nebeneinander
+5. Shop: Schild „Beliebtester Stil“ brach um → eine Zeile; Stilnamen in den Kacheln wieder in den Stil-Schriften
+6. Kein Netz: Hinweis zu lang (lief bis an den Rand) → „Offline · Route bleibt gespeichert“
+7. Stil wählen: Toy Town fehlte → alle 5 Stile, Klassik breit oben, Schild „PLUS“ statt „PREMIUM“
+8. „Wohin fährst du oft?“: Karte schien unruhig durch den Text → dunkler
+9. Suche: grauer Kasten „Tastatur“ → echte deutsche Tastatur-Attrappe mit „Los“-Taste
+10. „Neon City gehört dir“ → „Plus ist aktiv“; „Kaufen“ im Testbanner → „Plus holen“
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler, alle 20 Glas-Screens einzeln angesehen.
+
+**Ungetestet:** Nichts in Swift, keine Abos in App Store Connect.
+
+### Auftrag (Swift)
+1. **StoreKit 2, Abo-Gruppe „EzMaps Plus“:** `ezmaps.plus.yearly` 29,99 € mit Einführungsangebot 1 Woche gratis, `ezmaps.plus.monthly` 4,99 €; dazu Nicht-Verbrauchsartikel `ezmaps.plus.lifetime` 79,99 €. Alte Einzelstil-Produkte aus GM-035 nicht anlegen. Freischaltung: `Transaction.currentEntitlements` enthält eins der drei → alle Stile frei. StoreKit-Testdatei anpassen.
+2. **Paywall** genau wie Prototyp (`glas.html`, Screen „Shop (EzMaps Plus)“): 2×2-Stil-Kacheln, drei Plan-Zeilen (Für immer, Jährlich vorausgewählt, Monatlich), Knopf ändert Text je Plan („7 Tage gratis testen“, „Monatlich starten“, „Für immer freischalten“). Alle Preise aus `Product.displayPrice`; „2,50 € pro Monat“ aus `price / 12` mit `priceFormatStyle`; „spare 50 %“ aus Monat×12 gegen Jahr berechnen. Gratis-Woche nur zeigen, wenn `isEligibleForIntroOffer`.
+3. **Apple-Pflichten (Richtlinie 3.1.2):** Abo-Titel, Laufzeit, Preis und Verlängerungshinweis direkt über dem Knopf; Links zu Nutzungsbedingungen (EULA) und Datenschutz; „Käufe wiederherstellen“; Kündigen-Hinweis. Kein Countdown-Druck, kein versteckter Schließen-Knopf.
+4. **Dauerhafter Nutzen fürs Abo (sonst lehnt Apple es eventuell ab):** neue Stile regelmäßig (z. B. alle 2 bis 3 Monate), im App-Store-Text so nennen. Baustellen-Anzeige je Stil und Fotomodus dürfen Plus-Vorteile sein, Navigation und Sicherheit nicht.
+5. **Testmodus / Stil testen (GM-033)** bleibt, Banner-Knopf „Plus holen“ öffnet die Paywall.
+6. **UI-Korrekturen 1 bis 10** übernehmen: Attribution per Layout direkt über dem unteren Blatt (`safeAreaInset`/`overlay(alignment: .bottomTrailing)` am Blatt, keine festen Werte); Statusleisten-Verlauf (`LinearGradient` schwarz 55 % → klar, 58 pt, `.ignoresSafeArea`); Knopf-Inhalt immer `HStack`; Labels `lineLimit(1)` + `minimumScaleFactor(0.85)`; Onboarding mit 5 Stilen.
+7. `docs/APPSTORE_TEXTE.md`: „Kein Abo“ aus GM-037 streichen, stattdessen „Navigation gratis, Plus für alle Stile“.
+
 ## GM-037 – Preise höher, aber unter der Konkurrenz (Spiel-Karten-Apps) – Auftrag für den lokalen Claude
 
 **Ziel:** Nutzer: Preise viel teurer machen, aber günstiger als die Konkurrenz bleiben. Außerdem prüfen, ob die Konkurrenz-Apps Rechte an den Spielen haben.

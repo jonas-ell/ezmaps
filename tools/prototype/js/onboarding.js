@@ -1,6 +1,7 @@
 // GM-031: Onboarding und weitere Screens in den vier Richtungen (A HUD, B Glas, C Minimal, D Sticker).
 // Ein Satz Bildschirme (gleiches HTML), das Aussehen kommt nur aus onboarding.css je Richtung.
 import { MapView, renderTexture, drawRoute, drawBlips, drawPlayer, drawDestination, STYLES } from './map.js';
+import { placeAttribution } from './glasfix.js';
 import { Router } from './route.js';
 import { loadAssets, appIconUrl } from './assets.js';
 import { drawParkedCar } from './vorschau.js';
@@ -26,7 +27,7 @@ const SCREENS = [
   ['1 Willkommen', 'Karte im Hintergrund läuft langsam, App-Name groß. Kein Text-Wall, ein Knopf.', ph => {
     browse(ph.querySelector('.fill'), 'neon', 0.3);
     ph.append($(`<div class="f"><div class="dim" style="background:linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.25) 40%,rgba(0,0,0,.92) 75%)"></div><div class="grow"></div>
-      <img src="${appIconUrl}" style="width:76px;height:76px;border-radius:18px;margin-bottom:16px">
+      <img src="${appIconUrl}" style="width:76px;height:76px;border-radius:18px;margin-bottom:16px;box-shadow:0 0 0 .5px rgba(255,255,255,.35),0 10px 30px rgba(0,0,0,.6)">
       <div class="logo">EzMaps</div><div class="sub" style="font-size:17px">Deine Stadt als Spielwelt. Echte Navigation für ganz Deutschland, auch in CarPlay.</div>
       <div class="btn" style="margin-top:24px">Los geht's</div><div class="btn2">Ich habe schon EzMaps</div></div>`));
   }],
@@ -38,17 +39,17 @@ const SCREENS = [
       <div class="card"><div class="li"><span class="ic">${icon(I.loc, 18)}</span><span>Karte zeigt dich<small>Nur während die App offen ist</small></span></div><div class="li"><span class="ic">${icon(I.vol, 18)}</span><span>Ansagen laufen weiter<small>Auch bei gesperrtem iPhone, nur während einer Fahrt</small></span></div></div>
       <div class="btn">Standort erlauben</div><div class="btn2">Später</div></div>`));
   }],
-  ['3 Stil wählen', 'Echte Karten-Vorschau je Stil. Klassik gratis, Premium mit „Testen“.', ph => {
+  ['3 Stil wählen', 'Echte Karten-Vorschau je Stil, alle 5 Stile. Klassik gratis und groß, Plus-Stile mit „Kostenlos testen“.', ph => {
     ph.querySelector('.fill').style.background = '#0b0b0d';
     const f = $(`<div class="f">${steps(2)}<div class="kick">Schritt 2 von 3</div><div class="h1">Wie soll deine Welt aussehen?</div><div class="sub">Du kannst jederzeit wechseln.</div>
-      <div class="grid2" style="margin-top:16px">${['classic', 'neon', 'western', 'pixel'].map((s, i) => `<div class="tile ${s === 'classic' ? 'sel' : ''}"><div class="m" data-s="${s}"></div><span class="pill ${STYLES[s].free ? '' : 'pro'}">${STYLES[s].free ? 'GRATIS' : 'PREMIUM'}</span><div class="t">${s === 'neon' ? '<span class="nname">Neon City</span>' : s === 'pixel' ? '<span class="pname">Pixel Quest</span>' : s === 'western' ? '<span class="wname">Wild West</span>' : STYLES[s].name}<small>${STYLES[s].free ? 'Inklusive' : 'Kostenlos testen'}</small></div></div>`).join('')}</div>
+      <div class="grid2" style="margin-top:16px">${['classic', 'neon', 'western', 'pixel', 'toy'].map((s, i) => `<div class="tile ${s === 'classic' ? 'sel wide' : ''}"><div class="m" data-s="${s}"></div><span class="pill ${STYLES[s].free ? '' : 'pro'}">${STYLES[s].free ? 'GRATIS' : 'PLUS'}</span><div class="t">${s === 'neon' ? '<span class="nname">Neon City</span>' : s === 'pixel' ? '<span class="pname">Pixel Quest</span>' : s === 'western' ? '<span class="wname">Wild West</span>' : s === 'toy' ? '<span class="tname">Toy Town</span>' : STYLES[s].name}<small>${STYLES[s].free ? 'Inklusive' : 'Kostenlos testen'}</small></div></div>`).join('')}</div>
       <div class="grow"></div><div class="btn">Weiter mit Klassik</div></div>`);
     ph.append(f);
     requestAnimationFrame(() => f.querySelectorAll('.m').forEach(m => { const s = m.dataset.s; mapInto(m, s, { center: [40, -20], heading: 0.4, scale: 1.1, tilt: 45, anchor: [0.5, 0.6] }, (u, v) => { drawRoute(u, v, R, 0, s, { width: 6 }); drawPlayer(u, v, R.pts[0], 0, s, 9); }); }));
   }],
   ['4 Zuhause und Arbeit', 'Für Widgets, Siri und Schnellziele. Überspringbar.', ph => {
     browse(ph.querySelector('.fill'), 'neon', 0.6);
-    ph.append($(`<div class="f"><div class="dim" style="background:rgba(0,0,0,.78)"></div>${steps(3)}<div class="kick">Schritt 3 von 3</div><div class="h1">Wohin fährst du oft?</div><div class="sub">Dann reicht später ein Tipp oder „Hey Siri, nach Hause“.</div>
+    ph.append($(`<div class="f"><div class="dim" style="background:linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,.82) 60%,rgba(0,0,0,.92))"></div>${steps(3)}<div class="kick">Schritt 3 von 3</div><div class="h1">Wohin fährst du oft?</div><div class="sub">Dann reicht später ein Tipp oder „Hey Siri, nach Hause“.</div>
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px"><div class="field">${icon(I.home, 20)}<span>Lanaer Straße 12, Idstein</span></div><div class="field">${icon(I.work, 20)}<span style="opacity:.6">Arbeit hinzufügen</span></div></div>
       <div class="card" style="margin-top:16px"><div class="li"><span class="ic">${icon(I.vol, 18)}</span><span>Sprachansagen<small>Musik wird dabei nur leiser</small></span><span class="toggle" style="margin-left:auto"></span></div></div>
       <div class="grow"></div><div class="btn">Fertig, los!</div><div class="btn2">Überspringen</div></div>`));
@@ -59,7 +60,7 @@ const SCREENS = [
       <div class="grid2" style="margin-top:14px;grid-template-columns:repeat(4,1fr);gap:8px">${[['fuel', 'Tanken'], ['p', 'Parken'], ['food', 'Essen'], ['star', 'Favoriten']].map(([i, t]) => `<div class="card" style="padding:10px 4px;text-align:center;font:700 12px Inter"><div style="display:grid;place-items:center;margin-bottom:6px;color:var(--acc)">${icon(I[i], 22)}</div>${t}</div>`).join('')}</div>
       <div class="kick" style="margin-top:18px">Zuletzt</div>
       <div class="card"><div class="li"><span class="ic">${icon(I.home, 18)}</span><span>Zuhause<small>Lanaer Straße · 14 Min</small></span><span class="r">2,1 km</span></div><div class="li"><span class="ic">${icon(I.clock, 18)}</span><span>Hexenturm<small>Altstadt, Idstein</small></span><span class="r">1,9 km</span></div><div class="li"><span class="ic">${icon(I.clock, 18)}</span><span>Römerberg<small>Frankfurt am Main</small></span><span class="r">33 km</span></div></div>
-      <div class="grow"></div><div style="height:250px;margin:0 -22px -34px;background:#2b2b2e;opacity:.9;display:grid;place-items:center;font:500 12px Inter;color:#888">Tastatur</div></div>`));
+      <div class="grow"></div><div class="kb">${['qwertzuiopü', 'asdfghjklöä', '⇧yxcvbnm⌫'].map(r => `<div>${[...r].map(k => `<i class="${'⇧⌫'.includes(k) ? 'sp' : ''}">${k}</i>`).join('')}</div>`).join('')}<div><i class="sp">123</i><i class="sp">🙂</i><i style="flex:5">Leerzeichen</i><i class="sp go">Los</i></div></div></div>`));
   }],
   ['6 Ankunft', 'Belohnung nur im Stand: neue Straßen, Stufe, Foto teilen.', ph => {
     let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const [x, y] of R.pts) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
@@ -87,7 +88,7 @@ async function boot() {
   await loadAssets();
   scene = await (await fetch('data/idstein.json')).json();
   R = new Router(scene.graph).route(scene.presets.start, scene.presets.hexenturm);
-  for (const s of ['classic', 'neon', 'western', 'pixel']) tex[s] = await renderTexture(scene, s);
+  for (const s of ['classic', 'neon', 'western', 'pixel', 'toy']) tex[s] = await renderTexture(scene, s);
   await document.fonts.ready;
   const dirs = [['A', 'A · HUD', 'Schmale Fettschrift, abgeschrägte Ecken, Zahlen in Monospace.'], ['B', 'B · Glas', 'Weiche Glasflächen, runde Ecken, Verlauf-Knopf.'], ['C', 'C · Minimal', 'Schwarz, Pillen, wenig Schmuck.'], ['D', 'D · Sticker', 'Weiße Karten mit dicker Kontur, Gelb und Lila.']];
   for (const [cls, t, p] of dirs) {
@@ -95,6 +96,7 @@ async function boot() {
     const row = s.lastElementChild;
     for (const [name, cap, fn] of SCREENS) fn(phone(row, cls, `<b>${name}</b> · ${cap}`));
   }
+  await new Promise(r => requestAnimationFrame(r)); placeAttribution();
   window.__ready = true;
 }
 boot().catch(e => { console.error(e); document.body.insertAdjacentHTML('beforeend', `<pre style="color:#f66">${e.stack}</pre>`); });
