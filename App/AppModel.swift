@@ -454,6 +454,7 @@ final class AppModel {
 
     /// Stil, der wirklich gezeigt wird: gewählter Stil, wenn freigeschaltet oder im Test – sonst Klassik
     var activeStyle: MapStyle {
+        if let shot = ScreenshotMode.style { return shot } // GM-047: nur Store-Screenshots
         let s = settings.style
         if purchases.access.isUnlocked(s) || trial.active == s.trialKey { return s }
         return .classic

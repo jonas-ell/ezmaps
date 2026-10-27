@@ -259,7 +259,7 @@ OSA
     xcrun simctl terminate "$SID" "$BID" 2>/dev/null
     [ "$NAME" = "vorschau" ] && { xcrun simctl location "$SID" clear; xcrun simctl location "$SID" set 50.21712,8.25734; }
     STATE=$NAME; [ "$NAME" = "ziele" ] && STATE=karte; [ "$NAME" = "frei" ] && STATE=frei
-    xcrun simctl launch "$SID" "$BID" -EZShot "$STATE" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
+    xcrun simctl launch "$SID" "$BID" -EZShot "$STATE" -EZStyle neon-city -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null
     sleep 6   # GM-026: CarPlay braucht nach dem Neustart der App etwas, sonst geht der Klick ins Leere
     # GM-024: EzMaps im CarPlay-Fenster antippen (Startbildschirm: Icon unter „Nachrichten“, bei 25 % / 58 % des Bildes)
     osascript <<'OSA' 2>&1 | sed 's/^/Antippen: /'
@@ -331,7 +331,7 @@ if [ -f tools/.do_screens ]; then
   for ENTRY in karte:10 suche:9 vorschau:14 navigation:26 einstellungen:6; do
     NAME=${ENTRY%%:*}; WAIT=${ENTRY##*:}
     xcrun simctl terminate "$SID" "$BID" 2>/dev/null
-    xcrun simctl launch "$SID" "$BID" -EZShot "$NAME" -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null || { echo "Start fehlgeschlagen: $NAME"; continue; }
+    xcrun simctl launch "$SID" "$BID" -EZShot "$NAME" -EZStyle neon-city -AppleLanguages "(de)" -AppleLocale de_DE >/dev/null || { echo "Start fehlgeschlagen: $NAME"; continue; }
     sleep "$WAIT"
     xcrun simctl io "$SID" screenshot --type=png "$OUT/$NAME.png" >/dev/null 2>&1 && echo "Bild: $NAME ($(stat -f%z "$OUT/$NAME.png") Bytes)"
   done

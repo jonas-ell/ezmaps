@@ -2,6 +2,31 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-047 – Website 1:1 wie die App (gleiche Karte, gleiches CarPlay, gleiche Logik), Store-Bilder in Neon City
+
+**Ziel:** Nutzer: „die 1 zu 1 website muss aktualisiert werden, die soll genau wie die echte Map/das CarPlay aussehen und die gleiche Logik haben“. Der alte Prototyp zeichnet die Karte selbst (Canvas) und weicht deshalb ab.
+
+**Dateien:** `tools/prototype/live.html`, `tools/prototype/live.css`, `tools/prototype/js/live.js` (neu), `tools/prototype/serve.py`, `App/ScreenshotMode.swift`, `App/AppModel.swift`, `tools/mac_build.sh`
+
+**Geändert:**
+- Neue Seite `live.html` (iPhone 393 × 852 und CarPlay 800 × 480 nebeneinander, ein gemeinsamer Zustand wie in der App), gebaut auf MapLibre GL JS statt eigener Zeichnung:
+  - Karte: dieselben Stil-Dateien `App/MapStyles/style-*.json`, dieselben Glyphen `Resources/Glyphs` (Barlow Condensed), alle 5 Stile umschaltbar.
+  - Pfeil und Knöpfe direkt aus `App/Assets.xcassets` (PlayerNeon, HUD).
+  - Ebenen wie `RouteOverlay` (Route mit Rand, Alternativen, Ziel, Leuchtspur), Farben aus `StyleTheme`.
+  - Kamera wie `FollowCamera`: Höhe nach Tempo (`320 + (km/h − 30) × 6`), weiches Nachgleiten (6/4/1,5), Pfeil-Platz aus den freien Flächen, iPhone flach mit Pfeil bei 62 %, CarPlay ohne Knopfspalte und neben der Abbiegekarte. Höhe → Zoom mit dem Blickwinkel von MapLibre Native.
+  - Wischen = Umschauen (Pfeil bleibt auf der Position), Mitte-Knopf holt zurück.
+  - Logik wie Core: Valhalla-Anfrage und Abbiege-Texte wie `ValhallaClient.makeRoute`, Photon-Suche, Entfernungen wie `Formatting.distance`/`carPlayDistance`, Zeiten wie `Formatting.minutes`.
+  - Freie Fahrt mit denselben Wegpunkten wie `tools/mac_drive.sh` (Idstein → Wallrabenstein), GPS 1×/s, Tempo 1× bis 15×.
+  - Unterschiede, die bleiben: Kartensymbole sind in der App SF Symbols (hier nachgezeichnet); graue iOS-Teile in CarPlay nachgebaut; keine Tempolimits, Sprachansagen, Käufe.
+- `serve.py` öffnet jetzt `live.html`.
+- Store- und CarPlay-Screenshots zeigen Neon City (`-EZStyle neon-city`, wirkt nur im Screenshot-Modus). Test-Bilder bleiben Klassik.
+
+**Tatsächlich geprüft:**
+- Browser (Chromium/Playwright): Start, Freie Fahrt (5×), Suche „Römerberg Frankfurt“, Vorschau mit 3 Routen auf beiden Bildschirmen, Navigation mit Abbiegekarte, Ankunftsbox und Kamera. Keine Fehler in der Konsole.
+- Mac-Prüflauf vor dieser Änderung (GM-045/046): STIL OK, 59/59 Tests, 5 iPhone + 5 CarPlay + 10 Test-Bilder ohne Fehler (CarPlay-Ankunft wieder mit Karte).
+
+**Ungetestet:** Neon-Store-Bilder (`-EZStyle`) noch nicht auf dem Mac gelaufen.
+
 ## GM-046 – Plan „Freunde auf der Karte“ (Crew über iCloud)
 
 **Ziel:** Nutzer: „du erstellst jetzt einen detaillierten Plan, wie du das angehst“, nach der Entscheidung für iCloud mit Live-Gefühl.

@@ -1,0 +1,396 @@
+// GM-047: 1:1-Abbild der App im Browser. Jede Zahl hier stammt aus dem Swift-Code (Quelle steht dabei) – change both.
+'use strict';
+const BASE = location.href.replace(/tools\/prototype\/.*$/, '');      // Server läuft im Repo-Hauptordner
+const VALHALLA = 'https://valhalla1.openstreetmap.de';                 // App/AppConfig.swift
+const PHOTON = 'https://photon.komoot.io';
+const IDSTEIN = [50.21712, 8.25734];
+const HUD = n => `${BASE}App/Assets.xcassets/HUD/${n}.imageset/${n}@3x.png`;
+const ARROW = `${BASE}App/Assets.xcassets/PlayerNeon.imageset/player-neon-v2@3x.png`;
+const ARROW_GLOW = `${BASE}App/Assets.xcassets/PlayerNeonGlow.imageset/player-neon-v2-glow@3x.png`;
+
+// App/StyleTheme.swift
+const THEME = {
+  'classic': { route: '#1a73e8', edge: '#0b3d91', alt: 'rgba(90,110,140,.5)', bg: '#f2efe9' },
+  'neon-city': { route: '#a13df0', edge: '#4b1a73', alt: 'rgba(200,200,205,.55)', bg: '#1c1c1d' },
+  'wild-west': { route: '#c0261f', edge: '#4a0d0a', alt: 'rgba(90,60,30,.45)', bg: '#c4ac80' },
+  'pixel-quest': { route: '#ffcc33', edge: '#7a4a00', alt: 'rgba(255,255,255,.6)', bg: '#60a83a' },
+  'toy-town': { route: '#ff7a00', edge: '#ffffff', alt: 'rgba(255,255,255,.75)', bg: '#8dc63f' },
+};
+const DEST = '#f5d742';
+
+// Core/Formatting.swift
+function fmtDist(m) {
+  const m50 = Math.round(m / 50) * 50;
+  if (m >= 100 && m50 < 1000) return m50 + ' m';
+  if (m < 100) return Math.max(0, Math.round(m / 10) * 10) + ' m';
+  const t = Math.round(m / 100) / 10;
+  return t >= 10 ? Math.round(m / 1000) + ' km' : t.toFixed(1).replace('.', ',') + ' km';
+}
+function carDist(m) { // Formatting.carPlayDistance
+  if (fmtDist(m).endsWith('km')) return (Math.round(m / 100) / 10).toFixed(1).replace('.', ',') + ' km';
+  const step = m >= 100 ? 50 : 10; return Math.max(0, Math.round(m / step) * step) + ' m';
+}
+function fmtMin(s) { const t = Math.max(1, Math.round(s / 60)); if (t < 60) return t + ' Min'; const h = Math.floor(t / 60), mm = t % 60; return mm ? `${h} Std ${mm} Min` : `${h} Std`; }
+const clock = d => `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
+
+// Geo
+const R = 6371008.8, rad = Math.PI / 180;
+function dist(a, b) { const dl = (b[0] - a[0]) * rad, dn = (b[1] - a[1]) * rad; const x = Math.sin(dl / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dn / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); }
+function bearing(a, b) { const y = Math.sin((b[1] - a[1]) * rad) * Math.cos(b[0] * rad); const x = Math.cos(a[0] * rad) * Math.sin(b[0] * rad) - Math.sin(a[0] * rad) * Math.cos(b[0] * rad) * Math.cos((b[1] - a[1]) * rad); return (Math.atan2(y, x) / rad + 360) % 360; }
+function cumul(pts) { const c = [0]; for (let i = 1; i < pts.length; i++) c.push(c[i - 1] + dist(pts[i - 1], pts[i])); return c; }
+function at(pts, cum, d) {
+  d = Math.max(0, Math.min(cum[cum.length - 1], d));
+  let i = 1; while (i < cum.length - 1 && cum[i] < d) i++;
+  const f = cum[i] === cum[i - 1] ? 0 : (d - cum[i - 1]) / (cum[i] - cum[i - 1]);
+  return { p: [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f], h: bearing(pts[i - 1], pts[i]), i };
+}
+function decode6(str) {
+  const out = []; let i = 0, lat = 0, lon = 0;
+  while (i < str.length) for (const k of [0, 1]) {
+    let s = 0, v = 0, b; do { b = str.charCodeAt(i++) - 63; v |= (b & 0x1f) << s; s += 5; } while (b >= 0x20);
+    const d = v & 1 ? ~(v >> 1) : v >> 1; if (k === 0) lat += d; else { lon += d; out.push([lat / 1e6, lon / 1e6]); }
+  }
+  return out;
+}
+
+// Core/ValhallaClient.swift – kind(for:) und makeRoute
+const KIND = t => [9, 18, 20, 23].includes(t) ? 'slight-right' : [10, 26, 27].includes(t) ? 'right' : t === 11 ? 'sharp-right' : t === 12 ? 'uturn-right'
+  : t === 13 ? 'uturn-left' : t === 14 ? 'sharp-left' : t === 15 ? 'left' : [16, 19, 21, 24].includes(t) ? 'slight-left' : [4, 5, 6].includes(t) ? 'destination' : null;
+const KTEXT = { 'slight-right': 'Leicht rechts halten', right: 'Rechts abbiegen', 'sharp-right': 'Scharf rechts abbiegen', 'uturn-right': 'Wenden', 'uturn-left': 'Wenden',
+  'sharp-left': 'Scharf links abbiegen', left: 'Links abbiegen', 'slight-left': 'Leicht links halten', destination: 'Ziel erreicht' };
+function makeRoute(trip) {
+  const leg = trip.legs[0]; const shape = decode6(leg.shape); const cum = cumul(shape); const n = shape.length - 1;
+  const speeds = new Array(n).fill(50), names = new Array(n).fill(''); const man = [];
+  leg.maneuvers.forEach((m, mi) => {
+    const next = leg.maneuvers[mi + 1]; let street = (m.street_names || [])[0] || '';
+    if (!street && m.type === 26) street = ((next && next.street_names) || [])[0] || '';
+    const kmh = m.time > 0 ? Math.min(130, Math.max(8, m.length * 3600 / m.time)) : 30;
+    for (let i = m.begin_shape_index; i < Math.min(n, m.end_shape_index); i++) { speeds[i] = kmh; names[i] = street; }
+    const k = KIND(m.type); if (!k || m.type === 27) return;
+    let text = KTEXT[k];
+    if (m.type === 26) text = `Im Kreisverkehr ${m.roundabout_exit_count || 1}. Ausfahrt`;
+    if (m.type === 20 || m.type === 21) text = ('Ausfahrt ' + (((m.sign || {}).exit_number_elements || [])[0] || {}).text || '').trim() + ' nehmen';
+    if (m.type === 18 || m.type === 19) text = 'Auffahrt nehmen';
+    man.push({ distance: k === 'destination' ? cum[n] : cum[Math.min(m.begin_shape_index, n)], kind: k, text, street: k === 'destination' ? '' : street });
+  });
+  if (!man.length || man[man.length - 1].kind !== 'destination') man.push({ distance: cum[n], kind: 'destination', text: KTEXT.destination, street: '' });
+  return { shape, cum, length: cum[n], duration: trip.summary.time, maneuvers: man, speeds, names };
+}
+async function valhallaRoutes(from, to) {
+  const body = { locations: [{ lat: from[0], lon: from[1] }, { lat: to[0], lon: to[1] }], costing: 'auto',
+    costing_options: { auto: { use_highways: 1, use_tolls: 1 } }, directions_options: { language: 'de-DE', units: 'kilometers' }, alternates: 2 };
+  const r = await fetch(VALHALLA + '/route', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  const j = await r.json(); if (!r.ok) throw new Error(j.error || r.status);
+  return [j.trip, ...(j.alternates || []).map(a => a.trip)].map(makeRoute);
+}
+async function photon(q, near) { // Core/PhotonClient.swift (vereinfacht: Untertitel Art · Adresse · Ort)
+  const u = `${PHOTON}/api/?q=${encodeURIComponent(q)}&lat=${near[0]}&lon=${near[1]}&limit=8&lang=de`;
+  const j = await (await fetch(u)).json(); const out = [];
+  for (const f of j.features) {
+    const p = f.properties; const name = p.name || [p.street, p.housenumber].filter(Boolean).join(' ') || p.city; if (!name) continue;
+    const addr = [p.street, p.housenumber].filter(Boolean).join(' ');
+    const sub = [p.osm_value && p.name ? p.osm_value[0].toUpperCase() + p.osm_value.slice(1) : '', p.name ? addr : '', p.city || p.county || ''].filter(Boolean).join(' · ');
+    const c = [f.geometry.coordinates[1], f.geometry.coordinates[0]];
+    if (out.some(o => o.name === name && dist(o.c, c) < 400)) continue;
+    out.push({ name, sub, c });
+  }
+  return out;
+}
+
+// ---------- Zustand (Mirror AppModel) ----------
+const S = { screen: 'map', style: 'neon-city', pos: null, routes: [], sel: 0, dest: null, prog: 0, trail: [], speed: 2, recents: [], query: '', results: [],
+  carList: null, carQuery: '', carResults: [] };
+
+// ---------- Kartensymbole (App: SF Symbols, RouteOverlay.poiImages) ----------
+const POI_COLORS = { shop: '#5db8f0', cross: '#f05a5a', fuel: '#f5f5f5', parking: '#5db8f0', food: '#5db8f0', charge: '#5fd068' };
+function drawPoi(kind, color) {
+  const s = 44, c = document.createElement('canvas'); c.width = c.height = s; const g = c.getContext('2d');
+  const path = () => {
+    g.beginPath();
+    if (kind === 'parking') { g.font = '900 34px Inter, Arial'; g.textAlign = 'center'; g.textBaseline = 'middle'; return 'text'; }
+    if (kind === 'cross') { g.rect(17, 7, 10, 30); g.rect(7, 17, 30, 10); }
+    if (kind === 'shop') { g.moveTo(6, 18); g.lineTo(38, 18); g.lineTo(33, 37); g.lineTo(11, 37); g.closePath(); g.moveTo(13, 18); g.lineTo(19, 8); g.lineTo(21, 9); g.lineTo(16, 18); g.moveTo(31, 18); g.lineTo(25, 8); g.lineTo(23, 9); g.lineTo(28, 18); }
+    if (kind === 'fuel') { g.rect(9, 8, 18, 29); g.rect(27, 15, 7, 4); g.rect(31, 15, 3, 18); }
+    if (kind === 'food') { g.rect(11, 7, 3, 30); g.rect(7, 7, 2.5, 12); g.rect(15.5, 7, 2.5, 12); g.rect(7, 17, 11, 3); g.moveTo(28, 37); g.lineTo(31, 37); g.lineTo(31, 7); g.quadraticCurveTo(24, 12, 26, 24); g.lineTo(28, 24); g.closePath(); }
+    if (kind === 'charge') { g.moveTo(25, 4); g.lineTo(10, 25); g.lineTo(21, 25); g.lineTo(18, 40); g.lineTo(34, 18); g.lineTo(23, 18); g.closePath(); }
+    return 'path';
+  };
+  g.lineJoin = 'round'; g.lineWidth = 6; g.strokeStyle = '#000'; g.fillStyle = color;
+  if (path() === 'text') { g.strokeText('P', 22, 24); g.fillText('P', 22, 24); } else { g.stroke(); g.fill(); }
+  return g.getImageData(0, 0, s, s);
+}
+
+// ---------- Karten ----------
+function styleURL(name) { return `${BASE}App/MapStyles/style-${name}.json`; }
+async function loadStyle(name) {
+  const st = await (await fetch(styleURL(name))).json();
+  st.glyphs = BASE + 'Resources/Glyphs/{fontstack}/{range}.pbf';   // App: asset://Glyphs/… (Resources/Glyphs im Bundle)
+  return st;
+}
+function addOverlay(map) { // RouteOverlay.styleLoaded
+  const t = THEME[S.style]; const empty = { type: 'FeatureCollection', features: [] };
+  for (const id of ['ez-trail', 'ez-alt', 'ez-route', 'ez-dest']) if (!map.getSource(id)) map.addSource(id, { type: 'geojson', data: empty });
+  const L = (id, src, paint, layout = { 'line-cap': 'round', 'line-join': 'round' }) => { if (!map.getLayer(id)) map.addLayer({ id, type: 'line', source: src, paint, layout }); };
+  L('ez-trail-glow', 'ez-trail', { 'line-color': 'rgba(196,120,255,.35)', 'line-width': 12, 'line-blur': 6 });
+  L('ez-trail-line', 'ez-trail', { 'line-color': 'rgba(217,166,255,.9)', 'line-width': 3 });
+  L('ez-alt-line', 'ez-alt', { 'line-color': t.alt, 'line-width': 5 });
+  L('ez-route-edge', 'ez-route', { 'line-color': t.edge, 'line-width': 9 });
+  L('ez-route-line', 'ez-route', { 'line-color': t.route, 'line-width': 6 });
+  if (!map.getLayer('ez-dest-dot')) map.addLayer({ id: 'ez-dest-dot', type: 'circle', source: 'ez-dest', paint: { 'circle-color': DEST, 'circle-radius': 8, 'circle-stroke-color': '#000', 'circle-stroke-width': 2 } });
+  pushOverlay(map);
+}
+const line = pts => ({ type: 'Feature', geometry: { type: 'LineString', coordinates: pts.map(p => [p[1], p[0]]) } });
+function pushOverlay(map) {
+  if (!map.getSource('ez-route')) return;
+  const alts = S.routes.filter((_, i) => i !== S.sel).map(r => line(r.shape));
+  const main = S.routes[S.sel] ? [line(S.routes[S.sel].shape)] : [];
+  map.getSource('ez-alt').setData({ type: 'FeatureCollection', features: S.screen === 'navigating' ? [] : alts });
+  map.getSource('ez-route').setData({ type: 'FeatureCollection', features: main });
+  map.getSource('ez-dest').setData({ type: 'FeatureCollection', features: S.dest ? [{ type: 'Feature', geometry: { type: 'Point', coordinates: [S.dest.c[1], S.dest.c[0]] } }] : [] });
+  map.getSource('ez-trail').setData({ type: 'FeatureCollection', features: S.trail.length > 1 ? [line(S.trail)] : [] });
+}
+function makeMap(el, interactive = true) {
+  const map = new maplibregl.Map({ container: el, center: [IDSTEIN[1], IDSTEIN[0]], zoom: 15, attributionControl: false, pitchWithRotate: false, dragRotate: false, interactive });
+  map.on('styleimagemissing', e => {
+    const m = /^ez-poi-([a-z]+)(-neon)?$/.exec(e.id); if (!m) return;
+    if (!map.hasImage(e.id)) map.addImage(e.id, drawPoi(m[1], m[2] ? POI_COLORS[m[1]] : '#f5f5f5'), { pixelRatio: 1 }); // App: ~40 pt Bild × icon-size
+  });
+  map.on('style.load', () => addOverlay(map));
+  return map;
+}
+
+// ---------- FollowCamera (App/FollowCamera.swift) ----------
+const altitudeForKmh = k => 320 + (Math.min(130, Math.max(30, k)) - 30) * 6;     // RouteOverlay.altitude(forKmh:)
+function altitudeToZoom(alt, h, lat) { const mpp = alt / (1.5 * h); return Math.log2(40075016.686 * Math.cos(lat * rad) / (512 * mpp)); } // MapLibre: Blickwinkel 36,87°
+class FollowCamera {
+  constructor(map, arrowEl, { pitch = 0, arrowY = 0.5, insets = () => ({ top: 0, left: 0, bottom: 0, right: 0 }), glow = () => false } = {}) {
+    Object.assign(this, { map, arrowEl, pitch, arrowY, insets, glow, factor: 1, running: false, detached: false, has: false });
+    arrowEl.src = ARROW;
+    map.on('dragstart', e => { if (this.running && e.originalEvent) this.detached = true; });
+    map.on('zoomstart', e => { if (this.running && e.originalEvent) this.detached = true; });
+  }
+  start() { if (!this.running) { this.running = true; this.has = false; this.detached = false; } }
+  stop() { this.running = false; this.detached = false; this.arrowEl.style.display = 'none'; }
+  attach() { this.detached = false; this.factor = 1; }
+  zoom(step) { this.factor = Math.min(4, Math.max(0.35, this.factor * (step > 0 ? 0.7 : 1.4))); }
+  tick(dt, t) {
+    if (!this.running) return;
+    if (!t) { this.arrowEl.style.display = 'none'; return; }
+    const goal = altitudeForKmh(t.kmh) * this.factor;
+    if (!this.has) { Object.assign(this, { lat: t.p[0], lon: t.p[1], heading: t.h, alt: goal, has: true }); }
+    else {
+      const kPos = 1 - Math.exp(-dt * 6), kRot = 1 - Math.exp(-dt * 4), kAlt = 1 - Math.exp(-dt * 1.5);
+      this.lat += (t.p[0] - this.lat) * kPos; this.lon += (t.p[1] - this.lon) * kPos;
+      let dh = (t.h - this.heading) % 360; if (dh > 180) dh -= 360; else if (dh < -180) dh += 360;
+      this.heading = (this.heading + dh * kRot + 360) % 360; this.alt += (goal - this.alt) * kAlt;
+    }
+    const a = this.arrowEl, img = this.glow() ? ARROW_GLOW : ARROW; if (a.getAttribute('src') !== img) a.src = img;
+    if (this.detached) { // Umschauen: Karte bleibt, Pfeil auf der Fahrposition
+      const p = this.map.project([this.lon, this.lat]);
+      a.style.left = p.x + 'px'; a.style.top = p.y + 'px'; a.style.transform = `rotate(${this.heading - this.map.getBearing()}deg)`; a.style.display = 'block'; return;
+    }
+    const c = this.map.getContainer(); const W = c.clientWidth, H = c.clientHeight, s = this.insets();
+    const ay = s.top + (H - s.top - s.bottom) * this.arrowY, ax = s.left + (W - s.left - s.right) / 2;
+    const padding = { top: Math.max(0, 2 * ay - H), left: Math.max(0, 2 * ax - W), bottom: Math.max(0, H - 2 * ay), right: Math.max(0, W - 2 * ax) };
+    this.map.jumpTo({ center: [this.lon, this.lat], zoom: altitudeToZoom(this.alt, H, this.lat), bearing: this.heading, pitch: this.pitch, padding });
+    a.style.left = ax + 'px'; a.style.top = ay + 'px'; a.style.transform = ''; a.style.display = 'block';
+  }
+}
+
+// ---------- Fahrt-Simulation (wie simctl location / Demo-Fahrt der App) ----------
+let sim = null;           // { pts, cum, d, kmh(i), onRoute }
+let gpsTimer = 0;
+function startSim(pts, kmhAt, onRoute) { sim = { pts, cum: cumul(pts), d: 0, kmhAt, onRoute }; S.trail = []; gpsTimer = 1; }
+function stepSim(dt) {
+  if (!sim) return;
+  const r = at(sim.pts, sim.cum, sim.d); const kmh = sim.kmhAt(r.i - 1);
+  sim.d += kmh / 3.6 * dt * S.speed;
+  gpsTimer += dt;
+  if (gpsTimer >= 1) { // GPS 1×/s, Kamera gleitet dazwischen (wie in der App)
+    gpsTimer = 0; const q = at(sim.pts, sim.cum, sim.d);
+    S.pos = { p: q.p, h: q.h, kmh };
+    S.trail.push(q.p); if (S.trail.length > 600) S.trail.shift();
+    if (sim.onRoute) S.prog = sim.d;
+    for (const m of maps()) pushOverlay(m);
+    render();
+  }
+  if (sim.d >= sim.cum[sim.cum.length - 1]) {
+    if (sim.onRoute) { S.screen = 'arrived'; } sim = null; render();
+  }
+}
+
+// ---------- Navigation (Core/NavigationSession, vereinfacht auf das Sichtbare) ----------
+function navState() {
+  const r = S.routes[S.sel]; if (!r) return null;
+  const d = S.prog; const m = r.maneuvers.find(x => x.distance > d + 5) || r.maneuvers[r.maneuvers.length - 1];
+  const i = r.maneuvers.indexOf(m); const after = r.maneuvers[i + 1];
+  const remain = Math.max(0, r.length - d);
+  return { m, after, toMan: Math.max(0, m.distance - d), remain, time: r.duration * remain / r.length };
+}
+
+// ---------- Bedienung ----------
+const $ = id => document.getElementById(id);
+const pmap = makeMap($('pmap')), cmap = makeMap($('cmap'));
+const maps = () => [pmap, cmap];
+const pcam = new FollowCamera(pmap, $('parrow'), { pitch: 0, arrowY: 0.62, glow: () => true,     // GM-045: iPhone flach wie CarPlay
+  insets: () => ({ top: 59, left: 0, bottom: 34, right: 0 }) });
+const ccam = new FollowCamera(cmap, $('carrow'), { pitch: 0, arrowY: 0.5, glow: () => S.screen === 'navigating',
+  insets: () => ({ top: 100, left: S.screen === 'navigating' ? 360 : 0, bottom: 0, right: 90 }) });
+let tracking = true;                                       // iPhone ohne Navi: MapLibre userTrackingMode .follow
+pmap.on('dragstart', e => { if (e.originalEvent && S.screen !== 'navigating') tracking = false; });
+
+async function applyStyle(name) {
+  S.style = name; const st = await loadStyle(name);
+  for (const m of maps()) { m.setStyle(st); m.getContainer().style.background = THEME[name].bg; }
+}
+function fit(map, padding) {
+  const r = S.routes[S.sel]; if (!r) return; const b = new maplibregl.LngLatBounds();
+  S.routes.forEach(x => x.shape.forEach(p => b.extend([p[1], p[0]])));
+  map.fitBounds(b, { padding, duration: 0, bearing: 0, pitch: 0 });
+}
+async function choose(place) {
+  S.dest = place; S.recents = [place, ...S.recents.filter(p => p.name !== place.name)].slice(0, 8);
+  S.screen = 'preview'; S.carList = null; S.routes = []; render();
+  try { S.routes = await valhallaRoutes(S.pos ? S.pos.p : IDSTEIN, place.c); S.sel = 0; } catch (e) { alert('Route fehlgeschlagen: ' + e.message); S.screen = 'map'; }
+  for (const m of maps()) pushOverlay(m);
+  pcam.stop(); ccam.stop();
+  fit(pmap, { top: 130, left: 60, bottom: 380, right: 60 });
+  const w = $('cwin').clientWidth; fit(cmap, { top: 24, left: w * 0.56 + 10, bottom: 14, right: 58 });   // CarMapViewController.show
+  render();
+}
+function startNav() {
+  const r = S.routes[S.sel]; if (!r) return;
+  S.screen = 'navigating'; S.prog = 0; S.routes = [r]; S.sel = 0;
+  startSim(r.shape, i => r.speeds[Math.max(0, i)] || 50, true);
+  S.pos = { p: r.shape[0], h: bearing(r.shape[0], r.shape[1]), kmh: r.speeds[0] };
+  pcam.start(); ccam.start(); for (const m of maps()) pushOverlay(m); render();
+}
+function endNav() { S.screen = 'map'; S.routes = []; S.dest = null; sim = null; pcam.stop(); for (const m of maps()) pushOverlay(m); render(); }
+
+// ---------- Oberfläche iPhone (ContentView.swift) ----------
+const SYM = { left: 'M30 46V26a6 6 0 0 0-6-6H14m6-8-8 8 8 8', 'sharp-left': 'M30 46V26a6 6 0 0 0-6-6H14m6-8-8 8 8 8', right: 'M22 46V26a6 6 0 0 1 6-6h10m-6-8 8 8-8 8', 'sharp-right': 'M22 46V26a6 6 0 0 1 6-6h10m-6-8 8 8-8 8',
+  'slight-left': 'M32 46V30L18 16m0 10V16h10', 'slight-right': 'M20 46V30l14-14m0 10V16H24', 'uturn-left': 'M18 46V22a8 8 0 0 1 16 0v14m-6-6 6 6 6-6', 'uturn-right': 'M18 46V22a8 8 0 0 1 16 0v14m-6-6 6 6 6-6',
+  destination: 'M16 46V10m0 2h22l-5 8 5 8H16', straight: 'M26 46V12m-9 9 9-9 9 9' };
+const sym = (k, cls = 'sym') => `<svg class="${cls}" viewBox="0 0 52 52" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><path d="${SYM[k] || SYM.straight}"/></svg>`;
+const hudbtn = (icon, act, title) => `<button class="hudbtn" data-act="${act}" title="${title}"><img src="${HUD(icon)}" alt=""></button>`;
+function renderPhone() {
+  const ui = $('pui'); const n = navState(); let h = '';
+  if (S.screen === 'map' || S.screen === 'search') {
+    h += `<div class="hudcol">${hudbtn('hud-recenter', 'center', 'Auf meinen Standort')}${hudbtn('hud-styles', 'styles', 'Stile')}${hudbtn('hud-explore', 'none', 'Entdecken')}${hudbtn('hud-settings', 'none', 'Einstellungen')}</div>`;
+    h += `<div class="osm" style="bottom:${S.screen === 'search' ? 470 : 214}px">© OpenMapTiles · © OpenStreetMap-Mitwirkende</div>`;
+    h += `<div class="sheet"><div class="handle"></div>`;
+    if (S.screen === 'map') h += `<div class="mission"><div class="ic">⌖</div><div><b>Diese Woche</b><small>Fahre 5 Mal mit EzMaps</small></div><div class="n">0 / 5</div></div>`;
+    h += `<div class="search" data-act="search">⌕ <input id="q" placeholder="Wohin?" value="${S.query.replace(/"/g, '&quot;')}"></div>`;
+    if (S.screen === 'search') h += `<div class="results">${(S.results.length ? S.results : S.recents).map((r, i) => `<div class="res" data-pick="${i}"><div class="pin">⚲</div><div><b>${r.name}</b><small>${r.sub}</small></div></div>`).join('')}</div>`;
+    else h += `<div class="tip">Tipp: Ziele mit dem Stern merken</div>`;
+    h += `</div>`;
+  } else if (S.screen === 'preview') {
+    h += `<div class="hudcol" style="left:12px;right:auto;top:62px">${hudbtn('hud-back', 'back', 'Zurück')}</div>`;
+    h += `<div class="osm" style="bottom:${S.routes.length ? 120 + S.routes.length * 66 : 200}px">© OpenMapTiles · © OpenStreetMap-Mitwirkende</div>`;
+    h += `<div class="sheet"><div class="handle"></div><div class="title">${S.dest.name}</div><div class="sub">${S.dest.sub}</div>`;
+    if (!S.routes.length) h += `<div class="sub" style="margin-top:12px">Route wird berechnet …</div>`;
+    S.routes.forEach((r, i) => { const eta = new Date(Date.now() + r.duration * 1000);
+      h += `<div class="route ${i === S.sel ? 'sel' : ''}" data-route="${i}"><b>${fmtMin(r.duration)}</b><small>${i ? 'Alternative ' + i : 'Schnellste'} · ${fmtDist(r.length)} · an ${clock(eta)}</small></div>`; });
+    if (S.routes.length) h += `<button class="go" data-act="go">Los</button>`;
+    h += `</div>`;
+  } else if (S.screen === 'navigating' && n) {
+    h += `<div class="navcard">${sym(n.m.kind)}<div><div class="d">${fmtDist(n.toMan)}</div><div class="s">${n.m.street || n.m.text}</div></div></div>`;
+    if (n.after) h += `<div class="nextchip">danach ${n.after.text.replace(/^./, c => c.toLowerCase())}${n.after.street ? ' · ' + n.after.street : ''}</div>`;
+    h += `<div class="hudcol" style="top:auto;bottom:150px">${hudbtn('hud-recenter', 'center', 'Mitte')}</div>`;
+    h += `<div class="osm" style="bottom:118px">© OpenMapTiles · © OpenStreetMap-Mitwirkende</div>`;
+    const eta = new Date(Date.now() + n.time * 1000);
+    h += `<div class="navbar"><div style="width:54px"></div><div class="eta"><b>${clock(eta)}</b><small>${fmtMin(n.time)} · ${fmtDist(n.remain)}</small></div><button class="xbtn" data-act="end">✕</button></div>`;
+  } else if (S.screen === 'arrived') {
+    h += `<div class="arrive"><div class="title">Angekommen</div><div class="sub">${S.dest ? S.dest.name : ''}</div><button class="go" data-act="end">Fertig</button></div>`;
+  }
+  const focused = document.activeElement && document.activeElement.id === 'q';
+  ui.innerHTML = h;
+  const q = $('q'); if (q) { if (focused || S.screen === 'search') { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
+}
+
+// ---------- Oberfläche CarPlay (CarPlaySceneDelegate.swift + iOS-Vorlagen) ----------
+function renderCar() {
+  const ui = $('cui'); const n = navState(); let h = '';
+  if (S.carList) {
+    if (S.carList === 'ziele') h += `<div class="clist"><div class="hd"><button class="back" data-car="back">‹</button>Ziele</div><div class="it first" data-car="search">⌕ Suchen</div>${S.recents.map((r, i) => `<div class="it" data-recent="${i}">↺ ${r.name}<small>${r.sub}</small></div>`).join('')}</div>`;
+    else h += `<div class="clist"><div class="hd"><button class="back" data-car="back">‹</button>Suchen</div><input id="cq" placeholder="Ziel" value="${S.carQuery.replace(/"/g, '&quot;')}">${S.carResults.map((r, i) => `<div class="it" data-cres="${i}">${r.name}<small>${r.sub}</small></div>`).join('')}</div>`;
+    const f = document.activeElement && document.activeElement.id === 'cq'; ui.innerHTML = h; const cq = $('cq'); if (cq && (f || !S.carResults.length)) cq.focus(); return;
+  }
+  h += `<button class="cbar" data-car="ziele">Ziele</button>`;
+  h += `<div class="cosm">© OpenMapTiles<br>© OpenStreetMap-Mitwirkende</div>`;
+  h += `<div class="cbtns">${[['hud-zoom-in', 'zin'], ['hud-zoom-out', 'zout'], ['hud-recenter', 'center'], ['hud-pan', 'pan']].map(([i, a]) => `<button class="cbtn" data-car="${a}"><img src="${HUD(i)}" alt=""></button>`).join('')}</div>`;
+  if (S.screen === 'preview' && S.dest) {
+    h += `<div class="cpanel"><div class="t">${S.dest.name}</div><div class="st">${S.routes[S.sel] ? carDist(S.routes[S.sel].length) : 'Route wird berechnet …'}</div><div style="flex:1"></div>`;
+    if (S.routes.length > 1) h += `<button class="gray" data-car="routes">Routen</button>`;
+    if (S.routes.length) h += `<button class="green" data-car="go">Los</button>`;
+    h += `</div>`;
+  }
+  if (S.screen === 'navigating' && n) {
+    h += `<div class="cman"><div class="row">${sym(n.m.kind)}<div class="d">${carDist(n.toMan)}</div></div><div class="tx">${n.m.text}${n.m.street ? ' · ' + n.m.street : ''}</div></div>`;
+    const eta = new Date(Date.now() + n.time * 1000);
+    h += `<div class="cest"><div><b>${clock(eta)}</b><small>Ankunft</small></div><div><b>${Math.max(1, Math.round(n.time / 60))}</b><small>Min.</small></div><div><b>${carDist(n.remain).replace(' km', '')}</b><small>${carDist(n.remain).endsWith('km') ? 'km' : 'm'}</small></div></div>`;
+  }
+  ui.innerHTML = h;
+}
+function render() { renderPhone(); renderCar(); }
+
+// Klicks
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act],[data-pick],[data-route],[data-car],[data-recent],[data-cres],[data-speed]'); if (!t) return;
+  const d = t.dataset;
+  if (d.speed) { S.speed = +d.speed; document.querySelectorAll('[data-speed]').forEach(b => b.classList.toggle('on', b === t)); return; }
+  if (d.act === 'search') { if (S.screen === 'map') { S.screen = 'search'; render(); } return; }
+  if (d.act === 'center') { tracking = true; pcam.attach(); if (S.pos && S.screen !== 'navigating') pmap.easeTo({ center: [S.pos.p[1], S.pos.p[0]], duration: 400 }); return; }
+  if (d.act === 'styles') { const sel = $('style'); sel.selectedIndex = (sel.selectedIndex + 1) % sel.options.length; applyStyle(sel.value); return; }
+  if (d.act === 'back') { S.screen = 'map'; S.routes = []; S.dest = null; for (const m of maps()) pushOverlay(m); ccam.start(); render(); return; }
+  if (d.act === 'go' || d.car === 'go') return startNav();
+  if (d.act === 'end') return endNav();
+  if (d.pick) return choose((S.results.length ? S.results : S.recents)[+d.pick]);
+  if (d.route) { S.sel = +d.route; for (const m of maps()) pushOverlay(m); render(); return; }
+  if (d.car === 'ziele') { S.carList = 'ziele'; return render(); }
+  if (d.car === 'search') { S.carList = 'search'; return render(); }
+  if (d.car === 'back') { S.carList = S.carList === 'search' ? 'ziele' : null; return render(); }
+  if (d.recent) return choose(S.recents[+d.recent]);
+  if (d.cres) return choose(S.carResults[+d.cres]);
+  if (d.car === 'zin') return ccam.running ? ccam.zoom(1) : cmap.zoomIn();
+  if (d.car === 'zout') return ccam.running ? ccam.zoom(-1) : cmap.zoomOut();
+  if (d.car === 'center') { ccam.attach(); return ccam.start(); }
+  if (d.car === 'pan') { ccam.detached = true; return; }
+  if (d.car === 'routes') { S.sel = (S.sel + 1) % S.routes.length; for (const m of maps()) pushOverlay(m); return render(); }
+});
+let qTimer = 0;
+document.addEventListener('input', e => {
+  if (e.target.id === 'q') { S.query = e.target.value; if (S.screen !== 'search') S.screen = 'search';
+    clearTimeout(qTimer); qTimer = setTimeout(async () => { S.results = S.query.length > 1 ? await photon(S.query, S.pos ? S.pos.p : IDSTEIN) : []; render(); }, 350); }
+  if (e.target.id === 'cq') { S.carQuery = e.target.value; clearTimeout(qTimer); qTimer = setTimeout(async () => { S.carResults = S.carQuery.length > 1 ? await photon(S.carQuery, S.pos ? S.pos.p : IDSTEIN) : []; render(); }, 350); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.screen === 'search') { S.screen = 'map'; S.query = ''; S.results = []; render(); } });
+$('style').addEventListener('change', e => applyStyle(e.target.value));
+$('stop').addEventListener('click', () => { sim = null; });
+$('free').addEventListener('click', async () => {
+  const txt = await (await fetch(BASE + 'tools/drive_wallrabenstein.txt')).text();
+  const pts = txt.trim().split(/\s+/).map(s => s.split(',').map(Number));
+  if (S.screen === 'navigating') endNav();
+  startSim(pts, () => 50, false);                          // tools/mac_drive.sh: 14 m/s ≈ 50 km/h
+  S.pos = { p: pts[0], h: bearing(pts[0], pts[1]), kmh: 50 }; tracking = true; ccam.start(); render();
+});
+
+// Haupttakt: Simulation, Kameras, Punkt
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  stepSim(dt);
+  const target = S.pos ? { p: S.pos.p, h: S.pos.h, kmh: S.pos.kmh } : null;  // AppModel.cameraTarget
+  ccam.tick(dt, target);
+  if (S.screen === 'navigating') pcam.tick(dt, target);
+  const dot = $('pdot');
+  if (S.pos && S.screen !== 'navigating') {
+    const p = pmap.project([S.pos.p[1], S.pos.p[0]]); dot.style.left = p.x + 'px'; dot.style.top = p.y + 'px'; dot.style.display = 'block';
+  } else dot.style.display = 'none';
+  requestAnimationFrame(frame);
+}
+setInterval(() => { if (tracking && S.pos && (S.screen === 'map' || S.screen === 'search')) pmap.easeTo({ center: [S.pos.p[1], S.pos.p[0]], duration: 900, easing: x => x }); }, 1000);
+setInterval(() => { $('clock').textContent = $('clock2').textContent = clock(new Date()); if (S.screen === 'navigating') render(); }, 1000);
+
+S.pos = { p: IDSTEIN, h: 0, kmh: 0 };
+applyStyle('neon-city').then(() => { ccam.start(); render(); requestAnimationFrame(frame); });

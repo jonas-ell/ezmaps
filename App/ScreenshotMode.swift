@@ -12,6 +12,13 @@ enum ScreenshotMode {
         return args[i + 1]
     }
 
+    /// GM-047: fester Kartenstil für Store-Bilder (`-EZStyle neon-city`) – der Look, mit dem die App wirbt
+    static var style: MapStyle? {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-EZStyle"), i + 1 < args.count else { return nil }
+        return MapStyle(rawValue: args[i + 1])
+    }
+
     /// Ziel für die Bilder: weit genug weg für eine Route mit Alternativen (Idstein → Frankfurt)
     static let target = PhotonClient.Place(
         name: "Römerberg", subtitle: "Platz · Frankfurt am Main",
