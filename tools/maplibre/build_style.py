@@ -25,11 +25,13 @@ OUT_DIR = ROOT / "App" / "MapStyles"
 # dünne graue Straßen ohne Rand, farbige Symbole. Ab Zoom 14,5 (Fahrt, CarPlay) unverändert wie das Foto. Dazwischen fließend.
 def zc(far, near, z0=12, z1=14.5):
     return ["interpolate", ["linear"], ["zoom"], z0, far, z1, near]
-NEON = dict(land=zc("#232425", "#3b3c3e"), residential=zc("#323335", "#3b3c3e"), industrial=zc("#343537", "#3e3f41"),
-            farm=zc("#212223", "#38393b"), park=zc("#202322", "#36383a"), forest=zc("#1e2120", "#333537"),
-            water=zc("#4b5155", "#5d6870"), building="#5b5c5f", buildingEdge="#4a4b4e", urban="#3b3c3e", rail="#2b2c2e",
-            casing=zc("#232425", "#151617"), label="#1d1e20", poi_suffix="-neon", poi_minzoom=13.5)
-NEON.update(road=lambda r: zc("#bdbdbd" if r <= 1 else "#959595" if r <= 2 else "#727272" if r <= 4 else "#5f5f5f", "#ececec" if r <= 4 else "#dcdcdc" if r <= 6 else "#c4c4c4"),
+# GM-048: alle Zoomstufen nach den Pausenkarten-Bildern des Nutzers (Farben gemessen): Boden #181818, Häuser #363636,
+# Straßen flach #969696 ohne hellen Rand (Rand = Bodenfarbe, wirkt wie die Lücke zwischen Straße und Häusern), Wasser hellgrau.
+# Weit weg kleine Straßen dunkler (sonst unruhig, GM-047).
+NEON = dict(land="#181818", residential="#1b1b1b", industrial="#1d1d1d", farm="#181818", park="#1c1d1c", forest="#1a1b1a",
+            water="#6a6a6a", building="#363636", buildingEdge="#363636", urban="#181818", rail="#2c2c2c",
+            casing="#181818", label="#141414", poi_suffix="-neon", poi_minzoom=13.5)
+NEON.update(road=lambda r: zc("#a0a0a0" if r <= 1 else "#8a8a8a" if r <= 2 else "#6c6c6c" if r <= 4 else "#575757", "#969696"),
             widen=1.5, label_halo=None)
 CLASSIC = dict(land="#f2efe9", residential="#ece7e0", industrial="#ebe3e8", farm="#eef0d6", park="#d4ebc8", forest="#c3dfb4",
                water="#aad3df", building="#ddd5cc", buildingEdge="#cbc0b5", rail="#a3a3a3", casing="#c9c1b6", label="#4a4a4a",

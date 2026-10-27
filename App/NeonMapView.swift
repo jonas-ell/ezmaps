@@ -34,6 +34,7 @@ enum NeonMap {
         map.backgroundColor = StyleTheme.of(style).background
         map.setCenter(MapStyleResource.idstein, zoomLevel: zoom, animated: false)
         map.showsUserLocation = FollowCamera.locationAllowed // GM-045: sonst fragt MapLibre beim Start selbst nach dem Standort
+        map.showsUserHeadingIndicator = true // GM-048: Kompass-Richtung für den Standort-Pfeil (PlayerLocationView)
         map.logoView.isHidden = true
         // Den OSM-Hinweis zeigen wir immer selbst als Text (ODbL), das (i)-Symbol bleibt für Details
         map.attributionButtonPosition = .topRight
@@ -213,15 +214,15 @@ final class RouteOverlay {
     /// GM-026: Kartensymbole wie in der Vorlage – weißes Symbol mit schwarzem Rand (Namen passen zu build_style.py POI)
     static func poiImages() -> [String: UIImage] {
         let white = UIColor(white: 0.96, alpha: 1)
-        let blue = UIColor(red: 0x5d / 255.0, green: 0xb8 / 255.0, blue: 0xf0 / 255.0, alpha: 1)
-        let red = UIColor(red: 0xf0 / 255.0, green: 0x5a / 255.0, blue: 0x5a / 255.0, alpha: 1)
+        let pink = UIColor(red: 0xff / 255.0, green: 0x5f / 255.0, blue: 0xa2 / 255.0, alpha: 1)
         let green = UIColor(red: 0x5f / 255.0, green: 0xd0 / 255.0, blue: 0x68 / 255.0, alpha: 1)
         let symbols: [String: (String, UIColor)] = [
             "ez-poi-shop": ("basket.fill", white), "ez-poi-cross": ("cross.fill", white), "ez-poi-fuel": ("fuelpump.fill", white),
             "ez-poi-parking": ("parkingsign", white), "ez-poi-food": ("fork.knife", white), "ez-poi-charge": ("bolt.car.fill", white),
             // GM-045: Neon City – farbige Symbole wie auf der Übersichtskarte der Vorlage (eigene Zeichnung, SF Symbols)
-            "ez-poi-shop-neon": ("basket.fill", blue), "ez-poi-cross-neon": ("cross.fill", red), "ez-poi-fuel-neon": ("fuelpump.fill", white),
-            "ez-poi-parking-neon": ("parkingsign", blue), "ez-poi-food-neon": ("fork.knife", blue), "ez-poi-charge-neon": ("bolt.car.fill", green),
+            // GM-048: wie die Pausenkarten-Bilder meist weiß, nur Krankenhaus (rosa) und Laden-Säule (grün) farbig
+            "ez-poi-shop-neon": ("basket.fill", white), "ez-poi-cross-neon": ("cross.fill", pink), "ez-poi-fuel-neon": ("fuelpump.fill", white),
+            "ez-poi-parking-neon": ("parkingsign", white), "ez-poi-food-neon": ("fork.knife", white), "ez-poi-charge-neon": ("bolt.car.fill", green),
         ]
         var out: [String: UIImage] = [:]
         let cfg = UIImage.SymbolConfiguration(pointSize: 30, weight: .heavy)
@@ -383,6 +384,12 @@ struct NeonMapView: UIViewRepresentable {
             overlay?.styleLoaded(style)
         }
 
+        /// GM-048: eigener Standort als heller Pfeil (Minikarte der Vorlage) statt lila Punkt
+        func mapView(_ mapView: MLNMapView, viewFor annotation: MLNAnnotation) -> MLNAnnotationView? {
+            guard annotation is MLNUserLocation else { return nil }
+            return MainActor.assumeIsolated { PlayerLocationView() }
+        }
+
         /// GM-045: Nutzer wischt/zoomt in der Navigation → Kamera hält an, Pfeil bleibt auf der Fahrposition (vorher wanderte er mit)
         func mapView(_ mapView: MLNMapView, regionWillChangeWith reason: MLNCameraChangeReason, animated: Bool) {
             let gestures: MLNCameraChangeReason = [.gesturePan, .gesturePinch, .gestureRotate, .gestureZoomIn, .gestureZoomOut, .gestureOneFingerZoom, .gestureTilt]
@@ -403,4 +410,43 @@ struct OSMAttribution: View {
             .background(.black.opacity(0.55), in: RoundedRectangle(cornerRadius: 4))
             .accessibilityLabel(L("© OpenMapTiles · © OpenStreetMap-Mitwirkende"))
     }
+}
+
+/// GM-048: Standort ohne Fahrt/Navi wie die Minikarte eines Open-World-Spiels: schmaler heller Pfeil mit dunklem Rand,
+/// zeigt in Fahrtrichtung (ab 1 m/s) bzw. Blickrichtung (Kompass). Eigene Form, nicht aus einem Spiel übernommen.
+final class PlayerLocationView: MLNUserLocationAnnotationView {
+    private let arrow = UIImageView(image: PlayerLocationView.image)
+    private var lastHeading: Double = 0
+
+    override func update() {
+        if arrow.superview == nil {
+            frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+            arrow.frame = bounds
+            addSubview(arrow)
+        }
+        if let l = userLocation?.location, l.course >= 0, l.speed > 1 {
+            lastHeading = l.course
+        } else if let h = userLocation?.heading?.trueHeading, h >= 0 {
+            lastHeading = h
+        }
+        let rot: Double = (lastHeading - (mapView?.direction ?? 0)) * .pi / 180
+        arrow.transform = CGAffineTransform(rotationAngle: CGFloat(rot))
+    }
+
+    static let image: UIImage = UIGraphicsImageRenderer(size: CGSize(width: 30, height: 30)).image { ctx in
+        let p = UIBezierPath()
+        p.move(to: CGPoint(x: 15, y: 3))
+        p.addLine(to: CGPoint(x: 25, y: 26))
+        p.addLine(to: CGPoint(x: 15, y: 20.5))
+        p.addLine(to: CGPoint(x: 5, y: 26))
+        p.close()
+        p.lineJoinStyle = .round
+        ctx.cgContext.setShadow(offset: CGSize(width: 0, height: 1.5), blur: 3, color: UIColor.black.withAlphaComponent(0.6).cgColor)
+        UIColor(white: 0.1, alpha: 1).setStroke()
+        p.lineWidth = 3
+        p.stroke()
+        ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
+        UIColor(white: 0.95, alpha: 1).setFill()
+        p.fill()
+    }()
 }

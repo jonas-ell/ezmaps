@@ -11,7 +11,7 @@ const ARROW_GLOW = `${BASE}App/Assets.xcassets/PlayerNeonGlow.imageset/player-ne
 // App/StyleTheme.swift
 const THEME = {
   'classic': { route: '#1a73e8', edge: '#0b3d91', alt: 'rgba(90,110,140,.5)', bg: '#f2efe9' },
-  'neon-city': { route: '#a13df0', edge: '#4b1a73', alt: 'rgba(200,200,205,.55)', bg: '#1c1c1d' },
+  'neon-city': { route: '#a13df0', edge: '#4b1a73', alt: 'rgba(200,200,205,.55)', bg: '#181818' },
   'wild-west': { route: '#c0261f', edge: '#4a0d0a', alt: 'rgba(90,60,30,.45)', bg: '#c4ac80' },
   'pixel-quest': { route: '#ffcc33', edge: '#7a4a00', alt: 'rgba(255,255,255,.6)', bg: '#60a83a' },
   'toy-town': { route: '#ff7a00', edge: '#ffffff', alt: 'rgba(255,255,255,.75)', bg: '#8dc63f' },
@@ -102,7 +102,7 @@ const S = { screen: 'map', style: 'neon-city', pos: null, routes: [], sel: 0, de
   carList: null, carQuery: '', carResults: [] };
 
 // ---------- Kartensymbole (App: SF Symbols, RouteOverlay.poiImages) ----------
-const POI_COLORS = { shop: '#5db8f0', cross: '#f05a5a', fuel: '#f5f5f5', parking: '#5db8f0', food: '#5db8f0', charge: '#5fd068' };
+const POI_COLORS = { shop: '#f5f5f5', cross: '#ff5fa2', fuel: '#f5f5f5', parking: '#f5f5f5', food: '#f5f5f5', charge: '#5fd068' }; // GM-048
 function drawPoi(kind, color) {
   const s = 44, c = document.createElement('canvas'); c.width = c.height = s; const g = c.getContext('2d');
   const path = () => {
@@ -385,7 +385,7 @@ function frame(now) {
   if (S.screen === 'navigating') pcam.tick(dt, target);
   const dot = $('pdot');
   if (S.pos && S.screen !== 'navigating') {
-    const p = pmap.project([S.pos.p[1], S.pos.p[0]]); dot.style.left = p.x + 'px'; dot.style.top = p.y + 'px'; dot.style.display = 'block';
+    const p = pmap.project([S.pos.p[1], S.pos.p[0]]); dot.style.left = p.x + 'px'; dot.style.top = p.y + 'px'; dot.style.transform = `rotate(${S.pos.h - pmap.getBearing()}deg)`; dot.style.display = 'block';
   } else dot.style.display = 'none';
   requestAnimationFrame(frame);
 }

@@ -18,7 +18,8 @@ main { display: flex; flex-wrap: wrap; gap: 28px; padding: 22px 16px; justify-co
 .pui, .cui { position: absolute; inset: 0; pointer-events: none; }
 .pui > *, .cui > * { pointer-events: auto; }
 .arrow { position: absolute; width: 60px; height: 60px; margin: -30px 0 0 -30px; pointer-events: none; display: none; z-index: 2; }
-.dot { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: var(--accent); border: 3px solid #fff; box-shadow: 0 0 0 26px rgba(161,61,240,.18); display: none; pointer-events: none; z-index: 2; }
+/* GM-048: Standort ohne Fahrt/Navi wie PlayerLocationView (App/NeonMapView.swift) */
+.dot { position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; filter: drop-shadow(0 1.5px 2px rgba(0,0,0,.6)); display: none; pointer-events: none; z-index: 2; }
 
 /* Glas-Bausteine (App/Glass.swift) */
 .hudcol { position: absolute; right: 12px; top: 78px; display: flex; flex-direction: column; gap: 14px; }

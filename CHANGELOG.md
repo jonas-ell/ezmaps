@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-048 – Neon City wie die Pausenkarte der Vorlage, Standort als heller Pfeil
+
+**Ziel:** Nutzer schickt vier Bilder (Minikarte und Pausenkarte eines Open-World-Spiels): „die Map soll so sein und der Standort von einem selber, wenn man nicht am Fahren ist oder Navi an hat, so“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-neon-city.json`, `App/NeonMapView.swift`, `tools/prototype/live.html`, `tools/prototype/live.css`, `tools/prototype/js/live.js`
+
+**Geändert:**
+- Farben aus den Bildern gemessen (häufigste Farben im Kartenbereich): Boden #181818, Häuser #363636, Straßen #969696. Neon City nutzt sie jetzt auf allen Zoomstufen (vorher nah mittelgrau mit weißen Straßen nach GM-024). Straßen flach ohne hellen Rand, Rand in Bodenfarbe (Lücke zu den Häusern), Wasser #6a6a6a, Straßennamen dunkel auf der Straße bleiben (Navigation). Weit weg kleine Straßen dunkler.
+- Kartensymbole in Neon City meist weiß, Krankenhaus rosa, Laden-Säule grün (vorher viel Blau).
+- Eigener Standort ohne Fahrt/Navi: schmaler heller Pfeil mit dunklem Rand (`PlayerLocationView`, eigene Form), dreht nach Fahrtrichtung ab 1 m/s, sonst nach Kompass. Vorher lila Punkt von MapLibre. Gleich auf der 1:1-Website.
+
+**Tatsächlich geprüft:**
+- `check_style.py`: STIL OK.
+- 1:1-Website im Browser: freie Fahrt in Idstein auf iPhone und CarPlay angesehen.
+
+**Ungetestet:** Swift-Teil (`PlayerLocationView`, Kompass-Drehung) erst nach Mac-Build; Kompass nur auf dem echten iPhone.
+
 ## GM-047 – Website 1:1 wie die App (gleiche Karte, gleiches CarPlay, gleiche Logik), Store-Bilder in Neon City
 
 **Ziel:** Nutzer: „die 1 zu 1 website muss aktualisiert werden, die soll genau wie die echte Map/das CarPlay aussehen und die gleiche Logik haben“. Der alte Prototyp zeichnet die Karte selbst (Canvas) und weicht deshalb ab.
