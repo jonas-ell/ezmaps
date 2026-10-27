@@ -169,6 +169,7 @@ final class FollowCamera: NSObject {
 }
 
 /// GM-057: Standort-Marker je Stil (Zielbilder des Nutzers). Fahr-Pfeil (FollowCamera) und Stand-Marker (PlayerLocationView).
+@MainActor
 enum PlayerMarker {
     static func images(for style: MapStyle) -> (plain: UIImage, glow: UIImage) {
         switch style {
