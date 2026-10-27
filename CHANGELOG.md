@@ -2,6 +2,33 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-037 – Preise höher, aber unter der Konkurrenz (Spiel-Karten-Apps) – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer: Preise viel teurer machen, aber günstiger als die Konkurrenz bleiben. Außerdem prüfen, ob die Konkurrenz-Apps Rechte an den Spielen haben.
+
+**Dateien:** `tools/prototype/js/glas.js`
+
+**Marktvergleich (App Store DE, Oktober 2026):**
+- MapSkins GPS: Premium 7,99 € / 44,99 €, Jahr 39,99 bis 44,99 €; CarPlay ja
+- Game Maps IRL: Mappr: Lifetime 22,99 € / 34,99 €, Monat 5,99 bis 9,99 €, Jahr bis 69,99 €; CarPlay ja
+- Game Maps: Car Maps: Jahr 9,99 €, aber CarPlay extra 59,99 € im Jahr
+- Pixel Maps – Game Maps IRL: Monat 6,99 €, Lifetime 22,99 €
+- Game Maps – Play the IRL Map: Woche 7,99 €, Monat 14,99 €, Jahr 44,99 €
+- Günstigster Einmalkauf für alles: 22,99 €
+
+**Geändert (Prototyp, Shop):** Neon City **12,99 €** (vorher 7,99 €), Wild West / Pixel Quest / Toy Town je **9,99 €** (vorher 5,99 €), Alle Stile **21,99 €** „statt 42,96 €“ (vorher 19,99 €). Damit ist „Alle Stile“ der günstigste Einmalkauf am Markt, die Einzelstile lohnen sich kaum, das Paket wird zum Hauptkauf.
+
+**Rechte der Konkurrenz (Recherche, keine Rechtsberatung):** Keine der Apps nennt eine Lizenz von Spiele-Herstellern. „Game Maps: Car Maps“ schreibt selbst „nicht verbunden mit Spiele-Herstellern“, Mappr nennt seine Stile „eigene künstlerische Designs“. Trotzdem nutzen einige Spielnamen in Texten und Versionshinweisen. Der Hersteller der bekanntesten Gangster-Spielreihe lässt Fan-Projekte mit seinen Karten regelmäßig per DMCA entfernen. Ob er gegen diese Apps vorgeht, ist nicht bekannt. Folge für uns: so bleiben wie bisher – keine Spielnamen, keine Spiel-Grafiken, eigene Stilnamen, Pricedown nur mit App-Lizenz (GM-035). Das ist ein Vorteil gegenüber Apps, die jederzeit aus dem Store fliegen können.
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler, Shop angesehen.
+
+**Ungetestet:** Nichts in Swift. Preise nicht in App Store Connect angelegt.
+
+### Auftrag (Swift)
+1. App Store Connect und StoreKit-Testdatei: `ezmaps.style.neon` 12,99 €, `ezmaps.style.western`/`.pixel`/`.toy` je 9,99 €, `ezmaps.styles.all` 21,99 € (ersetzt die Preise aus GM-035 Punkt 1). Anzeige weiter aus `Product.displayPrice`, „statt …“ aus der Summe berechnet
+2. Im Shop „Alle Stile“ stärker zeigen: Text „Kein Abo · einmal zahlen“ und „CarPlay inklusive“ sichtbar lassen
+3. `docs/APPSTORE_TEXTE.md`: Werbetext ohne Spielnamen, mit „Kein Abo“, „CarPlay inklusive“, „Navigation und Ansagen gratis“
+
 ## GM-036 – Knöpfe auch im Glas-Look – Auftrag für den lokalen Claude
 
 **Ziel:** Nutzer: Glas-Look fehlte bei den Knöpfen (waren volle Farbflächen).
