@@ -49,16 +49,16 @@ Vor dem Start `docs/LESSONS_SWIFT.md` lesen. Je Block eigener Eintrag GM-0xx, na
 **6. Ankunft** (Onboarding B, Bild 7)
 - Glas-Blatt: „Angekommen · 9:47“ (Akzent, klein, Großbuchstaben), Zielname, 3 Werte-Kacheln (km, Min, neue Straßen grün), Stufen-Balken nur wenn Entdecken aktiv ist; „Fertig“ + runder Teilen-Knopf
 
-**7. Onboarding (neu, nur beim ersten Start)** (Onboarding B, Bild 1–5)
+**7. Onboarding (neu, nur beim ersten Start)** (Onboarding B, Bild 1, 2, 3, 5; Bild 4 „Fahrzeug“ gestrichen)
 - 1 Willkommen: Karte im Hintergrund (langsame Kamerafahrt, bei „Bewegung reduzieren“ still), App-Icon, „EzMaps“, ein Satz, „Los geht's“, „Ich habe schon EzMaps“ (= überspringen)
 - 2 Standort: Erklärung (zwei Zeilen „Karte zeigt dich“, „Kein Konto, kein Tracking“), **erst nach Tipp auf „Standort erlauben“** `requestWhenInUseAuthorization`; „Später“ geht weiter. Abgelehnt → später Hinweis mit Knopf zu den iOS-Einstellungen
 - 3 Stil wählen: 2×2 Kacheln mit echter Mini-Karte (MapLibre-Schnappschuss, gecacht), Klassik „Gratis“, andere „Premium · Kostenlos testen“ (StoreKit siehe GM-029 Punkt 1; bis dahin nur vorhandene Stile)
-- 4 Fahrzeug wählen: 3×2 Kacheln (Pfeil, Wagen, Flitzer, Kombi, Oldtimer, gesperrt „ab Stufe 3“ halbdurchsichtig), Symbole aus `Assets/Generated/Ideen/parked-car-*.png`; `AppSettings.vehicle`, Spieler-Symbol auf der Karte entsprechend (Schnauze in Fahrtrichtung)
-- 5 Zuhause/Arbeit + Schalter Sprachansagen und Losfahr-Hinweis (Mitteilungs-Erlaubnis nur fragen, wenn eingeschaltet)
-- Fortschritt oben als 4 Striche (Akzent) + „Schritt x von 4“. `AppSettings.onboardingDone`; Screenshot-Modus überspringt das Onboarding
+- ~~Fahrzeug wählen~~: **gestrichen (Nutzer-Entscheidung), nicht umsetzen.** Spieler-Symbol bleibt der Pfeil. Das Onboarding hat damit nur 4 Schritte
+- 4 Zuhause/Arbeit + Schalter Sprachansagen und Losfahr-Hinweis (Mitteilungs-Erlaubnis nur fragen, wenn eingeschaltet)
+- Fortschritt oben als 3 Striche (Akzent) + „Schritt x von 3“ (Standort, Stil, Zuhause/Arbeit). `AppSettings.onboardingDone`; Screenshot-Modus überspringt das Onboarding
 
 **8. Einstellungen**
-- Eigene Glas-Liste statt `Form`: oben Karte „Stil · Fahrzeug“ mit Symbol, dann Gruppen Navigation (Stimme, Autobahn meiden, Tempolimit anzeigen …), Orte (Zuhause, Arbeit), Daten und Recht. Schalter in Akzentfarbe, alles scrollbar
+- Eigene Glas-Liste statt `Form`: oben Karte „Stil“ mit Mini-Vorschau, dann Gruppen Navigation (Stimme, Autobahn meiden, Tempolimit anzeigen …), Orte (Zuhause, Arbeit), Daten und Recht. Schalter in Akzentfarbe, alles scrollbar
 
 **9. Prüfen**
 - Kleine Geräte 375 × 667 (LESSONS_SWIFT 2): nichts abgeschnitten, Blätter scrollen
