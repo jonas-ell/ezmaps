@@ -214,23 +214,23 @@ function fogLite(u, v, ls) {
   u.restore();
 }
 
-/** GM-041: Replay-Video in voller Größe (9:16) – Bild für Bild über window.__rvDraw(i), für den Export mit ffmpeg */
+/** GM-041/044: Replay-Video in voller Größe (16:9 wie der CarPlay-Bildschirm) – Bild für Bild über window.__rvDraw(i), für den Export mit ffmpeg */
 function videoPlayer() {
   document.body.style.background = '#000';
   const nw = new Set(newOnTrip()), newPct = Math.round(newOnTrip().reduce((t, k) => t + info.get(k).len, 0) / R.length * 100);
   const share = cityShare(explored), lv = levelFor(share), was = cityShare(before);
-  const el = $(`<div id="rv" class="dph B" style="width:405px;height:720px;border-radius:0;box-shadow:none;margin:0"><div class="fill"></div>
+  const el = $(`<div id="rv" class="dph B" style="width:960px;height:540px;border-radius:0;box-shadow:none;margin:0"><div class="fill"></div>
     <div class="rvtop"><b>EzMaps</b></div>
     <div class="rvtitle"><small>Fahrt zum</small><b>Hexenturm</b><span>1,9 km · 6 Min</span></div>
     <div class="rvend"><div class="rvbig">+${newPct} %</div><div class="rvsub">neue Straßen</div><div class="rvlv"><span>Idstein-${lv.title} · Stufe ${lv.number}</span><div class="rvbar"><i style="width:${share / (lv.next ?? 1) * 100}%"></i><s style="left:${was / (lv.next ?? 1) * 100}%"></s></div></div></div>
     <div class="rvosm">© OpenMapTiles · © OpenStreetMap-Mitwirkende</div></div>`);
   main.replaceWith(el);
   const v = new MapView(el.querySelector('.fill')); v.setTexture(tex.neon, 'neon');
-  const frames = planReplay(R.pts, { W: 405, H: 720, followScale: 1.5, duration: 10, fps: 30 });
+  const frames = planReplay(R.pts, { W: 560, H: 540, followScale: 1.6, duration: 10, fps: 30 }) // W: Kartenfläche rechts der Tafeln;
   const title = el.querySelector('.rvtitle'), end = el.querySelector('.rvend');
   window.__rvCount = frames.length;
   window.__rvDraw = i => {
-    const fr = frames[i], t = i / (frames.length - 1), u = v.apply({ center: fr.center, heading: fr.heading, scale: fr.scale, tilt: fr.tilt, anchor: [0.5, 0.62] });
+    const fr = frames[i], t = i / (frames.length - 1), u = v.apply({ center: fr.center, heading: fr.heading, scale: fr.scale, tilt: fr.tilt, anchor: [0.62, 0.66] }); // GM-044: wie CarPlay, Auto rechts der Infotafel
     fogLite(u, v, lines(before)); glow(u, v, lines(before), [196, 120, 255], 0.45, 1.6);
     const upto = fr.progress * R.length, seg = [];
     for (let k = 1; k < R.pts.length && R.cum[k - 1] < upto; k++) seg.push([R.pts[k - 1], R.pts[k], nw.has(R.edges[k - 1])]);

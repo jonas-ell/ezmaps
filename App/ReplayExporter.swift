@@ -8,17 +8,18 @@ import EzMapsCore
 
 /// GM-043: Fahrt-Replay als MP4 (GM-041/042, Vorlage docs/previews/replay-gm041.mp4).
 /// Kamera aus `ReplayPlanner` (Core, getestet), Bilder mit `MLNMapSnapshotter` im gewählten Stil, darüber Strecke,
-/// Titel, Ergebnis, „EzMaps“ und „© OpenStreetMap-Mitwirkende“. 1080 × 1920, 10 s.
+/// Titel, Ergebnis, „EzMaps“ und „© OpenStreetMap-Mitwirkende“. GM-044: Querformat wie CarPlay, 1920 × 1080, 10 s,
+/// Tafeln links (wie die Abbiegekarte in CarPlay), Karte und Auto rechts davon.
 @MainActor
 enum ReplayExporter {
-    static let size = CGSize(width: 540, height: 960)
+    static let size = CGSize(width: 960, height: 540)
     static let fps = 15
 
     static func export(trip: Journal.Trip, style: MapStyle, progress: @escaping (Double) -> Void) async throws -> URL {
         let track = trip.track
         var planner = ReplayPlanner()
         planner.fps = fps
-        planner.width = Double(size.width)
+        planner.width = Double(size.width) * 0.58 // Überblick nur in der Kartenfläche rechts der Tafeln
         planner.height = Double(size.height)
         let frames = planner.frames(for: track)
         guard !frames.isEmpty, let styleURL = MapStyleResource.url(for: style) else { throw ReplayError.noTrack }
@@ -65,7 +66,9 @@ enum ReplayExporter {
     enum ReplayError: Error { case noTrack, writer, snapshot }
 
     private static func snapshot(styleURL: URL, frame f: ReplayFrame) async throws -> MLNMapSnapshot {
-        let center = CLLocationCoordinate2D(latitude: f.center.latitude, longitude: f.center.longitude)
+        // GM-044: Auto soll bei 62 % der Breite stehen (rechts der Tafeln) – Bildmitte dafür nach links versetzen
+        let shifted = offsetCenter(f, dxPoints: -size.width * 0.12)
+        let center = CLLocationCoordinate2D(latitude: shifted.latitude, longitude: shifted.longitude)
         let altitude = MLNAltitudeForZoomLevel(f.zoom, CGFloat(f.pitch), center.latitude, size)
         let camera = MLNMapCamera(lookingAtCenter: center, altitude: altitude, pitch: CGFloat(f.pitch), heading: f.heading)
         let options = MLNMapSnapshotOptions(styleURL: styleURL, camera: camera, size: size)
@@ -78,6 +81,16 @@ enum ReplayExporter {
                 if let snap { cont.resume(returning: snap) } else { cont.resume(throwing: error ?? ReplayError.snapshot) }
             }
         }
+    }
+
+    /// Mittelpunkt um dx Bildpunkte quer zur Blickrichtung verschieben (Meter pro Punkt aus der Zoomstufe)
+    private static func offsetCenter(_ f: ReplayFrame, dxPoints: CGFloat) -> Coordinate {
+        let mpp: Double = 78_271.517 * cos(f.center.latitude * .pi / 180) / pow(2, f.zoom)
+        let meters: Double = Double(dxPoints) * mpp
+        let h: Double = (f.heading + 90) * .pi / 180 // nach rechts im Bild = Blickrichtung + 90°
+        let dLat: Double = meters * cos(h) / 110_540
+        let dLon: Double = meters * sin(h) / (111_320 * cos(f.center.latitude * .pi / 180))
+        return Coordinate(latitude: f.center.latitude + dLat, longitude: f.center.longitude + dLon)
     }
 
     private static func compose(snapshot: MLNMapSnapshot, frame f: ReplayFrame, t: Double, track: [Coordinate], cum: [Double],
@@ -138,21 +151,31 @@ enum ReplayExporter {
                 let w = (s as NSString).size(withAttributes: attr).width
                 (s as NSString).draw(at: CGPoint(x: center ? point.x - w / 2 : point.x, y: point.y), withAttributes: attr)
             }
-            text("EzMaps", .systemFont(ofSize: 18, weight: .black), .white, at: CGPoint(x: 16, y: 14), center: false, alpha: 0.9)
+            text("EzMaps", .systemFont(ofSize: 20, weight: .black), .white, at: CGPoint(x: size.width - 100, y: 12), center: false, alpha: 0.9)
+            func panel(_ rect: CGRect, _ color: UIColor, alpha: CGFloat) {
+                guard alpha > 0.01 else { return }
+                let p = UIBezierPath(roundedRect: rect, cornerRadius: 22)
+                color.withAlphaComponent(color.cgColor.alpha * alpha).setFill(); p.fill()
+                UIColor.white.withAlphaComponent(0.25 * alpha).setStroke(); p.lineWidth = 0.5; p.stroke()
+            }
+            // Titel-Tafel (wie die Abbiegekarte in CarPlay)
             let titleA = CGFloat(t < 0.12 ? 1 : max(0, 1 - (t - 0.12) / 0.06))
-            text(L("Fahrt zum").uppercased(), .systemFont(ofSize: 12, weight: .bold), UIColor(red: 0.76, green: 0.48, blue: 1, alpha: 1),
-                 at: CGPoint(x: size.width / 2, y: 70), center: true, alpha: titleA)
-            text(trip.destination, .systemFont(ofSize: 34, weight: .black), .white, at: CGPoint(x: size.width / 2, y: 88), center: true, alpha: titleA)
+            panel(CGRect(x: 18, y: 18, width: 300, height: 104), UIColor(red: 124 / 255.0, green: 40 / 255.0, blue: 200 / 255.0, alpha: 0.8), alpha: titleA)
+            text(L("Fahrt zum").uppercased(), .systemFont(ofSize: 12, weight: .bold), UIColor(red: 0.91, green: 0.82, blue: 1, alpha: 1),
+                 at: CGPoint(x: 36, y: 32), center: false, alpha: titleA)
+            text(trip.destination, .systemFont(ofSize: 30, weight: .black), .white, at: CGPoint(x: 36, y: 48), center: false, alpha: titleA)
             text(Formatting.distance(trip.meters) + " · " + Formatting.minutes(trip.seconds), .systemFont(ofSize: 14, weight: .semibold), .white,
-                 at: CGPoint(x: size.width / 2, y: 132), center: true, alpha: titleA * 0.85)
+                 at: CGPoint(x: 36, y: 90), center: false, alpha: titleA * 0.9)
+            // Ergebnis-Tafel links unten
             let endA = CGFloat(min(1, max(0, (t - 0.8) / 0.1)))
             if trip.newPercent > 0 {
-                text("+\(trip.newPercent) %", .systemFont(ofSize: 60, weight: .black), UIColor(red: 0.95, green: 0.89, blue: 1, alpha: 1),
-                     at: CGPoint(x: size.width / 2, y: size.height - 230), center: true, alpha: endA)
-                text(L("neue Straßen"), .systemFont(ofSize: 18, weight: .heavy), .white, at: CGPoint(x: size.width / 2, y: size.height - 160), center: true, alpha: endA)
+                panel(CGRect(x: 18, y: size.height - 150, width: 300, height: 132), UIColor(red: 28 / 255.0, green: 28 / 255.0, blue: 32 / 255.0, alpha: 0.78), alpha: endA)
+                text("+\(trip.newPercent) %", .systemFont(ofSize: 54, weight: .black), UIColor(red: 0.95, green: 0.89, blue: 1, alpha: 1),
+                     at: CGPoint(x: 36, y: size.height - 140), center: false, alpha: endA)
+                text(L("neue Straßen"), .systemFont(ofSize: 17, weight: .heavy), .white, at: CGPoint(x: 36, y: size.height - 74), center: false, alpha: endA)
             }
             text(L("© OpenMapTiles · © OpenStreetMap-Mitwirkende"), .systemFont(ofSize: 9, weight: .medium), .white,
-                 at: CGPoint(x: size.width - 230, y: size.height - 22), center: false, alpha: 0.8)
+                 at: CGPoint(x: size.width - 240, y: size.height - 20), center: false, alpha: 0.8)
         }
     }
 
@@ -206,7 +229,7 @@ struct ReplaySheet: View {
                     }
                 }
             }
-            .aspectRatio(9 / 16, contentMode: .fit)
+            .aspectRatio(16 / 9, contentMode: .fit) // GM-044: Querformat wie CarPlay
             if let url {
                 ShareLink(item: url) { Label(L("Teilen"), systemImage: "square.and.arrow.up") }
                     .buttonStyle(PrimaryGlassButtonStyle(height: 52))

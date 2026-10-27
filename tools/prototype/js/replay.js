@@ -1,10 +1,10 @@
-// GM-041: Fahrt-Replay – Kameraplan für ein 10-s-Video (9:16). Arbeitet hier in lokalen Metern [x, y] (y nach Süden)
+// GM-041: Fahrt-Replay – Kameraplan für ein 10-s-Video (GM-044: 16:9 wie CarPlay). Arbeitet hier in lokalen Metern [x, y] (y nach Süden)
 // und mit Kamera-Werten des Prototyps (heading in Bogenmaß, scale = Pixel pro Meter).
 // Mirror of Core/Sources/EzMapsCore/ReplayPlanner.swift – change both.
 const ease = x => x < 0.5 ? 2 * x * x : 1 - (-2 * x + 2) ** 2 / 2;
 const turn = (from, to, k) => { let d = (to - from) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; else if (d < -Math.PI) d += 2 * Math.PI; return from + d * k; };
 
-export function planReplay(pts, { duration = 10, fps = 30, followShare = 0.72, followScale = 2.4, W = 393, H = 852 } = {}) {
+export function planReplay(pts, { duration = 10, fps = 30, followShare = 0.72, followScale = 2.4, W = 960, H = 540 } = {}) {
   if (pts.length < 2) return [];
   const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
   const total = Math.max(cum.at(-1), 1);

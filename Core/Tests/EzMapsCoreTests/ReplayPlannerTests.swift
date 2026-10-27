@@ -41,9 +41,9 @@ final class ReplayPlannerTests: XCTestCase {
         let p = ReplayPlanner()
         let z = p.fitZoom(track)
         XCTAssertLessThan(z, p.followZoom)
-        // bei z passt die Nord-Süd-Ausdehnung (2 km) in 70 % der Höhe
+        // GM-044 Querformat: bei z passt die Nord-Süd-Ausdehnung (2 km) in 70 % der Höhe (1080)
         let metersPerPoint = 78_271.517 * cos(a.latitude * .pi / 180) / pow(2, z)
-        XCTAssertGreaterThanOrEqual(1920 * 0.7 * metersPerPoint, 1995)
+        XCTAssertGreaterThanOrEqual(1080 * 0.7 * metersPerPoint, 1995)
     }
 
     func testShortTrackGivesNoFrames() {

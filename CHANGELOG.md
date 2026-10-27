@@ -2,6 +2,28 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-044 – Fahrt-Replay im CarPlay-Format (Querformat 16:9)
+
+**Ziel:** Nutzer: „das video soll im carplay format sein“. Bisher Hochformat 9:16, jetzt Querformat wie der CarPlay-Bildschirm.
+
+**Dateien:** `Core/Sources/EzMapsCore/ReplayPlanner.swift` + Test, `tools/prototype/js/{replay,aufdecken}.js`, `tools/prototype/aufdecken.css`, `App/ReplayExporter.swift`, `docs/previews/replay-gm044-carplay.mp4` (neu, ersetzt `replay-gm041.mp4` als Vorlage)
+
+**Geändert:**
+- `ReplayPlanner`: Standard 1920 × 1080 (Mirror `replay.js`). Test angepasst.
+- Aufbau wie CarPlay:
+  - Titel-Tafel lila links oben („Fahrt zum Hexenturm · 1,9 km · 6 Min“, wie die Abbiegekarte).
+  - Ergebnis-Tafel links unten („+56 % neue Straßen“, Stufe).
+  - „EzMaps“ rechts oben, OSM-Hinweis rechts unten.
+  - Auto bei 62 % der Breite (rechts der Tafeln); Überblick am Ende nur in der Kartenfläche rechts.
+- App-Export (`ReplayExporter`): 960 × 540 pt × 2 = 1920 × 1080. Kamera-Mittelpunkt quer zur Blickrichtung versetzt (Snapshotter kennt keinen Anker). Player im Blatt 16:9.
+
+**Tatsächlich geprüft:**
+- `swift test` Core: 53 grün.
+- Prototyp-Video 300 Bilder ohne Fehler, MP4 erzeugt, Standbilder angesehen.
+- `swiftc -parse` für `ReplayExporter.swift`.
+
+**Ungetestet:** App-Export auf dem Mac (nicht gebaut, siehe GM-043).
+
 ## GM-043 – Alles in Code: GM-029 bis GM-042 in Swift umgesetzt (ungebaut) – Auftrag für den lokalen Claude: bauen und Fehler beheben
 
 **Ziel:** Nutzer: „code alles zuende“. Die Aufträge GM-029 bis GM-042 waren nur Prototyp und Text, die App stand bei GM-028 (nur Neon, kein Shop). Jetzt ist alles als Swift-Code da. Die Cloud hat keinen Zugang zum Mac-Gate (`~/.ssh` leer): **Die App ist nicht gebaut.** Erste Aufgabe ist Bauen und Compilerfehler beheben.

@@ -1,6 +1,6 @@
 import Foundation
 
-/// Fahrt-Replay (GM-041): plant die Kamera für ein kurzes Video (Standard 10 s, 30 Bilder/s, Hochformat 9:16).
+/// Fahrt-Replay (GM-041): plant die Kamera für ein kurzes Video (Standard 10 s, 30 Bilder/s, GM-044: Querformat 16:9 wie der CarPlay-Bildschirm).
 /// Ablauf: Kamera fliegt der Strecke nach (die Linie wächst mit, neue Straßen leuchten), am Ende zoomt sie
 /// heraus, bis die ganze Strecke zu sehen ist. Die App zeichnet jedes Bild mit MapLibre und schreibt es mit
 /// AVAssetWriter in eine Datei. Mirror in tools/prototype/js/replay.js – change both.
@@ -19,8 +19,8 @@ public struct ReplayPlanner: Sendable {
     public var duration: TimeInterval = 10
     public var fps: Int = 30
     /// Bildgröße in Punkten (für das Einpassen am Ende)
-    public var width: Double = 1080
-    public var height: Double = 1920
+    public var width: Double = 1920
+    public var height: Double = 1080
     /// Anteil der Zeit für die Verfolgung, danach Herauszoomen
     public var followShare: Double = 0.72
     public var followZoom: Double = 16.2
