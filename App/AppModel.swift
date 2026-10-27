@@ -86,7 +86,7 @@ final class AppModel {
     /// GM-041: Ergebnis „Stadt aufdecken“ der letzten Fahrt (für den Ankunft-Screen)
     private(set) var lastReveal: TripReveal?
     /// GM-043: Fahrten, Favoriten, Zuhause/Arbeit, Parkplatz, Abzeichen, Mission (lokal)
-    private(set) var journal: Journal
+    private(set) var journal = Journal()
     /// GM-043: aufgedeckte Straßen gesamt (für Entdecken)
     private(set) var exploredCells = 0
     private(set) var exploredKm: Double = 0
@@ -94,7 +94,7 @@ final class AppModel {
     private(set) var newBadges: [Badge] = []
     private(set) var missionJustDone = false
     /// GM-043: Stil-Test (GM-041) – nicht umgehbar, zählt auf iPhone und CarPlay
-    private(set) var trial: StyleTrial
+    private(set) var trial = StyleTrial()
     /// Stil, dessen Test gerade abgelaufen ist (Blatt „Test vorbei“, nie in CarPlay)
     var trialEnded: MapStyle?
     /// Shop/Stil-Seite öffnen (nil = zu). `.classic` = allgemeiner Shop

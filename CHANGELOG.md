@@ -2,6 +2,94 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-043 – Alles in Code: GM-029 bis GM-042 in Swift umgesetzt (ungebaut) – Auftrag für den lokalen Claude: bauen und Fehler beheben
+
+**Ziel:** Nutzer: „code alles zuende“. Die Aufträge GM-029 bis GM-042 waren nur Prototyp und Text, die App stand bei GM-028 (nur Neon, kein Shop). Jetzt ist alles als Swift-Code da. Die Cloud hat keinen Zugang zum Mac-Gate (`~/.ssh` leer): **Die App ist nicht gebaut.** Erste Aufgabe ist Bauen und Compilerfehler beheben.
+
+**Dateien:**
+- **Core (getestet):** `MapStyle.swift` (Klassik gratis, 5 Stile), `Purchases.swift` (Produkt-IDs, `StyleAccess`, `PlanMath`), `Autobahn.swift` (Autobahn GmbH, Filter „vor mir auf der Route“), `Journal.swift` (Fahrten, Favoriten, Zuhause/Arbeit, Parkplatz, Abzeichen, Wochenmission), Tests `StoreAndJournalTests.swift`
+- **Kartenstile:** `tools/maplibre/build_style.py` erzeugt jetzt `App/MapStyles/style-{classic,neon-city,wild-west,pixel-quest,toy-town}.json`. Neon ist unverändert, byte-gleich geprüft.
+- **App (neu):**
+  - `Glass.swift` (Glas-Bausteine GM-032/036)
+  - `StyleTheme.swift` (Farben je Stil, `StyleName` in Projekt-Schrift)
+  - `PurchaseManager.swift` (StoreKit 2)
+  - `EzMaps.storekit` (Testdatei, Preise GM-038/039, kein Einführungsangebot GM-042)
+  - `OnboardingView.swift`, `ShopScreens.swift`, `ExploreScreens.swift`, `ReplayExporter.swift`, `Shortcuts.swift`
+  - `Fonts/` (Rye, Press Start 2P, Fredoka Bold, Anton, alle OFL, mit `OFL.txt`)
+  - `Assets.xcassets/AppIconPreview`
+- **App (geändert):** `AppModel.swift`, `ContentView.swift` (komplett im Glas-Look), `NeonMapView.swift` (Stilwechsel, Leuchtspur), `CarPlaySceneDelegate.swift`, `SettingsScreen.swift`, `SpeechService.swift`, `GameStorage.swift`, `PrivacyInfo.xcprivacy` (SystemBootTime 35F9.1), `en.lproj/Localizable.strings` (+174)
+- **Projekt:** `project.yml` (UIAppFonts, StoreKit-Testdatei im Schema), `tools/mac_build.sh` (kopiert Pricedown aus `~/EzMapsPrivate/Fonts/` falls vorhanden), `.gitignore` (`App/Fonts/Pricedown.otf`)
+
+**Was jetzt in der App ist:**
+- **5 Kartenstile** (alle in der 1.0, GM-041). Klassik gratis, die anderen über Plus oder Einzelkauf. Stil wechselt auf iPhone und CarPlay gleich, Routenfarben je Stil.
+- **Shop „EzMaps Plus“**:
+  - Für immer 79,99 € (Anker), Jährlich 29,99 € (als €/Monat, vorausgewählt, „Beliebt · spare X %“), Monatlich 4,99 €.
+  - Einzelstil Neon 39,99 €, andere 29,99 €.
+  - Apple-Pflichtangaben, Wiederherstellen, Abo verwalten. Kein Gratis-Zeitraum.
+- **Stil-Test 10 Minuten** je Stil:
+  - zählt auf iPhone und CarPlay, nie mitten in der Fahrt beendet;
+  - Schlüsselbund + iCloud, mit Systemlaufzeit gemessen;
+  - Uhr im Startblatt, in der Navigation und in CarPlay;
+  - danach Blatt „Test vorbei“, nie in CarPlay.
+- **Onboarding** (3 Schritte + Willkommen): Standortfrage erst nach Erklärung, Stilwahl mit Klassik vorausgewählt, Zuhause/Arbeit per Suche, Sprachansagen.
+- **Glas-Oberfläche**:
+  - Startblatt mit Wochenmission und Schnellzielen (Zuhause, Arbeit, Favoriten, Dein Auto).
+  - Runde Knöpfe: Standort, Stile, Entdecken, Einstellungen.
+  - Suche mit Meine Orte, Favoriten, Zuletzt.
+  - Vorschau mit Stern, „Als Zuhause/Arbeit speichern“, „+X % neue Straßen“ je Route.
+  - Navigation mit lila Abbiegekarte, Baustellen-Banner und rundem Ende-Knopf.
+  - Uhrzeit-Verlauf oben (Scrim).
+- **Stadt aufdecken**:
+  - Fahrt wird aufgezeichnet, Leuchtspur hinter dem Auto (iPhone und CarPlay).
+  - Ankunft mit „+X % neue Straßen“, gefahren, entdeckt, neue Abzeichen, Mission geschafft.
+  - Tab **Entdecken**: Karte mit Nebel und Leuchtpunkten; „Dieses Gebiet“ = Anteil der Straßen im Kartenausschnitt (aus MapLibre); Stufe, Abzeichen, Mission, Meine Fahrten.
+- **Fahrt-Replay als MP4** (1080 × 1920, 10 s): MapLibre-Bilder mit Kamera aus `ReplayPlanner`, Titel, Ergebnis, Wasserzeichen, OSM-Hinweis. Teilen per ShareLink.
+- **Meine Fahrten** (lokal, löschbar, abschaltbar).
+- **Wo hab ich geparkt?**: Standort beim Trennen von CarPlay, Blatt mit „Zu Fuß hin“ (Apple Karten), Teilen, Vergessen.
+- **Baustellen/Sperrungen**: Autobahn GmbH für die Autobahnen der Route; Banner ab 5 km; Ansage einmal ab 2 km. Keine Blitzer.
+- **Stimme** wählbar (alle deutschen iOS-Stimmen), **Sprechtempo**.
+- **Siri/Kurzbefehle**: „Mit EzMaps nach Hause“, „… zur Arbeit“, „Wo hab ich geparkt?“.
+
+**Tatsächlich geprüft:**
+- `swift test` in Core (Linux): **53 Tests grün**.
+- Alle 21 App-Dateien mit `swiftc -parse`: nur Syntax, **kein Typ-Check, kein Build**.
+- Die 5 Stil-JSONs in MapLibre GL JS (Browser) gerendert: `docs/previews/maplibre-5-stile-gm043.png`.
+- StoreKit-Datei und PrivacyInfo als JSON/Plist gültig.
+
+**Ungetestet:**
+- Die ganze App, weil nicht gebaut. Mit Compilerfehlern ist zu rechnen (MapLibre-API-Namen, Observation, Concurrency).
+- StoreKit-Käufe.
+- Schlüsselbund/iCloud.
+- Replay-Export (Laufzeit pro Bild unbekannt).
+- „Dieses Gebiet“ (`visibleFeatures`).
+- Siri-Phrasen.
+
+**Bewusst noch nicht gemacht:**
+- **Widgets**: braucht ein Widget-Extension-Ziel in `project.yml`.
+- **Ortsteile mit Namen und Grenzen**: statt dessen „Dieses Gebiet“ = Kartenausschnitt.
+- **Fahrspur-Pfeile, Live-Aktivität/Dynamic Island, Spritpreise.**
+- **iOS 26 `.glassEffect()`**: SDK-abhängig, bei Xcode 26 mit `if #available` ergänzen.
+
+### Auftrag (Swift) – lokaler Claude
+1. `ssh mac-ezmaps clean && git archive HEAD | ssh mac-ezmaps extract && ssh mac-ezmaps build` und **alle Compilerfehler beheben**, ohne Funktionen zu streichen. Typische Stellen:
+   - `ExploreScreens.swift` (`NSExpression mgl_interpolate`, `visibleFeatures`, `getCoordinates`)
+   - `ReplayExporter.swift` (`MLNMapSnapshotOptions`, `MLNAltitudeForZoomLevel`)
+   - `AppModel` (@Observable-Init-Reihenfolge)
+   - `Shortcuts.swift` (AppIntents Swift-6-Warnungen)
+2. Im Simulator mit StoreKit-Testdatei durchgehen:
+   - Onboarding
+   - Stil testen bis zum Ende, auch in CarPlay
+   - Plus kaufen, kündigen, wiederherstellen
+   - Einzelkauf
+   - Demo-Fahrt: Ankunft „+100 %“, Replay erzeugen und teilen
+   - Entdecken
+   - Baustelle auf der A3 (Ziel Frankfurt)
+   - Parkplatz nach CarPlay-Trennen
+3. **App Store Connect:** Abo-Gruppe „EzMaps Plus“ (`ezmaps.plus.yearly` 29,99 €, `ezmaps.plus.monthly` 4,99 €, **ohne** Einführungsangebot), Nicht-Verbrauchsartikel `ezmaps.plus.lifetime` 79,99 €, `ezmaps.style.neon` 39,99 €, `ezmaps.style.western/.pixel/.toy` je 29,99 €; Familienfreigabe für Einmalkäufe an.
+4. **iCloud Key-Value Storage** als Capability anlegen (`com.apple.developer.ubiquity-kvstore-identifier`). Ohne das zählt nur der Schlüsselbund.
+5. Store-Screenshots neu (`tools/mac_screens.sh`). Das Onboarding wird im Screenshot-Modus übersprungen.
+6. Danach: Widget-Extension (Zuhause/Arbeit mit Fahrzeit, Dein Auto).
+
 ## GM-042 – Replay-Video als echte Datei, kein 7-Tage-Test mehr – Auftrag für den lokalen Claude
 
 **Ziel:** Nutzer: zeigen, wie das Replay-Video aussieht; „7 Tage testen“ raus.

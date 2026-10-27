@@ -38,6 +38,15 @@
 	</array>
 	<key>NSPrivacyAccessedAPITypes</key>
 	<array>
+		<!-- GM-043: Stil-Testzeit wird mit der Laufzeit seit Gerätestart gemessen (ProcessInfo.systemUptime), nur in der App -->
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategorySystemBootTime</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>35F9.1</string>
+			</array>
+		</dict>
 		<dict>
 			<key>NSPrivacyAccessedAPIType</key>
 			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
