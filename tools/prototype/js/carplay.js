@@ -46,7 +46,7 @@ export function renderCar() {
   if (c.screen === 'map') h = mapTpl();
   else if (c.screen === 'dest') h = listTpl('Ziele', destItems(), 'map');
   else if (c.screen === 'cat') h = listTpl(c.title, list, 'dest');
-  else if (c.screen === 'styles') h = listTpl('Stil', Object.entries(STYLES).map(([k, v]) => ({ name: v.name, sub: k === 'neon' ? 'Gratis' : 'Vorschau', icon: s.style === k ? 'check' : 'style', act: `style:${k}` })), 'map');
+  else if (c.screen === 'styles') h = listTpl('Stil', Object.entries(STYLES).map(([k, v]) => ({ name: v.name, sub: v.free ? 'Gratis' : 'Premium · Vorschau', icon: s.style === k ? 'check' : 'style', act: `style:${k}` })), 'map');
   else if (c.screen === 'preview' && s.nav) h = previewTpl();
   else if (c.screen === 'arrival' && s.nav) h = navbar([], [['end', 'close', 'Beenden']]) + alertTpl() + '<div class="cp-attrib">© OpenStreetMap-Mitwirkende</div>'; // GM-009 (1.6)
   else if (c.screen === 'nav' && s.nav) h = navTpl();

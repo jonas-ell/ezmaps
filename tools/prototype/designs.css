@@ -1,4 +1,4 @@
-/* GM-029: UI-Entwürfe – eigene Seite, ändert den klickbaren Prototyp nicht */
+/* GM-030: UI-Entwürfe – eigene Seite, ändert den klickbaren Prototyp nicht */
 body.dz { background: #0e0e10; color: #ddd; }
 .dz-head { display: flex; gap: 18px; flex-wrap: wrap; align-items: baseline; padding: 14px 24px; border-bottom: 1px solid #222; font-size: 13px; }
 .dz-head span { color: #888; }

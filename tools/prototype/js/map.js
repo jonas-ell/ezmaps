@@ -11,7 +11,9 @@ export const TEX = { x0: -1800, y0: -1500, w: 3600, h: 3000 };
 const WIDTH = { 0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5 };
 const MIN_PX = { 0: 4.4, 1: 3.6, 2: 3, 3: 2.4, 4: 2, 5: 1.4, 6: 1.2, 7: 1 };
 
+// GM-025: „Klassik“ ist der Gratis-Stil (heller Stadtplan); Neon City und die übrigen Stile sind Kauf-Stile (free: false)
 export const STYLES = {
+  classic: { name: 'Klassik', free: true, route: '#1a73e8', routeEdge: '#0b3d91', alt: 'rgba(90,110,140,0.5)', bg: '#f2efe9', haze: [222, 230, 240] },
   neon:    { name: 'Neon City', route: '#a13df0', routeEdge: '#4b1a73', alt: 'rgba(200,200,205,0.55)', bg: '#3b3c3e', haze: [59, 60, 62] },
   western: { name: 'Wild West', route: '#c0261f', routeEdge: '#4a0d0a', alt: 'rgba(90,60,30,0.45)', bg: '#c4ac80', haze: [196, 172, 128] },
   pixel:   { name: 'Pixel Quest', route: '#ffcc33', routeEdge: '#7a4a00', alt: 'rgba(255,255,255,0.6)', bg: '#1b2a5a', haze: [27, 42, 90], pixelated: true },
@@ -79,6 +81,7 @@ export function renderRegion(scene, style, region, S) {
   else {
     ctx.setTransform(world);
     if (style === 'neon') drawClassic(ctx, scene, S, NEON);
+    if (style === 'classic') drawClassic(ctx, scene, S, CLASSIC);
     if (style === 'western') drawClassic(ctx, scene, S, WESTERN);
     if (style === 'toy') drawToy(ctx, scene, S);
   }
@@ -110,6 +113,14 @@ const WESTERN = {
   land: '#dcc59a', residential: '#d4bb8a', industrial: '#ccb07f', farm: '#e3cfa2', park: '#d6c18c', forest: '#cdb782',
   water: '#a3b7ae', waterLine: '#6d8d88', building: '#9b7a50', buildingEdge: '#5e4127', casing: '#4a3220',
   road: r => r <= 4 ? '#f2e4bf' : '#7a5a38', thinMinor: true, rail: '#4a3220', ties: true, texture: paperTexture, trees: '#6b4f2e', vignette: true,
+};
+
+// GM-025: Gratis-Stil „Klassik“ – ruhiger, heller Stadtplan (bewusst schlicht, damit sich die Spiel-Stile lohnen)
+const flatTexture = () => noiseCanvas(8, g => { g.fillStyle = '#808080'; g.fillRect(0, 0, 8, 8); }); // „overlay“ mit 50 % Grau = keine Änderung
+const CLASSIC = {
+  land: '#f2efe9', residential: '#ece7e0', industrial: '#ebe3e8', farm: '#eef0d6', park: '#d4ebc8', forest: '#c3dfb4',
+  water: '#aad3df', waterLine: '#9cc9d9', building: '#ddd5cc', buildingEdge: '#cbc0b5', casing: '#c9c1b6', widen: 1.15,
+  road: r => r <= 1 ? '#f7c56b' : r <= 3 ? '#fde7a6' : '#ffffff', rail: '#a3a3a3', texture: flatTexture,
 };
 
 function drawClassic(ctx, scene, S, T) {

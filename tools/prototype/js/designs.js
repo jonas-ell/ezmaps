@@ -1,4 +1,4 @@
-// GM-029: UI-Entwürfe – vier Richtungen auf der echten Neon-Karte (map.js). Nur zum Zeigen.
+// GM-030: UI-Entwürfe – vier Richtungen auf der echten Neon-Karte (map.js). Nur zum Zeigen.
 import { MapView, renderTexture, renderRegion, drawRoute, drawBlips, drawPlayer, drawDestination } from './map.js';
 import { Router, pointAt, smoothHeading } from './route.js';
 import { loadAssets } from './assets.js';
