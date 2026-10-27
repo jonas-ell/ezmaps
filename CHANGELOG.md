@@ -2,6 +2,27 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-039 – Einzelkäufe von Stilen wieder da (teuer, neben Plus) – Auftrag für den lokalen Claude
+
+**Ziel:** Nutzer will auch Einzelkäufe einzelner Karten. Ergänzt GM-038 (Punkt 1 „Einzelstil-Produkte nicht anlegen“ ist damit aufgehoben).
+
+**Dateien:** `tools/prototype/js/glas.js`
+
+**Geändert (Prototyp):**
+- Neuer Screen „Einzelkauf“ (Stil-Seite): großes Kartenbild des Stils, Merkmale als Chips, darunter zuerst Plus (lila, „Besser · alle 4 Stile“, 2,50 €/Monat, „Plus 7 Tage gratis testen“), dann Nebenknopf „Nur Neon City · 39,99 € einmalig“
+- Shop: Link „Nur einen Stil kaufen ›“; Tipp auf eine Stil-Kachel öffnet die Stil-Seite
+- Preise einmalig: **Neon City 39,99 €**, **Wild West / Pixel Quest / Toy Town je 29,99 €**. Absichtlich teuer: ein Stil kostet so viel wie mehr als ein Jahr Plus, alle vier einzeln 129,96 € gegen 79,99 € „Für immer“
+
+**Tatsächlich geprüft:** Playwright (Chromium) ohne Fehler, Shop und Stil-Seite angesehen.
+
+**Ungetestet:** Nichts in Swift.
+
+### Auftrag (Swift)
+1. Nicht-Verbrauchsartikel `ezmaps.style.neon` 39,99 €, `ezmaps.style.western`/`.pixel`/`.toy` je 29,99 € (StoreKit-Testdatei + App Store Connect). Freischaltung je Stil: Plus (Abo oder Lifetime) **oder** der passende Einzelkauf
+2. `StyleDetailView` wie Prototyp; Plus immer oben und vorausgewählt, Einzelkauf als `GlassButton` (GM-036) darunter; Preise aus `Product.displayPrice`
+3. Wer einen Einzelstil hat und Plus kündigt, behält diesen Stil. Im Shop gekaufte Stile mit Haken statt Preis
+4. Familienfreigabe für Einzelkäufe und Lifetime an, Text „Wiederherstellen“ deckt alles ab
+
 ## GM-038 – EzMaps Plus (Abo mit teurem Einmalkauf als Anker) + UI-Fehler behoben – Auftrag für den lokalen Claude
 
 **Ziel:** Nutzer: Einmalpreise sehr teuer machen, damit das Monatsabo günstig wirkt (Preispsychologie). Alle UIs prüfen, manches sah schief aus. **Ersetzt die Preise aus GM-035 und GM-037** (keine Einzelstile mehr).

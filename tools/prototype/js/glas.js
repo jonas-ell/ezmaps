@@ -42,16 +42,30 @@ const SCREENS = [
     const styles = [['neon', '<span class="nname">Neon City</span>'], ['western', '<span class="wname">Wild West</span>'], ['pixel', '<span class="pname">Pixel Quest</span>'], ['toy', '<span class="tname">Toy Town</span>']];
     const f = $(`<div class="f" style="padding-top:56px"><div style="display:flex;justify-content:space-between;align-items:center"><div class="h1" style="font-size:28px">EzMaps <span style="color:#c27bff">Plus</span></div><div class="g round" style="width:36px;height:36px">${icon(I.x, 16)}</div></div>
       <div class="sub" style="margin-top:2px">Alle Stile, auf dem iPhone und in CarPlay. Jeder neue Stil inklusive.</div>
-      <div class="sgrid">${styles.map(([s, n]) => `<div class="stile"><div class="m" data-s="${s}"></div><span>${n}</span></div>`).join('')}</div>
+      <div class="sgrid">${styles.map(([s, n]) => `<div class="stile" style="height:138px"><div class="m" data-s="${s}"></div><span>${n}</span></div>`).join('')}</div>
       <div class="grow"></div>
       <div class="plan"><span><b>Für immer</b><small>einmal zahlen</small></span><span class="pp"><b>79,99 €</b></span></div>
       <div class="plan on"><span class="tag">Beliebt · spare 50 %</span><span><b>Jährlich</b><small>7 Tage gratis, dann 29,99 € im Jahr</small></span><span class="pp"><b>2,50 €</b><small>pro Monat</small></span></div>
       <div class="plan"><span><b>Monatlich</b><small>jederzeit kündbar</small></span><span class="pp"><b>4,99 €</b><small>pro Monat</small></span></div>
       <div class="btn" style="margin-top:12px">7 Tage gratis testen</div>
       <div class="fine">Danach 29,99 € pro Jahr, verlängert sich automatisch. Kündigen jederzeit in den iPhone-Einstellungen, spätestens 24 h vor Ablauf. Klassik und Navigation bleiben gratis.</div>
-      <div class="link">Käufe wiederherstellen · Bedingungen · Datenschutz</div></div>`);
+      <div class="link">Nur einen Stil kaufen ›</div><div class="link" style="margin-top:4px;opacity:.75">Käufe wiederherstellen · Bedingungen · Datenschutz</div></div>`);
     ph.append(f);
     requestAnimationFrame(() => f.querySelectorAll('.m').forEach(m => { const s = m.dataset.s; mapInto(m, s, { center: [40, -20], heading: 0.4, scale: 0.8, tilt: 45, anchor: [0.5, 0.6] }, (u, v) => { drawRoute(u, v, R, 0, s, { width: 6 }); drawPlayer(u, v, R.pts[0], 0, s, 9); }); }));
+  }],
+  ['Einzelkauf', 'Tipp auf eine Stil-Kachel oder „Nur einen Stil kaufen“. Einzelstil absichtlich teuer (Neon 39,99 €, andere 29,99 €): Plus steht daneben als klar bessere Wahl. Einmalkauf, gehört dir für immer.', ph => {
+    const el = ph.querySelector('.fill'); el.style.background = '#0b0b0d';
+    const f = $(`<div class="f" style="padding:0"><div class="hero" style="height:430px;border-radius:0"><div class="m" data-s="neon"></div><div class="t" style="padding:60px 22px 18px"><b style="font-size:40px"><span class="nname">Neon City</span></b><small style="font-size:14px">Dunkle Open-World-Karte · Neon-Route · auch in CarPlay</small></div></div>
+      <div style="position:absolute;left:16px;top:58px" class="g round">${icon(I.back, 20)}</div>
+      <div style="padding:16px 22px 34px;display:flex;flex-direction:column;flex:1">
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip">Eigene Symbole</span><span class="chip">Nachtmodus</span><span class="chip">Baustellen im Stil</span></div>
+      <div class="grow"></div>
+      <div class="plan on" style="margin-top:0"><span class="tag">Besser · alle 4 Stile</span><span><b>Mit Plus</b><small>alle Stile + jeder neue Stil</small></span><span class="pp"><b>2,50 €</b><small>pro Monat</small></span></div>
+      <div class="btn" style="margin-top:12px">Plus 7 Tage gratis testen</div>
+      <div class="btn2" style="margin-top:10px;height:52px"><span>Nur <span class="nname">Neon City</span> · 39,99 € einmalig</span></div>
+      <div class="fine">Einzelkauf gehört dir für immer, nur dieser Stil. Wild West, Pixel Quest, Toy Town je 29,99 €. Wer später Plus nimmt, behält den Stil.</div></div></div>`);
+    ph.append(f);
+    requestAnimationFrame(() => { const m = f.querySelector('.m'); mapInto(m, 'neon', { center: [40, -20], heading: 0.4, scale: 1.25, tilt: 50, anchor: [0.5, 0.5] }, (u, v) => { drawRoute(u, v, R, 0, 'neon', { width: 9 }); drawPlayer(u, v, R.pts[0], 0, 'neon', 14); drawBlips(u, v, scene, 'neon', { size: 10 }); }); });
   }],
   ['Stil testen', 'Plus-Stil 10 Minuten auf der echten Karte testen. Läuft nie während einer Fahrt ab (erst nach Ankunft zurück zu Klassik).', ph => {
     mapInto(ph.querySelector('.fill'), 'neon', { center: [-500, 300], heading: 0, scale: 0.6, tilt: 0, anchor: [0.5, 0.45] }, (u, v) => { drawBlips(u, v, scene, 'neon', {}); drawPlayer(u, v, R.pts[0], 0, 'neon', 12); });
