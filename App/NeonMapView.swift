@@ -399,6 +399,9 @@ struct NeonMapView: UIViewRepresentable {
     func makeUIView(context: Context) -> MLNMapView {
         let map = NeonMap.make(style: style)
         map.delegate = context.coordinator
+        // GM-051: Standort-Ansicht neu anlegen lassen – make() hat sie vor dem Delegate erzeugt (lila Standard-Punkt
+        // statt PlayerLocationView, auf allen Screenshots zu sehen)
+        if map.showsUserLocation { map.showsUserLocation = false; map.showsUserLocation = true }
         let overlay = RouteOverlay(map: map)
         overlay.theme = StyleTheme.of(style)
         overlay.mapStyle = style

@@ -283,7 +283,7 @@ struct StyleDetailView: View {
 
     private func feature(_ icon: String, _ text: String) -> some View {
         VStack(spacing: 6) {
-            Image(systemName: icon).font(.system(size: 18, weight: .bold)).foregroundStyle(accent)
+            Image(systemName: icon).font(.system(size: 18, weight: .bold)).foregroundStyle(accent).frame(height: 22) // GM-051: gleich hoch
             Text(text).font(.system(size: 11.5, weight: .semibold)).lineLimit(1).minimumScaleFactor(0.8)
         }
         .frame(maxWidth: .infinity).frame(height: 64)

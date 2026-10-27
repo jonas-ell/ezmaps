@@ -231,6 +231,12 @@ if [ -f tools/.do_carscreens ]; then
   xcrun simctl privacy "$SID" grant location "$BID"
   xcrun simctl location "$SID" set 50.21712,8.25734
   caffeinate -u -t 3   # GM-026: Bildschirm wecken (gesperrter Mac: AppleScript kommt nicht an die Fenster)
+  # GM-051: gesperrter Bildschirm → AppleScript kann nicht klicken, alle Bilder zeigen den CarPlay-Startbildschirm
+  if ioreg -n Root -d1 -a 2>/dev/null | grep -A1 CGSSessionScreenIsLocked | grep -q true; then
+    echo "MAC GESPERRT: CarPlay-Bilder brauchen einen entsperrten Mac-Bildschirm (Klicks im CarPlay-Fenster). Übersprungen."
+    echo "CARPLAY FERTIG"
+    exit 0
+  fi
   open -a Simulator --args -CurrentDeviceUDID "$SID"; sleep 6
   osascript <<'OSA' 2>&1 | sed 's/^/AppleScript: /'
 tell application "Simulator" to activate

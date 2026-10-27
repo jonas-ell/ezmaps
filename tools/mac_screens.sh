@@ -33,7 +33,10 @@ echo "Baue im Simulator und mache Bilder (dauert ein paar Minuten) …"
 ssh "$H" build > "$RAW"
 grep -vE '^[A-Za-z0-9+/=]{60,}$' "$RAW" | grep -v "^===" | tail -40
 
-rm -rf "$OUTDIR"; mkdir -p "$OUTDIR"   # GM-025: alte Bilder weg, sonst bleiben veraltete Zustände liegen
+# GM-025: alte Bilder weg, sonst bleiben veraltete Zustände liegen – GM-051: aber nur, wenn neue Bilder da sind
+if grep -q "^===SHOT " "$RAW"; then rm -rf "$OUTDIR"; fi
+mkdir -p "$OUTDIR"
+grep -E "MAC GESPERRT" "$RAW"
 python - "$RAW" "$OUTDIR" <<'PY'
 import base64, sys, pathlib
 raw, out = sys.argv[1], pathlib.Path(sys.argv[2])
