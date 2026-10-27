@@ -67,7 +67,7 @@ const MARKER = {
   // GTA-Minikarte: schmaler hellgrauer Pfeil mit dunklem Rand
   'neon-city': s => `<path d="M0 -14 L10 11 L0 6 L-10 11 Z" transform="scale(${s})" fill="#ececec" stroke="#141414" stroke-width="${2.2 / s}" stroke-linejoin="round"/>`,
   // RDR-Legende „Dein Charakter“: Tropfen mit Ring, Spitze in Fahrtrichtung
-  'wild-west': s => `<g transform="scale(${s})"><path d="M0 -15 C6 -6 10 -1 10 4 A10 10 0 1 1 -10 4 C-10 -1 -6 -6 0 -15 Z" fill="#f4ecd8" stroke="#1d140c" stroke-width="2.4"/><circle cy="4" r="4.5" fill="none" stroke="#1d140c" stroke-width="2.4"/></g>`,
+  'wild-west': s => `<path d="M0 -13 L9 10 L0 5 L-9 10 Z" transform="scale(${s})" fill="#f6ead6" stroke="#2b231b" stroke-width="${2.2 / s}" stroke-linejoin="round"/>`,
   // Blockwelt-Karte: weißer Pixel-Pfeil mit schwarzem Rand
   'pixel-quest': s => { // Pfeilspitze mit Kerbe aus Kunstpixeln
     const rows = { '-5': [0, 0], '-4': [-1, 1], '-3': [-1, 1], '-2': [-2, 2], '-1': [-2, 2], '0': [-3, 3], '1': [-3, 3], '2': [-4, 4] };
@@ -145,29 +145,36 @@ const STYLES = {
     },
   },
   'wild-west': {
-    title: 'Wild West (neu)', why: 'Komplett neu als handgezeichnete Papierkarte: vergilbtes Papier mit Flecken und dunklem Rand, alle Linien leicht zittrig wie mit Tinte gezeichnet, Häuser als dunkle Tintenblöcke, Hauptstraßen als Doppellinie, Nebenwege gestrichelt, Höhenlinien und Baum-Kringel im Gelände, Wasser mit Strichschraffur, Namen in schräger Schreibschrift. Route rot, Ziel als rotes X. Standort: heller Tropfen mit Ring (wie „Dein Charakter“). Ich habe keine Red-Dead-Bilder als Datei: sag mir, was dir am alten nicht gefallen hat, oder leg Bilder in den Referenz-Ordner.',
-    refs: [], missing: ['west-*.png (Red-Dead-Karte)'],
+    title: 'Wild West (Runde 3, nach deinen Red-Dead-Karten)', why: 'Farben aus deinen Bildern gemessen: helles Pfirsich-Papier (#e4c9a8) fast ohne Struktur, nur ganz weiche hellere/dunklere Flecken. Straßen sind nur dünne dunkelbraune Linien (Hauptstraßen etwas dicker, Feldwege dünner), Bahn als Linie mit Querstrichen, Gemeindegrenzen gestrichelt. Wasser graugrün (#aaa392) ohne Rand, mit weichem Übergang ins Papier. Häuser nur angedeutet: hellere Blöcke mit feinem Rand. Ortsnamen fett in Großbuchstaben, Gebiete in weit gesperrten Großbuchstaben, kleine Namen winzig in Großbuchstaben. Symbole: dunkle runde Knöpfe mit weißem Zeichen. Fadenkreuz: vier dünne durchgehende rote Striche mit Lücke (ohne Ausblenden). Route rot, Ziel rotes X, Standort heller Pfeil mit dunklem Rand.',
+    refs: ['west-karte-1.png', 'west-karte-2.png', 'west-karte-3.png'], missing: [],
     draw(o) {
-      let s = `<defs>${INK}<filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="8"/><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.32  0 0 0 0 0.16  0 0 0 0.35 0"/></filter>
-        <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="1.2" seed="2"/><feColorMatrix values="0 0 0 0 0.2  0 0 0 0 0.14  0 0 0 0 0.08  0 0 0 0.2 0"/></filter>
-        <radialGradient id="vig" cx="50%" cy="50%" r="70%"><stop offset="60%" stop-color="#3a2410" stop-opacity="0"/><stop offset="100%" stop-color="#3a2410" stop-opacity=".55"/></radialGradient>
-        <pattern id="wv" width="12" height="6" patternUnits="userSpaceOnUse"><path d="M1 3 H8" stroke="#4d4a3c" stroke-width="1"/></pattern></defs>`;
-      s += `<rect width="800" height="480" fill="#d9c49a"/><rect width="800" height="480" filter="url(#paper)"/><rect width="800" height="480" filter="url(#grain)"/>`;
-      s += `<g filter="url(#ink)" fill="none" stroke="#6b5233" stroke-width=".9" opacity=".7">${[0, 1, 2, 3].map(i => `<ellipse cx="720" cy="300" rx="${40 + i * 22}" ry="${30 + i * 16}"/>`).join('')}${[0, 1, 2].map(i => `<ellipse cx="60" cy="40" rx="${30 + i * 20}" ry="${22 + i * 14}"/>`).join('')}</g>`;
-      for (let y = 250; y < 385; y += 18) for (let x = 655; x < 785; x += 20) if (h2(x, y, 5) > 0.4) s += `<path filter="url(#ink)" d="M${x - 5} ${y} q5 -9 10 0 q-5 3 -10 0" fill="#9c8a5a" stroke="#3a2a18" stroke-width="1"/>`;
-      s += `<g filter="url(#ink)"><path d="${path(STREAM)}" stroke="#2a1d12" stroke-width="12" fill="none" stroke-linecap="round"/><path d="${path(STREAM)}" stroke="#a7a68e" stroke-width="9" fill="none" stroke-linecap="round"/><path d="${path(STREAM)}" stroke="url(#wv)" stroke-width="9" fill="none"/></g>`;
-      s += `<g filter="url(#ink)">` + HOUSES.map(b => `<rect x="${b.x + 2}" y="${b.y + 2}" width="${b.w - 4}" height="${b.h - 4}" fill="#4a3320" stroke="#21160c" stroke-width="1.2"/>`).join('');
-      for (const r of roadsSorted()) {
-        if (r.c >= 3) { s += `<path d="${path(r.p)}" stroke="#2a1d12" stroke-width="1.6" fill="none" stroke-dasharray="${r.c === 4 ? '5 4' : 'none'}"/>`; continue; }
-        s += `<path d="${path(r.p)}" stroke="#21160c" stroke-width="${WIDTH[r.c] - 9}" fill="none" stroke-linejoin="round"/><path d="${path(r.p)}" stroke="#d9c49a" stroke-width="${WIDTH[r.c] - 13}" fill="none" stroke-linejoin="round"/>`;
-      }
-      s += `<path d="${ringPath(RING.r)}" stroke="#21160c" stroke-width="12" fill="none"/><path d="${ringPath(RING.r)}" stroke="#d9c49a" stroke-width="8" fill="none"/></g>`;
-      s += labels('Rye', 12, '#2a1d12', { id: 'w', halo: '#d9c49a', haloW: 3 });
-      s += POIS.map(p => `<g transform="translate(${p.x} ${p.y})"><circle r="13" fill="#1b140e" stroke="#e8d8b0" stroke-width="1.5"/></g>` + glyph(p.k, p.x, p.y, '#fafafa', '#1b140e', 2, 0.6)).join('');
-      if (o.route) s += `<path filter="url(#ink)" d="${path(ROUTE)}" stroke="#a8201a" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` + destWest();
-      s += `<rect width="800" height="480" fill="url(#vig)"/>`;
+      const ink = '#4a3b2c';
+      let s = `<defs><filter id="blot"><feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="3" seed="11"/><feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.42  0 0 0 0 0.3  0 0 0 0.22 0"/></filter>
+        <filter id="soft"><feGaussianBlur stdDeviation="3"/></filter></defs>`;
+      s += `<rect width="800" height="480" fill="#e4c9a8"/><rect width="800" height="480" filter="url(#blot)"/>`;
+      // Gebietsname weit gesperrt (wie AMBARINO, NEW HANOVER)
+      s += `<text x="440" y="455" font-family="Libre Baskerville, Georgia, serif" font-size="20" letter-spacing="26" fill="#8a7458" opacity=".7">TAUNUS</text>`;
+      // Wasser: Teich rund + Bach, weich
+      s += `<g filter="url(#soft)"><ellipse cx="735" cy="335" rx="40" ry="26" fill="#aaa392"/><path d="${path(STREAM)}" stroke="#aaa392" stroke-width="16" fill="none" stroke-linecap="round"/></g>`;
+      s += `<ellipse cx="735" cy="335" rx="38" ry="24" fill="#aaa392" opacity=".75"/><path d="${path(STREAM)}" stroke="#aaa392" stroke-width="11" fill="none" stroke-linecap="round" opacity=".85"/>`;
+      s += `<text x="735" y="338" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-style="italic" font-size="9" fill="#5e5648">Weiher</text>`;
+      // Gemeindegrenze gestrichelt
+      s += `<path d="M-10 70 C120 60 220 20 300 -10" stroke="${ink}" stroke-width="1.6" fill="none" stroke-dasharray="7 3 2 3" opacity=".8"/>`;
+      // Häuser angedeutet
+      s += HOUSES.map(b => `<rect x="${b.x + 2}" y="${b.y + 2}" width="${b.w - 4}" height="${b.h - 4}" fill="#e9d1b2" stroke="#a48c6c" stroke-width=".6"/>`).join('');
+      // Straßen: dünne Linien
+      for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="${ink}" stroke-width="${{ 1: 2.6, 2: 2.2, 3: 1.4, 4: 1 }[r.c]}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+      s += `<path d="${ringPath(RING.r - 6)}" stroke="${ink}" stroke-width="2.2" fill="none"/>`;
+      // Bahn mit Querstrichen
+      s += `<path d="M-10 455 L330 470 L810 448" stroke="${ink}" stroke-width="1.6" fill="none"/><path d="M-10 455 L330 470 L810 448" stroke="${ink}" stroke-width="6" fill="none" stroke-dasharray="1.4 7"/>`;
+      // Namen: Ort fett, Straßen winzig in Großbuchstaben
+      s += `<text x="214" y="68" font-family="Roboto Slab, Georgia, serif" font-weight="800" font-size="17" letter-spacing="1" fill="#3a2d20" stroke="#e4c9a8" stroke-width="3" paint-order="stroke">IDSTEIN</text>`;
+      s += labels('Libre Baskerville, Georgia, serif', 7.5, '#4a3b2c', { upper: true, spacing: 1.4, id: 'w', halo: '#e4c9a8', haloW: 2.5 });
+      s += POIS.map(p => `<g transform="translate(${p.x} ${p.y})"><circle r="11" fill="#2b231b" stroke="#e9d5b6" stroke-width="1.5"/></g>` + glyph(p.k, p.x, p.y, '#fafafa', '#2b231b', 2, 0.5)).join('');
+      if (o.route) s += `<path d="${path(ROUTE)}" stroke="#a8261f" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` +
+        `<g transform="translate(${DEST[0]} ${DEST[1]})"><path d="M-9 -9 L9 9 M9 -9 L-9 9" stroke="#a8261f" stroke-width="5" stroke-linecap="round"/></g>`;
       s += marker('wild-west', ME.x, ME.y, ME.h, o.route ? 1.5 : 1.1);
-      if (o.look) s += crosshair('rgba(155,22,18,.9)');
+      if (o.look) { const c = '#a8261f', x = 400, y = 240; s += `<g stroke="${c}" stroke-width="2"><path d="M${x - 70} ${y} H${x - 12} M${x + 12} ${y} H${x + 70} M${x} ${y - 70} V${y - 12} M${x} ${y + 12} V${y + 70}"/></g>`; }
       return s;
     },
   },
@@ -185,7 +192,7 @@ const STYLES = {
       s += `<rect width="800" height="480" fill="url(#mg)"/>`;
       // Teich im Park + Bach, animiert
       s += `<path d="${path(STREAM)}" stroke="#2a3f8a" stroke-width="18" fill="none"/><path d="${path(STREAM)}" stroke="url(#mw)" stroke-width="14" fill="none"/>`;
-      s += `<rect x="700" y="300" width="72" height="56" fill="#2a3f8a"/><rect x="703" y="303" width="66" height="50" fill="url(#mw)"/>`;
+      s += `<ellipse cx="736" cy="328" rx="38" ry="28" fill="#2a3f8a"/><ellipse cx="736" cy="328" rx="35" ry="25" fill="url(#mw)"/>`;
       // Bäume: Laub-Blöcke mit Stamm-Schatten
       const tree = (x, y) => `<rect x="${x + 5}" y="${y + 5}" width="22" height="22" fill="rgba(0,0,0,.35)"/><rect x="${x}" y="${y}" width="22" height="22" fill="#2e5212"/><rect x="${x + 2}" y="${y + 2}" width="8" height="8" fill="#3c6c18"/><rect x="${x + 12}" y="${y + 6}" width="6" height="6" fill="#487824"/><rect x="${x + 6}" y="${y + 13}" width="7" height="6" fill="#3c6018"/>`;
       for (const [x, y] of [[652, 244], [680, 250], [744, 246], [654, 290], [656, 360], [690, 366], [770, 250]]) s += tree(x, y);

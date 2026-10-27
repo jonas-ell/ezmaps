@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-055 – Wild West nach echten Red-Dead-Karten, Pixel-Teich rund, Ansagen nur noch mit guter Stimme
+
+**Ziel:** Nutzer: Stimmen „sehr sehr sehr schlecht“ → andere Methode oder weglassen; Pixel: Seen rund, Liste der benötigten Texturen; Wild West: drei Red-Dead-Karten als Referenz („so sieht die echte Map aus“).
+
+**Dateien:** `tools/prototype/js/zielbilder.js`, `tools/prototype/zielbilder.html`, `App/SpeechService.swift`, `App/SettingsScreen.swift`, `App/en.lproj/Localizable.strings`, Referenzen lokal `west-karte-{1,2,3}.png`, `pixel-trank.png`
+
+**Geändert:**
+- Wild West neu nach den Bildern (Farben gemessen): helles Pfirsich-Papier mit weichen Flecken, Straßen als dünne dunkelbraune Linien, Bahn mit Querstrichen, Grenzen strichpunktiert, Wasser graugrün ohne Rand mit weichem Übergang, Häuser kaum sichtbar, Ortsname fett, Gebiet weit gesperrt, winzige Straßennamen in Großbuchstaben, Fadenkreuz vier dünne rote Striche mit Lücke, Standort heller Pfeil.
+- Pixel Quest: Teich rund.
+- Ansagen: nur noch mit einer Stimme in Qualität „Erweitert“ oder „Premium“; ohne solche Stimme keine Ansage und ein Hinweis in den Einstellungen, wie man sie lädt. Auswahl zeigt nur noch gute Stimmen.
+
+**Tatsächlich geprüft:** Zielbilder im Browser angesehen.
+
+**Ungetestet:** Swift-Änderung (Stimme) bis zum Mac-Build.
+
 ## GM-054 – Pixel Quest Runde 3 (sauber, animiertes Wasser), Codex-Aufträge für Toy Town
 
 **Ziel:** Nutzer: Pixel-Karte „scuffed“ (Symbole, Häuser wild verteilt), Eis statt Wasser, grüner Pfeil nur Alternative, weiß Standard; Toy Town sieht nicht wie die Teppiche aus → Codex-Prompts für einzelne Elemente.

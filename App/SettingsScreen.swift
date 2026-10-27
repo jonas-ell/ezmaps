@@ -31,6 +31,11 @@ struct SettingsScreen: View {
                 }
                 Section(L("Navigation")) {
                     Toggle(L("Sprachansagen"), isOn: binding(\.voice))
+                    if SpeechService.bestGermanVoice == nil {
+                        // GM-055: ohne gute Stimme keine Ansagen (die Standard-Stimme klingt zu schlecht)
+                        Text(L("Für Ansagen eine gute deutsche Stimme laden: iPhone-Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch → z. B. „Anna (Premium)“."))
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
                     Picker(L("Stimme"), selection: Binding(get: { model.settings.voiceIdentifier ?? "" },
                                                          set: { v in model.updateSettings { $0.voiceIdentifier = v.isEmpty ? nil : v } })) {
                         Text(L("Automatisch (beste)")).tag("")
