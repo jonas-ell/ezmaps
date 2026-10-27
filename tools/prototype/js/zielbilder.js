@@ -179,7 +179,7 @@ const STYLES = {
     },
   },
   'pixel-quest': {
-    title: 'Pixel Quest (Runde 3)', why: 'Mit deinen Grafiken: Gras, Bruchstein-Straßen, animiertes Wasser (Water_Item_Animated.gif). Häuser jetzt ordentlich: in Reihen entlang der Straßen, alle gleich ausgerichtet, von oben gesehen (Holzdach mit First, Bruchstein-Sockel, Schatten). Symbole einheitlich 16 × 16 Pixel, doppelt groß: Hähnchen = Essen, Steak = Imbiss, Heiltrank = Krankenhaus, Smaragd = Laden, Holzschild mit P = Parken, Kanister = Tankstelle. Standort: weißer Marker (Standard); grüner Marker als Alternative zum Aussuchen in der App.',
+    title: 'Pixel Quest (Runde 3)', why: 'Mit deinen Grafiken: Gras, Bruchstein-Straßen, animiertes Wasser (Water_Item_Animated.gif). Häuser jetzt ordentlich: in Reihen entlang der Straßen, alle gleich ausgerichtet, von oben gesehen (Holzdach mit First, Bruchstein-Sockel, Schatten). Symbole aus deinen Items: Hähnchen = Restaurant, Steak = Imbiss, Milcheimer = Café, Smaragd = Laden, Lavaeimer = Tankstelle, Redstone = Ladesäule, Goldbarren = Bank, Truhe = Kleidung, Kessel = Waschanlage, Papier = Kino, Schere = Friseur, Bett = Hotel, Buch = Schule, Glocke = Kirche, Kuchen = Spielplatz, Heiltrank = Krankenhaus, Holzschild P = Parken. Bahn mit deiner Schienen-Grafik, Ziel = deine rote Fahne. Standort: weißer Marker (Standard); grüner Marker als Alternative zum Aussuchen in der App.',
     refs: [], missing: ['pixel-video-*.png (Minecraft-Karten im Auto)'],
     draw(o) {
       const planks = pixelTile(16, (x, y) => { if (y % 4 === 3) return '#5f4628'; if ((x + Math.floor(y / 4) * 6) % 16 === 0) return '#6c5430'; const h = h2(x, y, 21); return h < 0.2 ? '#9c7848' : h > 0.85 ? '#a88454' : '#907848'; }, 2);
@@ -213,25 +213,32 @@ const STYLES = {
       const emerald = spr(['', '.....kkkkk......', '....kgGGGgk.....', '...kgGWGGGgk....', '..kgGGWGGGGgk...', '..kgGGGGGGGgk...', '..kggGGGGGggk...', '...kggGGGggk....', '....kggggggk....', '.....kgggk......', '......kgk.......', '.......k........'].map(r => ' ' + r), { k: '#0b3d1a', g: '#17a34a', G: '#41d978', W: '#c8ffd9' });
       const signP = spr(['', '.kkkkkkkkkkkkk..', '.kwwwwwwwwwwwk..', '.kwwkkkkkwwwwk..', '.kwwkwwwwkwwwk..', '.kwwkwwwwkwwwk..', '.kwwkkkkkwwwwk..', '.kwwkwwwwwwwwk..', '.kwwkwwwwwwwwk..', '.kwwwwwwwwwwwk..', '.kkkkkkkkkkkkk..', '......kbk.......', '......kbk.......', '......kbk.......', '.....kkkkk......'], { k: '#2a1c0e', w: '#b8945c', b: '#6c5430' });
       const can = spr(['', '.....kkkk.......', '....kyyyk.......', '..kkkkkkkkk.....', '..krrrrrrrk.....', '..krwwrrrrk.....', '..krrrrrrrk.....', '..krrwwrrrk.....', '..krrrrrrrk.....', '..krrrrrwwk.....', '..krrrrrrrk.....', '..kkkkkkkkk.....'].map(r => ' ' + r), { k: '#1b1b1b', y: '#f2c230', r: '#c23a2a', w: '#e86a50' });
-      const ic = { cross: potion, shop: emerald, parking: signP, fuel: can };
+      const MCI = { food: 'Cooked_Chicken_JE2_BE2.webp', shop: 'Smaragd.webp', fuel: 'Lava_Bucket_JE2_BE2.webp', cross: null, parking: null,
+        coffee: 'Milk_Bucket_JE2_BE2.webp', shirt: 'Chest.webp', cash: 'New_Gold_IngotB.webp', carwash: 'Cauldron_JE8.png', cinema: 'PaperNew.webp',
+        barber: 'Shears_TextureUpdate.webp', charge: 'Redstonedust.webp' };
+      const ic = { cross: potion, parking: signP };
       const icon = (href, x, y) => `<g transform="translate(${x - 16} ${y - 16})"><image href="${href}" width="32" height="32" style="image-rendering:pixelated;filter:drop-shadow(1.5px 1.5px 0 rgba(0,0,0,.6))"/></g>`;
-      s += POIS.map(p => icon(p.k === 'food' ? MC + 'Cooked_Chicken_JE2_BE2.webp' : ic[p.k], p.x, p.y)).join('');
+      s += [...POIS, ...POIS_MORE].map(p => icon(MCI[p.k] ? MC + MCI[p.k] : ic[p.k], p.x, p.y)).join('');
+      // weitere Orte: Bett = Hotel, Buch = Schule, Glocke = Kirche, Kuchen = Spielplatz
+      s += [['Bed.webp', 250, 130], ['BookNew.webp', 560, 120], ['Bell_(N).webp', 740, 130], ['Cake.webp', 690, 400]].map(([f, x, y]) => icon(MC + f, x, y)).join('');
+      // Bahn mit Schienen-Grafik
+      s += `<defs><pattern id="rl" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><image href="${MC}75fd677c0c22057ac6697ef859276fd6.png" width="24" height="24" style="image-rendering:pixelated"/></pattern></defs><path d="M-10 462 L810 450" stroke="url(#rl)" stroke-width="22" fill="none"/>`;
       s += icon(MC + 'Steak_JE4_BE3.webp', 706, 450);
       if (o.route) s += `<path d="${path(ROUTE)}" stroke="#4a0d08" stroke-width="11" fill="none" stroke-linejoin="round"/><path d="${path(ROUTE)}" stroke="#e0362b" stroke-width="7" fill="none" stroke-linejoin="round"/>` +
-        `<rect x="${DEST[0] - 3}" y="${DEST[1] - 34}" width="6" height="34" fill="#2a1c0e"/><rect x="${DEST[0] + 3}" y="${DEST[1] - 34}" width="24" height="16" fill="#2a1c0e"/><rect x="${DEST[0] + 5}" y="${DEST[1] - 32}" width="20" height="12" fill="#d42a3a"/>`;
+        `<image href="${MC}rote-fahne.png" x="${DEST[0] - 10}" y="${DEST[1] - 40}" width="40" height="40" style="image-rendering:pixelated"/>`;
       const sz = o.route ? 34 : 26;
       s += `<image href="${MC}Player_(texture)_BE2.webp" x="${ME.x - sz / 2}" y="${ME.y - sz / 2}" width="${sz}" height="${sz}" style="image-rendering:pixelated"/>`;
       return s;
     },
   },
   'toy-town': {
-    title: 'Toy Town (neu, wie der Spielteppich)', why: 'Neu nach deinen drei Teppich-Bildern: knallgrüner Rasen, graue Straßen mit gelber Randlinie und weißer gestrichelter Mitte, Zebrastreifen, Kreisverkehr mit Teich in der Mitte, Parkplätze mit blauem P, Fußballfeld, Häuser von schräg vorne (Wand, Fenster, Tür, rotes/blaues/gelbes Dach), runde Büsche und Bäume, alles mit dunklem Umriss. Standort: rotes Spielzeugauto. Eigene Zeichnungen im Teppich-Stil.',
+    title: 'Toy Town (Runde 3, mit Teppich-Ausschnitten)', why: 'Neu nach deinen drei Teppich-Bildern: knallgrüner Rasen, graue Straßen mit gelber Randlinie und weißer gestrichelter Mitte, Zebrastreifen, Kreisverkehr mit Teich in der Mitte, Parkplätze mit blauem P, Fußballfeld, Häuser, Laden, Krankenhaus, Kirche, Feuerwehr, Spielplatz und Tankstelle als Ausschnitte aus deinem Teppich-Bild 2 (Platzhalter nur fürs Zielbild). Standort: rotes Spielzeugauto.',
     refs: ['toy-teppich-1.png', 'toy-teppich-2.png', 'toy-teppich-3.png', 'toy-prototyp.png'], missing: [],
     draw(o) {
       let s = `<defs><filter id="felt"><feTurbulence type="fractalNoise" baseFrequency="1.4" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .12 0"/></filter></defs>`;
       s += `<rect width="800" height="480" fill="#3eb34a"/>`;
       // Fußballfeld im Park
-      s += `<rect x="652" y="240" width="140" height="146" fill="#2f9e3c" stroke="#fff" stroke-width="2.5"/><path d="M652 313 H792" stroke="#fff" stroke-width="2"/><circle cx="722" cy="313" r="16" fill="none" stroke="#fff" stroke-width="2"/><rect x="694" y="240" width="56" height="20" fill="none" stroke="#fff" stroke-width="2"/><rect x="694" y="366" width="56" height="20" fill="none" stroke="#fff" stroke-width="2"/>`;
+      s += `<image href="referenzen/toy-crops/pitch.png" x="650" y="236" width="146" height="150" preserveAspectRatio="xMidYMid slice"/><rect x="0" y="0" width="0" height="0" fill="#2f9e3c" stroke="#fff" stroke-width="2.5"/><path d="M652 313 H792" stroke="#fff" stroke-width="2"/><circle cx="722" cy="313" r="16" fill="none" stroke="#fff" stroke-width="2"/><rect x="694" y="240" width="56" height="20" fill="none" stroke="#fff" stroke-width="2"/><rect x="694" y="366" width="56" height="20" fill="none" stroke="#fff" stroke-width="2"/>`;
       s += `<path d="${path(STREAM)}" stroke="#1d5a8c" stroke-width="15" fill="none" stroke-linecap="round"/><path d="${path(STREAM)}" stroke="#3aa0e8" stroke-width="11" fill="none" stroke-linecap="round"/>`;
       for (const r of roadsSorted()) s += `<path d="${path(r.p)}" stroke="#3a3a3a" stroke-width="${WIDTH[r.c] + 9}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
       s += `<path d="${ringPath(RING.r)}" stroke="#3a3a3a" stroke-width="29" fill="none"/>`;
@@ -246,8 +253,15 @@ const STYLES = {
       const bush = (x, y, r) => `<circle cx="${x + 2}" cy="${y + 3}" r="${r}" fill="#155a1e"/><circle cx="${x}" cy="${y}" r="${r}" fill="#1e7a2a" stroke="#0f3d15" stroke-width="1.2"/><circle cx="${x - r * 0.3}" cy="${y - r * 0.3}" r="${r * 0.45}" fill="#38a845"/>`;
       for (let i = 0; i < 40; i++) { const x = h2(i, 3, 3) * 800, y = h2(i, 4, 3) * 480; if (!HOUSES.some(b => x > b.x - 8 && x < b.x + b.w + 8 && y > b.y - 14 && y < b.y + b.h + 8)) s += bush(x, y, 6 + h2(i, 5, 3) * 3); }
       // Häuser schräg von vorne
-      const walls = ['#f6e6b4', '#ffffff', '#f2b8a0', '#cfe6f5', '#f5d76e'], roofs = ['#d9342b', '#2f6fd0', '#f0b400', '#d9342b', '#2f6fd0', '#7a7f87'];
-      s += HOUSES.map(b => { if (b.w < 22) return ''; const roof = roofs[b.k], wall = walls[b.k % walls.length], wh = Math.min(12, b.h * 0.5), rh = b.h - wh;
+      // Platzhalter: Ausschnitte aus toy-teppich-2.png (nur Zielbild, lokal) – für die App kommen eigene Grafiken (Codex)
+      const CROP = 'referenzen/toy-crops/', spr = (f, x, y, w, h) => `<image href="${CROP}${f}.png" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice"/>`;
+      const place = [['store', 14, 136, 120, 66], ['hospital', 176, 128, 120, 80], ['church', 300, 128, 70, 56], ['house-a', 440, 112, 60, 60], ['house-b', 506, 116, 86, 60],
+        ['shop', 414, 300, 120, 64], ['fire', 26, 350, 90, 52], ['house-b', 120, 350, 80, 52], ['house-a', 210, 352, 52, 48], ['store', 270, 350, 100, 50],
+        ['house-a', 640, 108, 60, 60], ['church', 710, 110, 76, 62], ['playground', 14, 10, 110, 80], ['house-b', 176, 4, 120, 30], ['shop', 456, 4, 140, 72],
+        ['fuel', 640, 412, 90, 50], ['house-a', 414, 426, 60, 46], ['hospital', 480, 424, 110, 50], ['house-b', 736, 410, 56, 56]];
+      s += place.map(([f, x, y, w, h]) => `<g><rect x="${x - 2}" y="${y - 2}" width="${w + 4}" height="${h + 4}" rx="6" fill="#3eb34a"/>${spr(f, x, y, w, h)}</g>`).join('');
+      const walls = [], roofs = [];
+      s += [].map(b => { if (b.w < 22) return ''; const roof = roofs[b.k], wall = walls[b.k % walls.length], wh = Math.min(12, b.h * 0.5), rh = b.h - wh;
         let w = `<rect x="${b.x}" y="${b.y + rh}" width="${b.w}" height="${wh + 2}" fill="${wall}" stroke="#2b2b2b" stroke-width="1.2"/>`;
         for (let x = b.x + 3; x < b.x + b.w - 6; x += 9) w += `<rect x="${x}" y="${b.y + rh + 2.5}" width="5" height="${wh - 5}" fill="#4aa8e8" stroke="#2b2b2b" stroke-width=".7"/>`;
         w += `<rect x="${b.x + b.w / 2 - 2.5}" y="${b.y + b.h - 6}" width="5" height="8" fill="#8a4b22" stroke="#2b2b2b" stroke-width=".7"/>`;

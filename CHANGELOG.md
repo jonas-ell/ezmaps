@@ -2,6 +2,20 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-056 – Zielbilder: Pixel Quest mit den neuen Items des Nutzers, Toy Town mit Teppich-Ausschnitten (Platzhalter)
+
+**Ziel:** Nutzer: neue Minecraft-Items liegen bereit; „schneid dir die Häuser aus meinen Teppich-Referenzen raus“.
+
+**Dateien:** `tools/prototype/js/zielbilder.js` (Ausschnitte lokal in `tools/prototype/referenzen/toy-crops/`, freigestellte Fahne lokal `Assets/Generated/minecraft/rote-fahne.png`)
+
+**Geändert:**
+- Pixel Quest: 17 Orts-Symbole aus den Items (Hähnchen, Steak, Milcheimer, Smaragd, Lavaeimer, Redstone, Goldbarren, Truhe, Kessel, Papier, Schere, Bett, Buch, Glocke, Kuchen; Heiltrank, P-Schild gepixelt), Bahn mit Schienen-Grafik, rote Fahne als Ziel (weißer Hintergrund entfernt).
+- Toy Town: 10 Ausschnitte aus `toy-teppich-2.png` (Laden, Krankenhaus, Kirche, Häuser, Shop, Feuerwehr, Spielplatz, Tankstelle, Fußballfeld) als Platzhalter im Zielbild.
+
+**Tatsächlich geprüft:** beide Zielbilder im Browser angesehen.
+
+**Ungetestet:** Freigabe durch den Nutzer.
+
 ## GM-055 – Wild West nach echten Red-Dead-Karten, Pixel-Teich rund, Ansagen nur noch mit guter Stimme
 
 **Ziel:** Nutzer: Stimmen „sehr sehr sehr schlecht“ → andere Methode oder weglassen; Pixel: Seen rund, Liste der benötigten Texturen; Wild West: drei Red-Dead-Karten als Referenz („so sieht die echte Map aus“).
