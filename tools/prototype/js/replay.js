@@ -4,7 +4,7 @@
 const ease = x => x < 0.5 ? 2 * x * x : 1 - (-2 * x + 2) ** 2 / 2;
 const turn = (from, to, k) => { let d = (to - from) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; else if (d < -Math.PI) d += 2 * Math.PI; return from + d * k; };
 
-export function planReplay(pts, { duration = 10, fps = 30, followShare = 0.72, followScale = 2.4, W = 960, H = 540 } = {}) {
+export function planReplay(pts, { duration = 10, fps = 30, followShare = 0.72, followScale = 2.4, followTilt = 0, W = 960, H = 540 } = {}) {
   if (pts.length < 2) return [];
   const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
   const total = Math.max(cum.at(-1), 1);
@@ -19,10 +19,10 @@ export function planReplay(pts, { duration = 10, fps = 30, followShare = 0.72, f
     if (t <= followShare) {
       const p = ease(t / followShare), d = p * total, here = at(d);
       if (d + 1 < total) head = turn(head, hd(here, at(Math.min(total, d + 80))), 0.12);
-      out.push({ center: here, heading: head, scale: followScale, tilt: 55, progress: p });
+      out.push({ center: here, heading: head, scale: followScale, tilt: followTilt, progress: p });
     } else {
       const q = ease((t - followShare) / (1 - followShare)), end = pts.at(-1);
-      out.push({ center: [end[0] + (mid[0] - end[0]) * q, end[1] + (mid[1] - end[1]) * q], heading: head * (1 - q), scale: followScale + (fit - followScale) * q, tilt: 55 * (1 - q), progress: 1 });
+      out.push({ center: [end[0] + (mid[0] - end[0]) * q, end[1] + (mid[1] - end[1]) * q], heading: head * (1 - q), scale: followScale + (fit - followScale) * q, tilt: followTilt * (1 - q), progress: 1 });
     }
   }
   return out;

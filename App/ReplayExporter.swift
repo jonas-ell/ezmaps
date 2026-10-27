@@ -66,8 +66,8 @@ enum ReplayExporter {
     enum ReplayError: Error { case noTrack, writer, snapshot }
 
     private static func snapshot(styleURL: URL, frame f: ReplayFrame) async throws -> MLNMapSnapshot {
-        // GM-044: Auto soll bei 62 % der Breite stehen (rechts der Tafeln) – Bildmitte dafür nach links versetzen
-        let shifted = offsetCenter(f, dxPoints: -size.width * 0.12)
+        // GM-045: Pfeil groß in der Mitte wie beim Freifahren in CarPlay (flach, Fahrtrichtung oben) – Mitte nur im Überblick am Ende versetzen
+        let shifted = offsetCenter(f, dxPoints: f.progress >= 1 ? -size.width * 0.12 : 0)
         let center = CLLocationCoordinate2D(latitude: shifted.latitude, longitude: shifted.longitude)
         let altitude = MLNAltitudeForZoomLevel(f.zoom, CGFloat(f.pitch), center.latitude, size)
         let camera = MLNMapCamera(lookingAtCenter: center, altitude: altitude, pitch: CGFloat(f.pitch), heading: f.heading)
@@ -130,10 +130,10 @@ enum ReplayExporter {
             path.stroke()
             // Pfeil am aktuellen Punkt
             if let p = current, f.progress < 1 {
-                let arrow = RouteOverlay.arrowImage()
+                let arrow = UIImage(named: "PlayerNeonGlow") ?? RouteOverlay.arrowImage() // gleicher Pfeil wie in CarPlay
                 g.saveGState()
                 g.translateBy(x: p.x, y: p.y)
-                arrow.draw(in: CGRect(x: -16, y: -16, width: 32, height: 32))
+                arrow.draw(in: CGRect(x: -36, y: -36, width: 72, height: 72))
                 g.restoreGState()
             } else if let last = track.last {
                 let p = snapshot.point(for: CLLocationCoordinate2D(latitude: last.latitude, longitude: last.longitude))

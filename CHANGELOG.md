@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-045 – Replay-Kamera wie Freifahren in CarPlay
+
+**Ziel:** Nutzer: Im Replay soll die Kamera so stehen wie beim Freifahren, mit dem Pfeil groß in der Mitte.
+
+**Dateien:** `Core/Sources/EzMapsCore/ReplayPlanner.swift`, `tools/prototype/js/{replay,aufdecken}.js`, `App/ReplayExporter.swift`, `docs/previews/replay-gm044-carplay.mp4` (neu erzeugt)
+
+**Geändert:**
+- Kamera **flach von oben (0°)**, **Fahrtrichtung oben**, **Pfeil groß in der Mitte**. Das ist dieselbe Einstellung wie `FollowCamera` in CarPlay (pitch 0, Pfeil mittig).
+- `ReplayPlanner.followPitch = 0`; Mirror `replay.js` `followTilt = 0`.
+- Nah wie im Auto (Prototyp 1,8 px/m).
+- App: Pfeil-Bild `PlayerNeonGlow` (wie CarPlay), 72 pt.
+- Nur der Überblick am Ende rückt nach rechts neben die Ergebnis-Tafel.
+
+**Tatsächlich geprüft:** `swift test` Core 53 grün. Prototyp-Video ohne Fehler erzeugt, Standbilder angesehen. `swiftc -parse` ReplayExporter.
+
+**Ungetestet:** App-Export auf dem Mac (nicht gebaut, GM-043).
+
 ## GM-044 – Fahrt-Replay im CarPlay-Format (Querformat 16:9)
 
 **Ziel:** Nutzer: „das video soll im carplay format sein“. Bisher Hochformat 9:16, jetzt Querformat wie der CarPlay-Bildschirm.

@@ -24,6 +24,8 @@ public struct ReplayPlanner: Sendable {
     /// Anteil der Zeit für die Verfolgung, danach Herauszoomen
     public var followShare: Double = 0.72
     public var followZoom: Double = 16.2
+    /// GM-045: Kamera wie Freifahren in CarPlay – flach von oben (0°), Fahrtrichtung oben, Pfeil in der Mitte
+    public var followPitch: Double = 0
 
     public init() {}
 
@@ -46,12 +48,12 @@ public struct ReplayPlanner: Sendable {
                 let ahead = point(at: min(total, d + 80), track, cum)
                 let target = d + 1 < total ? bearing(here, ahead) : lastHeading
                 lastHeading = smooth(lastHeading, target, 0.12)
-                out.append(ReplayFrame(center: here, heading: lastHeading, zoom: followZoom, pitch: 55, progress: p))
+                out.append(ReplayFrame(center: here, heading: lastHeading, zoom: followZoom, pitch: followPitch, progress: p))
             } else {
                 let q = ease((t - followShare) / (1 - followShare))
                 let end = track.last!
                 let c = Coordinate(latitude: end.latitude + (mid.latitude - end.latitude) * q, longitude: end.longitude + (mid.longitude - end.longitude) * q)
-                out.append(ReplayFrame(center: c, heading: lastHeading * (1 - q), zoom: followZoom + (fit - followZoom) * q, pitch: 55 * (1 - q), progress: 1))
+                out.append(ReplayFrame(center: c, heading: lastHeading * (1 - q), zoom: followZoom + (fit - followZoom) * q, pitch: followPitch * (1 - q), progress: 1))
             }
         }
         return out

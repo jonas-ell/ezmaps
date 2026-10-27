@@ -226,11 +226,11 @@ function videoPlayer() {
     <div class="rvosm">© OpenMapTiles · © OpenStreetMap-Mitwirkende</div></div>`);
   main.replaceWith(el);
   const v = new MapView(el.querySelector('.fill')); v.setTexture(tex.neon, 'neon');
-  const frames = planReplay(R.pts, { W: 560, H: 540, followScale: 1.6, duration: 10, fps: 30 }) // W: Kartenfläche rechts der Tafeln;
+  const frames = planReplay(R.pts, { W: 560, H: 540, followScale: 1.8, duration: 10, fps: 30 }) // GM-045: wie Freifahren in CarPlay (flach, nah); W: Fläche rechts der Tafeln für den Überblick;
   const title = el.querySelector('.rvtitle'), end = el.querySelector('.rvend');
   window.__rvCount = frames.length;
   window.__rvDraw = i => {
-    const fr = frames[i], t = i / (frames.length - 1), u = v.apply({ center: fr.center, heading: fr.heading, scale: fr.scale, tilt: fr.tilt, anchor: [0.62, 0.66] }); // GM-044: wie CarPlay, Auto rechts der Infotafel
+    const fr = frames[i], t = i / (frames.length - 1), u = v.apply({ center: fr.center, heading: fr.heading, scale: fr.scale, tilt: fr.tilt, anchor: fr.progress >= 1 ? [0.62, 0.5] : [0.5, 0.5] }); // GM-045: Pfeil groß in der Mitte wie beim Freifahren (Überblick rechts der Tafeln)
     fogLite(u, v, lines(before)); glow(u, v, lines(before), [196, 120, 255], 0.45, 1.6);
     const upto = fr.progress * R.length, seg = [];
     for (let k = 1; k < R.pts.length && R.cum[k - 1] < upto; k++) seg.push([R.pts[k - 1], R.pts[k], nw.has(R.edges[k - 1])]);
@@ -238,7 +238,7 @@ function videoPlayer() {
     glow(u, v, seg.filter(x => !x[2]).map(x => [x[0], x[1]]), [170, 80, 240], 1, 6);
     glow(u, v, seg.filter(x => x[2]).map(x => [x[0], x[1]]), [214, 140, 255], 1, 7);
     if (fr.progress >= 1) drawDestination(u, v, R.pts.at(-1), 'neon', 9);
-    else drawPlayer(u, v, pointAt(R.pts, R.cum, upto).p, fr.heading, 'neon', 13);
+    else drawPlayer(u, v, pointAt(R.pts, R.cum, upto).p, fr.heading, 'neon', 30);
     const a = t < 0.12 ? 1 : Math.max(0, 1 - (t - 0.12) / 0.06);
     title.style.opacity = a; title.style.transform = `translateY(${(1 - a) * -12}px)`;
     const b = Math.min(1, Math.max(0, (t - 0.8) / 0.1));
