@@ -52,6 +52,43 @@ PLIST
   exit $STATUS
 fi
 
+# GM-045: App auf das iPhone „Jonas“ laden (Marker tools/.do_device, geschickt von tools/mac_device.sh).
+# iPhone muss mit dem Mac gekoppelt sein (einmal per Kabel, „Vertrauen“) und den Entwicklermodus an haben.
+# CarPlay-Berechtigung ist im Geräte-Build nicht drin (project.yml) – CarPlay im Auto erst nach Apples Freigabe.
+if [ -f tools/.do_device ]; then
+  rm -f tools/.do_device
+  KC="$HOME/Library/Keychains/mimic-build.keychain-db"
+  security unlock-keychain -p "$(cat "$HOME/.mimic-build-kc")" "$KC" || { echo "Schlüsselbund gesperrt"; exit 1; }
+  security set-keychain-settings -t 3600 "$KC"
+  P8=$(ls "$HOME/.appstoreconnect/private_keys/"AuthKey_*.p8 | head -1)
+  KEYID=$(basename "$P8" .p8); KEYID=${KEYID#AuthKey_}
+  AUTH=(-authenticationKeyPath "$P8" -authenticationKeyID "$KEYID" -authenticationKeyIssuerID "$(cat "$HOME/.appstoreconnect/issuer_id")")
+  xcodegen generate >/dev/null || exit 1
+  xcrun devicectl list devices --json-output /tmp/ezmaps_devices.json >/dev/null 2>&1
+  xcrun devicectl list devices 2>/dev/null | sed 's/^/  /'
+  DEV=$(/usr/bin/python3 - <<'PY2'
+import json
+d = json.load(open("/tmp/ezmaps_devices.json"))["result"]["devices"]
+ios = [x for x in d if x.get("hardwareProperties", {}).get("platform") == "iOS"]
+pick = [x for x in ios if "jonas" in x.get("deviceProperties", {}).get("name", "").lower()] or ios
+print(pick[0]["hardwareProperties"]["udid"] if pick else "")
+PY2
+)
+  [ -n "$DEV" ] || { echo "KEIN IPHONE GEFUNDEN (gekoppelt? entsperrt? im selben WLAN oder per Kabel?)"; exit 1; }
+  echo "Gerät: $DEV"
+  rm -rf build/device
+  xcodebuild -project EzMaps.xcodeproj -scheme EzMaps -destination "id=$DEV" -configuration Debug \
+    -derivedDataPath build/device -allowProvisioningUpdates -allowProvisioningDeviceRegistration "${AUTH[@]}" build > /tmp/ezmaps_device.log 2>&1 \
+    || { grep -E "error:" /tmp/ezmaps_device.log | head -30; tail -n 20 /tmp/ezmaps_device.log; echo "GERÄTE-BUILD FEHLGESCHLAGEN"; exit 1; }
+  echo "GERÄTE-BUILD OK"
+  APP=$(ls -d build/device/Build/Products/Debug-iphoneos/EzMaps.app)
+  xcrun devicectl device install app --device "$DEV" "$APP" 2>&1 | tail -5 || { echo "INSTALLATION FEHLGESCHLAGEN"; exit 1; }
+  BID=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$APP/Info.plist")
+  xcrun devicectl device process launch --device "$DEV" "$BID" 2>&1 | tail -3
+  echo "AUF DEM IPHONE INSTALLIERT ($BID)"
+  exit 0
+fi
+
 # GM-024: Freigabe „Bedienungshilfen“ vorbereiten (Marker tools/.do_open_privacy): öffnet auf dem Mac-Bildschirm
 # die Einstellungsseite und zeigt sshd-keygen-wrapper im Finder. Das Häkchen setzt der Nutzer selbst (macOS-Regel).
 if [ -f tools/.do_open_privacy ]; then

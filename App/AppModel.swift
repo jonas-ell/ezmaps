@@ -117,7 +117,8 @@ final class AppModel {
     @ObservationIgnored private var searchTask: Task<Void, Never>?
     @ObservationIgnored private var demoTask: Task<Void, Never>?
     @ObservationIgnored private var messageTask: Task<Void, Never>?
-    @ObservationIgnored private var rerouting = false
+    /// GM-045: beobachtet – CarPlay zeigt während der Neuberechnung „Route wird neu berechnet“ auf der Abbiegekarte
+    private(set) var rerouting = false
     @ObservationIgnored private let defaults = UserDefaults.standard
     /// GM-041: aufgedeckte Straßen (Datei) und die Punkte der laufenden Fahrt
     @ObservationIgnored private var exploration = GameStorage.loadExploration()

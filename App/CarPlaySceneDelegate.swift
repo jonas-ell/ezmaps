@@ -49,6 +49,11 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
             mapButton("plus.magnifyingglass") { [weak self] in self?.mapController?.zoom(by: 1) },
             mapButton("minus.magnifyingglass") { [weak self] in self?.mapController?.zoom(by: -1) },
             mapButton("location.north.line") { [weak self] in self?.mapController?.recenter() },
+            // GM-045: Karte verschieben – Pflicht für CarPlay-Navis (Autos mit Drehknopf haben keinen Touchscreen)
+            mapButton("arrow.up.and.down.and.arrow.left.and.right") { [weak self] in
+                self?.mapController?.beginPan()
+                self?.mapTemplate?.showPanningInterface(animated: true)
+            },
         ]
         mapTemplate = template
         interfaceController.setRootTemplate(template, animated: false, completion: nil)
@@ -96,6 +101,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
             _ = model.activeStyle
             _ = model.trail
             _ = model.trialRemaining
+            _ = model.rerouting
         } onChange: { [weak self] in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated {
@@ -133,7 +139,15 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
                 shownRevision = model.routeRevision
                 lastManeuverKey = ""
             }
-            updateGuidance()
+            if model.rerouting {
+                // GM-045: Abbiegekarte zeigt „Route wird neu berechnet“; die nächsten Hinweise (neue Revision) setzen sie fort
+                if lastManeuverKey != "pause" {
+                    lastManeuverKey = "pause"
+                    navSession?.pauseTrip(for: .rerouting, description: L("Route wird neu berechnet"))
+                }
+            } else {
+                updateGuidance()
+            }
         case .arrived:
             navSession?.finishTrip()
             navSession = nil
@@ -254,6 +268,28 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         }
     }
 
+    // GM-045: Verschieben – Pfeiltasten (Drehknopf) und Wischen (Touchscreen). Der Knopf „Mitte“ führt zurück zum Auto.
+
+    func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
+        MainActor.assumeIsolated { mapController?.pan(direction) }
+    }
+
+    func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
+        MainActor.assumeIsolated { mapController?.beginPan() }
+    }
+
+    func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint) {
+        MainActor.assumeIsolated { mapController?.drag(to: translation) }
+    }
+
+    func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
+        MainActor.assumeIsolated { mapController?.endDrag() }
+    }
+
+    func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
+        MainActor.assumeIsolated { mapController?.recenter() }
+    }
+
     func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {
         MainActor.assumeIsolated {
             navSession = nil
@@ -272,6 +308,10 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
     private var selected = -1
     private var navigating = false
     private var camera: FollowCamera?
+    /// GM-045: Nutzer verschiebt die Karte – Kamera folgt dem Auto erst wieder nach „Mitte“ oder Bildschirmwechsel
+    private var panning = false
+    private var dragDone = CGPoint.zero
+    private var lastScreen: AppModel.Screen?
     /// GM-043: Kartenstil im Auto (gleich wie auf dem iPhone, inkl. Stil-Test)
     private var shownStyle: MapStyle = .classic
     private var trailCount = 0
@@ -383,7 +423,9 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
               follow: Coordinate? = nil, heading: Double = 0, speedKmh: Double = 50) {
         guard let map = mapView else { return }
         // GM-027: Kamera zuerst umschalten – sonst überschreibt sie den gerade eingepassten Vorschau-Ausschnitt
-        if AppModel.shared.screen == .preview { camera?.stop() } else { camera?.start() }
+        let screen = AppModel.shared.screen
+        if screen != lastScreen { lastScreen = screen; panning = false } // GM-045: neuer Bildschirm → wieder dem Auto folgen
+        if screen == .preview || panning { camera?.stop() } else { camera?.start() }
         if revision != self.revision || selected != self.selected {
             let isNew = revision != self.revision
             self.revision = revision
@@ -415,7 +457,41 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         map.setZoomLevel(map.zoomLevel + step, animated: true)
     }
 
+    func beginPan() {
+        panning = true
+        dragDone = .zero
+        camera?.stop()
+    }
+
+    /// Ein Schritt per Pfeiltaste: ein Drittel des Bildschirms, bezogen auf die Bildschirmrichtung
+    func pan(_ direction: CPMapTemplate.PanDirection) {
+        if !panning { beginPan() }
+        let dx = view.bounds.width / 3, dy = view.bounds.height / 3
+        var d = CGPoint.zero
+        if direction.contains(.left) { d.x -= dx }
+        if direction.contains(.right) { d.x += dx }
+        if direction.contains(.up) { d.y -= dy }
+        if direction.contains(.down) { d.y += dy }
+        move(by: d, animated: true)
+    }
+
+    /// Wischen: CarPlay liefert die Gesamtverschiebung seit Beginn, wir bewegen nur um den neuen Teil
+    func drag(to translation: CGPoint) {
+        if !panning { beginPan() }
+        move(by: CGPoint(x: dragDone.x - translation.x, y: dragDone.y - translation.y), animated: false)
+        dragDone = translation
+    }
+
+    func endDrag() { dragDone = .zero }
+
+    private func move(by d: CGPoint, animated: Bool) {
+        guard let map = mapView else { return }
+        let c = map.convert(map.centerCoordinate, toPointTo: map)
+        map.setCenter(map.convert(CGPoint(x: c.x + d.x, y: c.y + d.y), toCoordinateFrom: map), animated: animated)
+    }
+
     func recenter() {
+        panning = false
         camera?.altitudeFactor = 1.0 // GM-030: gleiche Höhe wie beim Start
         camera?.start()
     }
