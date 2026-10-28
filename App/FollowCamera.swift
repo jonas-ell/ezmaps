@@ -180,10 +180,10 @@ enum PlayerMarker {
             let img = pixel(UIImage(named: green ? "px-player-green" : "px-player"))
             return (img, img)
         case .toyTown:
-            let car = UIImage(named: "toy-car-red") ?? toyCar() // GM-066: Spielzeugauto von Codex
+            let car = UIImage(named: "toy-car-red") ?? toyCar() // GM-071: Spielzeugauto von Codex
             return (car, car)
         case .wildWest:
-            let a = UIImage(named: "west-player-arrow") ?? arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60) // GM-066: Codex
+            let a = UIImage(named: "west-player-arrow") ?? arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60) // GM-071: Codex
             return (a, a)
         case .classic:
             let a = classic()
@@ -196,7 +196,7 @@ enum PlayerMarker {
         guard let img else { return RouteOverlay.arrowImage() }
         return UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { ctx in
             ctx.cgContext.interpolationQuality = .none
-            img.draw(in: CGRect(x: 12, y: 6, width: 36, height: 48))
+            img.draw(in: CGRect(x: 18, y: 14, width: 24, height: 32)) // GM-063: kleiner (CarPlay: wirkte wie eine Flasche)
         }
     }
 

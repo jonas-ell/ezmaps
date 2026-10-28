@@ -219,9 +219,9 @@ def build(P, title):
         "layout": {"symbol-placement": "line", "text-field": ["coalesce", ["get", "name:de"], ["get", "name"]],
                    # GM-028: Barlow Condensed (Neon/Klassik/Wild West); GM-050: Pixel Quest Press Start 2P, Toy Town Fredoka (OFL, eigene Glyphen)
                    "text-font": [P.get("font", "Barlow Condensed SemiBold")],
-                   "text-size": ["interpolate", ["linear"], ["zoom"], 13.5, round(10 * ls, 2), 16, round(13 * ls, 2), 18, round(16 * ls, 2)],
+                   "text-size": ["interpolate", ["linear"], ["zoom"], 13.5, round(11 * ls, 2), 16, round(14 * ls, 2), 18, round(17 * ls, 2)],
                    "text-transform": P.get("text_transform", "uppercase"), "text-letter-spacing": P.get("letter_spacing", 0.12),
-                   "text-max-angle": 30, "text-padding": 2, "symbol-spacing": 220},
+                   "text-max-angle": 30, "text-padding": 2, "symbol-spacing": 150},  # GM-063: Straßennamen öfter
         "paint": paint,
     })
     layers.append(poi_layer(P))
@@ -262,7 +262,7 @@ def poi_layer(P):
     return {
         "id": "poi-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": P.get("poi_minzoom", 14.5),
         "filter": ["in", ["get", "class"], ["literal", list(POI)]],
-        "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.5, 17, 0.7], "icon-padding": 22},  # GM-030: weniger dicht (Fahrt-Bilder)
+        "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.36, 17, 0.52], "icon-padding": 44},  # GM-063: kleiner, weniger dicht (Wiesbaden-Clip)
     }
 
 

@@ -2,19 +2,19 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
-## GM-067 – Pixel-Quest-Satz von Codex wieder raus
+## GM-072 – Pixel-Quest-Satz von Codex wieder raus
 
 **Ziel:** Nutzer: „lass pixelquest assets raus“.
 
 **Dateien:** `Assets/Generated/PixelQuest/` (gelöscht)
 
-**Geändert:** Der Pixel-Satz der Codex-Lieferung (GM-066) ist entfernt. Pixel Quest nutzt weiter die Grafiken des Nutzers (`App/Assets.xcassets/PixelQuest/`), unverändert. GM-066 Auftrag 6 entfällt.
+**Geändert:** Der Pixel-Satz der Codex-Lieferung (GM-071) ist entfernt. Pixel Quest nutzt weiter die Grafiken des Nutzers (`App/Assets.xcassets/PixelQuest/`), unverändert. GM-071 Auftrag 6 entfällt.
 
 **Tatsächlich geprüft:** Ordner weg, App-Bildsätze Pixel Quest unverändert.
 
 **Ungetestet:** –
 
-## GM-066 – Codex-Lieferung: Toy Town komplett, Wild West Rest, eigene Pixel-Symbole
+## GM-071 – Codex-Lieferung: Toy Town komplett, Wild West Rest, eigene Pixel-Symbole
 
 **Ziel:** Nutzer hat `ezmaps-assets.zip` von Codex hochgeladen (Auftrag aus dem Chat, selbstständig ohne Repo-Zugriff).
 
@@ -49,7 +49,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 5. **Wild-West-Texturen neu** (Wald-Stempel jetzt scharf, Papier/Schraffur/Wasser kräftiger): einbauen, wenn sie die Straßen nicht stören.
 6. Pixel Quest erst nach Entscheidung des Nutzers umstellen. Code-Namen wären `px-<art>`, Codex-Datei `px-poi-<codex-name>`, Zuordnung wie bei Wild West.
 
-## GM-065 – Ganz Europa: Texte angepasst (Technik konnte es schon)
+## GM-070 – Ganz Europa: Texte angepasst (Technik konnte es schon)
 
 **Ziel:** Nutzer: „sollte nicht ganz Europa auf der Karte sein?“
 
@@ -69,7 +69,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Ungetestet:** Fahrt im Ausland auf dem Gerät.
 
-## GM-064 – Gegen das Ruckeln: Position weich weiterrechnen, Pixel-Wasser nur im Stand
+## GM-069 – Gegen das Ruckeln: Position weich weiterrechnen, Pixel-Wasser nur im Stand
 
 **Ziel:** Nutzer: „was machen wir gegen das ruckeln wenn sich der standort bewegt?“
 
@@ -102,7 +102,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
    Gegenmittel: Leuchtspur nur alle 2 s, HUD-Werte in eine eigene kleine `@Observable`-Klasse.
 3. In CarPlay `maxFPS` 30 lassen, aber prüfen, ob das Autoradio wirklich 30 schafft.
 
-## GM-063 – Replay-Kamera wie Freifahren in CarPlay (aus der Cloud, dort zuerst als GM-045 geführt)
+## GM-068 – Replay-Kamera wie Freifahren in CarPlay (aus der Cloud, dort zuerst als GM-045 geführt, dann GM-063)
 
 **Ziel:** Nutzer: Im Replay soll die Kamera so stehen wie beim Freifahren, mit dem Pfeil groß in der Mitte.
 
@@ -118,6 +118,18 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 **Tatsächlich geprüft:** `swift test` Core grün (Linux). Prototyp-Video erzeugt und angesehen. `swiftc -parse` ReplayExporter.
 
 **Ungetestet:** App-Export auf dem Mac. Seit GM-057 gibt es einen Standort-Marker je Stil – das Replay sollte den Marker des aktiven Stils nehmen statt immer `PlayerNeonGlow` (für den lokalen Claude).
+
+## GM-063 – Fehler aus CarPlay-Bildern und Wiesbaden-Clip
+
+**Ziel:** Nutzer: „schau im Repo und mach weiter“. Offene Punkte aus GM-061/062.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `App/FollowCamera.swift`, `App/CarPlaySceneDelegate.swift`, `tools/prototype/js/live.js`
+
+**Geändert:** Kartensymbole kleiner (0,36–0,52) und mit doppeltem Abstand; Straßennamen größer und öfter; Kamera in der Stadt höher (30 km/h 400 m statt 320 m), CarPlay-Pfeil bei 64 % (mehr Strecke voraus); Pixel-Quest-Marker kleiner; Wild-West-Wald als kleine unregelmäßige Tupfen.
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** bis zu den CarPlay-Bildern dieses Laufs.
 
 ## GM-062 – Wild West: Kartensymbole von Codex
 

@@ -1683,17 +1683,17 @@
       "zoom"
      ],
      13.5,
-     10,
+     11,
      16,
-     13,
+     14,
      18,
-     16
+     17
     ],
     "text-transform": "uppercase",
     "text-letter-spacing": 0.12,
     "text-max-angle": 30,
     "text-padding": 2,
-    "symbol-spacing": 220
+    "symbol-spacing": 150
    },
    "paint": {
     "text-color": "#141414"
@@ -1798,11 +1798,11 @@
       "zoom"
      ],
      14.5,
-     0.5,
+     0.36,
      17,
-     0.7
+     0.52
     ],
-    "icon-padding": 22
+    "icon-padding": 44
    }
   },
   {

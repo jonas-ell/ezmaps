@@ -148,7 +148,7 @@ function makeMap(el, pixelRatio = devicePixelRatio) {
 }
 
 // ---------- FollowCamera (App/FollowCamera.swift) ----------
-const altitudeForKmh = k => 320 + (Math.min(130, Math.max(30, k)) - 30) * 6;     // RouteOverlay.altitude(forKmh:)
+const altitudeForKmh = k => 400 + (Math.min(130, Math.max(30, k)) - 30) * 6;     // RouteOverlay.altitude(forKmh:)
 // GM-049: wie MLNAltitudeForZoomLevel in MapLibre Native – Blickwinkel 30°, Kachel 512 (vorher 36,87° angenommen → zu weit weg)
 function altitudeToZoom(alt, h, lat) { const mpp = alt * 2 * Math.tan(15 * rad) / h; return Math.log2(40075016.686 * Math.cos(lat * rad) / (512 * mpp)); }
 class FollowCamera {
@@ -194,7 +194,7 @@ const pmap = makeMap($('pmap')), cmap = makeMap($('cmap'), 2 * devicePixelRatio)
 const maps = () => [pmap, cmap];
 const pcam = new FollowCamera(pmap, $('parrow'), { pitch: 0, arrowY: 0.62, glow: () => true,     // GM-045: iPhone flach wie CarPlay
   insets: () => ({ top: 59, left: 0, bottom: 34, right: 0 }) });
-const ccam = new FollowCamera(cmap, $('carrow'), { pitch: 0, arrowY: 0.5, glow: () => S.screen === 'navigating',
+const ccam = new FollowCamera(cmap, $('carrow'), { pitch: 0, arrowY: 0.64, glow: () => S.screen === 'navigating',
   insets: () => ({ top: 50, left: S.screen === 'navigating' ? 180 : 0, bottom: 0, right: 45 }) }); // Punkte: Leiste oben, Knopfspalte, Abbiegekarte
 let tracking = true;                                       // iPhone ohne Navi: MapLibre userTrackingMode .follow
 pmap.on('dragstart', e => { if (e.originalEvent && S.screen !== 'navigating') tracking = false; });

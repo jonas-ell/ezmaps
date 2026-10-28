@@ -85,7 +85,7 @@ final class RouteOverlay {
         waterTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let self, self.styleReady, let style = self.map?.style else { return }
-                // GM-064: Muster-Bild tauschen zwingt MapLibre, die Kacheln neu aufzubauen – während der Fahrt
+                // GM-069: Muster-Bild tauschen zwingt MapLibre, die Kacheln neu aufzubauen – während der Fahrt
                 // (Kamera bewegt sich 30–60×/s) gab das alle 0,2 s einen Ruck. Wasser läuft nur im Stand.
                 let model = AppModel.shared
                 if model.screen == .navigating || model.driveKmh > 5 { return }
@@ -232,7 +232,7 @@ final class RouteOverlay {
     /// GM-022: Kamerahöhe nach Tempo – in der Stadt nah, auf der Autobahn weit (sonst nur Asphalt im Bild)
     static func altitude(forKmh kmh: Double) -> Double {
         let k: Double = min(130, max(30, kmh))
-        return 320 + (k - 30) * 6 // GM-030: näher wie die Vorlage – 30 km/h → 320 m, 50 → 440 m, 130 → 920 m
+        return 400 + (k - 30) * 6 // GM-063: in der Stadt etwas höher (Clip: nur 1–2 Blöcke sichtbar) – 30 km/h → 400 m, 50 → 520 m
     }
 
     /// Kamera hinter dem Auto: nah, geneigt, Fahrtrichtung oben
@@ -277,7 +277,7 @@ final class RouteOverlay {
                 NeonColors.route.setFill(); d.fill()
                 StyleTheme.hex(0x5a1d8c).setStroke(); d.lineWidth = 1.5; d.stroke()
             case .wildWest:
-                // GM-066: handgezeichnetes rotes X von Codex, sonst gezeichnet (GM-057)
+                // GM-071: handgezeichnetes rotes X von Codex, sonst gezeichnet (GM-057)
                 if let img = UIImage(named: "west-waypoint-x") {
                     img.draw(in: CGRect(x: 6, y: 6, width: 36, height: 36))
                     return
@@ -298,7 +298,7 @@ final class RouteOverlay {
                 px(4, 1, 9, 7, 0x1b1206); px(4, 2, 8, 5, 0xe8453c); px(5, 3, 3, 2, 0xffcc33)   // Fahne
                 px(0, 15, 7, 1, 0x1b1206)                                       // Fuß
             case .toyTown:
-                // GM-066: karierte Zielfahne von Codex, sonst gezeichnet
+                // GM-071: karierte Zielfahne von Codex, sonst gezeichnet
                 if let img = UIImage(named: "toy-flag") {
                     img.draw(in: CGRect(x: 4, y: 2, width: 40, height: 40))
                     return
@@ -364,7 +364,7 @@ final class RouteOverlay {
             out["ez-poi-" + kind + "-neon"] = outlined(sym, neon)
             out["ez-poi-" + kind + "-west"] = UIImage(named: "west-poi-" + kind) ?? westBadge(sym) // GM-062: Codex-Knöpfe, wo vorhanden
             out["ez-poi-" + kind + "-px"] = UIImage(named: "px-" + kind).map(StylePatterns.pixelIcon) ?? StylePatterns.pixelSign(kind)
-            out["ez-poi-" + kind + "-toy"] = UIImage(named: "toy-poi-" + kind) ?? StylePatterns.toyBadge(kind, symbol: sym) // GM-066: Codex-Knöpfe, wo vorhanden
+            out["ez-poi-" + kind + "-toy"] = UIImage(named: "toy-poi-" + kind) ?? StylePatterns.toyBadge(kind, symbol: sym) // GM-071: Codex-Knöpfe, wo vorhanden
         }
         return out
     }
@@ -755,14 +755,15 @@ enum StylePatterns {
                 let p = UIBezierPath(); p.move(to: CGPoint(x: x, y: y)); p.addLine(to: CGPoint(x: x + l, y: y + l * 0.3)); p.lineWidth = 0.6; p.stroke()
             }
         }
-        out["ez-pat-forest-west"] = UIGraphicsImageRenderer(size: CGSize(width: 40, height: 40)).image { ctx in
-            StyleTheme.hex(0xdcc29e).setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 40, height: 40))
-            for (x, y) in [(10.0, 12.0), (30.0, 30.0)] {
-                let t = UIBezierPath()
-                t.move(to: CGPoint(x: x - 5, y: y)); t.addQuadCurve(to: CGPoint(x: x + 5, y: y), controlPoint: CGPoint(x: x, y: y - 10))
-                t.close()
-                StyleTheme.hex(0xb79c74).setFill(); t.fill()
-                StyleTheme.hex(0x4a3b2c).setStroke(); t.lineWidth = 0.9; t.stroke()
+        // GM-063: kleine, unregelmäßige Tinten-Baumtupfen (vorher große Dreiecke im Raster)
+        out["ez-pat-forest-west"] = UIGraphicsImageRenderer(size: CGSize(width: 72, height: 72)).image { ctx in
+            StyleTheme.hex(0xdcc29e).setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 72, height: 72))
+            for k in 0..<7 {
+                let x = 6 + hash(k, 1, 77) * 60, y = 8 + hash(k, 2, 77) * 58, r = 2.2 + hash(k, 3, 77) * 1.6
+                let t = UIBezierPath(arcCenter: CGPoint(x: x, y: y), radius: r, startAngle: .pi, endAngle: 0, clockwise: true)
+                t.addLine(to: CGPoint(x: x - r, y: y))
+                StyleTheme.hex(0xbfa57c).setFill(); t.fill()
+                StyleTheme.hex(0x5a4733).setStroke(); t.lineWidth = 0.7; t.stroke()
             }
         }
         // Toy Town
