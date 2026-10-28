@@ -277,6 +277,11 @@ final class RouteOverlay {
                 NeonColors.route.setFill(); d.fill()
                 StyleTheme.hex(0x5a1d8c).setStroke(); d.lineWidth = 1.5; d.stroke()
             case .wildWest:
+                // GM-066: handgezeichnetes rotes X von Codex, sonst gezeichnet (GM-057)
+                if let img = UIImage(named: "west-waypoint-x") {
+                    img.draw(in: CGRect(x: 6, y: 6, width: 36, height: 36))
+                    return
+                }
                 // GM-057: nur rotes X wie auf der Papierkarte
                 let x = UIBezierPath()
                 x.move(to: CGPoint(x: 14, y: 14)); x.addLine(to: CGPoint(x: 34, y: 34))
@@ -293,6 +298,11 @@ final class RouteOverlay {
                 px(4, 1, 9, 7, 0x1b1206); px(4, 2, 8, 5, 0xe8453c); px(5, 3, 3, 2, 0xffcc33)   // Fahne
                 px(0, 15, 7, 1, 0x1b1206)                                       // Fuß
             case .toyTown:
+                // GM-066: karierte Zielfahne von Codex, sonst gezeichnet
+                if let img = UIImage(named: "toy-flag") {
+                    img.draw(in: CGRect(x: 4, y: 2, width: 40, height: 40))
+                    return
+                }
                 let pole = UIBezierPath(roundedRect: CGRect(x: 12, y: 8, width: 4, height: 38), cornerRadius: 2)
                 StyleTheme.hex(0x2f3640).setFill(); pole.fill()
                 let flag = CGRect(x: 16, y: 8, width: 24, height: 16)
@@ -354,7 +364,7 @@ final class RouteOverlay {
             out["ez-poi-" + kind + "-neon"] = outlined(sym, neon)
             out["ez-poi-" + kind + "-west"] = UIImage(named: "west-poi-" + kind) ?? westBadge(sym) // GM-062: Codex-Knöpfe, wo vorhanden
             out["ez-poi-" + kind + "-px"] = UIImage(named: "px-" + kind).map(StylePatterns.pixelIcon) ?? StylePatterns.pixelSign(kind)
-            out["ez-poi-" + kind + "-toy"] = StylePatterns.toyBadge(kind, symbol: sym)
+            out["ez-poi-" + kind + "-toy"] = UIImage(named: "toy-poi-" + kind) ?? StylePatterns.toyBadge(kind, symbol: sym) // GM-066: Codex-Knöpfe, wo vorhanden
         }
         return out
     }

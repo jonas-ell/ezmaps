@@ -1,0 +1,1659 @@
+{
+  "folder": "WildWest",
+  "background_color": "#E4C9A8",
+  "assets": [
+    {
+      "name": "forest-stamp-1",
+      "folder": "WildWest",
+      "base_size": [
+        32,
+        32
+      ],
+      "prompt_used": "Original hand-drawn 1890s survey-map forest stamp 1. Tree clump from above, crisp #3A2D20 outlines, light hatching, no blur, transparent. Layout 1.",
+      "files": [
+        {
+          "name": "forest-stamp-1.png",
+          "width": 32,
+          "height": 32,
+          "sha256": "61f13e79583ff71e34a21e93bc39feb2e886d8a3abafe089fac3ebb7e5941291",
+          "bytes": 1084,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-1@2x.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "f2ebbb447975f1ae57d53d65db23d91a137cf18f4aa3f4f0cf9f60c0537b0191",
+          "bytes": 2519,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-1@3x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "ded98cec46509659619382a8a995af8e39ccc24672ee7b01278b5db5217d7b50",
+          "bytes": 3700,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-1-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "89feb48ba131edfcd08162355279054a109e93a2473b69c8e9219c1a3a47dfbc",
+          "bytes": 56700,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "forest-stamp-2",
+      "folder": "WildWest",
+      "base_size": [
+        32,
+        32
+      ],
+      "prompt_used": "Original hand-drawn 1890s survey-map forest stamp 2. Tree clump from above, crisp #3A2D20 outlines, light hatching, no blur, transparent. Layout 2.",
+      "files": [
+        {
+          "name": "forest-stamp-2.png",
+          "width": 32,
+          "height": 32,
+          "sha256": "251d669f71ce2d55fc30f9ecbd8a0d2762b33252f975d4d026d41ec77d76c21e",
+          "bytes": 1121,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-2@2x.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "a86ce1c8d6ae2ec8f12744fe5435b69d3b2804c552b3928e0152c34bafba5236",
+          "bytes": 2473,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-2@3x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "1b2b61c556c08c9bcdf6737de71ed4450c74af4a5aa1a577eb7044c4e6154a77",
+          "bytes": 3673,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-2-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "11158d3cef9a42a0157205c6eae2b2196834127ecd616a6019486d212ef33873",
+          "bytes": 59530,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "forest-stamp-3",
+      "folder": "WildWest",
+      "base_size": [
+        32,
+        32
+      ],
+      "prompt_used": "Original hand-drawn 1890s survey-map forest stamp 3. Tree clump from above, crisp #3A2D20 outlines, light hatching, no blur, transparent. Layout 3.",
+      "files": [
+        {
+          "name": "forest-stamp-3.png",
+          "width": 32,
+          "height": 32,
+          "sha256": "09a0213fe2eb3ed8ada3cd1181f6c608144bd37cc9e3365a894a9159cbffc156",
+          "bytes": 748,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-3@2x.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "ea0ab03ef147f994964e5e32302ea560614447f512e1d3081d3abf720b02df87",
+          "bytes": 1544,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-3@3x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "4ef37cdaa1d0da6edd5417a9ec116eb6bce5f652bbf645db65fdfd32cdcc9e48",
+          "bytes": 2410,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-3-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "aebd3c23aff4ec3a39d6d03b593d911fba0c5bcca4a15ca88e5e01c3855ebaca",
+          "bytes": 69659,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "forest-stamp-4",
+      "folder": "WildWest",
+      "base_size": [
+        32,
+        32
+      ],
+      "prompt_used": "Original hand-drawn 1890s survey-map forest stamp 4. Tree clump from above, crisp #3A2D20 outlines, light hatching, no blur, transparent. Layout 4.",
+      "files": [
+        {
+          "name": "forest-stamp-4.png",
+          "width": 32,
+          "height": 32,
+          "sha256": "962985339e3bee1c937183ed18c8095c5a5f2d01de7cc0ad06e04320d591ebdf",
+          "bytes": 1011,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-4@2x.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "6bb0a01c817dfb3bb8452ade7ebc9971e19551b930e90843168a450580a8c2a2",
+          "bytes": 2275,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-4@3x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "28a2d43a58525c92092f15c88ec4f72f667fa1ee5f32bf8044bb7fa05f455c3d",
+          "bytes": 3508,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-4-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "92221ed51fdd4f605cfce99304b76505f3dec2fe58c077e1229e1cada2bb5fee",
+          "bytes": 54898,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "forest-stamp-5",
+      "folder": "WildWest",
+      "base_size": [
+        32,
+        32
+      ],
+      "prompt_used": "Original hand-drawn 1890s survey-map forest stamp 5. Tree clump from above, crisp #3A2D20 outlines, light hatching, no blur, transparent. Layout 5.",
+      "files": [
+        {
+          "name": "forest-stamp-5.png",
+          "width": 32,
+          "height": 32,
+          "sha256": "c829798ec92f0f7ca23db45b9f2ca4a2c09afa4ea6c69b1735403c2683dc200c",
+          "bytes": 834,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-5@2x.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "5c96e5d0d61aa3397b5ed4df7181dffa0a4bbd9b359751ebed4257c8ea755ae1",
+          "bytes": 1833,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-5@3x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "ae6c659e86aeb56a46d167e35715064089e57c6fd5d6c6eae5658bd86d0e80d4",
+          "bytes": 2648,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-5-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "7906da9c8b147be38c6fac49ae07003cb1e5719caf712b5934d74d8d4d298804",
+          "bytes": 51325,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "forest-stamp-6",
+      "folder": "WildWest",
+      "base_size": [
+        32,
+        32
+      ],
+      "prompt_used": "Original hand-drawn 1890s survey-map forest stamp 6. Tree clump from above, crisp #3A2D20 outlines, light hatching, no blur, transparent. Layout 6.",
+      "files": [
+        {
+          "name": "forest-stamp-6.png",
+          "width": 32,
+          "height": 32,
+          "sha256": "f858443b9c4f9a20774629b8eb6dcfeefce2abb398ad7f2227d7d27e0c1d7c74",
+          "bytes": 1086,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-6@2x.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "471b6c97e4fbc2755e751d80e8f0c4902fdbff98c787c61269d866e276e479b7",
+          "bytes": 2604,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-6@3x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "06bdc9e708ea26381d7e9765bc4a0092111097b68310ac37757a456a0a8d51b2",
+          "bytes": 3808,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "forest-stamp-6-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "6fab87e99cfb5478a105ab0dce078234a72d622e85ca97863c016a6db2766890",
+          "bytes": 77027,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "hill-hatch",
+      "folder": "WildWest",
+      "base_size": [
+        256,
+        256
+      ],
+      "prompt_used": "Original 1890s survey-map short sepia #3A2D20 hachure stroke clusters. Seamless periodic tile, clearly visible, transparent background, no blur.",
+      "files": [
+        {
+          "name": "hill-hatch.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "b84c5d60311b64d6bf07c4484ab05fecdd17a8965ac3f2f3caf479fb0781dc95",
+          "bytes": 3076,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "hill-hatch@2x.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "86d3944c381ae10c1736dec7d01d70e5c7735d90fa5d8d0ed65259abd32d1a08",
+          "bytes": 5973,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "hill-hatch@3x.png",
+          "width": 768,
+          "height": 768,
+          "sha256": "0707ce4f2447c92b4d5bf3a7406164a8660a02c179d7377f5021b17536876358",
+          "bytes": 10975,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "hill-hatch-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "d371e7b15c4aa7aa7b8ee9025db5e759c323d4b4c3914138191a6f6ba03f3d98",
+          "bytes": 6801,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "transparent seamless overlay",
+      "method": "deterministic periodic texture geometry",
+      "tile": true
+    },
+    {
+      "name": "paper-tile",
+      "folder": "WildWest",
+      "base_size": [
+        512,
+        512
+      ],
+      "prompt_used": "Original seamless 1890s map paper: aged peach #E4C9A8, visible fine fibers, periodic faint stains, calm contrast, no vignette. Full-bleed opaque base texture.",
+      "files": [
+        {
+          "name": "paper-tile.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "d59235284c529876ae7cc1e046afa67db1f44c8bc069699124d26d1109474c7f",
+          "bytes": 114119,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": false,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "paper-tile@2x.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "a732b7da281a25ad7c468b82b7bc96c9a221e9ca564c706243365fc564a46297",
+          "bytes": 524982,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": false,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "paper-tile@3x.png",
+          "width": 1536,
+          "height": 1536,
+          "sha256": "d930d894e83da4a36cca9c06fd4b78ee62c707c4029a1599006779aff32f6b9c",
+          "bytes": 1225925,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": false,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "paper-tile-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "a732b7da281a25ad7c468b82b7bc96c9a221e9ca564c706243365fc564a46297",
+          "bytes": 524982,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": false,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "opaque seamless base texture",
+      "method": "deterministic periodic texture geometry",
+      "tile": true
+    },
+    {
+      "name": "player-arrow",
+      "folder": "WildWest",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Cream #F6EAD6 symmetric upward arrowhead, bottom notch, dark #3A2D20 outline and small shadow, no compass. Original geometry.",
+      "files": [
+        {
+          "name": "player-arrow.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "694ac8ff3677ce2e88cdc6b089b4611aeb13fedc9acaaf832f8068eefdc00353",
+          "bytes": 2391,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "player-arrow@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "6a3e1c2a7d5666b0990d0717cf7b3e8b9150fa993f8de01417c6c8b89c461831",
+          "bytes": 4691,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "player-arrow@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "51b54b1c41a66ed6c8e296a545452c676611ee27a805f52a6a85779661fb1bd0",
+          "bytes": 6973,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "player-arrow-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "0e06a12c8366f87c3f58a3bf05cc99c90c2c122f0a3897e2fa9432f213cc9493",
+          "bytes": 44393,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "water-edge",
+      "folder": "WildWest",
+      "base_size": [
+        256,
+        256
+      ],
+      "prompt_used": "Original 1890s survey-map fine horizontal sepia #3A2D20 pen lines for lakes. Seamless periodic tile, faint but visible, transparent background, no blur.",
+      "files": [
+        {
+          "name": "water-edge.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "d5cb93da37602e03349eccd8c5e67150d61f9f6277de38606d9844c290f28b03",
+          "bytes": 1830,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "water-edge@2x.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "3840cdc96cef776ca470fecf501ab3aed628eabdfcea7cf81a3e61d3f9cf3047",
+          "bytes": 5392,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "water-edge@3x.png",
+          "width": 768,
+          "height": 768,
+          "sha256": "e893c4e6caee18ec6b139fb86450acd4a2d44c017f05c6915b1c3ef867f9d9ae",
+          "bytes": 7693,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "water-edge-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "0456c541d38ac442e4a74fd6ad45b970e45f68bc8da288cf3c37f7c02ca47c7e",
+          "bytes": 5114,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": false,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "transparent seamless overlay",
+      "method": "deterministic periodic texture geometry",
+      "tile": true
+    },
+    {
+      "name": "waypoint-x",
+      "folder": "WildWest",
+      "base_size": [
+        48,
+        48
+      ],
+      "prompt_used": "Hand-inked red #A8261F X, two broad uneven diagonal pen strokes, tapered ends, transparent.",
+      "files": [
+        {
+          "name": "waypoint-x.png",
+          "width": 48,
+          "height": 48,
+          "sha256": "ac07019ef634e46a1a191310cf988603ebc16ae7f65ed2da98a2d2d6d11fc9ea",
+          "bytes": 1534,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "waypoint-x@2x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "d0651dc727e6fb59c9819eff971b31e791d9625b4abe8b72c7eb60025243874c",
+          "bytes": 2937,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "waypoint-x@3x.png",
+          "width": 144,
+          "height": 144,
+          "sha256": "877ec09f0f2e69f4856da92a4880b025f706a923746f094cda9893d6db8cef0f",
+          "bytes": 4325,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "waypoint-x-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "af42678c9fc96f9062c6df5c15e351448f506b8a40b10eca0146dd43a19b3e81",
+          "bytes": 36620,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "west-poi-bank",
+      "folder": "WildWest",
+      "base_size": [
+        36,
+        36
+      ],
+      "prompt_used": "Round solid pure BLACK #000000 disk filling 90% of the canvas, thin cream #E9D5B6 circular rim, centered simple solid WHITE #FFFFFF pictogram, bold and legible at 36 px. Flat vector-like raster icon with only subtle hand-ink irregularity at the silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes inside the white symbol. Transparent outside the circle. Pictogram: money bag.",
+      "files": [
+        {
+          "name": "west-poi-bank.png",
+          "width": 36,
+          "height": 36,
+          "sha256": "2cea392b0dd0019fb9d71d7157bba7c6261b7d55550a9b53662f40ca831ad5f6",
+          "bytes": 1495,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-bank@2x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "3453ebaa6091d01196f71d3686cdaba3e9638d883a7efc8693596485273546ad",
+          "bytes": 3430,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-bank@3x.png",
+          "width": 108,
+          "height": 108,
+          "sha256": "1d24fdfa5f95362bad31e4b5fd6b4365babc2dac20fc9ccb19b5d22684db8b88",
+          "bytes": 5403,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-bank-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "425bf0c9341a260a8ce4bff4cc23be02819dd22b9aa97c2389d9b5020dd0b06f",
+          "bytes": 69921,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "west-poi-barber",
+      "folder": "WildWest",
+      "base_size": [
+        36,
+        36
+      ],
+      "prompt_used": "Round solid pure BLACK #000000 disk filling 90% of the canvas, thin cream #E9D5B6 circular rim, centered simple solid WHITE #FFFFFF pictogram, bold and legible at 36 px. Flat vector-like raster icon with only subtle hand-ink irregularity at the silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes inside the white symbol. Transparent outside the circle. Pictogram: barber.",
+      "files": [
+        {
+          "name": "west-poi-barber.png",
+          "width": 36,
+          "height": 36,
+          "sha256": "dc21a308d79a6a8f7c2061da047487dea3ef3a6203aab352639b2b40281a5397",
+          "bytes": 1727,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-barber@2x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "93b1ae2a937f099cbf25d30d25383da0699d9d39296a27d5c78e2781881d655a",
+          "bytes": 4035,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-barber@3x.png",
+          "width": 108,
+          "height": 108,
+          "sha256": "84ef31d2a136dc8b7c3f83736aa827295bcf98b46271dc8b090d6c568c161fec",
+          "bytes": 6317,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-barber-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "ca2af835513e4f7ede890faa279b1c59f78ceb7e6cc7bf5349287be27d702ef5",
+          "bytes": 82665,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "west-poi-church",
+      "folder": "WildWest",
+      "base_size": [
+        36,
+        36
+      ],
+      "prompt_used": "Round solid pure BLACK #000000 disk filling 90% of the canvas, thin cream #E9D5B6 circular rim, centered simple solid WHITE #FFFFFF pictogram, bold and legible at 36 px. Flat vector-like raster icon with only subtle hand-ink irregularity at the silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes inside the white symbol. Transparent outside the circle. Pictogram: small church.",
+      "files": [
+        {
+          "name": "west-poi-church.png",
+          "width": 36,
+          "height": 36,
+          "sha256": "fb28e4bc1703ce26b63998806b9c0cc23a493857a1732bf9391bb067e0e7dcd5",
+          "bytes": 1430,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-church@2x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "f3c92ed948c93df71d71e7c8ecee319b75735b84bdcfe7fd3b3abf04e3861411",
+          "bytes": 3325,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-church@3x.png",
+          "width": 108,
+          "height": 108,
+          "sha256": "15761761c56516252344998437bb5e9034ab3d250a128ef5849c8c04db5d232e",
+          "bytes": 5146,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-church-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "9861ad56ec26791dce5168d617ec53e55cd627a3c14ccd69a1809d47c46a5517",
+          "bytes": 63002,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "west-poi-cinema",
+      "folder": "WildWest",
+      "base_size": [
+        36,
+        36
+      ],
+      "prompt_used": "Round solid pure BLACK #000000 disk filling 90% of the canvas, thin cream #E9D5B6 circular rim, centered simple solid WHITE #FFFFFF pictogram, bold and legible at 36 px. Flat vector-like raster icon with only subtle hand-ink irregularity at the silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes inside the white symbol. Transparent outside the circle. Pictogram: cinema.",
+      "files": [
+        {
+          "name": "west-poi-cinema.png",
+          "width": 36,
+          "height": 36,
+          "sha256": "9c5617c354db22e0026bb4f1db655ffb109f75f8d527da0b001458c393cafd15",
+          "bytes": 1645,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-cinema@2x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "effbab2f4e37df302c2d8f6a22cc801b663f8983ebb4059062a67efd157dbe83",
+          "bytes": 3944,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-cinema@3x.png",
+          "width": 108,
+          "height": 108,
+          "sha256": "dcb70afa275f1a8d621798479f94e3c679633c80541d5aea24d82b45ecdf3cc4",
+          "bytes": 6189,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-cinema-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "40b16a67fb1e1c0ec72f54450b72d2abca3264779427f86be10dd7d6aeded69f",
+          "bytes": 82815,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "west-poi-clothing",
+      "folder": "WildWest",
+      "base_size": [
+        36,
+        36
+      ],
+      "prompt_used": "Round solid pure BLACK #000000 disk filling 90% of the canvas, thin cream #E9D5B6 circular rim, centered simple solid WHITE #FFFFFF pictogram, bold and legible at 36 px. Flat vector-like raster icon with only subtle hand-ink irregularity at the silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes inside the white symbol. Transparent outside the circle. Pictogram: clothing.",
+      "files": [
+        {
+          "name": "west-poi-clothing.png",
+          "width": 36,
+          "height": 36,
+          "sha256": "6630d2865ff74a70dd64d5094218ad7126fa75c870fc152c884eb62199d6139a",
+          "bytes": 1428,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-clothing@2x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "1cff11f6337d4d9f7ab10b9ef7252df531f283f868cea265f0dba9d910505fa1",
+          "bytes": 3328,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-clothing@3x.png",
+          "width": 108,
+          "height": 108,
+          "sha256": "2039d1e23aa371241ece278f42ffbb72a9d2109cb57becd15daa9f4582c43d12",
+          "bytes": 5186,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-clothing-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "a950509fae86be7a311eea3e4c21b96d166ae3df0f06580e9ad4a03b3438f586",
+          "bytes": 66199,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "west-poi-hospital",
+      "folder": "WildWest",
+      "base_size": [
+        36,
+        36
+      ],
+      "prompt_used": "Round solid pure BLACK #000000 disk filling 90% of the canvas, thin cream #E9D5B6 circular rim, centered simple solid WHITE #FFFFFF pictogram, bold and legible at 36 px. Flat vector-like raster icon with only subtle hand-ink irregularity at the silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes inside the white symbol. Transparent outside the circle. Pictogram: hospital.",
+      "files": [
+        {
+          "name": "west-poi-hospital.png",
+          "width": 36,
+          "height": 36,
+          "sha256": "44b476312e03a37c65d4fbc41b2ba86ae07a7ea3f880de239499187c1f43159d",
+          "bytes": 1321,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-hospital@2x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "ce3a8add142d57f7d30bdd494aa5159fc93baf3796abe9af4613222fc4f98684",
+          "bytes": 2976,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-hospital@3x.png",
+          "width": 108,
+          "height": 108,
+          "sha256": "e696c4ac7ea9ac785e2c98a005188012e33c570b9d7af60e9e0631795c228d7a",
+          "bytes": 4745,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-hospital-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "a0fd61c993b30be5acb08e3106d30cd7667c00b283a31344d47fe019e7886ff3",
+          "bytes": 61084,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "west-poi-hotel",
+      "folder": "WildWest",
+      "base_size": [
+        36,
+        36
+      ],
+      "prompt_used": "Round solid pure BLACK #000000 disk filling 90% of the canvas, thin cream #E9D5B6 circular rim, centered simple solid WHITE #FFFFFF pictogram, bold and legible at 36 px. Flat vector-like raster icon with only subtle hand-ink irregularity at the silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes inside the white symbol. Transparent outside the circle. Pictogram: hotel.",
+      "files": [
+        {
+          "name": "west-poi-hotel.png",
+          "width": 36,
+          "height": 36,
+          "sha256": "0d89bf3f809976d67785f5c6e65d4a8321ff7b2ade20669f72b7e409bc239575",
+          "bytes": 1419,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-hotel@2x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "89ccaacebb9aae8ed1d5968d606709913287067b75f9729b3dfaf03377dfece5",
+          "bytes": 3182,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-hotel@3x.png",
+          "width": 108,
+          "height": 108,
+          "sha256": "92cebaef4c2efd7d448807013e06a797ca8b2f33c1a94d2a018bbdb1773dd3e0",
+          "bytes": 4975,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-hotel-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "03bed916028e306956a846c306f852bbb9d733dc4e926bedc5975bcccf21efc8",
+          "bytes": 63231,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "west-poi-parking",
+      "folder": "WildWest",
+      "base_size": [
+        36,
+        36
+      ],
+      "prompt_used": "Round solid pure BLACK #000000 disk filling 90% of the canvas, thin cream #E9D5B6 circular rim, centered simple solid WHITE #FFFFFF pictogram, bold and legible at 36 px. Flat vector-like raster icon with only subtle hand-ink irregularity at the silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes inside the white symbol. Transparent outside the circle. Pictogram: parking.",
+      "files": [
+        {
+          "name": "west-poi-parking.png",
+          "width": 36,
+          "height": 36,
+          "sha256": "5c79f17ab55250609be287afda5ff68c90c3680b36f70560824e14465430121a",
+          "bytes": 1387,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-parking@2x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "2b612b2f9bc3b9950280e17874dae2f31e9d93a7200cfa8f9f1e4b253e4f2ef0",
+          "bytes": 3218,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-parking@3x.png",
+          "width": 108,
+          "height": 108,
+          "sha256": "76d7885ff54bf498fefc735497b455a3010881287737b6228f966d7341a601b5",
+          "bytes": 5058,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-parking-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "89dae0bb323ef4433922ae72169b6f257cc94a435a386692096956ffc9b9765c",
+          "bytes": 65710,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "west-poi-playground",
+      "folder": "WildWest",
+      "base_size": [
+        36,
+        36
+      ],
+      "prompt_used": "Round solid pure BLACK #000000 disk filling 90% of the canvas, thin cream #E9D5B6 circular rim, centered simple solid WHITE #FFFFFF pictogram, bold and legible at 36 px. Flat vector-like raster icon with only subtle hand-ink irregularity at the silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes inside the white symbol. Transparent outside the circle. Pictogram: swing.",
+      "files": [
+        {
+          "name": "west-poi-playground.png",
+          "width": 36,
+          "height": 36,
+          "sha256": "94fee3733034d2fed5b103b11ce1f6a48460b4f4d45084cf799366968b294676",
+          "bytes": 1602,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-playground@2x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "79454ea74f22aec3ab706b247662f17654944512ee5b4c2295927605db4be44d",
+          "bytes": 3521,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-playground@3x.png",
+          "width": 108,
+          "height": 108,
+          "sha256": "9830d705313fce638a83a67e02bf0d19311800a70932acf846db2bb062ee5057",
+          "bytes": 5411,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-playground-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "82d4f317872a9bd03182e46d2dfc04846e9620ff7e9c07e06367e4b2bc0201c9",
+          "bytes": 68773,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "west-poi-school",
+      "folder": "WildWest",
+      "base_size": [
+        36,
+        36
+      ],
+      "prompt_used": "Round solid pure BLACK #000000 disk filling 90% of the canvas, thin cream #E9D5B6 circular rim, centered simple solid WHITE #FFFFFF pictogram, bold and legible at 36 px. Flat vector-like raster icon with only subtle hand-ink irregularity at the silhouette edge. No hatching, no paper texture, no sepia tint, no shading, no gradient, no internal strokes inside the white symbol. Transparent outside the circle. Pictogram: school bell.",
+      "files": [
+        {
+          "name": "west-poi-school.png",
+          "width": 36,
+          "height": 36,
+          "sha256": "f3b0fd9470eb0c62293eea074e2e77bd7ae9d7249b232998fdd17dea3195e3de",
+          "bytes": 1412,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-school@2x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "d679138ade2bf7bf78f20abf6fe9f955de59ea591339c219e5fa5836597934e0",
+          "bytes": 3275,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-school@3x.png",
+          "width": 108,
+          "height": 108,
+          "sha256": "177873194042767473ddc83d2aff4dd6c6a56f4421951ed351802a2689023f13",
+          "bytes": 5267,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "west-poi-school-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "fc7d402bc9c37429d8dc0a805fe1256862aa4653ee53f735cd9fd46f103f3e50",
+          "bytes": 68549,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    }
+  ],
+  "notes": [
+    "PixelQuest folder added with user approval.",
+    "Continuous base textures (grass, asphalt, water, paper) are opaque RGBA; isolated sprites and ink overlays have real transparent pixels.",
+    "Full-bleed seamless tiles have no padding. West round badges follow 90% diameter rather than generic 8% padding.",
+    "Non-square sprites have square 1024px masters with aspect ratio preserved.",
+    "Original geometry and original generated illustration, no prior conversation artwork reused."
+  ],
+  "validation": {
+    "every_file_opened_and_decoded": true,
+    "all_dimensions_checked": true,
+    "all_sprite_alpha_channels_checked": true,
+    "all_texture_opposite_edges_exactly_equal": true,
+    "pixel_quest_grid_checked": false,
+    "visual_review": "Side-by-side sprites and 3x3 texture repeats visually reviewed; all six index.html overview pages loaded and rendered with WeasyPrint."
+  }
+}

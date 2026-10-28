@@ -2,6 +2,41 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-066 – Codex-Lieferung: Toy Town komplett, Wild West Rest, eigene Pixel-Symbole
+
+**Ziel:** Nutzer hat `ezmaps-assets.zip` von Codex hochgeladen (Auftrag aus dem Chat, selbstständig ohne Repo-Zugriff).
+
+**Geprüft (Cloud):**
+- 290 Dateien, alle verlangten Bilder vorhanden (@1x/@2x/@3x + Master).
+- Echte Transparenz, Größen wie bestellt.
+- Bei den 3 Toy-Town-Kacheln gibt es nur @1x/@2x (so bestellt).
+- Kontaktbogen angesehen (`docs/previews/codex-lieferung-gm066.png`): scharf, einheitlich, nichts aus bekannten Spielen.
+
+**Dateien:**
+- `Assets/Generated/ToyTown/{houses,nature,tiles,markers}/` (neu)
+- `Assets/Generated/WildWest/` (10 Knöpfe, Pfeil, X, Wald-Stempel/Papier/Schraffur/Wasser neu; Manifest der 2. Lieferung als `manifest-gm066.json`/`index-gm066.html`, das erste bleibt)
+- `Assets/Generated/PixelQuest/` (neu)
+- Xcode: `App/Assets.xcassets/ToyTown/` (33 Bildsätze, neu), `App/Assets.xcassets/WildWest/` (+12)
+- Code: `App/NeonMapView.swift`, `App/FollowCamera.swift`
+
+**Geändert (alles mit Rückfall auf die bisherige Zeichnung, falls ein Bild fehlt):**
+- **Wild West:** alle 16 Symbolarten jetzt als Codex-Knöpfe. Namen wie im Code `west-poi-<art>`, z. B. Krankenhaus → `cross`, Bank → `cash`, Kleidung → `shirt`; keine Code-Änderung nötig. Standort-Pfeil `west-player-arrow`, Ziel `west-waypoint-x`.
+- **Toy Town:** 6 runde Symbole (`toy-poi-<art>`), rotes Spielzeugauto als Standort (`toy-car-red`), karierte Zielfahne (`toy-flag`).
+- **Toy-Town-Häuser, Natur und Kacheln** liegen als Bildsätze bereit, sind aber **noch nicht auf der Karte** (braucht `build_style.py`, siehe Auftrag).
+- **Pixel Quest:** Codex-Satz nur im Repo (`Assets/Generated/PixelQuest/`), **nicht** in der App. Die App nutzt weiter die Grafiken des Nutzers – Entscheidung des Nutzers offen (Minecraft-Ähnlichkeit, siehe Chat).
+
+**Tatsächlich geprüft:** Dateien und Transparenz per Skript, Kontaktbögen angesehen, `swiftc -parse` NeonMapView/FollowCamera, `check_style.py`: STIL OK.
+
+**Ungetestet:** Mac-Build und Aussehen auf dem Gerät.
+
+### Auftrag (lokaler Claude)
+1. Mac-Build, aufs iPhone: Wild West (16 Knöpfe, Pfeil, X) und Toy Town (Symbole, Auto, Fahne) ansehen.
+2. **Toy-Town-Häuser auf die Gebäude:** in `build_style.py` eine `symbol`-Ebene auf `building` (Mittelpunkt), Bild nach Gebäude-ID gestreut aus `toy-house-1…6`. Für große Grundflächen `toy-apartment`/`toy-shop`; `icon-size` nach Zoom (ab 15,5), `icon-allow-overlap` aus. Bilder laden wie `poiImages`. Mit `render_previews.py` prüfen, dann auf dem Gerät.
+3. **Toy-Town-Natur:** Bäume (`toy-tree-round-*`) als Symbole in Wald/Park, `toy-pond` in Kreisel-Mitten (falls machbar), `toy-football-pitch`/`toy-playground`/`toy-parking-lot` auf `pitch`/`playground`/`parking`.
+4. **Toy-Town-Kacheln:** `toy-grass`/`toy-asphalt`/`toy-water` sind halbdurchsichtige Overlays. Grundfarbe darunter laut Codex #3EB34A / #9A9A9A / #4AA8E8 (heute Toy-Land #8dc63f – angleichen oder Kachel einfärben).
+5. **Wild-West-Texturen neu** (Wald-Stempel jetzt scharf, Papier/Schraffur/Wasser kräftiger): einbauen, wenn sie die Straßen nicht stören.
+6. Pixel Quest erst nach Entscheidung des Nutzers umstellen. Code-Namen wären `px-<art>`, Codex-Datei `px-poi-<codex-name>`, Zuordnung wie bei Wild West.
+
 ## GM-065 – Ganz Europa: Texte angepasst (Technik konnte es schon)
 
 **Ziel:** Nutzer: „sollte nicht ganz Europa auf der Karte sein?“

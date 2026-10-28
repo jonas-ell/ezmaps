@@ -1,0 +1,23 @@
+{
+ "images": [
+  {
+   "filename": "toy-parking-lot.png",
+   "idiom": "universal",
+   "scale": "1x"
+  },
+  {
+   "filename": "toy-parking-lot@2x.png",
+   "idiom": "universal",
+   "scale": "2x"
+  },
+  {
+   "filename": "toy-parking-lot@3x.png",
+   "idiom": "universal",
+   "scale": "3x"
+  }
+ ],
+ "info": {
+  "author": "xcode",
+  "version": 1
+ }
+}

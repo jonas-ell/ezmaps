@@ -1,0 +1,159 @@
+{
+  "folder": "ToyTown/tiles",
+  "background_color": "#3EB34A",
+  "assets": [
+    {
+      "name": "toy-asphalt",
+      "folder": "ToyTown/tiles",
+      "base_size": [
+        256,
+        256
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Seamless full-bleed asphalt texture with periodic edges. No padding: texture must cover map continuously.",
+      "files": [
+        {
+          "name": "toy-asphalt.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "8c1f7a27e8bd45f9e48ef00e5651faeb6a6e067be8581d6c1f12ea7dad58c9d5",
+          "bytes": 3408,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": false,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-asphalt@2x.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "283ea1a6f7b3b39b86c9a2f3894d38ad4318d20f3af2eb992153194cd606a6c8",
+          "bytes": 7534,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": false,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "opaque seamless base texture",
+      "method": "deterministic periodic texture geometry",
+      "tile": true
+    },
+    {
+      "name": "toy-grass",
+      "folder": "ToyTown/tiles",
+      "base_size": [
+        256,
+        256
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Seamless full-bleed grass texture with periodic edges. No padding: texture must cover map continuously.",
+      "files": [
+        {
+          "name": "toy-grass.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "0a5fe2fddef7dbd708fe1b12d72373459566fd4a48734054b742dc76bf3b3e61",
+          "bytes": 4413,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": false,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-grass@2x.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "9f3eaf8bbbfcae1e07b7d8057a75d2fd342926a8812297676d9c8285cfe31c46",
+          "bytes": 5966,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": false,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "opaque seamless base texture",
+      "method": "deterministic periodic texture geometry",
+      "tile": true
+    },
+    {
+      "name": "toy-water",
+      "folder": "ToyTown/tiles",
+      "base_size": [
+        256,
+        256
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Seamless full-bleed water texture with periodic edges. No padding: texture must cover map continuously.",
+      "files": [
+        {
+          "name": "toy-water.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "4cc8bde25a74c3d4f82e9b96c2e21cb7a260787103029a635e2ad9eb44234ffe",
+          "bytes": 3116,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": false,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-water@2x.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "d847544b0d7f9f2094f3e4caf7c159d08d0b0399f4e63c0a8e5b5c766181a5c7",
+          "bytes": 2769,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": false,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": true,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "opaque seamless base texture",
+      "method": "deterministic periodic texture geometry",
+      "tile": true
+    }
+  ],
+  "notes": [
+    "PixelQuest folder added with user approval.",
+    "Continuous base textures (grass, asphalt, water, paper) are opaque RGBA; isolated sprites and ink overlays have real transparent pixels.",
+    "Full-bleed seamless tiles have no padding. West round badges follow 90% diameter rather than generic 8% padding.",
+    "Non-square sprites have square 1024px masters with aspect ratio preserved.",
+    "Original geometry and original generated illustration, no prior conversation artwork reused."
+  ],
+  "validation": {
+    "every_file_opened_and_decoded": true,
+    "all_dimensions_checked": true,
+    "all_sprite_alpha_channels_checked": true,
+    "all_texture_opposite_edges_exactly_equal": true,
+    "pixel_quest_grid_checked": false,
+    "visual_review": "Side-by-side sprites and 3x3 texture repeats visually reviewed; all six index.html overview pages loaded and rendered with WeasyPrint."
+  }
+}

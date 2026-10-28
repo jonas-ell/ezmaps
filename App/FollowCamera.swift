@@ -180,10 +180,10 @@ enum PlayerMarker {
             let img = pixel(UIImage(named: green ? "px-player-green" : "px-player"))
             return (img, img)
         case .toyTown:
-            let car = toyCar()
+            let car = UIImage(named: "toy-car-red") ?? toyCar() // GM-066: Spielzeugauto von Codex
             return (car, car)
         case .wildWest:
-            let a = arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60)
+            let a = UIImage(named: "west-player-arrow") ?? arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60) // GM-066: Codex
             return (a, a)
         case .classic:
             let a = classic()
