@@ -151,6 +151,8 @@ final class FollowCamera: NSObject {
         let inset = UIEdgeInsets(top: max(0, 2 * ay - map.bounds.height), left: max(0, 2 * ax - map.bounds.width),
                                  bottom: max(0, map.bounds.height - 2 * ay), right: max(0, map.bounds.width - 2 * ax))
         if map.contentInset != inset { map.contentInset = inset }
+        // GM-027/063: kein zweiter (grauer) GPS-Punkt neben dem Pfeil – vor dem Überspringen im Stand prüfen (sonst blieb er stehen)
+        if map.showsUserLocation { map.showsUserLocation = false }
         // GM-028: im Stand nichts neu setzen – spart Rechenzeit (Kamera und Pfeil sind schon richtig)
         if let p = lastSet, abs(p.0 - lat) < 1e-7, abs(p.1 - lon) < 1e-7, abs(p.2 - heading) < 0.05, abs(p.3 - altitude) < 0.5, p.4 == CGPoint(x: ax, y: ay) {
             return
@@ -164,7 +166,6 @@ final class FollowCamera: NSObject {
         if arrow.image !== img { arrow.image = img }
         arrow.isHidden = false
         if arrow.superview === map { map.bringSubviewToFront(arrow) }
-        if map.showsUserLocation { map.showsUserLocation = false } // GM-027: kein zweiter (grauer) GPS-Punkt neben dem Pfeil
     }
 }
 
