@@ -1,0 +1,723 @@
+{
+  "folder": "ToyTown/nature",
+  "background_color": "#3EB34A",
+  "assets": [
+    {
+      "name": "toy-bush-group",
+      "folder": "ToyTown/nature",
+      "base_size": [
+        48,
+        32
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-bush-group. One compact horizontal group of three joined rounded green bushes seen from above. Simple flat green lobes with dark grey outlines. Width to height 3:2, no ground or platform. Must read at 48x32. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-bush-group.png",
+          "width": 48,
+          "height": 32,
+          "sha256": "113bc3400124a80f78a00b62533ae6ca3940f342829ed2645ca219fb048cb68b",
+          "bytes": 1556,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-bush-group@2x.png",
+          "width": 96,
+          "height": 64,
+          "sha256": "96b193586483bfc3bc44045effc86ec8b9609d8a4d9e03e11fe188da89a68d39",
+          "bytes": 3727,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-bush-group@3x.png",
+          "width": 144,
+          "height": 96,
+          "sha256": "69ce17faa313cc705878596471d59c82e070621d88226da7f5fe83fc44298536",
+          "bytes": 6251,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-bush-group-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "99cc08ab0a1f4c393ae5f633f1345bfaf192134f718e4247d65e4ba74d207586",
+          "bytes": 79736,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-flower-bed",
+      "folder": "ToyTown/nature",
+      "base_size": [
+        48,
+        32
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-flower-bed. One horizontal oval flower bed from directly above, a light sandy rim enclosing six large simplified pink yellow and white flowers with green leaves. Width to height 3:2, no surrounding lawn. Must read at 48x32. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-flower-bed.png",
+          "width": 48,
+          "height": 32,
+          "sha256": "58a0978a9b12345cac5daee338343bdc19fb2521a6e51956e2c32ab6c3f74753",
+          "bytes": 3520,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-flower-bed@2x.png",
+          "width": 96,
+          "height": 64,
+          "sha256": "4ef552565fe03f70435ab2b1c7a769442fb054ee2fe80bcf6d8129e1b36b8ef5",
+          "bytes": 11630,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-flower-bed@3x.png",
+          "width": 144,
+          "height": 96,
+          "sha256": "8b98f9e3ba0691e7d7c1fc6ca462c09332ad824f0b08c6c95d62e22e8a92a104",
+          "bytes": 22423,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-flower-bed-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "c313d6e588c3bce3f75a6deff4010054f064fe2af7c1b35810eab2942f92dc38",
+          "bytes": 379914,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-football-pitch",
+      "folder": "ToyTown/nature",
+      "base_size": [
+        128,
+        96
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Top-down football pitch, white sidelines, center circle and penalty boxes, transparent beyond pitch.",
+      "files": [
+        {
+          "name": "toy-football-pitch.png",
+          "width": 128,
+          "height": 96,
+          "sha256": "6a21d194b7d923afaceaf954920096dc9ee329cf78676965fee18ea69c1c01d5",
+          "bytes": 1856,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-football-pitch@2x.png",
+          "width": 256,
+          "height": 192,
+          "sha256": "61dc2440951965e3534aace65aeff591bb49da37501e664dd4dabf8dda3e96e2",
+          "bytes": 3835,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-football-pitch@3x.png",
+          "width": 384,
+          "height": 288,
+          "sha256": "041fb98b0dca2f713eeb0a596edc2f09b234ed5504af784007cbcb5c79d36c42",
+          "bytes": 5763,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-football-pitch-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "93438a800bf1423f7d2d95a53f4622c5156e3a8f55e5a05d36fc3262a8025085",
+          "bytes": 18880,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "toy-parking-lot",
+      "folder": "ToyTown/nature",
+      "base_size": [
+        128,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Top-down asphalt parking lot, exactly four bays in one row, yellow edge line, blue P sign. Letter P explicitly permitted.",
+      "files": [
+        {
+          "name": "toy-parking-lot.png",
+          "width": 128,
+          "height": 64,
+          "sha256": "fd36c5a16c755e625c9a0c7046c56114bcaa37a6ea4a739d9f87277af7e0a1b8",
+          "bytes": 903,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-parking-lot@2x.png",
+          "width": 256,
+          "height": 128,
+          "sha256": "0f54c04207fc42a66c5f2b9e76a60e5d13782fd2092223ee8f6011e66de90900",
+          "bytes": 1635,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-parking-lot@3x.png",
+          "width": 384,
+          "height": 192,
+          "sha256": "b3e08e17a3ce41b80f08c3bf69733a062f2071f22985168c452c48820ccefb33",
+          "bytes": 2385,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-parking-lot-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "da9b35d656fc2b68a310984a1868768816aaf37fbb53a00f75d8bd935b8e77fc",
+          "bytes": 10033,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "toy-playground",
+      "folder": "ToyTown/nature",
+      "base_size": [
+        96,
+        96
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-playground. One compact isolated playground seen directly from above, one bright red/yellow slide and one blue swing frame with two yellow seats on a small rounded sand patch. Flat play-mat drawing, no perspective beyond simplified recognizable equipment. No people, no labels. Must read at96px. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-playground.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "b4f7454f99e78c21b6ebe7ab2f4fc7b49f1db360441968abccbd49996d28ca26",
+          "bytes": 10409,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-playground@2x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "28e20a27deebce7ebfdaea163d5db74f91c324802a6e715b510754b9d148476c",
+          "bytes": 27655,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-playground@3x.png",
+          "width": 288,
+          "height": 288,
+          "sha256": "d7b0bcbb2d9da030fbd601e6a67d893825f5cdb3e7db7ad8db02bd2bffe4a80d",
+          "bytes": 47735,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-playground-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "92f77eba058ec55d40c4b2055254ba8593adcc4d9647dbed9a4874cc9761def9",
+          "bytes": 245581,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-pond",
+      "folder": "ToyTown/nature",
+      "base_size": [
+        96,
+        96
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-pond. One small isolated irregular oval pond seen strictly from above, blue #4AA8E8 water with flat two white ripple strokes, continuous light sandy rim, a few simple reeds on one edge. No ground beyond sandy rim, transparent surrounding. Must read at96px. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-pond.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "5b61e4570bba4de628e38a6a444e0fe8edc966b7e516435b2ea699940a2f9eac",
+          "bytes": 8051,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-pond@2x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "a82e47a17488991d74eb515058f2e603c07e3d83d8b22798aeba5699e5eecda3",
+          "bytes": 22266,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-pond@3x.png",
+          "width": 288,
+          "height": 288,
+          "sha256": "113b4e3490ef6289b3cab49a81c64da97f5d48c6bf9f8e4860ed69952c0c325b",
+          "bytes": 39091,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-pond-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "91867264877257ec042d4dce6f1a2112a437d9ae7ac0017db5d2832e20d3fff5",
+          "bytes": 228316,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-tree-round-l",
+      "folder": "ToyTown/nature",
+      "base_size": [
+        48,
+        48
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-tree-round. One isolated round-canopy deciduous tree seen directly from above, thick dark grey contour, three large overlapping green foliage lobes, small visible brown trunk at bottom. Three flat green tones, no texture or tiny details. Must read at 24px. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-tree-round-l.png",
+          "width": 48,
+          "height": 48,
+          "sha256": "c77ab81f9c84881f784dc2ed33ded92a0f41895c72c8c42c8036c6c6b0231129",
+          "bytes": 2651,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-tree-round-l@2x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "1eaa4782bd7a89712c29385fc6c6423d93d4221b834ff02820c6fa7cbdfe301d",
+          "bytes": 6345,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-tree-round-l@3x.png",
+          "width": 144,
+          "height": 144,
+          "sha256": "cee1e59292020781ceaa6c0aae6e1938243840e2a4a8460a60de8f1c9e8051a5",
+          "bytes": 10513,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-tree-round-l-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "4d0efdd89378efd8d2a9c0dd7a838eafcfdbe21673b15c243d5c21a2dc63d555",
+          "bytes": 114771,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-tree-round-m",
+      "folder": "ToyTown/nature",
+      "base_size": [
+        32,
+        32
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-tree-round. One isolated round-canopy deciduous tree seen directly from above, thick dark grey contour, three large overlapping green foliage lobes, small visible brown trunk at bottom. Three flat green tones, no texture or tiny details. Must read at 24px. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-tree-round-m.png",
+          "width": 32,
+          "height": 32,
+          "sha256": "21ddd58c79fa7782bde422f825d3e6aec820770e53eceeb655470e9f391f0b90",
+          "bytes": 1682,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-tree-round-m@2x.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "b1f37aff52d5bef44b87cf3cbaac6173f01027c3b7220d633a80b1bdcc134e40",
+          "bytes": 3857,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-tree-round-m@3x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "1eaa4782bd7a89712c29385fc6c6423d93d4221b834ff02820c6fa7cbdfe301d",
+          "bytes": 6345,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-tree-round-m-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "4d0efdd89378efd8d2a9c0dd7a838eafcfdbe21673b15c243d5c21a2dc63d555",
+          "bytes": 114771,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-tree-round-s",
+      "folder": "ToyTown/nature",
+      "base_size": [
+        24,
+        24
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-tree-round. One isolated round-canopy deciduous tree seen directly from above, thick dark grey contour, three large overlapping green foliage lobes, small visible brown trunk at bottom. Three flat green tones, no texture or tiny details. Must read at 24px. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-tree-round-s.png",
+          "width": 24,
+          "height": 24,
+          "sha256": "8b23c00313db68064372911489a0f9bb8a93a066bddf81088b88b69c75e1ae3d",
+          "bytes": 1166,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-tree-round-s@2x.png",
+          "width": 48,
+          "height": 48,
+          "sha256": "c77ab81f9c84881f784dc2ed33ded92a0f41895c72c8c42c8036c6c6b0231129",
+          "bytes": 2651,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-tree-round-s@3x.png",
+          "width": 72,
+          "height": 72,
+          "sha256": "c9246b5c9ad7234248578d7c43da16559bdfa2faa1cfd5648e3f2a0c477d0135",
+          "bytes": 4391,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-tree-round-s-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "4d0efdd89378efd8d2a9c0dd7a838eafcfdbe21673b15c243d5c21a2dc63d555",
+          "bytes": 114771,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    }
+  ],
+  "notes": [
+    "PixelQuest folder added with user approval.",
+    "Continuous base textures (grass, asphalt, water, paper) are opaque RGBA; isolated sprites and ink overlays have real transparent pixels.",
+    "Full-bleed seamless tiles have no padding. West round badges follow 90% diameter rather than generic 8% padding.",
+    "Non-square sprites have square 1024px masters with aspect ratio preserved.",
+    "Original geometry and original generated illustration, no prior conversation artwork reused."
+  ],
+  "validation": {
+    "every_file_opened_and_decoded": true,
+    "all_dimensions_checked": true,
+    "all_sprite_alpha_channels_checked": true,
+    "all_texture_opposite_edges_exactly_equal": true,
+    "pixel_quest_grid_checked": false,
+    "visual_review": "Side-by-side sprites and 3x3 texture repeats visually reviewed; all six index.html overview pages loaded and rendered with WeasyPrint."
+  }
+}

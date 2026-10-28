@@ -1,0 +1,645 @@
+{
+  "folder": "ToyTown/markers",
+  "background_color": "#3EB34A",
+  "assets": [
+    {
+      "name": "toy-car-red",
+      "folder": "ToyTown/markers",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Cute red toy car seen exactly from above, pointing straight up, light blue windows, black tires.",
+      "files": [
+        {
+          "name": "toy-car-red.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "34c85bec4ee4a6e3e6d9a91f11e824035c38399841a2c89b3de4265105e421df",
+          "bytes": 2004,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-car-red@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "79b02877765f481f435c946a4dccc55723f783e64883b9d50280f425047f8fae",
+          "bytes": 3897,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-car-red@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "1e69b4a10ec3159760239283719c7f5d33a1d765b1230df5a6c64b31612c54cd",
+          "bytes": 5969,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-car-red-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "946fd8df7b1427909cdd8de948b04d1a374b5eb7ec91528dfab1518b61e795c9",
+          "bytes": 37303,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "toy-flag",
+      "folder": "ToyTown/markers",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Checkered black and white finish flag on short pole. Pole bottom centered at lower center.",
+      "files": [
+        {
+          "name": "toy-flag.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "48d7efa56c7069567cf731c2da75e72e4320cc46263e1d0a2f438550fb584e64",
+          "bytes": 990,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-flag@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "0bf847024ce0166c01634727cf7f337575c65583a865cfc937f9096a0ec1712a",
+          "bytes": 1715,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-flag@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "826742e0247606186a75247165182606252f0593ac3c687346569c38b3f07997",
+          "bytes": 2526,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-flag-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "00c5bbeea657116684c346c102ec04507d5a6e21e54ae2feddd87be5885350e9",
+          "bytes": 15783,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "toy-poi-charge",
+      "folder": "ToyTown/markers",
+      "base_size": [
+        48,
+        48
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Round charge badge, #008C83 fill, white rim, soft shadow, centered bold white pictogram. P is permitted for parking.",
+      "files": [
+        {
+          "name": "toy-poi-charge.png",
+          "width": 48,
+          "height": 48,
+          "sha256": "2154da512fa86dc9b737d9f40cfc7eb7d78c6dce1b356141018c746525e80205",
+          "bytes": 2075,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-charge@2x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "46af48c901438226e6ee0b2e44e7ac65e6726eeaf7b1ddd2f067019955640c64",
+          "bytes": 4068,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-charge@3x.png",
+          "width": 144,
+          "height": 144,
+          "sha256": "f0e71f337c48ac1089f7303cf452f1b1614e82d463dc31a442e6634018502012",
+          "bytes": 6220,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-charge-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "e9148bda8c39cef3a7b7b9b947a6bf2cb5326e48452541b65486b9e5bfbf6726",
+          "bytes": 52435,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "toy-poi-food",
+      "folder": "ToyTown/markers",
+      "base_size": [
+        48,
+        48
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Round food badge, #279F45 fill, white rim, soft shadow, centered bold white pictogram. P is permitted for parking.",
+      "files": [
+        {
+          "name": "toy-poi-food.png",
+          "width": 48,
+          "height": 48,
+          "sha256": "1c41c4a29d193d3329b94ecfde0cfc4ea8335de6d752c0e72018ccf5c0e47bb4",
+          "bytes": 2018,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-food@2x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "0deecf0d8bb8bfcf5c3a7574a3a21b1066f6ad78eeee9f5101cf07df75c0f9d0",
+          "bytes": 4033,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-food@3x.png",
+          "width": 144,
+          "height": 144,
+          "sha256": "8877224c102ebed178ff32d59625906a4275424570821fd4cde3d6efb3411d84",
+          "bytes": 6237,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-food-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "7d9cea05e8f3ed78883e80553196d7707c2bf6974fad9ddb8b8d0fa04feb966a",
+          "bytes": 54180,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "toy-poi-fuel",
+      "folder": "ToyTown/markers",
+      "base_size": [
+        48,
+        48
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Round fuel badge, #EF7E21 fill, white rim, soft shadow, centered bold white pictogram. P is permitted for parking.",
+      "files": [
+        {
+          "name": "toy-poi-fuel.png",
+          "width": 48,
+          "height": 48,
+          "sha256": "ffea58ed6e984d0aaef22d9ce87fbfbf01535fa318594b503109cbb2910e8aa7",
+          "bytes": 1997,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-fuel@2x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "3ed4b1644ff40635cff62de986572ceb7d29ba8cddaac2515af8389e2f84f50a",
+          "bytes": 4012,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-fuel@3x.png",
+          "width": 144,
+          "height": 144,
+          "sha256": "d5d3ea38bb052a5397d317ebfbad5f8a9b96ab8fb069a0079410e080f2fba7a9",
+          "bytes": 6149,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-fuel-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "280a7d6a98f184af56d4efefeef15925008a9ffda397d37d7aaa8a447bf5d7c6",
+          "bytes": 52525,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "toy-poi-hospital",
+      "folder": "ToyTown/markers",
+      "base_size": [
+        48,
+        48
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Round hospital badge, #D9342B fill, white rim, soft shadow, centered bold white pictogram. P is permitted for parking.",
+      "files": [
+        {
+          "name": "toy-poi-hospital.png",
+          "width": 48,
+          "height": 48,
+          "sha256": "29d7b02f18f8275a751caf0e638e0c12dea040fd7399f48e27f50ff3b27cb3f1",
+          "bytes": 1856,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-hospital@2x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "c68871e8e00a7b9bb01697ab2b93eb5ea5a8b4ca3a1cf756a89e71be42ca1fda",
+          "bytes": 3742,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-hospital@3x.png",
+          "width": 144,
+          "height": 144,
+          "sha256": "f3a93b136b3791ff9a3b9ba2f2d67618e2ecadc6512cbc3fe1d5e36fb2a458df",
+          "bytes": 5792,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-hospital-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "d52c4c9aa5493b64f0bf9bbee54cf86170dec02264b6af299bd9456eeb751378",
+          "bytes": 50995,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "toy-poi-parking",
+      "folder": "ToyTown/markers",
+      "base_size": [
+        48,
+        48
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Round parking badge, #2F6FD0 fill, white rim, soft shadow, centered bold white pictogram. P is permitted for parking.",
+      "files": [
+        {
+          "name": "toy-poi-parking.png",
+          "width": 48,
+          "height": 48,
+          "sha256": "c39259776bb81a6996d6274fca48677a429f0d617955e5f66c820f14daeeb13d",
+          "bytes": 2001,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-parking@2x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "247188098f8f924656a545faba6ed1698c93075edce6e11494411ca7073df5a5",
+          "bytes": 3967,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-parking@3x.png",
+          "width": 144,
+          "height": 144,
+          "sha256": "7879278dcf40ce887a7d48780625e26e44af44969d40e9be3af40956cfa5b3b8",
+          "bytes": 6202,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-parking-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "99a7503cb1c67767e39153e45a2cb0be23a57b302b3f90fbdee9c7a69d989726",
+          "bytes": 53917,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    },
+    {
+      "name": "toy-poi-shop",
+      "folder": "ToyTown/markers",
+      "base_size": [
+        48,
+        48
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design. Round shop badge, #F0B400 fill, white rim, soft shadow, centered bold white pictogram. P is permitted for parking.",
+      "files": [
+        {
+          "name": "toy-poi-shop.png",
+          "width": 48,
+          "height": 48,
+          "sha256": "7903f0aef0fa6de5bf2251d4a5416b8bcc0ae625b454a5aa9b3e3b8cf4d3c785",
+          "bytes": 2056,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-shop@2x.png",
+          "width": 96,
+          "height": 96,
+          "sha256": "cc3cc28829c7d3aaa9058cd0d0c7fe9193a344b494c0bb9fdee095a36066892f",
+          "bytes": 4062,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-shop@3x.png",
+          "width": 144,
+          "height": 144,
+          "sha256": "2d7ced1576ca8ffe930a4204b3a52258e488469d9fcfe42e83ec7f97fdf7b92d",
+          "bytes": 6271,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-poi-shop-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "909aca8a7f863ee9ba66633d6d5555ca00b52e3cf8fec54b8640f745bd54be05",
+          "bytes": 54170,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "original deterministic geometry",
+      "tile": false
+    }
+  ],
+  "notes": [
+    "PixelQuest folder added with user approval.",
+    "Continuous base textures (grass, asphalt, water, paper) are opaque RGBA; isolated sprites and ink overlays have real transparent pixels.",
+    "Full-bleed seamless tiles have no padding. West round badges follow 90% diameter rather than generic 8% padding.",
+    "Non-square sprites have square 1024px masters with aspect ratio preserved.",
+    "Original geometry and original generated illustration, no prior conversation artwork reused."
+  ],
+  "validation": {
+    "every_file_opened_and_decoded": true,
+    "all_dimensions_checked": true,
+    "all_sprite_alpha_channels_checked": true,
+    "all_texture_opposite_edges_exactly_equal": true,
+    "pixel_quest_grid_checked": false,
+    "visual_review": "Side-by-side sprites and 3x3 texture repeats visually reviewed; all six index.html overview pages loaded and rendered with WeasyPrint."
+  }
+}

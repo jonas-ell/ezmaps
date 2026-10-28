@@ -89,7 +89,8 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
            water="#4ab0ea", building=by_height(["#e3412f", "#ef7d2d", "#3d78c9", "#8b8f96"]),
            buildingEdge="#2f3640", rail="#2f3640", casing="#c9cbce", label="#ffffff",
            road=lambda r: "#66686c", widen=1.4, label_halo="#2f3640",
-           pat=dict(land="ez-pat-lawn-toy", forest="ez-pat-trees-toy", park="ez-pat-park-toy"),
+           pat=dict(land="ez-pat-lawn-toy", forest="ez-pat-trees-toy", park="ez-pat-park-toy", water="ez-pat-water-toy"),
+           house_icons=True,
            water_edge="#f2d48b", road_dash="#ffffff", building_ink="#2f3640",
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
            poi_suffix="-toy", poi_minzoom=14, place_color="#ffffff", place_halo="#2f3640", place_halo_width=2.4, place_transform="none")
@@ -224,6 +225,15 @@ def build(P, title):
                    "text-max-angle": 30, "text-padding": 2, "symbol-spacing": 150},  # GM-063: Straßennamen öfter
         "paint": paint,
     })
+    if P.get("house_icons"):  # GM-065: Toy Town – Spielzeughaus (Codex) auf jedem Gebäude, Art nach Höhe
+        layers.append({"id": "building-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "building", "minzoom": 15,
+                       "layout": {"icon-image": ["step", ["coalesce", ["get", "render_height"], 0],
+                                                 ["match", ["%", ["to-number", ["id"], 0], 6], 0, "toy-house-1", 1, "toy-house-2", 2, "toy-house-3",
+                                                  3, "toy-house-4", 4, "toy-house-5", "toy-house-6"],
+                                                 10, ["match", ["%", ["to-number", ["id"], 0], 3], 0, "toy-shop", 1, "toy-school", "toy-police"],
+                                                 14, "toy-apartment"],
+                                  "icon-size": ["interpolate", ["linear"], ["zoom"], 15, 0.3, 17, 0.55, 19, 0.9],
+                                  "icon-padding": 0, "icon-allow-overlap": False}})
     layers.append(poi_layer(P))
     layers.append(place_layer(P))  # GM-058: Orts- und Stadtnamen (vorher keine – beim Rauszoomen kein „Frankfurt“)
     return {

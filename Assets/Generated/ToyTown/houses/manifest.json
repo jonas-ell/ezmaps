@@ -1,0 +1,957 @@
+{
+  "folder": "ToyTown/houses",
+  "background_color": "#3EB34A",
+  "assets": [
+    {
+      "name": "toy-apartment",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-apartment. One compact three-floor apartment building, grey roof, cream walls. Exactly three clearly separated rows of two blue windows, front door on the bottom floor. Simple bold geometry. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-apartment.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "e6691d748c4ef06d839b05bf216b16672010829b071ba83fbbde15f803caf1a7",
+          "bytes": 5142,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-apartment@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "337dc0d14854e4584a3ca02eb8b7d7811c3401f743fd3c423e05d070a54bffae",
+          "bytes": 13802,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-apartment@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "a8d1fbdaf396d1c17a67f041f25e97e3dfd67d9fa00033fc8c1d60a1c70e0464",
+          "bytes": 23375,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-apartment-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "bf315d5448ba4566457fa1e6ac40ef8da18872003cc37854afb5525b71c1e37e",
+          "bytes": 176287,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-fire-station",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-fire-station. One compact red fire station building, grey low roof, TWO large grey garage doors side by side on the front with blue upper windows. No trucks, no text. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-fire-station.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "636b89ca1c8b2a1c90386807c0c3a63de7bd55625b3c14db008518dee54fa230",
+          "bytes": 4448,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-fire-station@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "1f7532555c9385b37db2309510825776267125d542535999d01baec831deac20",
+          "bytes": 12570,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-fire-station@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "6e7164d083891a2e1e9b98b73167f01effafc78e925360e11a8804885abb4524",
+          "bytes": 21468,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-fire-station-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "86926dfc8de7b48a172e5909d77539f1da7fbe2d1cb23ff846fc4ca618863fa5",
+          "bytes": 180528,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-hospital",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-hospital. One small white hospital building, grey low roof with one clearly visible bold red equal-arm cross centered on the ROOF, blue windows and doors. No other signs or text. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-hospital.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "858034d786d56d26852e06bd65ed6e39ef9f28b001d3f6684a2547ed8bb2fcf0",
+          "bytes": 4624,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-hospital@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "952d4e856e15e8d4a5238eb4ece04f0980a4ef7961e71849ea09e77594184fb6",
+          "bytes": 11941,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-hospital@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "ba61b65235907ea7b641d64332386596f10d96cfe65950f66c840c94232a5232",
+          "bytes": 19946,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-hospital-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "915f4c89d89709b0f633f6b0a4228807c7679b2cf3a58cdf1376514e7838e8fd",
+          "bytes": 160253,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-house-1",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-house-1. One compact family house, red simple gable roof, cream front wall, centered blue door, two large blue windows. No chimney. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-house-1.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "a2e2a221f025fc90831577a9d4e2e9cde098f959e1e20a5ad5f41b4b6d86422a",
+          "bytes": 5006,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-1@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "0654cbd3b8b0b106adffe720b067bdb3e149bd758bf0716b0039b8b0d297715c",
+          "bytes": 13282,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-1@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "d73739a9c396c55e1c322c3aa2162e68ed2710316b1437fceb9c52f40f2b5f8b",
+          "bytes": 22026,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-1-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "b30a100314467d2868c77d001c794ee093066c9c1ffeb2dd4191ef755bac9066",
+          "bytes": 198612,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-house-2",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-house-2. One compact family house, blue hipped roof, white front wall, one large blue window on each side of a coral door, small chimney on the roof. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-house-2.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "9b9b6ef03ef7c91d3f5aaedffb3cb5d6f77a9217fc7e5a15407bea8f924b1229",
+          "bytes": 4904,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-2@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "21c6750ec3ae20d9f554f727d623f2bd9e91765ea1c0b2b1b9a54daeeaa475cc",
+          "bytes": 12273,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-2@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "3c120c244550fee566f1cf2dc701974533c0a29ff35d2948401fef74fbe79e04",
+          "bytes": 20347,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-2-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "8c02d2088cd02211b93d583bae673dd7514d558619212b04c8767bec3090e848",
+          "bytes": 173834,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-house-3",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-house-3. One compact family house, yellow gable roof, light blue walls, attached one-car garage to the right with grey door. Readable simple silhouette. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-house-3.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "644a5854b2f90eda106df65066ddf7685be3b615ef4c969a036fa928de7320bb",
+          "bytes": 4607,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-3@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "be5ebb59ea4b43b0d183109a9d8de599c22df77268baee4631c4cefb02714f4b",
+          "bytes": 13051,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-3@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "91e33c48b9a270d6afa9316e95d3f6fb349c3d30442b8aced915511bd6f5bf03",
+          "bytes": 22723,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-3-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "ab6783b76c55dee64bc71783fd930b517e632c99ec41a5efd5966b02cddd190c",
+          "bytes": 183789,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-house-4",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-house-4. One compact two-floor family house, grey mansard roof, salmon walls, small balcony across front upper window. A single simple white balcony railing. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-house-4.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "40669bcf78ae8405ed1b364f11ec2539f324cb5ae5599c090982cb2cadd77f27",
+          "bytes": 6415,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-4@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "1eb793dfa570398c6489f6fc213037cbf4ff3b3294260e749a6732a482554ab3",
+          "bytes": 18972,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-4@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "5f0e739cd57dffffe8872bb8353182c88f693c92f5975829d7ab6f0200538a17",
+          "bytes": 33587,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-4-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f0fba27478b1808b78b44af8c975c1409b30beaf5e6cacede6e139d204052b89",
+          "bytes": 303815,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-house-5",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-house-5. One compact bungalow family house, red asymmetrical shed roof, white walls, wide front blue window and a blue door. Different silhouette from a gable-roof house. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-house-5.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "64a86242ade9b556467df92c05e73132ca90b58b18a8b75347e3e4d578e6d068",
+          "bytes": 4893,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-5@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "088483894b28718b59cd7a270f597a93c0690507a41db29b10b4b97ea7ff40e3",
+          "bytes": 13350,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-5@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "481baf8e66a09a3508cff221a4877a300eae243a56924c86969bda63205c7814",
+          "bytes": 23378,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-5-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "9730d42d7a4fde75e7bb0437a3bf519f0d6df89b3ed9b03f68ca160199056e82",
+          "bytes": 238625,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-house-6",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-house-6. One compact two-floor family house, blue twin-gable roof, cream walls, blue windows, yellow door. Symmetric distinctive twin peaks. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-house-6.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "905fb640b445211e792317fd4bf9e7486a87f17b8c3483783c9b3a834162fbf5",
+          "bytes": 6878,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-6@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "5f156087aa945c57a7d918dcd93b7a65df9887075fca5c085472c4f5f536d618",
+          "bytes": 20115,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-6@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "8e8a88532bbaaf9ce6f59b0c4c467f7389ddb495a04d166d61da2e2a9d235e92",
+          "bytes": 34191,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-house-6-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "22a919c48c7f833a299e16e3948680b445aadb6eb6510d0dadf52f967833cc79",
+          "bytes": 293071,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-police",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-police. One small blue police station building, blue roof and light blue walls, centered entrance, two blue windows, one small blue emergency light on roof. No symbols, no lettering. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-police.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "d34997a3be999fc9bf1a168e4d1014e3668ee7c62893b7c5b2c6d4e19d029abc",
+          "bytes": 5240,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-police@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "ac4c85eae87c181691fef3c9184f6529e9e127175d43fddcb44eee5085b5506f",
+          "bytes": 15057,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-police@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "6f9f4477132cb162929e597686de95c4edb37531b8bba3c4f3642d797ec14def",
+          "bytes": 26404,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-police-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "77b0c79a6646127e8ab5d712754db1484a5ff11315d0b7b15d1554fd38ebf0c5",
+          "bytes": 224623,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-school",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-school. One small symmetrical school building, yellow roof, cream facade, blue windows, central double door. A small round clock above door with only two thick hands and NO numbers. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-school.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "888fdf1249e5145c87cb7d742bbe243fc03138b3066fcc978985e3785bb3efc7",
+          "bytes": 4757,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-school@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "b279c5650eb6032f19aee7cb7ba077eb865e97c8d6c9a42d177afb57971254bb",
+          "bytes": 13170,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-school@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "34cb140435cda1a1be5120affba3c090ade6fb2c8051aff77376a35266b17752",
+          "bytes": 22879,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-school-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "de3684f8bbd432a67d04fda441b5c66830eab1c0ba74be1f13f847d016d1ebd0",
+          "bytes": 183806,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    },
+    {
+      "name": "toy-shop",
+      "folder": "ToyTown/houses",
+      "base_size": [
+        64,
+        64
+      ],
+      "prompt_used": "Style: printed children's play-rug / car play-mat illustration. Flat, bright, cheerful colors, slightly simplified cartoon shapes, clean 2-3 px dark grey outlines (#2B2B2B), no gradients except a soft drop shadow, no text, no logos, no brand names. Top-down map view, but buildings drawn in a slight front-facing 3/4 view (roof on top, front wall with windows and door visible), like on a toy car play-mat. Palette: grass #3EB34A, asphalt grey #9A9A9A, yellow edge lines #F2C230, white markings #FFFFFF, roofs red #D9342B / blue #2F6FD0 / yellow #F0B400 / grey #7A7F87, walls cream #F6E6B4, white, light blue #CFE6F5, salmon #F2B8A0, windows #4AA8E8. Original artwork only – do not copy any existing rug design.\nAsset: toy-shop. One small friendly store, red roof, cream walls, large blue shopfront windows and a central door, red and white striped awning over the storefront, NO lettering or signs. Single isolated sprite centered on a square 1024x1024 transparent canvas. Approximately 8% clear padding on all sides; nothing cropped. Crisp flat colors and clean consistent thick outlines, no blur, no texture, no checkerboard, no background rectangle. Front wall faces canvas bottom for buildings. Main silhouette fills around84% of canvas. Avoid extra trees, lawns, fences or decorations. Outline weight equivalent to 2px at64px export; details intentionally large enough for tiny UI sprites.",
+      "files": [
+        {
+          "name": "toy-shop.png",
+          "width": 64,
+          "height": 64,
+          "sha256": "89b8ab9c5e2c78588868b6fc6fda5afc259dbf3bbc2f0d941fcd46d416a64f64",
+          "bytes": 6181,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-shop@2x.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "18ceb5df7af1fe85b3a20ea0872868cb2a1a1ede5c2f246d4127ddd4fcab98ba",
+          "bytes": 18026,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-shop@3x.png",
+          "width": 192,
+          "height": 192,
+          "sha256": "06ea7258acb27fa9e3d973d23db6741dd27aa1b0735965aefc98f370a9af1890",
+          "bytes": 31380,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        },
+        {
+          "name": "toy-shop-master.png",
+          "width": 1024,
+          "height": 1024,
+          "sha256": "bed494e5598ac276a7ad81ab95accb00d123c6ac22bf0deb236dc6dc5ad492c4",
+          "bytes": 277062,
+          "checks": {
+            "opens": true,
+            "pixel_size_matches": true,
+            "has_zero_alpha": true,
+            "has_opaque_pixels": true,
+            "has_content": true,
+            "seam_edges_identical": null,
+            "exact_16x16_nearest_neighbor_grid": null
+          }
+        }
+      ],
+      "kind": "sprite",
+      "method": "built-in image generation; fixed spot-color PNG export; alpha-preserving size/padding normalization",
+      "tile": false
+    }
+  ],
+  "notes": [
+    "PixelQuest folder added with user approval.",
+    "Continuous base textures (grass, asphalt, water, paper) are opaque RGBA; isolated sprites and ink overlays have real transparent pixels.",
+    "Full-bleed seamless tiles have no padding. West round badges follow 90% diameter rather than generic 8% padding.",
+    "Non-square sprites have square 1024px masters with aspect ratio preserved.",
+    "Original geometry and original generated illustration, no prior conversation artwork reused."
+  ],
+  "validation": {
+    "every_file_opened_and_decoded": true,
+    "all_dimensions_checked": true,
+    "all_sprite_alpha_channels_checked": true,
+    "all_texture_opposite_edges_exactly_equal": true,
+    "pixel_quest_grid_checked": false,
+    "visual_review": "Side-by-side sprites and 3x3 texture repeats visually reviewed; all six index.html overview pages loaded and rendered with WeasyPrint."
+  }
+}

@@ -181,12 +181,14 @@ enum PlayerMarker {
             let img = pixel(UIImage(named: green ? "px-player-green" : "px-player"))
             return (img, img)
         case .toyTown:
-            let car = toyCar()
+            let car = UIImage(named: "toy-car").map { img in // GM-065: Codex-Auto
+                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { _ in img.draw(in: CGRect(x: 9, y: 3, width: 42, height: 54)) }
+            } ?? toyCar()
             return (car, car)
         case .wildWest:
             // GM-064: Codex-Pfeil, sonst gezeichnet
             let a = UIImage(named: "west-arrow").map { img in
-                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { _ in img.draw(in: CGRect(x: 8, y: 8, width: 44, height: 44)) }
+                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { _ in img.draw(in: CGRect(x: 4, y: 4, width: 52, height: 52)) }
             } ?? arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60)
             return (a, a)
         case .classic:
@@ -200,7 +202,8 @@ enum PlayerMarker {
         guard let img else { return RouteOverlay.arrowImage() }
         return UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { ctx in
             ctx.cgContext.interpolationQuality = .none
-            img.draw(in: CGRect(x: 18, y: 14, width: 24, height: 32)) // GM-063: kleiner (CarPlay: wirkte wie eine Flasche)
+            let w: CGFloat = img.size.width >= img.size.height ? 44 : 33 // GM-065: Codex-Pfeil ist quadratisch; größer (kaum sichtbar)
+            img.draw(in: CGRect(x: 30 - w / 2, y: 8, width: w, height: 44))
         }
     }
 

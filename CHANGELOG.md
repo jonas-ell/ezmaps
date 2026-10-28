@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-065 – Toy Town mit Codex-Grafiken, Pixel-Pfeil von Codex, Standort-Marker sichtbar
+
+**Ziel:** Nutzer schickt ZIP mit den Toy-Town- und Pixel-Quest-Grafiken; „Standort-Pfeil wird nicht angezeigt“; Screenshots mobil und CarPlay, Fehler suchen.
+
+**Dateien:** `Assets/Generated/ToyTown/`, `Assets/Generated/PixelQuest/` (aus dem ZIP), `App/Assets.xcassets/ToyTown/` (neu), `App/Assets.xcassets/PixelQuest/px-player`, `px-cross`, `px-parking`, `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `App/NeonMapView.swift`, `App/FollowCamera.swift`
+
+**Geändert:**
+- Toy Town: Spielzeughaus auf jedem Gebäude (Art nach Höhe: Familienhäuser, Laden/Schule/Polizei, Hochhaus), Gras-, Wald- (Bäume), Park- (Büsche) und Wasser-Kachel, 6 Symbole, rotes Auto als Standort, karierte Fahne als Ziel.
+- Pixel Quest: weißer Pixel-Pfeil von Codex als Standort (vorher „Flasche“), Heiltrank-Herz und P-Schild von Codex; übrige Symbole bleiben die Items des Nutzers.
+- Standort-Marker ohne Navigation: Rahmen 46 statt 34 pt, Marker im Bild größer gezeichnet (iPhone-Bilder: Wild West, Pixel, Toy fast unsichtbar).
+
+**Tatsächlich geprüft:** STIL OK; iPhone-Testbilder (vorheriger Stand) zeigten den Fehler.
+
+**Ungetestet:** siehe Mac-Lauf.
+
 ## GM-064 – Wild West mit den Codex-Grafiken
 
 **Ziel:** Nutzer: auf Codex warten, alle Grafiken einbauen, auf dem Mac laufen lassen, aufs Handy, CarPlay-Bilder.

@@ -293,6 +293,10 @@ final class RouteOverlay {
                 px(4, 1, 9, 7, 0x1b1206); px(4, 2, 8, 5, 0xe8453c); px(5, 3, 3, 2, 0xffcc33)   // Fahne
                 px(0, 15, 7, 1, 0x1b1206)                                       // Fuß
             case .toyTown:
+                if let f = UIImage(named: "toy-flag") { // GM-065: Codex
+                    f.draw(in: CGRect(x: 4, y: 4, width: 40, height: 40))
+                    return
+                }
                 let pole = UIBezierPath(roundedRect: CGRect(x: 12, y: 8, width: 4, height: 38), cornerRadius: 2)
                 StyleTheme.hex(0x2f3640).setFill(); pole.fill()
                 let flag = CGRect(x: 16, y: 8, width: 24, height: 16)
@@ -354,7 +358,7 @@ final class RouteOverlay {
             out["ez-poi-" + kind + "-neon"] = outlined(sym, neon)
             out["ez-poi-" + kind + "-west"] = UIImage(named: "west-poi-" + kind) ?? westBadge(sym) // GM-062: Codex-Knöpfe, wo vorhanden
             out["ez-poi-" + kind + "-px"] = UIImage(named: "px-" + kind).map(StylePatterns.pixelIcon) ?? StylePatterns.pixelSign(kind)
-            out["ez-poi-" + kind + "-toy"] = StylePatterns.toyBadge(kind, symbol: sym)
+            out["ez-poi-" + kind + "-toy"] = UIImage(named: "toy-poi-" + kind) ?? StylePatterns.toyBadge(kind, symbol: sym) // GM-065: Codex
         }
         return out
     }
@@ -619,7 +623,7 @@ final class PlayerLocationView: MLNUserLocationAnnotationView {
             shownStyle = style
             shownGreen = green
             arrow.image = style == .neonCity ? PlayerLocationView.image : PlayerMarker.images(for: style).plain
-            let size: CGFloat = style == .neonCity ? 30 : 34
+            let size: CGFloat = style == .neonCity ? 30 : 46 // GM-065: vorher 34 – Marker kaum sichtbar
             frame.size = CGSize(width: size, height: size)
             arrow.frame = bounds
             arrow.contentMode = .scaleAspectFit
@@ -760,7 +764,11 @@ enum StylePatterns {
         if let p = UIImage(named: "west-tex-paper") { out["ez-pat-paper-west"] = p }
         if let f = UIImage(named: "west-tex-forest") { out["ez-pat-forest-west"] = f }
         out["ez-pat-water-west"] = UIImage(named: "west-tex-water") ?? pixelTile(2) { _, _ in rgb(170, 163, 146) }
-        // Toy Town
+        // GM-065: Toy Town – Codex-Kacheln und Haus-Symbole ("toy-house-1" … in Assets ToyTown)
+        for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment"] {
+            if let img = UIImage(named: name) { out[name] = img }
+        }
+        // Toy Town (gezeichnet; Codex-Kacheln weiter unten haben Vorrang)
         out["ez-pat-lawn-toy"] = UIGraphicsImageRenderer(size: CGSize(width: 64, height: 64)).image { ctx in
             rgb(141, 198, 63).setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 64, height: 64))
             rgb(163, 214, 90).setFill()
@@ -775,6 +783,10 @@ enum StylePatterns {
             rgb(124, 193, 66).setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 48, height: 48))
             toyTree(ctx.cgContext, 16, 20, 6)
         }
+        if let g = UIImage(named: "toy-tex-grass") { out["ez-pat-lawn-toy"] = g }
+        if let f = UIImage(named: "toy-tex-forest") { out["ez-pat-trees-toy"] = f }
+        if let p = UIImage(named: "toy-tex-park") { out["ez-pat-park-toy"] = p }
+        out["ez-pat-water-toy"] = UIImage(named: "toy-tex-water") ?? pixelTile(2) { _, _ in rgb(74, 168, 232) }
         return out
     }
 
