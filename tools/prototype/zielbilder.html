@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EzMaps Zielbilder</title>
+<!-- GM-052: Zielbild je Kartenstil nach den Referenzen des Nutzers (erst freigeben lassen, dann die App daran angleichen).
+     Referenz-Screenshots liegen lokal in tools/prototype/referenzen/ (nicht im Repo, Spielbilder). -->
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&family=Fredoka:wght@600;700&family=Inter:wght@400;600;800&family=Libre+Baskerville:ital@0;1&family=Roboto+Slab:wght@800&family=Press+Start+2P&family=Rye&display=block" rel="stylesheet">
+<style>
+  body { margin: 0; background: #0f0f11; color: #eee; font-family: Inter, system-ui, sans-serif; }
+  header { padding: 18px 22px; border-bottom: 1px solid #26262b; }
+  header h1 { margin: 0 0 6px; font-size: 22px; }
+  header p { margin: 0; color: #9a9aa3; font-size: 14px; max-width: 980px; line-height: 1.45; }
+  section { padding: 22px; border-bottom: 1px solid #26262b; }
+  h2 { margin: 0 0 4px; font-size: 20px; }
+  .why { color: #9a9aa3; font-size: 13.5px; margin: 0 0 14px; max-width: 1100px; line-height: 1.45; }
+  .row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+  figure { margin: 0; }
+  figcaption { font-size: 12px; color: #8a8a93; margin-top: 6px; }
+  .refs { display: flex; flex-wrap: wrap; gap: 8px; max-width: 520px; }
+  .refs img { height: 150px; border-radius: 8px; border: 1px solid #333; }
+  .missing { width: 230px; height: 150px; border: 2px dashed #444; border-radius: 8px; display: grid; place-items: center; text-align: center; color: #777; font-size: 12px; padding: 8px; box-sizing: border-box; }
+  svg.scene { width: 800px; max-width: 100%; height: auto; border-radius: 14px; box-shadow: 0 0 0 1px #333; display: block; }
+  .markers { display: flex; gap: 14px; align-items: center; margin-top: 10px; font-size: 12px; color: #aaa; }
+  .markers svg { width: 64px; height: 64px; background: #2a2a2e; border-radius: 10px; }
+  @media (max-width: 860px) { .refs { max-width: 100%; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>EzMaps · Zielbilder je Stil</h1>
+  <p>Links deine Referenzen, rechts mein Nachbau als Zielbild (gleiche Szene für alle Stile: Kreisverkehr, Straßen, Häuser, Park, Bach, Symbole, Route mit Ziel, dein Standort).
+  Darunter der Standort-Pfeil des Stils (ohne Navi klein, in der Navi groß). Erst wenn du ein Zielbild freigibst, gleiche ich die App daran an und vergleiche so lange, bis sie gleich aussieht.
+  Fehlende Referenzen: Datei in <code>tools/prototype/referenzen/</code> mit dem angezeigten Namen ablegen und Seite neu laden.</p>
+</header>
+<main id="main"></main>
+<script src="js/zielbilder.js"></script>
+</body>
+</html>

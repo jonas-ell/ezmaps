@@ -15,6 +15,18 @@ final class PurchaseManager {
     private(set) var isBusy = false
     /// Kurzer Fehlertext für die Paywall
     var errorText: String?
+    /// GM-050: Test-Käufe (Preise aus TestStore, Kauf schaltet ohne Geld frei), solange App Store Connect noch keine
+    /// Produkte liefert. Nur in Test-Builds (Debug oder EZTEST von tools/mac_device.sh), nie im App-Store-Build.
+    private(set) var testMode = false
+    @ObservationIgnored private let testKey = "testPurchases"
+
+    static var testAllowed: Bool {
+        #if DEBUG || EZTEST
+        return true
+        #else
+        return false
+        #endif
+    }
 
     @ObservationIgnored private var updates: Task<Void, Never>?
 
@@ -38,8 +50,15 @@ final class PurchaseManager {
             for p in list { map[p.id] = p }
             products = map
         } catch {
-            errorText = L("Shop gerade nicht erreichbar")
+            if !Self.testAllowed { errorText = L("Shop gerade nicht erreichbar") }
         }
+        testMode = Self.testAllowed && products.isEmpty
+    }
+
+    /// GM-050: Test-Käufe zurücksetzen (Einstellungen, nur im Test-Modus)
+    func resetTestPurchases() {
+        UserDefaults.standard.removeObject(forKey: testKey)
+        Task { await refreshEntitlements() }
     }
 
     func refreshEntitlements() async {
@@ -49,25 +68,42 @@ final class PurchaseManager {
             if let exp = t.expirationDate, exp < Date() { continue }
             owned.insert(t.productID)
         }
+        if testMode { owned.formUnion(UserDefaults.standard.stringArray(forKey: testKey) ?? []) }
         access = StyleAccess(owned: owned)
     }
 
-    func price(_ id: String) -> String? { products[id]?.displayPrice }
+    func price(_ id: String) -> String? { products[id]?.displayPrice ?? (testMode ? TestStore.price(id) : nil) }
+
+    /// Kaufbar? (echtes Produkt oder Test-Modus)
+    func canBuy(_ id: String) -> Bool { products[id] != nil || (testMode && TestStore.pricesEUR[id] != nil) }
 
     /// Jahrespreis pro Monat, im Format von StoreKit („2,49 €“)
     var yearlyPerMonth: String? {
-        guard let y = products[ProductID.yearly] else { return nil }
-        return PlanMath.perMonth(yearly: y.price).formatted(y.priceFormatStyle)
+        if let y = products[ProductID.yearly] { return PlanMath.perMonth(yearly: y.price).formatted(y.priceFormatStyle) }
+        guard testMode, let y = TestStore.pricesEUR[ProductID.yearly] else { return nil }
+        return TestStore.display(PlanMath.perMonth(yearly: y))
     }
 
     var savingsPercent: Int {
-        guard let m = products[ProductID.monthly], let y = products[ProductID.yearly] else { return 0 }
-        return PlanMath.savingsPercent(monthly: m.price, yearly: y.price)
+        if let m = products[ProductID.monthly], let y = products[ProductID.yearly] { return PlanMath.savingsPercent(monthly: m.price, yearly: y.price) }
+        guard testMode, let m = TestStore.pricesEUR[ProductID.monthly], let y = TestStore.pricesEUR[ProductID.yearly] else { return 0 }
+        return PlanMath.savingsPercent(monthly: m, yearly: y)
     }
 
     /// Kaufen. `true` = gekauft (Freischaltung ist dann schon aktualisiert)
     @discardableResult
     func purchase(_ id: String) async -> Bool {
+        if testMode && products[id] == nil && TestStore.pricesEUR[id] != nil {
+            // GM-050: Test-Kauf – kurz „kaufen“, dann freischalten (kein Geld, nur auf diesem Gerät)
+            isBusy = true
+            try? await Task.sleep(nanoseconds: 700_000_000)
+            var owned = Set(UserDefaults.standard.stringArray(forKey: testKey) ?? [])
+            owned.insert(id)
+            UserDefaults.standard.set(Array(owned), forKey: testKey)
+            await refreshEntitlements()
+            isBusy = false
+            return true
+        }
         guard let product = products[id] else {
             errorText = L("Shop gerade nicht erreichbar")
             return false
@@ -100,7 +136,7 @@ final class PurchaseManager {
     func restore() async {
         isBusy = true
         defer { isBusy = false }
-        do { try await AppStore.sync() } catch { errorText = L("Wiederherstellen fehlgeschlagen") }
+        if !testMode { do { try await AppStore.sync() } catch { errorText = L("Wiederherstellen fehlgeschlagen") } }
         await refreshEntitlements()
     }
 }

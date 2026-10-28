@@ -1642,7 +1642,17 @@
       "restaurant",
       "fast_food",
       "cafe",
-      "charging_station"
+      "charging_station",
+      "clothing_store",
+      "bank",
+      "atm",
+      "cinema",
+      "hairdresser",
+      "lodging",
+      "school",
+      "college",
+      "place_of_worship",
+      "playground"
      ]
     ]
    ],
@@ -1670,11 +1680,31 @@
      "restaurant",
      "ez-poi-food",
      "fast_food",
-     "ez-poi-food",
+     "ez-poi-fastfood",
      "cafe",
-     "ez-poi-food",
+     "ez-poi-coffee",
      "charging_station",
      "ez-poi-charge",
+     "clothing_store",
+     "ez-poi-shirt",
+     "bank",
+     "ez-poi-cash",
+     "atm",
+     "ez-poi-cash",
+     "cinema",
+     "ez-poi-cinema",
+     "hairdresser",
+     "ez-poi-barber",
+     "lodging",
+     "ez-poi-hotel",
+     "school",
+     "ez-poi-school",
+     "college",
+     "ez-poi-school",
+     "place_of_worship",
+     "ez-poi-church",
+     "playground",
+     "ez-poi-playground",
      ""
     ],
     "icon-size": [
@@ -1686,11 +1716,158 @@
       "zoom"
      ],
      14.5,
-     0.55,
+     0.5,
      17,
-     0.8
+     0.7
     ],
-    "icon-padding": 6
+    "icon-padding": 22
+   }
+  },
+  {
+   "id": "place-names",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "place",
+   "minzoom": 5,
+   "filter": [
+    "any",
+    [
+     "in",
+     [
+      "get",
+      "class"
+     ],
+     [
+      "literal",
+      [
+       "city",
+       "town"
+      ]
+     ]
+    ],
+    [
+     "all",
+     [
+      "==",
+      [
+       "get",
+       "class"
+      ],
+      "village"
+     ],
+     [
+      ">=",
+      [
+       "zoom"
+      ],
+      9.5
+     ]
+    ],
+    [
+     "all",
+     [
+      "in",
+      [
+       "get",
+       "class"
+      ],
+      [
+       "literal",
+       [
+        "suburb",
+        "quarter"
+       ]
+      ]
+     ],
+     [
+      ">=",
+      [
+       "zoom"
+      ],
+      12
+     ]
+    ]
+   ],
+   "layout": {
+    "text-field": [
+     "coalesce",
+     [
+      "get",
+      "name:de"
+     ],
+     [
+      "get",
+      "name"
+     ]
+    ],
+    "text-font": [
+     "Barlow Condensed SemiBold"
+    ],
+    "text-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     6,
+     [
+      "match",
+      [
+       "get",
+       "class"
+      ],
+      "city",
+      14,
+      "town",
+      10,
+      8
+     ],
+     12,
+     [
+      "match",
+      [
+       "get",
+       "class"
+      ],
+      "city",
+      24,
+      "town",
+      18,
+      "village",
+      14,
+      12
+     ],
+     16,
+     [
+      "match",
+      [
+       "get",
+       "class"
+      ],
+      "city",
+      30,
+      "town",
+      24,
+      "village",
+      18,
+      14
+     ]
+    ],
+    "text-transform": "uppercase",
+    "text-letter-spacing": 0.08,
+    "text-max-width": 8,
+    "text-padding": 4,
+    "symbol-sort-key": [
+     "get",
+     "rank"
+    ]
+   },
+   "paint": {
+    "text-color": "#4a4a4a",
+    "text-halo-color": "#ffffff",
+    "text-halo-width": 1.6
    }
   }
  ]

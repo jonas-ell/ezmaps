@@ -17,7 +17,7 @@
    "id": "land",
    "type": "background",
    "paint": {
-    "background-color": "#3b3c3e"
+    "background-color": "#181818"
    }
   },
   {
@@ -26,7 +26,7 @@
    "source": "openmaptiles",
    "source-layer": "landcover",
    "paint": {
-    "fill-color": "#38393b",
+    "fill-color": "#181818",
     "fill-antialias": true
    },
    "filter": [
@@ -44,7 +44,7 @@
    "source": "openmaptiles",
    "source-layer": "landcover",
    "paint": {
-    "fill-color": "#333537",
+    "fill-color": "#1a1b1a",
     "fill-antialias": true
    },
    "filter": [
@@ -62,7 +62,7 @@
    "source": "openmaptiles",
    "source-layer": "landcover",
    "paint": {
-    "fill-color": "#36383a",
+    "fill-color": "#1c1d1c",
     "fill-antialias": true
    },
    "filter": [
@@ -80,7 +80,7 @@
    "source": "openmaptiles",
    "source-layer": "park",
    "paint": {
-    "fill-color": "#36383a",
+    "fill-color": "#1c1d1c",
     "fill-antialias": true
    }
   },
@@ -90,7 +90,7 @@
    "source": "openmaptiles",
    "source-layer": "landuse",
    "paint": {
-    "fill-color": "#3b3c3e",
+    "fill-color": "#1b1b1b",
     "fill-antialias": true
    },
    "filter": [
@@ -115,7 +115,7 @@
    "source": "openmaptiles",
    "source-layer": "landuse",
    "paint": {
-    "fill-color": "#3e3f41",
+    "fill-color": "#1d1d1d",
     "fill-antialias": true
    },
    "filter": [
@@ -142,7 +142,7 @@
    "source": "openmaptiles",
    "source-layer": "landuse",
    "paint": {
-    "fill-color": "#36383a",
+    "fill-color": "#1c1d1c",
     "fill-antialias": true
    },
    "filter": [
@@ -169,7 +169,7 @@
    "source": "openmaptiles",
    "source-layer": "water",
    "paint": {
-    "fill-color": "#5d6870",
+    "fill-color": "#6a6a6a",
     "fill-antialias": true
    },
    "filter": [
@@ -191,7 +191,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#5d6870",
+    "line-color": "#6a6a6a",
     "line-width": [
      "interpolate",
      [
@@ -266,7 +266,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#5d6870",
+    "line-color": "#6a6a6a",
     "line-width": [
      "interpolate",
      [
@@ -340,9 +340,9 @@
    "source": "openmaptiles",
    "source-layer": "building",
    "paint": {
-    "fill-color": "#5b5c5f",
+    "fill-color": "#363636",
     "fill-antialias": true,
-    "fill-outline-color": "#4a4b4e"
+    "fill-outline-color": "#363636"
    }
   },
   {
@@ -355,7 +355,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#2b2c2e",
+    "line-color": "#2c2c2c",
     "line-width": [
      "interpolate",
      [
@@ -430,7 +430,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#151617",
+    "line-color": "#181818",
     "line-width": [
      "interpolate",
      [
@@ -511,7 +511,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#151617",
+    "line-color": "#181818",
     "line-width": [
      "interpolate",
      [
@@ -592,7 +592,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#151617",
+    "line-color": "#181818",
     "line-width": [
      "interpolate",
      [
@@ -673,7 +673,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#151617",
+    "line-color": "#181818",
     "line-width": [
      "interpolate",
      [
@@ -754,7 +754,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#151617",
+    "line-color": "#181818",
     "line-width": [
      "interpolate",
      [
@@ -835,7 +835,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#151617",
+    "line-color": "#181818",
     "line-width": [
      "interpolate",
      [
@@ -915,7 +915,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#151617",
+    "line-color": "#181818",
     "line-width": [
      "interpolate",
      [
@@ -995,7 +995,19 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#c4c4c4",
+    "line-color": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     12,
+     "#575757",
+     14.5,
+     "#969696"
+    ],
     "line-width": [
      "interpolate",
      [
@@ -1076,7 +1088,19 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#dcdcdc",
+    "line-color": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     12,
+     "#575757",
+     14.5,
+     "#969696"
+    ],
     "line-width": [
      "interpolate",
      [
@@ -1157,7 +1181,19 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#ececec",
+    "line-color": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     12,
+     "#6c6c6c",
+     14.5,
+     "#969696"
+    ],
     "line-width": [
      "interpolate",
      [
@@ -1238,7 +1274,19 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#ececec",
+    "line-color": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     12,
+     "#6c6c6c",
+     14.5,
+     "#969696"
+    ],
     "line-width": [
      "interpolate",
      [
@@ -1319,7 +1367,19 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#ececec",
+    "line-color": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     12,
+     "#8a8a8a",
+     14.5,
+     "#969696"
+    ],
     "line-width": [
      "interpolate",
      [
@@ -1400,7 +1460,19 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#ececec",
+    "line-color": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     12,
+     "#a0a0a0",
+     14.5,
+     "#969696"
+    ],
     "line-width": [
      "interpolate",
      [
@@ -1480,7 +1552,19 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#ececec",
+    "line-color": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     12,
+     "#a0a0a0",
+     14.5,
+     "#969696"
+    ],
     "line-width": [
      "interpolate",
      [
@@ -1612,7 +1696,7 @@
     "symbol-spacing": 220
    },
    "paint": {
-    "text-color": "#1d1e20"
+    "text-color": "#141414"
    }
   },
   {
@@ -1620,7 +1704,7 @@
    "type": "symbol",
    "source": "openmaptiles",
    "source-layer": "poi",
-   "minzoom": 14.5,
+   "minzoom": 13.5,
    "filter": [
     "in",
     [
@@ -1640,7 +1724,17 @@
       "restaurant",
       "fast_food",
       "cafe",
-      "charging_station"
+      "charging_station",
+      "clothing_store",
+      "bank",
+      "atm",
+      "cinema",
+      "hairdresser",
+      "lodging",
+      "school",
+      "college",
+      "place_of_worship",
+      "playground"
      ]
     ]
    ],
@@ -1652,27 +1746,47 @@
       "class"
      ],
      "shop",
-     "ez-poi-shop",
+     "ez-poi-shop-neon",
      "grocery",
-     "ez-poi-shop",
+     "ez-poi-shop-neon",
      "hospital",
-     "ez-poi-cross",
+     "ez-poi-cross-neon",
      "pharmacy",
-     "ez-poi-cross",
+     "ez-poi-cross-neon",
      "doctors",
-     "ez-poi-cross",
+     "ez-poi-cross-neon",
      "fuel",
-     "ez-poi-fuel",
+     "ez-poi-fuel-neon",
      "parking",
-     "ez-poi-parking",
+     "ez-poi-parking-neon",
      "restaurant",
-     "ez-poi-food",
+     "ez-poi-food-neon",
      "fast_food",
-     "ez-poi-food",
+     "ez-poi-fastfood-neon",
      "cafe",
-     "ez-poi-food",
+     "ez-poi-coffee-neon",
      "charging_station",
-     "ez-poi-charge",
+     "ez-poi-charge-neon",
+     "clothing_store",
+     "ez-poi-shirt-neon",
+     "bank",
+     "ez-poi-cash-neon",
+     "atm",
+     "ez-poi-cash-neon",
+     "cinema",
+     "ez-poi-cinema-neon",
+     "hairdresser",
+     "ez-poi-barber-neon",
+     "lodging",
+     "ez-poi-hotel-neon",
+     "school",
+     "ez-poi-school-neon",
+     "college",
+     "ez-poi-school-neon",
+     "place_of_worship",
+     "ez-poi-church-neon",
+     "playground",
+     "ez-poi-playground-neon",
      ""
     ],
     "icon-size": [
@@ -1684,11 +1798,158 @@
       "zoom"
      ],
      14.5,
-     0.55,
+     0.5,
      17,
-     0.8
+     0.7
     ],
-    "icon-padding": 6
+    "icon-padding": 22
+   }
+  },
+  {
+   "id": "place-names",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "place",
+   "minzoom": 5,
+   "filter": [
+    "any",
+    [
+     "in",
+     [
+      "get",
+      "class"
+     ],
+     [
+      "literal",
+      [
+       "city",
+       "town"
+      ]
+     ]
+    ],
+    [
+     "all",
+     [
+      "==",
+      [
+       "get",
+       "class"
+      ],
+      "village"
+     ],
+     [
+      ">=",
+      [
+       "zoom"
+      ],
+      9.5
+     ]
+    ],
+    [
+     "all",
+     [
+      "in",
+      [
+       "get",
+       "class"
+      ],
+      [
+       "literal",
+       [
+        "suburb",
+        "quarter"
+       ]
+      ]
+     ],
+     [
+      ">=",
+      [
+       "zoom"
+      ],
+      12
+     ]
+    ]
+   ],
+   "layout": {
+    "text-field": [
+     "coalesce",
+     [
+      "get",
+      "name:de"
+     ],
+     [
+      "get",
+      "name"
+     ]
+    ],
+    "text-font": [
+     "Barlow Condensed SemiBold"
+    ],
+    "text-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     6,
+     [
+      "match",
+      [
+       "get",
+       "class"
+      ],
+      "city",
+      14,
+      "town",
+      10,
+      8
+     ],
+     12,
+     [
+      "match",
+      [
+       "get",
+       "class"
+      ],
+      "city",
+      24,
+      "town",
+      18,
+      "village",
+      14,
+      12
+     ],
+     16,
+     [
+      "match",
+      [
+       "get",
+       "class"
+      ],
+      "city",
+      30,
+      "town",
+      24,
+      "village",
+      18,
+      14
+     ]
+    ],
+    "text-transform": "uppercase",
+    "text-letter-spacing": 0.08,
+    "text-max-width": 8,
+    "text-padding": 4,
+    "symbol-sort-key": [
+     "get",
+     "rank"
+    ]
+   },
+   "paint": {
+    "text-color": "#ffffff",
+    "text-halo-color": "#000000",
+    "text-halo-width": 1.8
    }
   }
  ]

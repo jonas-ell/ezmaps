@@ -19,6 +19,20 @@ public struct Coordinate: Codable, Hashable, Sendable {
             + cos(latitude * .pi / 180) * cos(other.latitude * .pi / 180) * sin(dLon / 2) * sin(dLon / 2)
         return 2 * r * atan2(sqrt(a), sqrt(1 - a))
     }
+
+    /// GM-050: Richtung zu `other` in Grad (0 = Norden, im Uhrzeigersinn), eben genähert – für kurze Strecken
+    public func bearing(to other: Coordinate) -> Double {
+        let dx: Double = (other.longitude - longitude) * cos(latitude * .pi / 180)
+        let dy: Double = other.latitude - latitude
+        return (atan2(dx, dy) * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
+    }
+
+    /// GM-050: um `meters` in Richtung `bearing` (Grad) verschoben – für das Weiterrechnen der Kamera zwischen GPS-Punkten
+    public func moved(meters: Double, bearing: Double) -> Coordinate {
+        let b: Double = bearing * .pi / 180
+        return Coordinate(latitude: latitude + meters * cos(b) / 110_540,
+                          longitude: longitude + meters * sin(b) / (111_320 * cos(latitude * .pi / 180)))
+    }
 }
 
 /// Lokale ebene Projektion (Meter) um einen Bezugspunkt – genau genug für Abstände von wenigen Kilometern.

@@ -7,6 +7,6 @@ import webbrowser
 ROOT = pathlib.Path(__file__).parent
 PORT = 8765
 handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT.parent.parent))  # Repo-Wurzel, damit Assets/Generated erreichbar ist
-print(f"EzMaps-Prototyp: http://localhost:{PORT}/tools/prototype/  (Strg+C beendet)")
-webbrowser.open(f"http://localhost:{PORT}/tools/prototype/")
+print(f"EzMaps 1:1 (wie die App): http://localhost:{PORT}/tools/prototype/live.html  · alter Prototyp: /tools/prototype/  (Strg+C beendet)")
+webbrowser.open(f"http://localhost:{PORT}/tools/prototype/live.html")  # GM-047
 http.server.ThreadingHTTPServer(("127.0.0.1", PORT), handler).serve_forever()

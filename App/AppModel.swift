@@ -20,6 +20,8 @@ struct AppSettings: Codable, Equatable {
     var speechRate: Double = 1
     /// GM-043: Onboarding (GM-031/032) schon gesehen
     var onboarded = false
+    /// GM-057: Pixel Quest – Standort-Marker grün statt weiß (Standard weiß)
+    var pixelMarkerGreen = false
 
     init() {}
 
@@ -36,6 +38,7 @@ struct AppSettings: Codable, Equatable {
         voiceIdentifier = try c.decodeIfPresent(String.self, forKey: .voiceIdentifier)
         speechRate = try c.decodeIfPresent(Double.self, forKey: .speechRate) ?? 1
         onboarded = try c.decodeIfPresent(Bool.self, forKey: .onboarded) ?? false
+        pixelMarkerGreen = try c.decodeIfPresent(Bool.self, forKey: .pixelMarkerGreen) ?? false
     }
 }
 
@@ -117,12 +120,17 @@ final class AppModel {
     @ObservationIgnored private var searchTask: Task<Void, Never>?
     @ObservationIgnored private var demoTask: Task<Void, Never>?
     @ObservationIgnored private var messageTask: Task<Void, Never>?
-    @ObservationIgnored private var rerouting = false
+    /// GM-045: beobachtet – CarPlay zeigt während der Neuberechnung „Route wird neu berechnet“ auf der Abbiegekarte
+    private(set) var rerouting = false
     @ObservationIgnored private let defaults = UserDefaults.standard
     /// GM-041: aufgedeckte Straßen (Datei) und die Punkte der laufenden Fahrt
     @ObservationIgnored private var exploration = GameStorage.loadExploration()
     @ObservationIgnored private var tripTrack: [Coordinate] = []
     @ObservationIgnored private var lastAccuracy: Double = .greatestFiniteMagnitude
+    /// GM-050: letzte bekannte Stelle für die Kamera – sie rechnet in jedem Bild von hier weiter (vorher 1–2 Sprünge
+    /// pro Sekunde, die Kamera glitt hinterher und schnitt Kurven). Navigation: Fortschritt auf der Route; frei: GPS + Kurs.
+    @ObservationIgnored private var navAnchor: (progress: Double, mps: Double, time: Date)?
+    @ObservationIgnored private var driveAnchor: (coordinate: Coordinate, mps: Double, time: Date)?
     @ObservationIgnored private var tripStart: Date?
     @ObservationIgnored private var trialTask: Task<Void, Never>?
     @ObservationIgnored private var trialSaveCounter = 0
@@ -161,8 +169,23 @@ final class AppModel {
 
     /// GM-025: Ziel für die gleitende Kamera – in der Navigation die Position auf der Route, sonst das GPS
     var cameraTarget: FollowCamera.Target? {
-        if screen == .navigating, let c = navCoordinate { return .init(coordinate: c, heading: navHeading, kmh: navSpeedKmh) }
+        let now = Date()
+        if screen == .navigating, let c = navCoordinate {
+            // GM-050: auf der Route weiterrechnen (höchstens 1,5 s), Richtung über ±12 m gemittelt → runde Kurven
+            if let a = navAnchor, nav?.offRoute != true, let route = session?.route {
+                let d: Double = min(route.length, a.progress + a.mps * min(1.5, now.timeIntervalSince(a.time)))
+                if let p = route.coordinate(at: d), let p0 = route.coordinate(at: d - 12), let p1 = route.coordinate(at: d + 12) {
+                    return .init(coordinate: p, heading: p0.bearing(to: p1), kmh: navSpeedKmh)
+                }
+            }
+            return .init(coordinate: c, heading: navHeading, kmh: navSpeedKmh)
+        }
         guard let c = currentCoordinate else { return nil }
+        // frei fahren: entlang des Kurses weiterrechnen (höchstens 1,2 s), im Stand nicht
+        if let a = driveAnchor, a.mps > 1.5 {
+            let s: Double = a.mps * min(1.2, now.timeIntervalSince(a.time))
+            return .init(coordinate: a.coordinate.moved(meters: s, bearing: driveHeading), heading: driveHeading, kmh: driveKmh)
+        }
         return .init(coordinate: c, heading: driveHeading, kmh: driveKmh)
     }
 
@@ -171,7 +194,10 @@ final class AppModel {
     /// GM-043: Standort erst nach dem Onboarding-Schritt „Wo bist du gerade?“ abfragen (erst Nutzen erklären)
     func onAppear() { if settings.onboarded || ScreenshotMode.state != nil { location.requestPermission() } }
 
-    func recenter() { recenterRequest += 1 }
+    func recenter() {
+        location.requestPermission() // GM-045: wer im Onboarding „Später“ gewählt hat, wird hier gefragt
+        recenterRequest += 1
+    }
 
     // MARK: Suche
 
@@ -306,6 +332,7 @@ final class AppModel {
     private func handleGPS(_ loc: CLLocation) {
         if loc.speed > 1.5 && loc.course >= 0 { driveHeading = loc.course }
         if loc.speed >= 0 { driveKmh = loc.speed * 3.6 }
+        driveAnchor = (Coordinate(latitude: loc.coordinate.latitude, longitude: loc.coordinate.longitude), max(0, loc.speed), Date())
         lastAccuracy = loc.horizontalAccuracy >= 0 ? loc.horizontalAccuracy : .greatestFiniteMagnitude
         guard demoPosition == nil else { return } // Demo-Fahrt hat Vorrang
         let speed: Double? = loc.speed >= 0 ? loc.speed : nil
@@ -313,16 +340,18 @@ final class AppModel {
         feed(Coordinate(latitude: loc.coordinate.latitude, longitude: loc.coordinate.longitude), speed: speed, course: course)
     }
 
-    private func feed(_ position: Coordinate, speed: Double?, course: Double?) {
+    private func feed(_ position: Coordinate, speed: Double?, course: Double?, simFactor: Double = 1) {
         guard var s = session else { return }
         let u = s.update(position: position, speed: speed)
         session = s
         record(position)
         nav = u.state
-        navCoordinate = s.route.coordinate(at: u.state.progress) ?? position
-        navHeading = s.route.heading(at: u.state.progress)
+        // GM-049: neben der Route (vor der Neuberechnung) folgt der Pfeil dem Auto, statt auf der alten Stelle stehen zu bleiben
+        navCoordinate = u.state.offRoute ? position : (s.route.coordinate(at: u.state.progress) ?? position)
+        navHeading = u.state.offRoute ? (course ?? navHeading) : s.route.heading(at: u.state.progress)
         let seg = s.route.segmentIndex(at: u.state.progress)
         if seg < s.route.segmentSpeeds.count { navSpeedKmh = s.route.segmentSpeeds[seg] }
+        navAnchor = (u.state.progress, (speed ?? navSpeedKmh / 3.6) * simFactor, Date())
         if let text = u.announcement, settings.voice { speech.say(text) }
         updateRoadNotice(progress: u.state.progress, route: s.route)
         if u.shouldReroute { reroute(from: position, heading: course) }
@@ -450,6 +479,7 @@ final class AppModel {
 
     /// Stil, der wirklich gezeigt wird: gewählter Stil, wenn freigeschaltet oder im Test – sonst Klassik
     var activeStyle: MapStyle {
+        if let shot = ScreenshotMode.style { return shot } // GM-047: nur Store-Screenshots
         let s = settings.style
         if purchases.access.isUnlocked(s) || trial.active == s.trialKey { return s }
         return .classic
@@ -531,6 +561,13 @@ final class AppModel {
     /// Beim Wechsel in den Hintergrund sichern
     func saveTrialNow() { GameStorage.saveTrial(trial) }
 
+    /// GM-050: Ansagen während der Navigation aus/an (iPhone-Knopf, CarPlay-Leiste)
+    func toggleVoice() {
+        updateSettings { $0.voice.toggle() }
+        if !settings.voice { speech.stop() }
+        show(settings.voice ? L("Ansagen an") : L("Ansagen aus"))
+    }
+
     func completeOnboarding() { updateSettings { $0.onboarded = true } }
 
     /// Orte suchen ohne den Suchbildschirm (Onboarding, Einstellungen: Zuhause/Arbeit)
@@ -570,7 +607,7 @@ final class AppModel {
     /// Demo-Fahrt: fährt die Route mit den geschätzten Geschwindigkeiten ab (2× Echtzeit)
     private func startDemo(on route: Route) {
         demoTask?.cancel()
-        let offset = min(demoStartOffset, route.length * 0.9)
+        let offset = min(demoStartOffset, max(0, route.length - 120)) // GM-030: bis kurz vors Ziel (Ankunfts-Bild)
         demoTask = Task { [weak self] in
             var d: Double = offset
             while !Task.isCancelled {
@@ -583,7 +620,7 @@ final class AppModel {
                 d = min(current.length, d + mps * 0.5 * 2)
                 guard let p = current.coordinate(at: d) else { return }
                 self.demoPosition = p
-                self.feed(p, speed: mps, course: current.heading(at: d))
+                self.feed(p, speed: mps, course: current.heading(at: d), simFactor: 2) // Demo fährt 2× so schnell
                 if self.screen != .navigating { return }
             }
         }

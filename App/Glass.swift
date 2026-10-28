@@ -146,13 +146,30 @@ struct GlassRoundButton: View {
     var tint: SwiftUI.Color = .white
     let action: () -> Void
 
+    /// GM-045: kräftige HUD-Knöpfe von Codex (Assets/Generated/Icons/HUD) statt SF Symbols, wo es eins gibt
+    static let hud = ["location.north.line": "hud-recenter", "paintpalette": "hud-styles", "map": "hud-explore",
+                      "gearshape": "hud-settings", "chevron.left": "hud-back", "xmark": "hud-close",
+                      "star": "hud-star", "star.fill": "hud-star-filled", "magnifyingglass": "hud-search",
+                      "plus.magnifyingglass": "hud-zoom-in", "minus.magnifyingglass": "hud-zoom-out",
+                      "arrow.up.and.down.and.arrow.left.and.right": "hud-pan",
+                      "speaker.wave.2.fill": "hud-volume-on", "speaker.slash.fill": "hud-volume-off"]
+
     var body: some View {
         Button(action: action) {
-            Image(systemName: systemImage)
-                .font(.system(size: size * 0.4, weight: .semibold))
-                .foregroundStyle(tint)
-                .frame(width: size, height: size)
-                .neutralGlass(size / 2)
+            if let name = Self.hud[systemImage], UIImage(named: name) != nil {
+                // Hintergrund wie hud-button-bg.svg: fast schwarz, feiner heller Rand
+                Image(name).resizable().interpolation(.high).frame(width: size * 0.62, height: size * 0.62)
+                    .frame(width: size, height: size)
+                    .background(Circle().fill(SwiftUI.Color(white: 0.043).opacity(0.85)))
+                    .overlay(Circle().strokeBorder(SwiftUI.Color.white.opacity(0.18), lineWidth: 1.5))
+                    .shadow(color: .black.opacity(0.35), radius: 6, y: 3)
+            } else {
+                Image(systemName: systemImage)
+                    .font(.system(size: size * 0.4, weight: .semibold))
+                    .foregroundStyle(tint)
+                    .frame(width: size, height: size)
+                    .neutralGlass(size / 2)
+            }
         }
         .buttonStyle(.plain)
         .accessibilityLabel(label)

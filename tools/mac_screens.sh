@@ -1,6 +1,7 @@
 #!/bin/bash
 # App-Store-Screenshots aus der echten App (Simulator auf dem Mac) holen – vom Windows-PC (Git Bash):
 #   bash tools/mac_screens.sh           → iPhone 6,9″
+#   bash tools/mac_screens.sh tests     → kleines iPhone, Englisch, Standort verweigert (docs/store/tests/)
 #   bash tools/mac_screens.sh carplay   → CarPlay-Fenster (braucht Bedienungshilfen-Freigabe, s. mac_build.sh)
 # Ergebnis: docs/store/iphone-69/<zustand>.png (1320 × 2868). Ablauf in tools/mac_build.sh (Marker .do_screens).
 set -u
@@ -10,6 +11,7 @@ OUTDIR=docs/store/iphone-69
 MARK=.do_screens
 if [ "${1:-}" = "carplay" ]; then OUTDIR=docs/store/carplay; MARK=.do_carscreens; fi  # GM-023
 if [ "${1:-}" = "freigabe" ]; then MARK=.do_open_privacy; fi  # GM-024: Einstellungen am Mac öffnen
+if [ "${1:-}" = "tests" ]; then OUTDIR=docs/store/tests; MARK=.do_testshots; fi  # GM-029: kleines iPhone, Englisch, Standort verweigert
 TMP=$(mktemp -d)
 RAW="$TMP/ausgabe.txt"
 
@@ -19,6 +21,9 @@ P=$(ssh -o BatchMode=yes -o ConnectTimeout=10 "$H" ping 2>&1)
 # letzten Commit + Marker schicken (Marker nie im Repo, nie liegen lassen – MAC_ZUGANG Abschnitt 4)
 mkdir -p "$TMP/src"
 git archive --format=tar HEAD App Core Resources project.yml tools/mac_build.sh | tar -x -C "$TMP/src"
+# GM-045: Pricedown (Neon-City-Name) nur aus der lokalen Datei mitschicken, nie aus Git. Desktop-Lizenz: Bilder/Videos und eigener Test ok,
+# für den Store-Build (mac_archive.sh, nur Git-Dateien) braucht es die App-Lizenz.
+[ -f tools/prototype/fonts/pricedown.otf ] && cp tools/prototype/fonts/pricedown.otf "$TMP/src/App/Fonts/Pricedown.otf"
 touch "$TMP/src/tools/$MARK"
 ssh "$H" clean >/dev/null || exit 1
 tar -cf - -C "$TMP/src" . | ssh "$H" extract || exit 1
@@ -26,9 +31,12 @@ rm -rf "$TMP/src"
 
 echo "Baue im Simulator und mache Bilder (dauert ein paar Minuten) …"
 ssh "$H" build > "$RAW"
-grep -vE '^[A-Za-z0-9+/=]{60,}$' "$RAW" | grep -v "^===" | tail -25
+grep -vE '^[A-Za-z0-9+/=]{60,}$' "$RAW" | grep -v "^===" | tail -40
 
-rm -rf "$OUTDIR"; mkdir -p "$OUTDIR"   # GM-025: alte Bilder weg, sonst bleiben veraltete Zustände liegen
+# GM-025: alte Bilder weg, sonst bleiben veraltete Zustände liegen – GM-051: aber nur, wenn neue Bilder da sind
+if grep -q "^===SHOT " "$RAW"; then rm -rf "$OUTDIR"; fi
+mkdir -p "$OUTDIR"
+grep -E "MAC GESPERRT" "$RAW"
 python - "$RAW" "$OUTDIR" <<'PY'
 import base64, sys, pathlib
 raw, out = sys.argv[1], pathlib.Path(sys.argv[2])

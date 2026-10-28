@@ -23,7 +23,8 @@ struct StyleTheme {
             return StyleTheme(route: hex(0xc0261f), routeEdge: hex(0x4a0d0a), alternative: UIColor(red: 90 / 255.0, green: 60 / 255.0, blue: 30 / 255.0, alpha: 0.45),
                               background: hex(0xc4ac80), isLight: true)
         case .pixelQuest:
-            return StyleTheme(route: hex(0xffcc33), routeEdge: hex(0x7a4a00), alternative: UIColor(white: 1, alpha: 0.6),
+            // GM-050: rote Route mit dunklem Rand wie in den Blockwelt-Karten-Videos des Nutzers (vorher gelb)
+            return StyleTheme(route: hex(0xe0362b), routeEdge: hex(0x4a0d08), alternative: UIColor(white: 1, alpha: 0.6),
                               background: hex(0x60a83a), isLight: false)
         case .toyTown:
             return StyleTheme(route: hex(0xff7a00), routeEdge: hex(0xffffff), alternative: UIColor(white: 1, alpha: 0.75),
@@ -47,7 +48,7 @@ struct StyleName: View {
         switch style {
         case .neonCity:
             Text(title)
-                .font(.custom(UIFont(name: "Pricedown", size: size) != nil ? "Pricedown" : "Anton-Regular", size: size * 1.18))
+                .font(.custom(UIFont(name: "Pricedown-Black", size: size) != nil ? "Pricedown-Black" : "Anton-Regular", size: size * 1.18))
                 .foregroundStyle(.white)
                 .shadow(color: .black, radius: 0, x: 1.5, y: 1.5)
                 .shadow(color: .black, radius: 0, x: -1.5, y: -1.5)

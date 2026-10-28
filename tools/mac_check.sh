@@ -4,10 +4,12 @@
 # Übersicht: docs/store/uebersicht.png
 set -u
 cd "$(dirname "$0")/.."
+python tools/maplibre/check_style.py | tail -3 || { echo "Kartenstil fehlerhaft"; exit 1; }   # GM-029
 bash tools/mac_run.sh | grep -E "error:|BUILD|Executed [0-9]+ tests, with|ALLES|FEHLER" || true
 bash tools/mac_run.sh log | grep -q "ALLES OK" || { echo "Build/Tests nicht grün – keine Screenshots"; exit 1; }
 bash tools/mac_screens.sh | grep -E "Bild:|gespeichert"
-bash tools/mac_screens.sh carplay | grep -E "Bild:|gespeichert|AppleScript"
+bash tools/mac_screens.sh carplay | grep -E "Bild:|gespeichert|AppleScript|GESPERRT"
+bash tools/mac_screens.sh tests | grep -E "Bild:|gespeichert|Kein kleines|error"   # GM-029
 python - <<'PY'
 from PIL import Image
 import glob, os

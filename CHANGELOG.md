@@ -2,22 +2,319 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
-## GM-045 – Replay-Kamera wie Freifahren in CarPlay
+## GM-063 – Replay-Kamera wie Freifahren in CarPlay (aus der Cloud, dort zuerst als GM-045 geführt)
 
 **Ziel:** Nutzer: Im Replay soll die Kamera so stehen wie beim Freifahren, mit dem Pfeil groß in der Mitte.
 
 **Dateien:** `Core/Sources/EzMapsCore/ReplayPlanner.swift`, `tools/prototype/js/{replay,aufdecken}.js`, `App/ReplayExporter.swift`, `docs/previews/replay-gm044-carplay.mp4` (neu erzeugt)
 
 **Geändert:**
-- Kamera **flach von oben (0°)**, **Fahrtrichtung oben**, **Pfeil groß in der Mitte**. Das ist dieselbe Einstellung wie `FollowCamera` in CarPlay (pitch 0, Pfeil mittig).
+- Kamera **flach von oben (0°)**, **Fahrtrichtung oben**, **Pfeil groß in der Mitte**. Das ist dieselbe Einstellung wie `FollowCamera` in CarPlay.
 - `ReplayPlanner.followPitch = 0`; Mirror `replay.js` `followTilt = 0`.
 - Nah wie im Auto (Prototyp 1,8 px/m).
-- App: Pfeil-Bild `PlayerNeonGlow` (wie CarPlay), 72 pt.
+- App: Pfeil-Bild `PlayerNeonGlow`, 72 pt.
 - Nur der Überblick am Ende rückt nach rechts neben die Ergebnis-Tafel.
 
-**Tatsächlich geprüft:** `swift test` Core 53 grün. Prototyp-Video ohne Fehler erzeugt, Standbilder angesehen. `swiftc -parse` ReplayExporter.
+**Tatsächlich geprüft:** `swift test` Core grün (Linux). Prototyp-Video erzeugt und angesehen. `swiftc -parse` ReplayExporter.
 
-**Ungetestet:** App-Export auf dem Mac (nicht gebaut, GM-043).
+**Ungetestet:** App-Export auf dem Mac. Seit GM-057 gibt es einen Standort-Marker je Stil – das Replay sollte den Marker des aktiven Stils nehmen statt immer `PlayerNeonGlow` (für den lokalen Claude).
+
+## GM-062 – Wild West: Kartensymbole von Codex
+
+**Ziel:** Nutzer: Codex-Ergebnis schon einbauen (Codex-Limit erreicht).
+
+**Dateien:** `Assets/Generated/WildWest/`, `Assets/Generated/ToyTown/` (Codex-Lieferung), `App/Assets.xcassets/WildWest/` (neu), `App/NeonMapView.swift`
+
+**Geändert:** 6 Codex-Knöpfe (Restaurant, Imbiss, Kaffee, Laden, Tankstelle, Ladesäule) ersetzen die gezeichneten Wild-West-Symbole; übrige Arten bleiben gezeichnet. Nicht eingebaut: Wald-Stempel (verschwommen) und Papier/Schraffur/Wasser (kaum sichtbar). Toy Town: Codex hat keine Bilder geliefert.
+
+**Tatsächlich geprüft:** Dateien angesehen.
+
+**Ungetestet:** Gerät.
+
+## GM-060 – Pixel Quest: Häuser als Blöcke von oben
+
+**Ziel:** Nutzer: „die Häuser sind noch nicht fertig bei der Pixel-Map“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `App/NeonMapView.swift`, `tools/prototype/js/poi.js`
+
+**Geändert:** dunkle Außenkante und helle Innenkante je Haus (`building-edge`, `building-highlight` mit `line-offset`), Schatten wächst mit dem Zoom (1 → 9 pt), Dach-Muster mit Blockkante je 16er-Block.
+
+**Tatsächlich geprüft:** STIL OK; Browser-Render Idstein Bahnhof Zoom 17,5 angesehen.
+
+**Ungetestet:** Gerät.
+
+## GM-059 – Verbesserungen nach Gerätetest: Pixel Quest ruhiger und Wasser animiert, Wild West wie Papierkarte
+
+**Ziel:** Nutzer: „ja deine Verbesserungen“ (Liste aus GM-058).
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `App/Assets.xcassets/PixelQuest/px-tex-water-0…7` (neu, Bilder aus dem Wasser-GIF des Nutzers), `App/Assets.xcassets/StyleTiles/*`
+
+**Geändert:**
+- Pixel Quest: Gebäude als 4 Ebenen mit festem Muster je Höhe (Muster-Ausdruck zeichnete auf dem iPhone lückenhaft, Gras schien durch), kleine Straßen später, weit weg Straßen ohne dunklen Rand, Straßenschrift kleiner, Wasser animiert (8 Bilder, alle 0,2 s).
+- Wild West: kleine Straßen später, Linien weit weg dünner, Bahn erst ab Zoom 11 und Querstriche fein erst ab 13, Häuser fast ohne Kontrast, Papierfasern als Hintergrund, Wald mit Tinten-Baumtupfen.
+- `with_min` kennt Mindest-Zoom je Stil (`minzoom_shift`).
+
+**Tatsächlich geprüft:** STIL OK; Vorschauen gerendert.
+
+**Ungetestet:** Gerät (Gras durch Häuser nur auf dem iPhone sichtbar gewesen).
+
+## GM-058 – Ortsnamen, Weizenfeld, kein Fadenkreuz in der Navigation
+
+**Ziel:** Nutzer (Gerätetest): beim Rauszoomen keine Stadtnamen, Fadenkreuz in der Navigation, neue Weizen-Grafik für Felder.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `App/Assets.xcassets/PixelQuest/px-tex-wheat.imageset` (neu)
+
+**Geändert:**
+- Neue Ebene `place-names` in allen Stilen (Städte ab Zoom 5, Dörfer ab 9,5, Stadtteile ab 12), Schrift und Farbe je Stil.
+- Pixel Quest: Felder als Weizen von oben (Farben aus der Weizen-Grafik des Nutzers, die Grafik selbst ist schräg von der Seite), Schienen erst ab Zoom 13.
+- Fadenkreuz nie in der Navigation.
+
+**Tatsächlich geprüft:** STIL OK, Geräte-Build OK und installiert.
+
+**Ungetestet:** Aussehen auf dem Gerät.
+
+## GM-057 – Zielbilder in die App: Wild West nach Red-Dead-Karten, Pixel Quest mit Nutzer-Grafiken, Neon-Waypoint, mehr Symbole, Standort-Marker je Stil
+
+**Ziel:** Nutzer: „setz mal alles jetzt in der App um, ich bewerte dann, lad es direkt auf mein Handy“. Toy Town gefällt nicht → bleibt bis zu den Codex-Grafiken wie bisher.
+
+**Dateien:** `tools/maplibre/build_style.py`, `tools/maplibre/check_style.py`, `App/MapStyles/*.json`, `Resources/Glyphs/Old Standard TT Regular` + `OFL-OldStandard.txt` (neu), `App/Assets.xcassets/PixelQuest/*` (neu, Grafiken des Nutzers – laut Nutzer nachgepixelt), `App/NeonMapView.swift`, `App/FollowCamera.swift` (PlayerMarker), `App/CarPlaySceneDelegate.swift`, `App/AppModel.swift`, `App/SettingsScreen.swift`, `App/en.lproj/Localizable.strings`
+
+**Geändert:**
+- Wild West wie Zielbild Runde 3: Pfirsich-Papier, Straßen als dünne Tintenlinien, weicher Wasserrand, Bahn mit Querstrichen, Häuser kaum sichtbar, Schrift Old Standard TT (OFL, eigene Glyphen), Ziel nur rotes X, Fadenkreuz durchgehend rot, Standort heller Pfeil.
+- Pixel Quest: Gras-, Bruchstein-, Wasser- und Schienen-Grafik des Nutzers, Symbole aus seinen Items (Hähnchen, Steak, Milcheimer, Smaragd, Lavaeimer, Redstone, Goldbarren, Truhe, Kessel, Papier, Schere, Bett, Buch, Glocke, Kuchen), Heiltrank und P-Schild gepixelt, Ziel rote Fahne, Standort weißer Marker; grün wählbar (Einstellungen → Pixel Quest → Standort-Marker).
+- Neon City: flacher lila Waypoint ohne Leuchten, Route breit und flach.
+- 16 Symbol-Arten statt 6 für alle Stile (Café, Imbiss, Kleidung, Bank, Kino, Friseur, Hotel, Schule, Kirche, Spielplatz neu); `check_style.py` prüft Arten × Stile.
+- Standort-Marker je Stil (Fahrt und Stand): Neon Codex-Pfeil, Wild West heller Pfeil, Pixel Quest Nutzer-Marker, Toy Town rotes Spielzeugauto, Klassik blauer Pfeil im Kreis.
+
+**Tatsächlich geprüft:** `check_style.py`: STIL OK (4 Schriften).
+
+**Ungetestet:** bis zum Mac-Build; Website zeigt die neuen Symbol-Arten noch nicht.
+
+## GM-056 – Zielbilder: Pixel Quest mit den neuen Items des Nutzers, Toy Town mit Teppich-Ausschnitten (Platzhalter)
+
+**Ziel:** Nutzer: neue Minecraft-Items liegen bereit; „schneid dir die Häuser aus meinen Teppich-Referenzen raus“.
+
+**Dateien:** `tools/prototype/js/zielbilder.js` (Ausschnitte lokal in `tools/prototype/referenzen/toy-crops/`, freigestellte Fahne lokal `Assets/Generated/minecraft/rote-fahne.png`)
+
+**Geändert:**
+- Pixel Quest: 17 Orts-Symbole aus den Items (Hähnchen, Steak, Milcheimer, Smaragd, Lavaeimer, Redstone, Goldbarren, Truhe, Kessel, Papier, Schere, Bett, Buch, Glocke, Kuchen; Heiltrank, P-Schild gepixelt), Bahn mit Schienen-Grafik, rote Fahne als Ziel (weißer Hintergrund entfernt).
+- Toy Town: 10 Ausschnitte aus `toy-teppich-2.png` (Laden, Krankenhaus, Kirche, Häuser, Shop, Feuerwehr, Spielplatz, Tankstelle, Fußballfeld) als Platzhalter im Zielbild.
+
+**Tatsächlich geprüft:** beide Zielbilder im Browser angesehen.
+
+**Ungetestet:** Freigabe durch den Nutzer.
+
+## GM-055 – Wild West nach echten Red-Dead-Karten, Pixel-Teich rund, Ansagen nur noch mit guter Stimme
+
+**Ziel:** Nutzer: Stimmen „sehr sehr sehr schlecht“ → andere Methode oder weglassen; Pixel: Seen rund, Liste der benötigten Texturen; Wild West: drei Red-Dead-Karten als Referenz („so sieht die echte Map aus“).
+
+**Dateien:** `tools/prototype/js/zielbilder.js`, `tools/prototype/zielbilder.html`, `App/SpeechService.swift`, `App/SettingsScreen.swift`, `App/en.lproj/Localizable.strings`, Referenzen lokal `west-karte-{1,2,3}.png`, `pixel-trank.png`
+
+**Geändert:**
+- Wild West neu nach den Bildern (Farben gemessen): helles Pfirsich-Papier mit weichen Flecken, Straßen als dünne dunkelbraune Linien, Bahn mit Querstrichen, Grenzen strichpunktiert, Wasser graugrün ohne Rand mit weichem Übergang, Häuser kaum sichtbar, Ortsname fett, Gebiet weit gesperrt, winzige Straßennamen in Großbuchstaben, Fadenkreuz vier dünne rote Striche mit Lücke, Standort heller Pfeil.
+- Pixel Quest: Teich rund.
+- Ansagen: nur noch mit einer Stimme in Qualität „Erweitert“ oder „Premium“; ohne solche Stimme keine Ansage und ein Hinweis in den Einstellungen, wie man sie lädt. Auswahl zeigt nur noch gute Stimmen.
+
+**Tatsächlich geprüft:** Zielbilder im Browser angesehen.
+
+**Ungetestet:** Swift-Änderung (Stimme) bis zum Mac-Build.
+
+## GM-054 – Pixel Quest Runde 3 (sauber, animiertes Wasser), Codex-Aufträge für Toy Town
+
+**Ziel:** Nutzer: Pixel-Karte „scuffed“ (Symbole, Häuser wild verteilt), Eis statt Wasser, grüner Pfeil nur Alternative, weiß Standard; Toy Town sieht nicht wie die Teppiche aus → Codex-Prompts für einzelne Elemente.
+
+**Dateien:** `tools/prototype/js/zielbilder.js`, `docs/ASSETS_CODEX.md` (Abschnitt 10)
+
+**Geändert:**
+- Pixel Quest: Häuser in Reihen entlang der Straßen, gleich groß und ausgerichtet, von oben mit Satteldach (helle/dunkle Holzhälfte, First), Bruchstein-Sockel und Schatten; isometrische Hausbilder entfernt. Symbole einheitlich 16 × 16 Pixel doppelt groß mit Schatten (Hähnchen, Steak aus Nutzer-Grafiken; Heiltrank, Smaragd, Holzschild P, Kanister selbst gepixelt). Wasser = `Water_Item_Animated.gif` (animiert), Teich im Park. Ziel = rote Pixel-Fahne. Standort weiß (Standard), grün als wählbare Alternative.
+- Toy Town: Codex-Aufträge für Häuser (12), Natur/Plätze, nahtlose Kacheln, Symbole, Auto-Marker und Zielfahne im Spielteppich-Stil (eigene Zeichnungen, keine Teppich-Motive kopiert).
+
+**Tatsächlich geprüft:** Zielbild Pixel Quest im Browser gerendert und angesehen.
+
+**Ungetestet:** Freigabe durch den Nutzer; Toy-Town-Assets stehen aus (Codex).
+
+## GM-053 – Zielbilder Runde 2: Neon-Waypoint und mehr Symbole, Wild West neu, Pixel Quest mit Nutzer-Grafiken, Toy Town wie Spielteppich
+
+**Ziel:** Rückmeldung des Nutzers zu GM-052: Neon-Waypoint und Symbole wie auf seinen Screenshots, Wild West gefällt gar nicht, Pixel Quest neu mit `Assets/Generated/minecraft`, Toy Town wie die Spielteppiche aus der Kindheit (3 Bilder).
+
+**Dateien:** `tools/prototype/js/zielbilder.js`, `.gitignore` (`Assets/Generated/minecraft/` vorerst nur lokal), Referenzen lokal `tools/prototype/referenzen/toy-teppich-{1,2,3}.png`
+
+**Geändert:**
+- Neon City: flacher lila Waypoint ohne Leuchten am Routenende mit Fadenkreuz darüber, breite flache Route, 7 weitere Symbole (Kaffee, Kleidung, Geld, Waschanlage, Kino, Friseur, Laden-Säule) im gleichen Look.
+- Wild West neu: handgezeichnete Tintenkarte (Zitter-Filter), Papier mit Flecken und dunklem Rand, Häuser als dunkle Tintenblöcke, Höhenlinien, Baum-Kringel, schraffiertes Wasser.
+- Pixel Quest neu mit den Grafiken des Nutzers (Gras, Bruchstein, Eis/Wasser, Dorfhäuser, Hähnchen/Steak, Spieler- und grüner Marker) plus gezeichnete Pixel-Symbole (Heiltrank = Krankenhaus, Smaragd = Laden, P-Schild). Laut Nutzer sind die Grafiken nachgepixelt (eigene Versionen); kommen nach Freigabe in die App.
+- Toy Town neu nach den Teppich-Bildern: knallgrün, gelbe Randlinien, weiße gestrichelte Mitte, Zebrastreifen, Kreisel mit Teich, Parkplätze mit blauem P, Fußballfeld, Häuser schräg von vorne, Büsche, Filz-Körnung.
+- Minecraft-Ordner war versehentlich mit GM-052 ins öffentliche Repo gekommen – vorerst wieder herausgenommen (liegt noch in der Git-Geschichte).
+
+**Tatsächlich geprüft:** Zielbild-Seite im Browser gerendert und je Stil angesehen.
+
+**Ungetestet:** Freigabe durch den Nutzer steht aus; App noch nicht angeglichen.
+
+## GM-052 – Zielbilder je Stil zur Freigabe (Vorgehen des Nutzers: erst Zielbild absegnen, dann App angleichen)
+
+**Ziel:** Nutzer: „Du erstellst ein HTML-Bild von jeder Stil-Referenz, und erst wenn ich deine HTML-1:1-Bilder abgesegnet habe, gleichst du die App damit ab, bis es mir gefällt. Achte auch auf die korrekten Pfeile, die den Standort anzeigen, bei jedem Stil.“ Dazu GM-051 (Prüfschleife): Standort-Pfeil statt lila Punkt, Abbiegetafel je Stil, Test-Bilder für alle Stile, CarPlay-Bilder nur mit entsperrtem Mac.
+
+**Dateien:** `tools/prototype/zielbilder.html`, `tools/prototype/js/zielbilder.js` (neu), `.gitignore` (`tools/prototype/referenzen/` – Spiel-Screenshots nur lokal), GM-051: `App/NeonMapView.swift`, `App/ContentView.swift` (NavPanelLook/NavPanel), `App/ShopScreens.swift`, `tools/mac_build.sh`, `tools/mac_screens.sh`, `tools/mac_check.sh`
+
+**Geändert:**
+- Zielbild-Seite: je Stil links die Referenzen (lokal), rechts ein SVG-Nachbau derselben Szene (Kreisverkehr, Straßen, Häuser, Park, Bach, Symbole, Route mit Ziel, Standort) als Navigation, frei fahren und – bei Neon City und Wild West – Umschauen mit Fadenkreuz; darunter der Standort-Pfeil des Stils.
+  - Neon City nach den Pausenkarten (dazu Variante „Auto-Foto“ zum Vergleichen), Standort = schmaler hellgrauer Pfeil (Minikarte).
+  - Wild West nach den Red-Dead-Bildern, Standort = Tropfen mit Ring („Dein Charakter“).
+  - Pixel Quest nach den Blockwelt-Videos, Standort = weiße Pixel-Pfeilspitze mit Kerbe.
+  - Toy Town nach dem Prototyp, Standort = rotes Spielzeugauto.
+  - Klassik schlicht, Standort = blauer Pfeil im weißen Kreis.
+- GM-051: Standort-Ansicht wird nach dem Setzen des Delegates neu angelegt (vorher lila Standard-Punkt), Pfeil-Rand obenauf; Abbiegetafel je Stil (Pergament mit Doppelrahmen und Western-Schrift, dunkelblauer Pixel-Kasten mit weißem Rand und Pixelschrift, weiße Spielzeug-Tafel mit Rand, Abbiege-Text als dritte Zeile); Symbole auf der Stil-Seite gleich hoch; Test-Bilder `stil-<stil>-karte/navigation` für alle Stile; CarPlay-Bilder werden bei gesperrtem Mac übersprungen, alte bleiben.
+
+**Tatsächlich geprüft:**
+- Mac: BUILD SUCCEEDED, 64/64 Tests; iPhone- und Test-Bilder (18) angesehen: Standort-Pfeil hell mit Rand, Abbiegetafeln je Stil, jeder Stil eigenständig.
+- Zielbild-Seite im Browser gerendert und je Stil angesehen.
+- CarPlay: Mac gesperrt erkannt („MAC GESPERRT“), alte Bilder behalten.
+
+**Ungetestet:** Freigabe der Zielbilder durch den Nutzer steht aus; die App wird erst danach angeglichen (Standort-Pfeile je Stil sind in der App noch nicht umgesetzt).
+
+## GM-050 – Pfeil flüssig, Pixel Quest als Blockwelt, Toy Town als Spielteppich, Ziel-Symbole je Stil, Fadenkreuz wie GTA, Test-Käufe, neue Stil-Seite
+
+**Ziel:** Gerätetest des Nutzers: Pfeil ruckelt und nimmt Kurven schlecht, Kamera fliegt beim Start von Idstein her, Stimme roboterhaft und bricht ab, Ansagen nicht stummschaltbar, Knopf oben rechts überdeckt den Kompass, gelber Ziel-Punkt „lame“ (jeder Stil ein eigenes Ziel), Stil-Seite „Plus holen“ zu trocken, Preise und simulierte Käufe in die echte App, Unterlagen für App Store Connect. Dazu: Fadenkreuz wie in GTA (nicht über den ganzen Bildschirm) und „Pixel Quest und Toy Town sehen gar nicht mehr aus wie sie sollen – die Maps nicht alle im selben Stil“, Pixel Quest wie die Blockwelt-Karten aus den Videos des Nutzers.
+
+**Dateien:** `App/AppModel.swift`, `App/FollowCamera.swift`, `App/NeonMapView.swift` (StylePatterns, Ziel-Symbole, Fadenkreuz, Symbole -px/-toy), `App/ContentView.swift`, `App/CarPlaySceneDelegate.swift`, `App/SpeechService.swift`, `App/PurchaseManager.swift`, `App/ShopScreens.swift` (StyleDetailView neu, OfferCard, TestModeNote), `App/SettingsScreen.swift`, `App/StyleTheme.swift`, `App/ScreenshotMode.swift`, `App/en.lproj/Localizable.strings`, `Core/Sources/EzMapsCore/Coordinate.swift`, `Core/Sources/EzMapsCore/TestStore.swift` (neu) + Tests `CoordinateMotionTests`, `TestStoreTests`, `tools/maplibre/build_style.py`, `tools/maplibre/check_style.py`, `App/MapStyles/*.json`, `Resources/Glyphs/Press Start 2P Regular`, `Resources/Glyphs/Fredoka Bold` (neu), `tools/mac_build.sh`, `tools/store_iap_images.py` (neu), `docs/IN_APP_KAEUFE.md` (neu), `docs/store/iap/*.png`, `docs/store/stile/*.png`, `App/Assets.xcassets/StyleTiles/*`, Website `tools/prototype/js/{live,navcore,poi,stylepreview}.js`, `live.css`
+
+**Geändert:**
+- Pfeil/Kamera: Kamera bekam nur 1–2 Punkte pro Sekunde und glitt hinterher (Kurven geschnitten, Drehung zu spät). Jetzt rechnet `AppModel.cameraTarget` in jedem Bild weiter: in der Navigation entlang der Route aus Fortschritt und Tempo (max. 1,5 s), Richtung über ±12 m gemittelt (runde Kurven); frei entlang des GPS-Kurses (max. 1,2 s). Kamera folgt enger (12/7 statt 6/4). Demo-Fahrt meldet ihr doppeltes Tempo. Geräte-Build jetzt optimiert (Release statt Debug). Gleich auf der Website.
+- Start direkt am letzten bekannten Standort (vorher Flug von Idstein).
+- Knöpfe oben rechts eine Stufe tiefer (Kompass).
+- Ansagen an/aus: Knopf in der Navigation (iPhone) und in der CarPlay-Leiste; Hinweis „Ansagen aus/an“.
+- Stimme: Audio-Sitzung erst 0,6 s nach dem Ende freigeben (vorher brach die nächste Ansage ab), etwas ruhiger. Natürlicher klingt sie nur mit einer Premium-Stimme (iOS-Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch).
+- Ziel-Symbol je Stil (eigene Formen): Klassik rote Stecknadel, Neon City leuchtende lila Raute, Wild West rotes Tinten-X im Kreis, Pixel Quest Pixel-Fahne, Toy Town karierte Spielzeug-Fahne. Gleich auf der Website.
+- Fadenkreuz beim Umschauen wie die Pausenkarte: vier kurze Arme mit Lücke, nach außen ausgeblendet; Neon City weiß, Wild West rot (vorher Linien über den ganzen Bildschirm).
+- Pixel Quest neu als Blockwelt: Gras-Block-Textur, Blätterwald, Wasser-Textur, Felder, graue Steinstraßen (Linien-Muster), Häuser als Holz/Fichte/Ziegel/Bruchstein-Blöcke mit Block-Schatten, weiße Pixelschrift (Press Start 2P, eigene Glyphen) mit schwarzem Rand, Pixel-Schilder als Symbole, rote Route. Alle Texturen selbst gezeichnet (`StylePatterns`).
+- Toy Town neu als Spielteppich: Rasen mit Flecken, runde Bäume im Wald/Park, Asphalt mit hellem Gehweg-Rand und weißer Mittellinie, Wasser mit Sandrand, Häuser mit dunkler Kontur, runde Schrift (Fredoka), runde bunte Symbol-Knöpfe.
+- Gebäudefarben nach Höhe: die Kacheln fassen gleich hohe Nachbarhäuser zu einem Objekt zusammen, nach ID verteilt war deshalb fast alles eine Farbe (im Browser gemessen).
+- `check_style.py` prüft jetzt auch alle Muster (fill-/line-/background-pattern).
+- Test-Käufe: Preise aus `TestStore` (gleich wie StoreKit-Datei, getestet), Kauf schaltet ohne Geld frei, Hinweis „Testkauf“, Zurücksetzen in den Einstellungen. Nur in Test-Builds (Debug oder EZTEST aus `mac_device.sh`), nie im App-Store-Build; echte StoreKit-Produkte haben Vorrang.
+- Stil-Seite neu: großes Vorschaubild (echte Karte flach wie im Auto, Pfeil, „Auch in CarPlay“, Name groß in Stil-Schrift, Rand in Stilfarbe), drei Kacheln „was du bekommst“, zwei wählbare Angebote (Plus „Bester Deal“ / Nur dieser Stil), ein Knopf passend zur Wahl, Apple-Pflichttext darunter, „10 Minuten kostenlos testen“ als eigener Knopf.
+- App Store Connect: `docs/IN_APP_KAEUFE.md` (Abo-Gruppe, 7 Produkte mit Texten DE/EN in Apple-Längen, Prüfhinweis, Reihenfolge), Werbebilder `docs/store/iap/` (1024 × 1024, `tools/store_iap_images.py`), Prüf-Screenshot über neuen Screenshot-Zustand `stil`.
+
+**Tatsächlich geprüft:**
+- `check_style.py`: STIL OK (3 Schriften, alle Muster und Symbole gezeichnet).
+- Stil-Vorschauen aller 5 Stile gerendert und angesehen (Pixel Quest Blockwelt, Toy Town Spielteppich).
+- Gebäudefarben-Verteilung im Browser gemessen (4 Formeln).
+- Website: Skripte syntaktisch geprüft.
+
+**Ungetestet:** gesamter Swift-Teil bis zum Mac-Build; Kurvenverhalten und Stimme nur auf dem Gerät prüfbar.
+
+## GM-049 – Website wirklich 1:1 (CarPlay-Maßstab, Logik der App), freies Fahren, Stil-Vorschauen aus echten Karten, Wild West mit runden Symbolen und Fadenkreuz
+
+**Ziel:** Nutzer: „die Website ist nicht 1 zu 1 wie die App und genauso wenig wie das CarPlay“, „ich will freies Fahren auch simulieren können“, „die Logik der echten App auf die 1:1-Seite, arbeite den Swift-Code ab und spiegel es“, „die Stil-Vorschauen sollen so sein, dass man sie im Einsatz in CarPlay sieht“, für Wild West Symbole wie im Bild und ein rotes Fadenkreuz beim Verschieben.
+
+**Dateien:** `tools/prototype/live.html`, `live.css`, `js/live.js`, `js/navcore.js` (neu), `js/poi.js` (neu), `stylepreview.html` + `js/stylepreview.js` (neu), `tools/maplibre/render_previews.py` (neu), `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/Assets.xcassets/StyleTiles/*`, `App/NeonMapView.swift`, `App/AppModel.swift`, `App/ContentView.swift`, `docs/store/stile/*.png`
+
+**Geändert:**
+- Website, Maßstab: App-Screenshots und Website nebeneinander gelegt. CarPlay im Simulator hat 800 × 480 Pixel, aber nur 400 × 240 Punkte (2×). Die Website hatte 800 Punkte gezeichnet, darum war alles halb so groß. CarPlay jetzt in echten Punkten mit doppelter Pixeldichte, alle Maße halbiert. Höhe → Zoom jetzt wie MapLibre Native (`MLNAltitudeForZoomLevel`: 30° Blickwinkel, vorher 36,87° angenommen).
+- Website, Logik aus Swift übernommen (`js/navcore.js`): `NavigationSession` (Einrasten mit Fenster und Rücksprung-Schutz, Ankunft 25 m, „danach“ nur unter 300 m, Ansagen nach Tempo-Stufen mit denselben Texten), `RerouteMonitor` (30 m, 8 s), Neuberechnung mit Fahrtrichtung und gesperrter verpasster Abbiegung (dann ohne Sperre), Tempolimits über `trace_attributes` mit `SpeedLimits.fill`, `AppModel.feed`/`cameraTarget`/Demo-Fahrt (läuft nach Neuberechnung auf der neuen Route weiter), Hinweise (`show`), Sprachansagen (Browser-Stimme Deutsch, abschaltbar). Tempolimit-Schild auf iPhone (auch „unbegrenzt“) und CarPlay (nur Zahl), CarPlay-Abbiegekarte zeigt während der Neuberechnung „Route wird neu berechnet“.
+- Website, freies Fahren: Tastatur (W/S oder ↑/↓ Gas und Bremse, A/D oder ←/→ lenken), Klick auf die Karte = über echte Straßen dorthin fahren (ohne Navi), „Falsch abbiegen“ fährt 6 s quer weg. In der Navigation führt Abweichen zur Neuberechnung wie in der App; 3 s ohne Taste → Demo-Fahrt fährt weiter.
+- App und Website: neben der Route (vor der Neuberechnung) folgt der Pfeil dem Auto, statt auf der alten Routen-Stelle stehen zu bleiben. Hinweis-Text in der Navigation unter der Abbiegekarte statt darüber.
+- Stil-Vorschauen (Onboarding, Stil-Liste, Shop, Einstellungen): statt gemalter Kacheln echte Kartenausschnitte, gerendert mit den App-Stilen in CarPlay-Größe (720 × 480 bei Zoom der CarPlay-Kamera, 50 km/h) mit Pfeil und Route, verkleinert auf 240 × 160 pt (`render_previews.py`, Bilder in `docs/store/stile/`).
+- Wild West: Kartensymbole als schwarze runde Knöpfe mit weißem Zeichen (eigene Zeichnung aus SF Symbols, keine Spiel-Symbole). Rotes Fadenkreuz quer über die Karte, sobald man die Karte verschiebt (`CrosshairView`), weg bei „Mitte“. Gleich auf der Website.
+- Website-Kartensymbole in `js/poi.js` (gemeinsam für Website und Vorschau-Renderer).
+
+**Tatsächlich geprüft:**
+- Browser (Playwright): App-Screenshot und Website nebeneinander (CarPlay-Maßstab jetzt gleich), freie Fahrt per Tastatur, Navigation nach Niedernhausen mit Tempolimit 50 aus Valhalla und „danach“-Hinweis, „Falsch abbiegen“ → Neuberechnung (Fortschritt neu auf der neuen Route, Demo-Fahrt weiter). Keine Fehler in der Konsole.
+- `check_style.py`: STIL OK (Wild-West-Symbole werden in `poiImages` gezeichnet).
+- Stil-Vorschauen für alle 5 Stile gerendert und angesehen.
+
+**Ungetestet:** Swift-Teile (Wild-West-Symbole, Fadenkreuz, Pfeil neben der Route, Hinweis-Position, neue Vorschaubilder) erst nach Mac-Build.
+
+## GM-048 – Neon City wie die Pausenkarte der Vorlage, Standort als heller Pfeil
+
+**Ziel:** Nutzer schickt vier Bilder (Minikarte und Pausenkarte eines Open-World-Spiels): „die Map soll so sein und der Standort von einem selber, wenn man nicht am Fahren ist oder Navi an hat, so“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-neon-city.json`, `App/NeonMapView.swift`, `tools/prototype/live.html`, `tools/prototype/live.css`, `tools/prototype/js/live.js`
+
+**Geändert:**
+- Farben aus den Bildern gemessen (häufigste Farben im Kartenbereich): Boden #181818, Häuser #363636, Straßen #969696. Neon City nutzt sie jetzt auf allen Zoomstufen (vorher nah mittelgrau mit weißen Straßen nach GM-024). Straßen flach ohne hellen Rand, Rand in Bodenfarbe (Lücke zu den Häusern), Wasser #6a6a6a, Straßennamen dunkel auf der Straße bleiben (Navigation). Weit weg kleine Straßen dunkler.
+- Kartensymbole in Neon City meist weiß, Krankenhaus rosa, Laden-Säule grün (vorher viel Blau).
+- Eigener Standort ohne Fahrt/Navi: schmaler heller Pfeil mit dunklem Rand (`PlayerLocationView`, eigene Form), dreht nach Fahrtrichtung ab 1 m/s, sonst nach Kompass. Vorher lila Punkt von MapLibre. Gleich auf der 1:1-Website.
+
+**Tatsächlich geprüft:**
+- `check_style.py`: STIL OK.
+- 1:1-Website im Browser: freie Fahrt in Idstein auf iPhone und CarPlay angesehen.
+
+**Ungetestet:** Swift-Teil (`PlayerLocationView`, Kompass-Drehung) erst nach Mac-Build; Kompass nur auf dem echten iPhone.
+
+## GM-047 – Website 1:1 wie die App (gleiche Karte, gleiches CarPlay, gleiche Logik), Store-Bilder in Neon City
+
+**Ziel:** Nutzer: „die 1 zu 1 website muss aktualisiert werden, die soll genau wie die echte Map/das CarPlay aussehen und die gleiche Logik haben“. Der alte Prototyp zeichnet die Karte selbst (Canvas) und weicht deshalb ab.
+
+**Dateien:** `tools/prototype/live.html`, `tools/prototype/live.css`, `tools/prototype/js/live.js` (neu), `tools/prototype/serve.py`, `App/ScreenshotMode.swift`, `App/AppModel.swift`, `tools/mac_build.sh`
+
+**Geändert:**
+- Neue Seite `live.html` (iPhone 393 × 852 und CarPlay 800 × 480 nebeneinander, ein gemeinsamer Zustand wie in der App), gebaut auf MapLibre GL JS statt eigener Zeichnung:
+  - Karte: dieselben Stil-Dateien `App/MapStyles/style-*.json`, dieselben Glyphen `Resources/Glyphs` (Barlow Condensed), alle 5 Stile umschaltbar.
+  - Pfeil und Knöpfe direkt aus `App/Assets.xcassets` (PlayerNeon, HUD).
+  - Ebenen wie `RouteOverlay` (Route mit Rand, Alternativen, Ziel, Leuchtspur), Farben aus `StyleTheme`.
+  - Kamera wie `FollowCamera`: Höhe nach Tempo (`320 + (km/h − 30) × 6`), weiches Nachgleiten (6/4/1,5), Pfeil-Platz aus den freien Flächen, iPhone flach mit Pfeil bei 62 %, CarPlay ohne Knopfspalte und neben der Abbiegekarte. Höhe → Zoom mit dem Blickwinkel von MapLibre Native.
+  - Wischen = Umschauen (Pfeil bleibt auf der Position), Mitte-Knopf holt zurück.
+  - Logik wie Core: Valhalla-Anfrage und Abbiege-Texte wie `ValhallaClient.makeRoute`, Photon-Suche, Entfernungen wie `Formatting.distance`/`carPlayDistance`, Zeiten wie `Formatting.minutes`.
+  - Freie Fahrt mit denselben Wegpunkten wie `tools/mac_drive.sh` (Idstein → Wallrabenstein), GPS 1×/s, Tempo 1× bis 15×.
+  - Unterschiede, die bleiben: Kartensymbole sind in der App SF Symbols (hier nachgezeichnet); graue iOS-Teile in CarPlay nachgebaut; keine Tempolimits, Sprachansagen, Käufe.
+- `serve.py` öffnet jetzt `live.html`.
+- Store- und CarPlay-Screenshots zeigen Neon City (`-EZStyle neon-city`, wirkt nur im Screenshot-Modus). Test-Bilder bleiben Klassik.
+- Neon City weit weg: Straßen nach Art gestaffelt (Autobahn #bdbdbd, Bundesstraße #959595, Landstraße #727272, klein #5f5f5f) – Übersicht vorher zu hell und unruhig (Screenshot Vorschau).
+
+**Tatsächlich geprüft:**
+- Browser (Chromium/Playwright): Start, Freie Fahrt (5×), Suche „Römerberg Frankfurt“, Vorschau mit 3 Routen auf beiden Bildschirmen, Navigation mit Abbiegekarte, Ankunftsbox und Kamera. Keine Fehler in der Konsole.
+- Mac-Prüflauf vor dieser Änderung (GM-045/046): STIL OK, 59/59 Tests, 5 iPhone + 5 CarPlay + 10 Test-Bilder ohne Fehler (CarPlay-Ankunft wieder mit Karte).
+
+- Mac-Prüflauf mit `-EZStyle`: STIL OK, 59/59 Tests, alle 20 Bilder in Neon City bzw. Klassik (Tests), keine Fehler.
+
+**Ungetestet:** gestaffelte Straßenfarben nur im Browser angesehen, noch nicht auf dem Mac.
+
+## GM-046 – Plan „Freunde auf der Karte“ (Crew über iCloud)
+
+**Ziel:** Nutzer: „du erstellst jetzt einen detaillierten Plan, wie du das angehst“, nach der Entscheidung für iCloud mit Live-Gefühl.
+
+**Dateien:** `docs/FREUNDE_PLAN.md` (neu)
+
+**Geändert:**
+- Plan in 7 Phasen: Prototyp, Kernlogik mit Weiterrechnen (Core, getestet), CloudKit (Zone pro Crew, Zonen-Freigabe, Abholen alle 3 s, Senden gedrosselt), Bildschirme, Karte und CarPlay, Prüfen (Demo-Freunde für Screenshots, echter Test mit zweitem iPhone), Veröffentlichung.
+- Schutz vor Missbrauch zuerst: freiwillig, immer sichtbar, Auto-Aus, kein Verlauf, Entwickler kann nichts lesen.
+- Abhängigkeit: Bundle-ID muss vor dem iCloud-Container feststehen (Container ist dauerhaft).
+
+**Tatsächlich geprüft:** nichts gebaut, nur Plan.
+
+**Ungetestet:** alles (noch nicht umgesetzt).
+
+## GM-045 – Reif für den CarPlay-Antrag: Karte verschieben, Neuberechnung im Auto, App aufs iPhone, Prüflauf stabiler
+
+**Ziel:** Nutzer: „arbeite so lange bis die app reif ist um sich für carplay zu bewerben“ und „die app kannst du zum testen auf das gerät jonas vom mac aus laden“. Dazu die Merge-Nacharbeit (lokal GM-029 bis GM-031 trafen auf Cloud GM-022 bis GM-044, Nummern doppelt; ab hier geht es mit GM-045 weiter).
+
+**Dateien:** `App/CarPlaySceneDelegate.swift`, `App/AppModel.swift`, `App/ContentView.swift`, `tools/mac_build.sh`, `tools/mac_device.sh` (neu), `docs/CARPLAY_ANTRAG.md` (neu)
+
+**Geändert:**
+- CarPlay: Karte verschieben (Pflicht für Navis). Neuer Kartenknopf mit vier Pfeilen öffnet Apples Verschiebe-Ansicht (Pfeiltasten für Autos mit Drehknopf); Wischen auf Touchscreens geht auch. Die Kamera folgt dem Auto erst wieder nach „Mitte“, beim Schließen der Verschiebe-Ansicht oder beim Wechsel des Bildschirms (z. B. Navi startet).
+- CarPlay: während der Neuberechnung zeigt die Abbiegekarte „Route wird neu berechnet“ (`pauseTrip(for: .rerouting)`); `rerouting` im Modell ist jetzt beobachtbar.
+- Store-Screenshot „einstellungen“: Blatt wird mehrmals geöffnet, bis es offen ist (vorher ging der Aufruf verloren und das Bild zeigte die Karte).
+- CarPlay-Screenshots: EzMaps-Symbol dreimal mit Pause antippen (vorher zeigten frei/vorschau/navigation oft den CarPlay-Startbildschirm).
+- Neu `bash tools/mac_device.sh`: baut signiert für das iPhone „jonas“, installiert und startet die App (Marker `.do_device`). CarPlay-Berechtigung ist im Geräte-Build nicht drin.
+- Neu `docs/CARPLAY_ANTRAG.md`: Apples Regeln für CarPlay-Navis mit Stand, englischer Formulartext, was vor dem Absenden fehlt.
+- Nach Gerätetest des Nutzers (iPhone 15):
+  - Onboarding: deckender Hintergrund statt halb durchsichtig über der Startkarte (Startkarte darunter ausgeblendet), Karte dahinter in Neon City; „Ich habe schon EzMaps“ und Schritt „Zuhause/Arbeit“ raus (2 Schritte); Neon City vorausgewählt.
+  - Standort: Karte fragte beim Start selbst (MapLibre `showsUserLocation`) – jetzt nur nach Zustimmung; „Später“ → Frage beim Standort-Knopf.
+  - Pfeil: beim Wischen/Zoomen in der Navigation hält die Kamera an und der Pfeil bleibt auf der Fahrposition (`FollowCamera.detach/attach`), „Mitte“ holt zurück. CarPlay-Verschieben nutzt dasselbe.
+  - Neon-City-Name: Code suchte „Pricedown“, die Datei heißt „Pricedown-Black“ – darum immer Ersatzschrift. `mac_device.sh`/`mac_screens.sh` schicken die lokale Datei mit (nie Git); Store-Build ohne, bis die App-Lizenz gekauft ist.
+  - Neon City aus der Entfernung nach Vorlage (Pausenkarte eines Open-World-Spiels): Boden fast schwarz, Orte etwas heller, dünne graue Straßen ohne Rand; ab Zoom 14,5 wie bisher. Farbige Kartensymbole (blau, rot, grün) ab Zoom 13,5.
+  - Codex-Auftrag `docs/ASSETS_CODEX.md` Abschnitt 9: neue Kartenknöpfe (HUD) und Stil-Bilder.
+  - Codex-Lieferung eingebaut: 14 HUD-Knöpfe (`Assets/Generated/Icons/HUD`, als PNG 1×/2×/3× gerechnet, weil Xcode SVG-Schatten nicht zeichnet) in `GlassRoundButton` (Zuordnung SF-Symbol → HUD) und als CarPlay-Kartenknöpfe; 5 Stil-Bilder (`Assets/Generated/StyleTiles`, in der App 200 pt als JPEG ohne die eingebauten Ecken, zusammen 730 KB) in `StyleSwatch`.
+  - iPhone-Navigation flach von oben (vorher 55° schräg), wie CarPlay und das Foto des Nutzers.
+
+**Tatsächlich geprüft:**
+- Geräte-Build für iPhone 15 „jonas“: GERÄTE-BUILD OK, installiert und gestartet (`com.game.ezmaps`).
+- Mac-Prüflauf: STIL OK, BUILD SUCCEEDED, 59/59 Tests; Einstellungs-Screenshot zeigt jetzt das Blatt.
+- CarPlay-Lauf einzeln: frei, Vorschau, Navigation, Ziele zeigen EzMaps (Verschiebe-Knopf sichtbar). **Ankunft zeigt nur den Hintergrund ohne Karte** – offen.
+- Neon-Stil im Browser (MapLibre GL JS, OpenFreeMap) bei Zoom 10,5 / 12,5 / 15,5 angesehen.
+- Zweiter Geräte-Build mit allen Korrekturen: installiert.
+
+**Ungetestet:** Verschieben und Neuberechnung im CarPlay-Simulator von Hand (Screenshots decken das nicht ab); Verhalten im echten Auto (braucht Apples Freigabe).
 
 ## GM-044 – Fahrt-Replay im CarPlay-Format (Querformat 16:9)
 

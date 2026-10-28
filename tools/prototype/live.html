@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EzMaps 1:1</title>
+<!-- GM-047: 1:1-Abbild der App. Gleiche Kartenstile (App/MapStyles), gleiche Glyphen (Resources/Glyphs), gleicher Pfeil und
+     gleiche Knöpfe (App/Assets.xcassets), gleiche Kamera-Formel (FollowCamera), gleiche Server (Valhalla, Photon).
+     Start: python tools/prototype/serve.py → http://localhost:8765/tools/prototype/live.html -->
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="live.css">
+</head>
+<body>
+<header class="bar">
+  <b>EzMaps 1:1</b>
+  <label>Stil <select id="style">
+    <option value="neon-city">Neon City</option><option value="classic">Klassik</option><option value="wild-west">Wild West</option>
+    <option value="pixel-quest">Pixel Quest</option><option value="toy-town">Toy Town</option></select></label>
+  <span class="grp"><span>Tempo</span><button data-speed="1">1×</button><button data-speed="2" class="on">2×</button><button data-speed="5">5×</button><button data-speed="15">15×</button></span>
+  <button id="free">Freie Fahrt (Idstein → Wallrabenstein)</button>
+  <button id="stop">Anhalten</button>
+  <button id="wrong" title="Fährt kurz von der Route weg – Neuberechnung wie in der App">Falsch abbiegen</button>
+  <label><input type="checkbox" id="voice" checked> Ansagen</label>
+  <span class="hint">Frei fahren: W/S oder ↑/↓ Gas und Bremse, A/D oder ←/→ lenken · Klick auf die Karte = dorthin fahren (ohne Navi) · Ziel suchen: „Wohin?“ oder CarPlay „Ziele“ · Ziehen = Umschauen, Mitte-Knopf = zurück.</span>
+</header>
+<main>
+  <section class="phone" id="phone">
+    <div class="pmap" id="pmap"></div>
+    <div class="xhair" id="pxh"></div>
+    <img class="arrow" id="parrow" alt="">
+    <svg class="dot" id="pdot" viewBox="0 0 30 30"><path d="M15 3 25 26 15 20.5 5 26Z" fill="#f2f2f2" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round"/></svg>
+    <div class="scrim"></div>
+    <div class="status"><span id="clock">9:41</span><span class="si">●●● ᯤ ▮</span></div>
+    <div class="island"></div>
+    <div class="pui" id="pui"></div>
+  </section>
+  <section class="carside">
+    <div class="car" id="car">
+      <div class="dock"><div class="dtime" id="clock2">9:41</div><img class="ico" src="../../Assets/Generated/AppIcon/appicon-1024.png" alt=""><div class="ico msg"></div><div class="grid">▦</div></div>
+      <div class="cwin" id="cwin">
+        <div class="cmap" id="cmap"></div>
+        <div class="xhair" id="cxh"></div>
+        <img class="arrow" id="carrow" alt="">
+        <div class="cui" id="cui"></div>
+      </div>
+    </div>
+    <p class="note">Graue Teile (Leiste links, „Ziele“, Abbiegekarte, Ankunftsbox, Routen-Vorschau, Listen) zeichnet in der echten App iOS. Kartensymbole sind in der App SF Symbols, hier nachgezeichnet. Kartendaten © OpenMapTiles · © OpenStreetMap-Mitwirkende.</p>
+  </section>
+</main>
+<script src="js/poi.js"></script>
+<script src="js/navcore.js"></script>
+<script src="js/live.js"></script>
+</body>
+</html>

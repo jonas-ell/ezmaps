@@ -29,8 +29,21 @@ struct SettingsScreen: View {
                         }
                     }
                 }
+                if model.activeStyle == .pixelQuest {
+                    Section("Pixel Quest") {
+                        Picker(L("Standort-Marker"), selection: Binding(get: { model.settings.pixelMarkerGreen }, set: { v in model.updateSettings { $0.pixelMarkerGreen = v } })) {
+                            Text(L("Weiß")).tag(false)
+                            Text(L("Grün")).tag(true)
+                        }
+                    }
+                }
                 Section(L("Navigation")) {
                     Toggle(L("Sprachansagen"), isOn: binding(\.voice))
+                    if SpeechService.bestGermanVoice == nil {
+                        // GM-055: ohne gute Stimme keine Ansagen (die Standard-Stimme klingt zu schlecht)
+                        Text(L("Für Ansagen eine gute deutsche Stimme laden: iPhone-Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch → z. B. „Anna (Premium)“."))
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
                     Picker(L("Stimme"), selection: Binding(get: { model.settings.voiceIdentifier ?? "" },
                                                          set: { v in model.updateSettings { $0.voiceIdentifier = v.isEmpty ? nil : v } })) {
                         Text(L("Automatisch (beste)")).tag("")
@@ -79,6 +92,9 @@ struct SettingsScreen: View {
                 Section(L("Käufe")) {
                     LabeledContent(L("EzMaps Plus"), value: model.purchases.access.hasPlus ? L("aktiv") : L("nicht aktiv"))
                     Button(L("Käufe wiederherstellen")) { Task { await model.purchases.restore() } }
+                    if model.purchases.testMode {
+                        Button(L("Testkäufe zurücksetzen"), role: .destructive) { model.purchases.resetTestPurchases() }
+                    }
                     Button(L("Abo verwalten")) { manageSubs = true }
                 }
                 Section {
