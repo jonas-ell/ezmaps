@@ -230,6 +230,9 @@ enum PlayerMarker {
     static func toyCar() -> UIImage {
         UIGraphicsImageRenderer(size: CGSize(width: 44, height: 60)).image { ctx in
             let g = ctx.cgContext
+            // GM-063: 70 % Größe (CarPlay: Auto zu groß)
+            g.translateBy(x: 22 * 0.3, y: 30 * 0.3)
+            g.scaleBy(x: 0.7, y: 0.7)
             let ink = StyleTheme.hex(0x2f3640)
             ink.setFill()
             for (x, y) in [(5.0, 12.0), (35.0, 12.0), (5.0, 36.0), (35.0, 36.0)] { UIBezierPath(roundedRect: CGRect(x: x, y: y, width: 5, height: 11), cornerRadius: 1.5).fill() }
