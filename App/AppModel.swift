@@ -131,6 +131,11 @@ final class AppModel {
     /// pro Sekunde, die Kamera glitt hinterher und schnitt Kurven). Navigation: Fortschritt auf der Route; frei: GPS + Kurs.
     @ObservationIgnored private var navAnchor: (progress: Double, mps: Double, time: Date)?
     @ObservationIgnored private var driveAnchor: (coordinate: Coordinate, mps: Double, time: Date)?
+    /// GM-064: gegen das Ruckeln – Weiterrechnen mit weichem Ausgleich bei jeder neuen Meldung (Core, getestet)
+    @ObservationIgnored private var freeSmoother = FreeMotionSmoother()
+    @ObservationIgnored private var routeSmoother = RouteProgressSmoother()
+    /// gleiche Uhr für Meldungen und Kamerabilder (läuft stetig, unabhängig von der Uhrzeit)
+    private var clock: TimeInterval { ProcessInfo.processInfo.systemUptime }
     @ObservationIgnored private var tripStart: Date?
     @ObservationIgnored private var trialTask: Task<Void, Never>?
     @ObservationIgnored private var trialSaveCounter = 0
@@ -171,9 +176,9 @@ final class AppModel {
     var cameraTarget: FollowCamera.Target? {
         let now = Date()
         if screen == .navigating, let c = navCoordinate {
-            // GM-050: auf der Route weiterrechnen (höchstens 1,5 s), Richtung über ±12 m gemittelt → runde Kurven
-            if let a = navAnchor, nav?.offRoute != true, let route = session?.route {
-                let d: Double = min(route.length, a.progress + a.mps * min(1.5, now.timeIntervalSince(a.time)))
+            // GM-050: auf der Route weiterrechnen, Richtung über ±12 m gemittelt → runde Kurven
+            // GM-064: Fortschritt aus RouteProgressSmoother – bei neuer Meldung kein Ruck mehr
+            if nav?.offRoute != true, let route = session?.route, let d = routeSmoother.value(at: clock, limit: route.length) {
                 if let p = route.coordinate(at: d), let p0 = route.coordinate(at: d - 12), let p1 = route.coordinate(at: d + 12) {
                     return .init(coordinate: p, heading: p0.bearing(to: p1), kmh: navSpeedKmh)
                 }
@@ -181,11 +186,11 @@ final class AppModel {
             return .init(coordinate: c, heading: navHeading, kmh: navSpeedKmh)
         }
         guard let c = currentCoordinate else { return nil }
-        // frei fahren: entlang des Kurses weiterrechnen (höchstens 1,2 s), im Stand nicht
-        if let a = driveAnchor, a.mps > 1.5 {
-            let s: Double = a.mps * min(1.2, now.timeIntervalSince(a.time))
-            return .init(coordinate: a.coordinate.moved(meters: s, bearing: driveHeading), heading: driveHeading, kmh: driveKmh)
+        // frei fahren: GM-064 weiterrechnen inkl. Kurve, Abweichung bei neuer Meldung weich ausgleichen (im Stand nicht)
+        if demoPosition == nil, let p = freeSmoother.pose(at: clock) {
+            return .init(coordinate: p.coordinate, heading: p.heading, kmh: driveKmh)
         }
+        _ = now
         return .init(coordinate: c, heading: driveHeading, kmh: driveKmh)
     }
 
@@ -280,6 +285,7 @@ final class AppModel {
         guard let route = selected, let dest = destination else { return }
         let s = NavigationSession(route: route, destinationName: dest.name)
         session = s
+        routeSmoother.reset() // GM-064: neue Fahrt, neuer Fortschritt
         nav = nil
         navCoordinate = route.coordinate(at: 0)
         navHeading = route.heading(at: 0)
@@ -333,6 +339,8 @@ final class AppModel {
         if loc.speed > 1.5 && loc.course >= 0 { driveHeading = loc.course }
         if loc.speed >= 0 { driveKmh = loc.speed * 3.6 }
         driveAnchor = (Coordinate(latitude: loc.coordinate.latitude, longitude: loc.coordinate.longitude), max(0, loc.speed), Date())
+        freeSmoother.fix(Coordinate(latitude: loc.coordinate.latitude, longitude: loc.coordinate.longitude), speed: max(0, loc.speed),
+                         course: loc.speed > 1.5 && loc.course >= 0 ? loc.course : nil, at: clock)
         lastAccuracy = loc.horizontalAccuracy >= 0 ? loc.horizontalAccuracy : .greatestFiniteMagnitude
         guard demoPosition == nil else { return } // Demo-Fahrt hat Vorrang
         let speed: Double? = loc.speed >= 0 ? loc.speed : nil
@@ -352,6 +360,7 @@ final class AppModel {
         let seg = s.route.segmentIndex(at: u.state.progress)
         if seg < s.route.segmentSpeeds.count { navSpeedKmh = s.route.segmentSpeeds[seg] }
         navAnchor = (u.state.progress, (speed ?? navSpeedKmh / 3.6) * simFactor, Date())
+        routeSmoother.fix(progress: u.state.progress, speed: (speed ?? navSpeedKmh / 3.6) * simFactor, at: clock)
         if let text = u.announcement, settings.voice { speech.say(text) }
         updateRoadNotice(progress: u.state.progress, route: s.route)
         if u.shouldReroute { reroute(from: position, heading: course) }

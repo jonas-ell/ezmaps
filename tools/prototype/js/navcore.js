@@ -133,7 +133,7 @@ async function loadSpeedLimits(route) {
 let session = null, rerouting = false;
 function startNav() {
   const r = S.routes[S.sel]; if (!r || !S.dest) return;
-  session = new NavigationSession(r, S.dest.name); S.nav = null;
+  session = new NavigationSession(r, S.dest.name); S.nav = null; routeSmoother.reset();   // GM-064
   S.navCoord = coordAt(r, 0); S.navHeading = headingAt(r, 0); S.navKmh = r.speeds[0] || 50;
   S.screen = 'navigating'; S.routes = [r]; S.sel = 0; S.trail = [];
   say(session.startAnnouncement()); loadSpeedLimits(r);
@@ -147,6 +147,7 @@ function feed(pos, speed, course, simFactor = 1) {
   S.navCoord = u.state.offRoute ? pos : coordAt(r, u.state.progress); S.navHeading = u.state.offRoute ? (course == null ? S.navHeading : course) : headingAt(r, u.state.progress);
   S.navKmh = r.speeds[segIndex(r, u.state.progress)] || 50;
   S.navAnchor = { progress: u.state.progress, mps: (speed == null ? S.navKmh / 3.6 : speed) * simFactor, t: performance.now() };   // GM-050
+  routeSmoother.fix(u.state.progress, (speed == null ? S.navKmh / 3.6 : speed) * simFactor, clockS());   // GM-064
   if (u.announcement) say(u.announcement);
   if (u.shouldReroute) reroute(pos, course);
   if (u.state.arrived && S.screen === 'navigating') { sim = null; manual = null; S.screen = 'arrived'; }
@@ -172,6 +173,7 @@ let sim = null, manual = null, gpsTimer = 0; const keys = {};
 function onFix(p, h, kmh, simFactor = 1) {                 // AppModel.handleGPS: Richtung nur ab 1,5 m/s
   S.pos = { p, h: kmh > 5.4 || !S.pos ? h : S.pos.h, kmh };
   S.driveAnchor = { p, mps: kmh / 3.6 * simFactor, t: performance.now() };   // GM-050
+  freeSmoother.fix(p, kmh / 3.6 * simFactor, kmh > 5.4 ? h : null, clockS());   // GM-064
   S.trail.push(p); if (S.trail.length > 600) S.trail.shift();
   feed(p, kmh / 3.6, h, simFactor);
   for (const m of maps()) pushOverlay(m); render();
@@ -224,22 +226,61 @@ async function driveTo(lngLat) {
   } catch (e) { show('Keine Straße dorthin'); }
 }
 
-// GM-050: AppModel.cameraTarget – in jedem Bild weiterrechnen statt den 1×/s-Punkten hinterherzugleiten
+// GM-064: Mirror of Core/Sources/EzMapsCore/MotionSmoother.swift – change both.
+// Weiterrechnen (frei: mit Drehrate) und Abweichung bei neuer Meldung weich über `blend` s ausgleichen → kein Ruck 1×/s.
+const dAng = (a, b) => { let d = (b - a) % 360; if (d > 180) d -= 360; else if (d < -180) d += 360; return d; };
+const nAng = h => ((h % 360) + 360) % 360;
+const movedLL = (p, m, b) => [p[0] + m * Math.cos(b * rad) / 110540, p[1] + m * Math.sin(b * rad) / (111320 * Math.cos(p[0] * rad))];
+class FreeMotionSmoother {
+  constructor() { this.blend = 0.6; this.maxPredict = 2.5; this.minSpeed = 1.5; this.a = null; this.off = { n: 0, e: 0, h: 0, t: 0 }; }
+  fix(c, speed, course, t) {
+    const mps = Math.max(0, speed), old = this.pose(t);
+    let heading = this.a ? this.a.h : (course ?? 0), turn = 0;
+    if (this.a && mps >= this.minSpeed && course != null && course >= 0) { turn = Math.max(-45, Math.min(45, dAng(this.a.h, course) / Math.max(0.2, t - this.a.t))); heading = course; }
+    else if (mps >= this.minSpeed && course != null && course >= 0) heading = course;
+    this.a = { c, mps, h: heading, turn, t };
+    if (old) {
+      const raw = this.predict(t), k = 111320 * Math.cos(c[0] * rad);
+      this.off = { n: (old.p[0] - raw.p[0]) * 110540, e: (old.p[1] - raw.p[1]) * k, h: dAng(raw.h, old.h), t };
+      if (Math.hypot(this.off.n, this.off.e) > 60) this.off = { n: 0, e: 0, h: 0, t };
+    }
+  }
+  predict(t) {
+    const a = this.a; if (!a) return null;
+    const dt = Math.max(0, Math.min(this.maxPredict, t - a.t));
+    if (a.mps < this.minSpeed || dt <= 0) return { p: a.c, h: a.h };
+    return { p: movedLL(a.c, a.mps * dt, a.h + a.turn * dt / 2), h: nAng(a.h + a.turn * dt) };
+  }
+  pose(t) {
+    const p = this.predict(t); if (!p) return null;
+    const age = t - this.off.t, f = age <= 0 ? 1 : Math.exp(-3 * age / this.blend), k = 111320 * Math.cos(p.p[0] * rad);
+    return { p: [p.p[0] + this.off.n * f / 110540, p.p[1] + this.off.e * f / k], h: nAng(p.h + this.off.h * f) };
+  }
+}
+class RouteProgressSmoother {
+  constructor() { this.blend = 0.6; this.maxPredict = 2.5; this.reset(); }
+  reset() { this.a = null; this.off = { v: 0, t: 0 }; }
+  fix(progress, speed, t) { const old = this.value(t); this.a = { progress, mps: Math.max(0, speed), t }; if (old != null) { const d = old - progress; this.off = Math.abs(d) > 40 ? { v: 0, t } : { v: d, t }; } }
+  value(t, limit = Infinity) {
+    const a = this.a; if (!a) return null;
+    const dt = Math.max(0, Math.min(this.maxPredict, t - a.t)), age = t - this.off.t, f = age <= 0 ? 1 : Math.exp(-3 * age / this.blend);
+    return Math.min(limit, Math.max(0, a.progress + a.mps * dt + this.off.v * f));
+  }
+}
+const freeSmoother = new FreeMotionSmoother(), routeSmoother = new RouteProgressSmoother();
+const clockS = () => performance.now() / 1000;
+
+// GM-050/064: AppModel.cameraTarget – in jedem Bild weiterrechnen, Sprünge weich ausgleichen
 function cameraTarget() {
-  const now = performance.now();
   if (S.screen === 'navigating' && S.navCoord) {
-    const a = S.navAnchor;
-    if (a && session && !(S.nav && S.nav.offRoute)) {
-      const r = session.route, d = Math.min(r.length, a.progress + a.mps * Math.min(1.5, (now - a.t) / 1000));
-      return { p: coordAt(r, d), h: bearing(coordAt(r, d - 12), coordAt(r, d + 12)), kmh: S.navKmh };
+    if (session && !(S.nav && S.nav.offRoute)) {
+      const r = session.route, d = routeSmoother.value(clockS(), r.length);
+      if (d != null) return { p: coordAt(r, d), h: bearing(coordAt(r, d - 12), coordAt(r, d + 12)), kmh: S.navKmh };
     }
     return { p: S.navCoord, h: S.navHeading, kmh: S.navKmh };
   }
   if (!S.pos) return null;
-  const a = S.driveAnchor;
-  if (a && a.mps > 1.5) {
-    const m = a.mps * Math.min(1.2, (now - a.t) / 1000), h = S.pos.h * rad;
-    return { p: [a.p[0] + m * Math.cos(h) / 110540, a.p[1] + m * Math.sin(h) / (111320 * Math.cos(a.p[0] * rad))], h: S.pos.h, kmh: S.pos.kmh };
-  }
+  const p = freeSmoother.pose(clockS());
+  if (p) return { p: p.p, h: p.h, kmh: S.pos.kmh };
   return { p: S.pos.p, h: S.pos.h, kmh: S.pos.kmh };
 }

@@ -85,6 +85,10 @@ final class RouteOverlay {
         waterTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let self, self.styleReady, let style = self.map?.style else { return }
+                // GM-064: Muster-Bild tauschen zwingt MapLibre, die Kacheln neu aufzubauen – während der Fahrt
+                // (Kamera bewegt sich 30–60×/s) gab das alle 0,2 s einen Ruck. Wasser läuft nur im Stand.
+                let model = AppModel.shared
+                if model.screen == .navigating || model.driveKmh > 5 { return }
                 self.waterFrame = (self.waterFrame + 1) % Self.waterFrames.count
                 style.setImage(Self.waterFrames[self.waterFrame], forName: "ez-pat-water-px")
             }

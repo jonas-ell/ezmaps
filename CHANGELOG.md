@@ -2,6 +2,39 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-064 – Gegen das Ruckeln: Position weich weiterrechnen, Pixel-Wasser nur im Stand
+
+**Ziel:** Nutzer: „was machen wir gegen das ruckeln wenn sich der standort bewegt?“
+
+**Ursachen (Code gelesen):**
+1. `AppModel.cameraTarget` rechnete zwischen den GPS-Meldungen (~1×/s) weiter, **sprang aber bei jeder neuen Meldung** auf den neuen Punkt. Schätzung und Messung weichen fast immer um ein paar Meter ab (GPS hinkt, Tempo schwankt). `FollowCamera` zog in ~0,1 s nach → Ruck einmal pro Sekunde.
+2. Frei fahren: Richtung blieb zwischen den Meldungen stehen → Drehen in Stufen. Weiterrechnen endete nach 1,2 s → bei verspäteter Meldung Stillstand, dann Sprung.
+3. Pixel Quest: das Wasser tauscht alle 0,2 s das Muster-Bild (`setImage`). Das zwingt MapLibre, Kacheln neu aufzubauen → kleine Rucke während der Fahrt.
+
+**Dateien:** `Core/Sources/EzMapsCore/MotionSmoother.swift` (neu) + `MotionSmootherTests.swift`, `App/AppModel.swift`, `App/NeonMapView.swift`, `tools/prototype/js/navcore.js` (Mirror)
+
+**Geändert:**
+- `FreeMotionSmoother` (frei fahren): rechnet als Bogen mit Drehrate aus den letzten Meldungen weiter (gedeckelt ±45 °/s), bis 2,5 s. Die Abweichung bei einer neuen Meldung klingt in ~0,6 s ab statt sofort. Große Sprünge (> 60 m, nach Tunnel) werden direkt gesetzt. Im Stand bleibt der Pfeil stehen.
+- `RouteProgressSmoother` (Navigation): dasselbe für den Fortschritt auf der Route. Neuberechnung (> 40 m) setzt direkt.
+- `cameraTarget` nutzt beide, mit der Systemlaufzeit als Uhr statt der Uhrzeit.
+- Pixel-Wasser wird nur noch im Stand animiert (nicht in der Navigation, nicht über 5 km/h).
+
+**Tatsächlich geprüft:**
+- `swift test` Core: alle grün, 7 neu. Geprüft: kein Sprung > 0,3 m beim neuen Fix, wenn GPS 4 m hinterherhinkt; nach 0,8 s auf der Messung; Kurve höchstens 1° pro Bild statt 20°-Stufen; Tunnel; Stillstand.
+- JS-Mirror mit `node` gegengerechnet.
+- `swiftc -parse` AppModel, NeonMapView.
+
+**Ungetestet:** auf dem iPhone und in CarPlay.
+
+### Auftrag (lokaler Claude)
+1. Mac-Build, aufs iPhone, freie Fahrt und Navigation im Auto: ruckelt der Pfeil noch?
+2. Falls ja, mit Instruments (Time Profiler + Core Animation FPS) während der Fahrt messen. Weitere Kandidaten:
+   - SwiftUI zeichnet `ContentView` bei jeder Meldung neu (`nav`, `navCoordinate`, `trail` sind beobachtet).
+   - `showTrail` setzt alle 5 Punkte die ganze Linie neu.
+   - `NavigationSession.update` läuft auf dem Main-Thread.
+   Gegenmittel: Leuchtspur nur alle 2 s, HUD-Werte in eine eigene kleine `@Observable`-Klasse.
+3. In CarPlay `maxFPS` 30 lassen, aber prüfen, ob das Autoradio wirklich 30 schafft.
+
 ## GM-063 – Replay-Kamera wie Freifahren in CarPlay (aus der Cloud, dort zuerst als GM-045 geführt)
 
 **Ziel:** Nutzer: Im Replay soll die Kamera so stehen wie beim Freifahren, mit dem Pfeil groß in der Mitte.
