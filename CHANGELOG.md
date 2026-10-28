@@ -2,6 +2,26 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-065 – Ganz Europa: Texte angepasst (Technik konnte es schon)
+
+**Ziel:** Nutzer: „sollte nicht ganz Europa auf der Karte sein?“
+
+**Geprüft, was schon geht:** Die Kacheln (OpenFreeMap `planet`) decken die ganze Welt ab. Photon findet „Mailänder Dom“ (deutsche Namen dank `lang=de`). Valhalla FOSSGIS rechnet Paris → Amsterdam (512 km, Maut erkannt). Im Code gibt es keine Beschränkung auf Deutschland.
+
+**Dateien:** `App/OnboardingView.swift`, `App/en.lproj/Localizable.strings`, `docs/APPSTORE_TEXTE.md`
+
+**Geändert:** „ganz Deutschland“ → „ganz Europa“ (Onboarding DE/EN, App-Store-Texte).
+
+**Bleibt deutsch-spezifisch (bewusst):**
+- Baustellen/Sperrungen nur Autobahn GmbH (Deutschland). Andere Länder bräuchten eigene Quellen, z. B. ASFINAG (AT) oder DATEX-II-Feeds.
+- Ansagen auf Deutsch.
+- Tempolimit-Schild „unbegrenzt“ (Zeichen 282) gilt nur auf deutschen Autobahnen; Valhalla liefert die Limits auch im Ausland.
+- Straßenbreiten im Stil sind auf ~50° Breite berechnet (in Skandinavien etwas breiter, unkritisch).
+
+**Tatsächlich geprüft:** Photon- und Valhalla-Anfragen mit `curl` (Mailand, Paris → Amsterdam), Kachel-Quelle erreichbar.
+
+**Ungetestet:** Fahrt im Ausland auf dem Gerät.
+
 ## GM-064 – Gegen das Ruckeln: Position weich weiterrechnen, Pixel-Wasser nur im Stand
 
 **Ziel:** Nutzer: „was machen wir gegen das ruckeln wenn sich der standort bewegt?“

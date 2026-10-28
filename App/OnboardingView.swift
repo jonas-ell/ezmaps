@@ -39,7 +39,7 @@ struct OnboardingView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                 .shadow(color: .black.opacity(0.6), radius: 15, y: 10)
             Text("EzMaps").font(.system(size: 52, weight: .black)).tracking(-2)
-            Text(L("Deine Stadt als Spielwelt. Echte Navigation für ganz Deutschland, auch in CarPlay."))
+            Text(L("Deine Stadt als Spielwelt. Echte Navigation für ganz Europa, auch in CarPlay."))
                 .font(.system(size: 17)).foregroundStyle(.white.opacity(0.85))
             Button(L("Los geht's")) { step = 1 }.buttonStyle(PrimaryGlassButtonStyle()).padding(.top, 12)
         }
