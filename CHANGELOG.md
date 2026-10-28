@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-063 – Fehler aus CarPlay-Bildern und Wiesbaden-Clip
+
+**Ziel:** Nutzer: „schau im Repo und mach weiter“. Offene Punkte aus GM-061/062.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `App/FollowCamera.swift`, `App/CarPlaySceneDelegate.swift`, `tools/prototype/js/live.js`
+
+**Geändert:** Kartensymbole kleiner (0,36–0,52) und mit doppeltem Abstand; Straßennamen größer und öfter; Kamera in der Stadt höher (30 km/h 400 m statt 320 m), CarPlay-Pfeil bei 64 % (mehr Strecke voraus); Pixel-Quest-Marker kleiner; Wild-West-Wald als kleine unregelmäßige Tupfen.
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** bis zu den CarPlay-Bildern dieses Laufs.
+
 ## GM-062 – Wild West: Kartensymbole von Codex
 
 **Ziel:** Nutzer: Codex-Ergebnis schon einbauen (Codex-Limit erreicht).

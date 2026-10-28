@@ -340,6 +340,7 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         mapView = map
         let cam = FollowCamera(map: map, pitch: 0)
         cam.altitudeFactor = 1.0 // GM-030: vorher 1,6 – viel zu weit weg, keine Straßennamen
+        cam.arrowY = 0.64 // GM-063: Pfeil tiefer, mehr Strecke vor dem Auto
         cam.target = { AppModel.shared.cameraTarget }
         cam.glow = { AppModel.shared.screen == .navigating }
         cam.restoreAttribution = false

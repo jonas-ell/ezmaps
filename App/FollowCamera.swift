@@ -196,7 +196,7 @@ enum PlayerMarker {
         guard let img else { return RouteOverlay.arrowImage() }
         return UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { ctx in
             ctx.cgContext.interpolationQuality = .none
-            img.draw(in: CGRect(x: 12, y: 6, width: 36, height: 48))
+            img.draw(in: CGRect(x: 18, y: 14, width: 24, height: 32)) // GM-063: kleiner (CarPlay: wirkte wie eine Flasche)
         }
     }
 
