@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-064 – Wild West mit den Codex-Grafiken
+
+**Ziel:** Nutzer: auf Codex warten, alle Grafiken einbauen, auf dem Mac laufen lassen, aufs Handy, CarPlay-Bilder.
+
+**Dateien:** `Assets/Generated/WildWest/` (Codex, Runde 2), `App/Assets.xcassets/WildWest/` (16 Symbole, Pfeil, X, Papier-, Wasser-, Wald-Kachel), `tools/maplibre/build_style.py`, `App/MapStyles/style-wild-west.json`, `App/NeonMapView.swift`, `App/FollowCamera.swift`
+
+**Geändert:** alle 16 Wild-West-Symbole, Standort-Pfeil und rotes X von Codex; Hintergrund Papier-Kachel, Wasser mit Federstrichen, Wald aus Hügelschraffur und Tinten-Baumstempeln (transparente Codex-Kacheln auf die Untergrundfarbe gelegt, weil MapLibre-Muster deckend sein müssen). Toy Town: Codex hat erneut keine Bilder geliefert (nur Beschreibung).
+
+**Tatsächlich geprüft:** STIL OK; Codex-Dateien angesehen.
+
+**Ungetestet:** siehe Mac-Lauf.
+
 ## GM-063 – Fehler aus CarPlay-Bildern und Wiesbaden-Clip
 
 **Ziel:** Nutzer: „schau im Repo und mach weiter“. Offene Punkte aus GM-061/062.

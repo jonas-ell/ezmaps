@@ -184,7 +184,10 @@ enum PlayerMarker {
             let car = toyCar()
             return (car, car)
         case .wildWest:
-            let a = arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60)
+            // GM-064: Codex-Pfeil, sonst gezeichnet
+            let a = UIImage(named: "west-arrow").map { img in
+                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { _ in img.draw(in: CGRect(x: 8, y: 8, width: 44, height: 44)) }
+            } ?? arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60)
             return (a, a)
         case .classic:
             let a = classic()

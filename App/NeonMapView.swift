@@ -273,6 +273,10 @@ final class RouteOverlay {
                 NeonColors.route.setFill(); d.fill()
                 StyleTheme.hex(0x5a1d8c).setStroke(); d.lineWidth = 1.5; d.stroke()
             case .wildWest:
+                if let x = UIImage(named: "west-x") { // GM-064: Codex
+                    x.draw(in: CGRect(x: 4, y: 4, width: 40, height: 40))
+                    return
+                }
                 // GM-057: nur rotes X wie auf der Papierkarte
                 let x = UIBezierPath()
                 x.move(to: CGPoint(x: 14, y: 14)); x.addLine(to: CGPoint(x: 34, y: 34))
@@ -752,6 +756,10 @@ enum StylePatterns {
                 StyleTheme.hex(0x5a4733).setStroke(); t.lineWidth = 0.7; t.stroke()
             }
         }
+        // GM-064: Codex-Grafiken (Assets/Generated/WildWest) haben Vorrang vor den gezeichneten Mustern
+        if let p = UIImage(named: "west-tex-paper") { out["ez-pat-paper-west"] = p }
+        if let f = UIImage(named: "west-tex-forest") { out["ez-pat-forest-west"] = f }
+        out["ez-pat-water-west"] = UIImage(named: "west-tex-water") ?? pixelTile(2) { _, _ in rgb(170, 163, 146) }
         // Toy Town
         out["ez-pat-lawn-toy"] = UIGraphicsImageRenderer(size: CGSize(width: 64, height: 64)).image { ctx in
             rgb(141, 198, 63).setFill(); ctx.fill(CGRect(x: 0, y: 0, width: 64, height: 64))

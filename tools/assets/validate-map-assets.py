@@ -1,10 +1,16 @@
 """Read-only checks for delivered PNG dimensions, alpha, repetition and inventory."""
 import json
+import argparse
 from pathlib import Path
 from PIL import Image, ImageChops
 
 root = Path(__file__).resolve().parents[2] / 'Assets' / 'Generated'
 specs = json.loads((root / 'map-asset-prompts.json').read_text())
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--style', choices=('WildWest', 'ToyTown'))
+args = parser.parse_args()
+if args.style:
+    specs = [a for a in specs if a['style'] == args.style]
 errors = []
 count = 0
 for a in specs:
@@ -34,7 +40,7 @@ for a in specs:
                 maximum=max(v[1] for v in lr.getextrema()+tb.getextrema())
                 if maximum > 2:
                     errors.append(f'{file.name}: opposite edge delta {maximum}')
-for style in ('WildWest','ToyTown'):
+for style in ([args.style] if args.style else ('WildWest','ToyTown')):
     for name in ('index.html','manifest.json','README.md'):
         if not (root/style/name).exists():
             errors.append(f'Missing {style}/{name}')

@@ -41,7 +41,7 @@ CLASSIC = dict(land="#f2efe9", residential="#ece7e0", industrial="#ebe3e8", farm
 # Straßen nur dünne dunkelbraune Linien, Wasser graugrün mit weichem Rand, Häuser kaum sichtbar, Schrift Old Standard TT (OFL).
 WESTERN = dict(land="#e4c9a8", residential="#e4c9a8", industrial="#e0c4a2", farm="#e4c9a8", park="#dec5a2", forest="#dcc29e",
                water="#aaa392", building="#e8cfae", buildingEdge="#e8cfae",
-               pat=dict(land="ez-pat-paper-west", forest="ez-pat-forest-west"),
+               pat=dict(land="ez-pat-paper-west", forest="ez-pat-forest-west", water="ez-pat-water-west"),
                minzoom_shift={"secondary": 10, "tertiary": 11.5, "minor": 13.5, "service": 15}, rail_minzoom=11, rail="#4a3b2c", casing="#4a3b2c", label="#4a3b2c",
                road=lambda r: "#4a3b2c", widen=1.0, ink_lines={0: 3.2, 1: 3.0, 2: 2.6, 3: 2.2, 4: 1.8, 5: 1.3, 6: 1.0, 7: 0.8},
                water_soft=True, rail_ticks=True, label_halo="#e4c9a8", label_halo_width=2,
