@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-067 – Pixel-Quest-Satz von Codex wieder raus
+
+**Ziel:** Nutzer: „lass pixelquest assets raus“.
+
+**Dateien:** `Assets/Generated/PixelQuest/` (gelöscht)
+
+**Geändert:** Der Pixel-Satz der Codex-Lieferung (GM-066) ist entfernt. Pixel Quest nutzt weiter die Grafiken des Nutzers (`App/Assets.xcassets/PixelQuest/`), unverändert. GM-066 Auftrag 6 entfällt.
+
+**Tatsächlich geprüft:** Ordner weg, App-Bildsätze Pixel Quest unverändert.
+
+**Ungetestet:** –
+
 ## GM-066 – Codex-Lieferung: Toy Town komplett, Wild West Rest, eigene Pixel-Symbole
 
 **Ziel:** Nutzer hat `ezmaps-assets.zip` von Codex hochgeladen (Auftrag aus dem Chat, selbstständig ohne Repo-Zugriff).
