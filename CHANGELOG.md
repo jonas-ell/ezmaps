@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-082 – Pixel Quest: Schienen in echter Breite, Straßen weit weg ohne dunklen Rand
+
+**Ziel:** Nutzer: „Schienen und generell Sachen sollen bei ihrer gleichen Größe bleiben und nicht immer kleiner werden, wenn man nah ranzoomt“; Bilder mit dunklen Straßen weit weg.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`
+
+**Geändert:** Schienen 3,4 m breit (wachsen mit wie Straßen und Häuser, mindestens 6 px), vorher feste 8–18 px. Straßenrand erst ab Zoom 14,5–16 (weit weg überdeckte der dunkle Rand die dünne Pflasterlinie).
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
 ## GM-081 – Pixel Quest: Pflaster mittelweit wieder sichtbar, Schieferdächer zwischen den roten
 
 **Ziel:** Nutzer schickt 4 iPhone-Bilder (Frankfurt, Pixel Quest) ohne Text – Fehler selbst suchen.

@@ -217,7 +217,7 @@ def build(P, title):
         casing = P.get("casing_minor", P["casing"]) if r >= 4 else P["casing"]
         ca, cp = P.get("casing_add", (3, 1.6))  # GM-072: Pixel Quest schmaler Rand
         layers.append(with_min(line(f"road-{cls}-casing", "transportation", casing, meters(WIDTH[r] * 0.75 * widen + ca, MIN_PX[r] + cp), road_filter(cls)), cls, P))
-        if P.get("far_simple"): layers[-1]["paint"]["line-opacity"] = ["interpolate", ["linear"], ["zoom"], 12, 0, 14, 1]  # GM-059: weit weg ohne Rand
+        if P.get("far_simple"): layers[-1]["paint"]["line-opacity"] = ["interpolate", ["linear"], ["zoom"], 14.5, 0, 16, 1]  # GM-059/082: weit weg ohne Rand (dunkler Rand überdeckte die dünne Straße)
     for cls, r in (order if ink and not rpx else []):
         px = ink[r]
         layers.append(with_min(line(f"road-{cls}", "transportation", P["road"](r),
@@ -250,7 +250,7 @@ def build(P, title):
     if P.get("rail_pattern"):  # GM-057: Schienen-Grafik (Pixel Quest)
         layers[rail_i]["paint"]["line-pattern"] = P["rail_pattern"]
         layers[rail_i]["minzoom"] = 13  # GM-058: weit weg nur Rauschen
-        layers[rail_i]["paint"]["line-width"] = ["interpolate", ["linear"], ["zoom"], 13, 8, 17, 18]
+        layers[rail_i]["paint"]["line-width"] = meters(3.4, 6)  # GM-082: echte Breite – vorher feste Bildpunkte, nah winzig im Gleisbett
     if P.get("water_edge"):
         i = next(k for k, l in enumerate(layers) if l["id"] == "water")
         layers.insert(i + 1, line("water-edge", "water", P["water_edge"], meters(2.5, 1.2), ["!=", ["get", "class"], "swimming_pool"]))
