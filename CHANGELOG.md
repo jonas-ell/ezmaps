@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-079 – Pixel Quest: Items größer
+
+**Ziel:** Nutzer (Bild mit kleinem Hähnchen auf dem Dach): „das Chicken z. B. muss größer sein“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`
+
+**Geändert:** Pixel-Quest-Symbole 1,6× so groß und ab Zoom 17 bis 19 nochmals bis 1,8× wachsend (vorher ab Zoom 17 fest, wirkte nah winzig neben den Blöcken).
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
 ## GM-078 – Pixel Quest: Dächer auf allen Blöcken, Hochhäuser mit Glasfassade, echte Höhen
 
 **Ziel:** Nutzer: „die Frankfurt-Skyline ist wirklich so groß, aber die Textur sieht schrecklich aus“; „kannst du nicht noch Dächer drauf bauen, auch wenn die flach sind?“

@@ -91,6 +91,7 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              # (Höhe in 4-m-Schritten, mindestens 1 Block), Holz/Fichte/Ziegel/Bruchstein nach Höhe; Villager-Bilder raus (bis 3D-Modelle kommen)
              extrude=[(0, 8, "ez-pat-oak-px"), (8, 12, "ez-pat-spruce-px"), (12, 20, "ez-pat-brick-px"), (20, None, "ez-pat-tower-px")],  # GM-078: echte Höhen, Hochhäuser Glas
              roofs=[((0, 20), "ez-pat-roof-px"), ((20, None), "ez-pat-slab-px")],
+             poi_scale=1.6, poi_near=1.8,  # GM-079: Items größer (Nutzer: „das Chicken muss größer sein“)
              extrude_only=True, extrude_minzoom=15, extrude_far=(13, "#7a5a32"),  # GM-075: ruckelte – unter Zoom 15 einfarbig
              label_spacing=420, casing_add=(0.8, 0.8), water_line_pattern="ez-pat-water-px",
              zoom_patterns=["ez-pat-grass-px", "ez-pat-leaves-px", "ez-pat-farm-px", "ez-pat-stone-px"],  # GM-072: Blöcke wachsen beim Zoomen
@@ -436,7 +437,8 @@ def poi_layer(P):
     return {
         "id": "poi-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": P.get("poi_minzoom", 14.5),
         "filter": ["in", ["get", "class"], ["literal", list(POI)]],
-        "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, round(0.5 * P.get("poi_scale", 1), 2), 17, round(0.72 * P.get("poi_scale", 1), 2)], "icon-padding": 44},  # GM-067: größer (Nutzer: „Icons zu klein“)
+        "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, round(0.5 * P.get("poi_scale", 1), 2), 17, round(0.72 * P.get("poi_scale", 1), 2),
+                                                  19, round(0.72 * P.get("poi_scale", 1) * P.get("poi_near", 1), 2)], "icon-padding": 44},  # GM-079: nah weiter wachsen  # GM-067: größer (Nutzer: „Icons zu klein“)
     }
 
 
