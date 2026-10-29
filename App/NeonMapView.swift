@@ -91,11 +91,16 @@ final class RouteOverlay {
         }
     }
 
+    /// GM-072: Symbole und Muster für jede Karte (auch Stil-Seite und Erkunden – dort fehlten sie, Karte ohne Texturen)
+    static func registerImages(_ style: MLNStyle) {
+        for (name, image) in RouteOverlay.poiImages() { style.setImage(image, forName: name) } // GM-026
+        for (name, image) in StylePatterns.all() { style.setImage(image, forName: name) } // GM-050: Muster Pixel Quest / Toy Town
+    }
+
     func styleLoaded(_ style: MLNStyle) {
         styleReady = true
         animateWater(mapStyle == .pixelQuest)
-        for (name, image) in RouteOverlay.poiImages() { style.setImage(image, forName: name) } // GM-026
-        for (name, image) in StylePatterns.all() { style.setImage(image, forName: name) } // GM-050: Muster Pixel Quest / Toy Town
+        RouteOverlay.registerImages(style)
         let empty = MLNShapeCollectionFeature(shapes: [])
         let alt = MLNShapeSource(identifier: "ez-alt", shape: empty, options: nil)
         let main = MLNShapeSource(identifier: "ez-route", shape: empty, options: nil)
@@ -471,6 +476,7 @@ struct NeonMapView: UIViewRepresentable {
             }
         }
         c.camera?.setStyle(style) // GM-057: Fahr-Pfeil je Stil
+        SkyOverlay.update(on: map, style: style) // GM-072
         if c.trailCount != trail.count {
             c.trailCount = trail.count
             c.overlay?.showTrail(trail)
@@ -611,6 +617,31 @@ final class CrosshairView: UIView {
     }
 }
 
+/// GM-072: Himmel des Nutzers (px-sky) oben über der schrägen Pixel-Quest-Karte, weich in die Ferne übergeblendet
+/// wie die Sichtweite im Blockspiel. Nicht bedienbar, liegt unter den Knöpfen.
+final class SkyOverlay: UIImageView {
+    private let fade = CAGradientLayer()
+
+    static func update(on map: MLNMapView, style: MapStyle) {
+        let existing = map.subviews.compactMap { $0 as? SkyOverlay }.first
+        guard style == .pixelQuest, let img = UIImage(named: "px-sky") else { existing?.removeFromSuperview(); return }
+        let v = existing ?? SkyOverlay(image: img)
+        if existing == nil {
+            v.contentMode = .scaleAspectFill
+            v.clipsToBounds = true
+            v.isUserInteractionEnabled = false
+            v.layer.magnificationFilter = .nearest
+            v.fade.colors = [UIColor.black.cgColor, UIColor.black.cgColor, UIColor.clear.cgColor]
+            v.fade.locations = [0, 0.55, 1]
+            v.layer.mask = v.fade
+            map.insertSubview(v, at: map.subviews.count > 0 ? 1 : 0)
+        }
+        let h = map.bounds.height * 0.24
+        v.frame = CGRect(x: 0, y: 0, width: map.bounds.width, height: h)
+        v.fade.frame = v.bounds
+    }
+}
+
 /// Hinweis „© OpenStreetMap-Mitwirkende“ – auf jedem Kartenbildschirm sichtbar (rechtlich Pflicht)
 struct OSMAttribution: View {
     var body: some View {
@@ -656,7 +687,7 @@ final class PlayerLocationView: MLNUserLocationAnnotationView {
         } else if let h = userLocation?.heading?.trueHeading, h >= 0 {
             lastHeading = h
         }
-        let rot: Double = (lastHeading - (mapView?.direction ?? 0)) * .pi / 180
+        let rot: Double = style == .pixelQuest ? 0 : (lastHeading - (mapView?.direction ?? 0)) * .pi / 180 // GM-072: Pixel-Marker steht aufrecht
         arrow.transform = CGAffineTransform(rotationAngle: CGFloat(rot))
     }
 
@@ -690,6 +721,26 @@ enum StylePatterns {
     }
 
     static func rgb(_ r: Int, _ g: Int, _ b: Int) -> UIColor { UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: 1) }
+
+    /// GM-072: Bild hart (ohne Glätten) vergrößern
+    static func scaled(_ img: UIImage, _ f: CGFloat) -> UIImage {
+        let size = CGSize(width: img.size.width * f, height: img.size.height * f)
+        let fmt = UIGraphicsImageRendererFormat(); fmt.scale = img.scale
+        return UIGraphicsImageRenderer(size: size, format: fmt).image { ctx in
+            ctx.cgContext.interpolationQuality = .none
+            img.draw(in: CGRect(origin: .zero, size: size))
+        }
+    }
+
+    /// GM-072: Bild n × n mal nebeneinander (gleiche Pixelgröße)
+    static func tiled(_ img: UIImage, _ n: Int) -> UIImage {
+        let size = CGSize(width: img.size.width * CGFloat(n), height: img.size.height * CGFloat(n))
+        let fmt = UIGraphicsImageRendererFormat(); fmt.scale = img.scale
+        return UIGraphicsImageRenderer(size: size, format: fmt).image { ctx in
+            ctx.cgContext.interpolationQuality = .none
+            for y in 0..<n { for x in 0..<n { img.draw(in: CGRect(x: CGFloat(x) * img.size.width, y: CGFloat(y) * img.size.height, width: img.size.width, height: img.size.height)) } }
+        }
+    }
 
     /// Kachel aus Kunstpixeln (je 2 pt), harte Kanten
     static func pixelTile(_ cells: Int, _ color: (Int, Int) -> UIColor) -> UIImage {
@@ -788,11 +839,19 @@ enum StylePatterns {
         out["ez-pat-water-west"] = UIImage(named: "west-tex-water") ?? pixelTile(2) { _, _ in rgb(170, 163, 146) }
         // GM-065: Toy Town – Codex-Kacheln und Haus-Symbole ("toy-house-1" … in Assets ToyTown)
         for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment",
-                     "px-house-1", "px-house-2", "px-house-3", "px-house-4", // GM-067: Villager-Häuser
+                     "px-sky", // GM-072
                      "fv2-paper-grain", "fv2-forest-canopy", "fv2-grass-mottle", "fv2-rock-grain", "fv2-water-grain", // GM-068: Frontier-Körnung
                      "fv2-forest-paint", "fv2-meadow-paint", // GM-070: gemalte Kacheln
                      "toy-tex-weave"] { // GM-071: Teppich-Flor
             if let img = UIImage(named: name) { out[name] = img }
+        }
+        for k in 1...16 { if let img = UIImage(named: "px-house-\(k)") { out["px-house-\(k)"] = img } } // GM-072: 16 Villager-Varianten
+        // GM-072: Straße aus 4 × 4 Bruchstein-Blöcken (line-pattern zieht das Bild auf Straßenbreite – vorher graue Streifen)
+        if let c = out["ez-pat-road-px"] { out["ez-pat-road-px"] = tiled(c, 4) }
+        // GM-072: Blöcke wachsen beim Heranzoomen (build_style zoom_patterns: 2×/4×/8× ab Zoom 16/17/18)
+        for n in ["ez-pat-grass-px", "ez-pat-leaves-px", "ez-pat-farm-px", "ez-pat-stone-px"] {
+            guard let img = out[n] else { continue }
+            for f in [2, 4, 8] { out[n + "-\(f)"] = scaled(img, CGFloat(f)) }
         }
         // Toy Town (gezeichnet; Codex-Kacheln weiter unten haben Vorrang)
         out["ez-pat-lawn-toy"] = UIGraphicsImageRenderer(size: CGSize(width: 64, height: 64)).image { ctx in

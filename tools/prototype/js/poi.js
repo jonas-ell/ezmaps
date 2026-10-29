@@ -136,7 +136,7 @@ function toyBadge(kind) {
 const ASSET_IMAGES = {};
 async function preloadAssetImages(base) {
   const sets = { ToyTown: ['toy-house-1', 'toy-house-2', 'toy-house-3', 'toy-house-4', 'toy-house-5', 'toy-house-6', 'toy-shop', 'toy-school', 'toy-police', 'toy-apartment', 'toy-tex-weave'],
-    PixelQuest: ['px-house-1', 'px-house-2', 'px-house-3', 'px-house-4'],
+    PixelQuest: Array.from({ length: 16 }, (_, i) => `px-house-${i + 1}`), // GM-072: 16 Varianten
     Frontier: ['fv2-paper-grain', 'fv2-forest-canopy', 'fv2-grass-mottle', 'fv2-rock-grain', 'fv2-water-grain', 'fv2-forest-paint', 'fv2-meadow-paint'] };
   const jobs = [];
   // GM-068: Frontier-Symbole unter den Namen der Stile (ez-poi-<art>-fv2 → fv2-poi-<datei>), wie RouteOverlay in der App
@@ -144,6 +144,10 @@ async function preloadAssetImages(base) {
     shirt: 'clothing', cash: 'bank', cinema: 'cinema', barber: 'barber', hotel: 'hotel', school: 'school', church: 'church', playground: 'playground' };
   for (const [k, f] of Object.entries(fv2)) jobs.push(new Promise(ok => { const im = new Image(); im.onload = () => { ASSET_IMAGES[`ez-poi-${k}-fv2`] = im; ok(); };
     im.onerror = ok; im.src = `${base}App/Assets.xcassets/Frontier/fv2-poi-${f}.imageset/fv2-poi-${f}@2x.png`; }));
+  // GM-072: Wild-West-Kacheln wie in der App (StylePatterns: west-tex-* haben Vorrang)
+  for (const [k, f] of Object.entries({ 'ez-pat-paper-west': 'west-tex-paper', 'ez-pat-forest-west': 'west-tex-forest', 'ez-pat-water-west': 'west-tex-water' }))
+    jobs.push(new Promise(ok => { const im = new Image(); im.onload = () => { ASSET_IMAGES[k] = im; ok(); }; im.onerror = ok;
+      im.src = `${base}App/Assets.xcassets/WildWest/${f}.imageset/${f}@2x.png`; }));
   for (const [dir, names] of Object.entries(sets)) for (const n of names) {
     jobs.push(new Promise(ok => { const im = new Image(); im.onload = () => { ASSET_IMAGES[n] = im; ok(); }; im.onerror = ok;
       im.src = `${base}App/Assets.xcassets/${dir}/${n}.imageset/${n}@2x.png`; }));
@@ -159,6 +163,14 @@ function addAssetImages(map) {
 // Bild für einen fehlenden Namen (styleimagemissing): Symbole und Muster aller Stile; pixelRatio dazu
 function styleImage(id) {
   if (ASSET_IMAGES[id]) return { data: ASSET_IMAGES[id], pixelRatio: 2 };
+  const zs = /^(ez-pat-[a-z-]+-px)-([248])$/.exec(id); // GM-072: Blöcke wachsen beim Zoomen (wie StylePatterns.scaled)
+  if (zs && PATTERNS[zs[1]]) {
+    const d = PATTERNS[zs[1]](), f = +zs[2], src = document.createElement('canvas'), c = document.createElement('canvas');
+    src.width = d.width; src.height = d.height; src.getContext('2d').putImageData(d, 0, 0);
+    c.width = d.width * f; c.height = d.height * f;
+    const g = c.getContext('2d'); g.imageSmoothingEnabled = false; g.drawImage(src, 0, 0, c.width, c.height);
+    return { data: g.getImageData(0, 0, c.width, c.height), pixelRatio: 2 };
+  }
   if (PATTERNS[id]) return { data: PATTERNS[id](), pixelRatio: 2 };
   const m = /^ez-poi-([a-z]+)(-neon|-west|-px|-toy)?$/.exec(id); if (!m) return null;
   if (m[2] === '-px') return { data: pixelSign(m[1]), pixelRatio: 2 };

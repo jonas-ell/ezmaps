@@ -177,6 +177,13 @@ struct StyleSwatch: View {
 /// Echte MapLibre-Karte im Stil (Stil-Seite), nicht bedienbar. GM-050: flach von oben wie in CarPlay, mit Pfeil
 struct StylePreviewMap: UIViewRepresentable {
     let style: MapStyle
+    func makeCoordinator() -> Coordinator { Coordinator() }
+    /// GM-072: Symbole und Muster anmelden (vorher grüne Kästen ohne Texturen auf der Stil-Seite)
+    final class Coordinator: NSObject, MLNMapViewDelegate {
+        func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
+            MainActor.assumeIsolated { RouteOverlay.registerImages(style) }
+        }
+    }
     func makeUIView(context: Context) -> MLNMapView {
         let center = AppModel.shared.currentCoordinate.map { CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude) } ?? MapStyleResource.idstein
         let map = NeonMap.make(zoom: 16.2, style: style)
@@ -184,6 +191,10 @@ struct StylePreviewMap: UIViewRepresentable {
         map.isUserInteractionEnabled = false
         map.showsUserLocation = false
         map.compassView.isHidden = true
+        map.delegate = context.coordinator
+        let cam = map.camera
+        cam.pitch = RouteOverlay.pitch(for: style) // GM-072: Pixel Quest schräg wie in der App
+        map.setCamera(cam, animated: false)
         return map
     }
     func updateUIView(_ map: MLNMapView, context: Context) {}
@@ -252,7 +263,8 @@ struct StyleDetailView: View {
     private var hero: some View {
         ZStack(alignment: .bottomLeading) {
             StylePreviewMap(style: style)
-            Image(style == .neonCity ? "PlayerNeonGlow" : "PlayerNeon").resizable().frame(width: 54, height: 54)
+            Image(uiImage: style == .neonCity ? (UIImage(named: "PlayerNeonGlow") ?? RouteOverlay.arrowImage()) : PlayerMarker.images(for: style).plain) // GM-072: Marker des Stils
+                .resizable().interpolation(style == .pixelQuest ? .none : .high).frame(width: 54, height: 54)
                 .frame(maxWidth: .infinity, maxHeight: .infinity).offset(y: 30)
             LinearGradient(colors: [.black.opacity(0.35), .clear, .clear, .black.opacity(0.9)], startPoint: .top, endPoint: .bottom)
             VStack(alignment: .leading, spacing: 6) {

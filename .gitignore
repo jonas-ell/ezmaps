@@ -34,3 +34,4 @@ tools/prototype/referenzen/
 Assets/Generated/minecraft/
 # GM-067: Villager-Häuser (Spielbilder) nur lokal – Test-Builds schicken sie mit (mac_device/drive/screens)
 App/Assets.xcassets/PixelQuest/px-house-*.imageset/
+App/Assets.xcassets/PixelQuest/px-sky.imageset/

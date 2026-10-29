@@ -56,6 +56,7 @@ for STYLE in STYLES:
         expr = [l.get("layout", {}).get("icon-image"), l.get("paint", {})]  # GM-050: auch fill-/line-/background-pattern
         if any(expr):
             used.update(x for x in json.dumps(expr).split('"') if x.startswith(("ez-poi-", "ez-pat-")))
+    used = {re.sub(r"-[248]$", "", u) if re.sub(r"-[248]$", "", u) in drawn else u for u in used}  # GM-072: StylePatterns.scaled
     for name in sorted(used - drawn):
         errors.append(f"{STYLE.name}: Symbol {name} wird nicht in poiImages gezeichnet")
     if "OpenStreetMap" not in json.dumps(style["sources"]):

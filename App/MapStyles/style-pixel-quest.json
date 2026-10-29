@@ -18,7 +18,19 @@
    "type": "background",
    "paint": {
     "background-color": "#5d9b37",
-    "background-pattern": "ez-pat-grass-px"
+    "background-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-grass-px",
+     16,
+     "ez-pat-grass-px-2",
+     17,
+     "ez-pat-grass-px-4",
+     18,
+     "ez-pat-grass-px-8"
+    ]
    }
   },
   {
@@ -48,7 +60,19 @@
    "paint": {
     "fill-color": "#b59a45",
     "fill-antialias": true,
-    "fill-pattern": "ez-pat-farm-px"
+    "fill-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-farm-px",
+     16,
+     "ez-pat-farm-px-2",
+     17,
+     "ez-pat-farm-px-4",
+     18,
+     "ez-pat-farm-px-8"
+    ]
    },
    "filter": [
     "==",
@@ -68,7 +92,19 @@
    "paint": {
     "fill-color": "#2f6b22",
     "fill-antialias": true,
-    "fill-pattern": "ez-pat-leaves-px"
+    "fill-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-leaves-px",
+     16,
+     "ez-pat-leaves-px-2",
+     17,
+     "ez-pat-leaves-px-4",
+     18,
+     "ez-pat-leaves-px-8"
+    ]
    },
    "filter": [
     "==",
@@ -87,7 +123,19 @@
    "paint": {
     "fill-color": "#5d9b37",
     "fill-antialias": true,
-    "fill-pattern": "ez-pat-grass-px"
+    "fill-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-grass-px",
+     16,
+     "ez-pat-grass-px-2",
+     17,
+     "ez-pat-grass-px-4",
+     18,
+     "ez-pat-grass-px-8"
+    ]
    },
    "filter": [
     "==",
@@ -106,7 +154,19 @@
    "paint": {
     "fill-color": "#5d9b37",
     "fill-antialias": true,
-    "fill-pattern": "ez-pat-grass-px"
+    "fill-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-grass-px",
+     16,
+     "ez-pat-grass-px-2",
+     17,
+     "ez-pat-grass-px-4",
+     18,
+     "ez-pat-grass-px-8"
+    ]
    }
   },
   {
@@ -117,7 +177,19 @@
    "paint": {
     "fill-color": "#5d9b37",
     "fill-antialias": true,
-    "fill-pattern": "ez-pat-grass-px"
+    "fill-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-grass-px",
+     16,
+     "ez-pat-grass-px-2",
+     17,
+     "ez-pat-grass-px-4",
+     18,
+     "ez-pat-grass-px-8"
+    ]
    },
    "filter": [
     "in",
@@ -171,7 +243,19 @@
    "paint": {
     "fill-color": "#8a8a8a",
     "fill-antialias": true,
-    "fill-pattern": "ez-pat-stone-px"
+    "fill-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-stone-px",
+     16,
+     "ez-pat-stone-px-2",
+     17,
+     "ez-pat-stone-px-4",
+     18,
+     "ez-pat-stone-px-8"
+    ]
    },
    "filter": [
     "in",
@@ -200,7 +284,19 @@
    "paint": {
     "fill-color": "#5d9b37",
     "fill-antialias": true,
-    "fill-pattern": "ez-pat-grass-px"
+    "fill-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-grass-px",
+     16,
+     "ez-pat-grass-px-2",
+     17,
+     "ez-pat-grass-px-4",
+     18,
+     "ez-pat-grass-px-8"
+    ]
    },
    "filter": [
     "in",
@@ -297,7 +393,8 @@
      379.104,
      22,
      758.208
-    ]
+    ],
+    "line-pattern": "ez-pat-water-px"
    },
    "filter": [
     "in",
@@ -372,7 +469,8 @@
      126.368,
      22,
      252.736
-    ]
+    ],
+    "line-pattern": "ez-pat-water-px"
    },
    "filter": [
     "!",
@@ -427,7 +525,29 @@
      ]
     ]
    },
-   "minzoom": 13
+   "minzoom": 13,
+   "filter": [
+    "any",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     8
+    ],
+    [
+     "<",
+     [
+      "zoom"
+     ],
+     15
+    ]
+   ]
   },
   {
    "id": "building-far",
@@ -442,16 +562,41 @@
    "filter": [
     "all",
     [
-     "<",
+     "all",
      [
-      "coalesce",
+      "<",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      7
+     ]
+    ],
+    [
+     "any",
+     [
+      ">=",
+      [
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
+      ],
+      8
      ],
-     7
+     [
+      "<",
+      [
+       "zoom"
+      ],
+      15
+     ]
     ]
    ],
    "maxzoom": 13.5,
@@ -471,16 +616,41 @@
    "filter": [
     "all",
     [
-     "<",
+     "all",
      [
-      "coalesce",
+      "<",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      7
+     ]
+    ],
+    [
+     "any",
+     [
+      ">=",
+      [
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
+      ],
+      8
      ],
-     7
+     [
+      "<",
+      [
+       "zoom"
+      ],
+      15
+     ]
     ]
    ],
    "minzoom": 13.5
@@ -498,28 +668,53 @@
    "filter": [
     "all",
     [
-     ">=",
+     "all",
      [
-      "coalesce",
+      ">=",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      7
      ],
-     7
+     [
+      "<",
+      [
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
+      ],
+      10
+     ]
     ],
     [
-     "<",
+     "any",
      [
-      "coalesce",
+      ">=",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      8
      ],
-     10
+     [
+      "<",
+      [
+       "zoom"
+      ],
+      15
+     ]
     ]
    ],
    "maxzoom": 13.5,
@@ -539,28 +734,53 @@
    "filter": [
     "all",
     [
-     ">=",
+     "all",
      [
-      "coalesce",
+      ">=",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      7
      ],
-     7
+     [
+      "<",
+      [
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
+      ],
+      10
+     ]
     ],
     [
-     "<",
+     "any",
      [
-      "coalesce",
+      ">=",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      8
      ],
-     10
+     [
+      "<",
+      [
+       "zoom"
+      ],
+      15
+     ]
     ]
    ],
    "minzoom": 13.5
@@ -578,28 +798,53 @@
    "filter": [
     "all",
     [
-     ">=",
+     "all",
      [
-      "coalesce",
+      ">=",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      10
      ],
-     10
+     [
+      "<",
+      [
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
+      ],
+      14
+     ]
     ],
     [
-     "<",
+     "any",
      [
-      "coalesce",
+      ">=",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      8
      ],
-     14
+     [
+      "<",
+      [
+       "zoom"
+      ],
+      15
+     ]
     ]
    ],
    "maxzoom": 13.5,
@@ -619,28 +864,53 @@
    "filter": [
     "all",
     [
-     ">=",
+     "all",
      [
-      "coalesce",
+      ">=",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      10
      ],
-     10
+     [
+      "<",
+      [
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
+      ],
+      14
+     ]
     ],
     [
-     "<",
+     "any",
      [
-      "coalesce",
+      ">=",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      8
      ],
-     14
+     [
+      "<",
+      [
+       "zoom"
+      ],
+      15
+     ]
     ]
    ],
    "minzoom": 13.5
@@ -658,16 +928,41 @@
    "filter": [
     "all",
     [
-     ">=",
+     "all",
      [
-      "coalesce",
+      ">=",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      14
+     ]
+    ],
+    [
+     "any",
+     [
+      ">=",
+      [
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
+      ],
+      8
      ],
-     14
+     [
+      "<",
+      [
+       "zoom"
+      ],
+      15
+     ]
     ]
    ],
    "maxzoom": 13.5,
@@ -687,16 +982,41 @@
    "filter": [
     "all",
     [
-     ">=",
+     "all",
      [
-      "coalesce",
+      ">=",
       [
-       "get",
-       "render_height"
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
       ],
-      0
+      14
+     ]
+    ],
+    [
+     "any",
+     [
+      ">=",
+      [
+       "coalesce",
+       [
+        "get",
+        "render_height"
+       ],
+       0
+      ],
+      8
      ],
-     14
+     [
+      "<",
+      [
+       "zoom"
+      ],
+      15
+     ]
     ]
    ],
    "minzoom": 13.5
@@ -742,7 +1062,29 @@
     ],
     "line-opacity": 0.8
    },
-   "minzoom": 15
+   "minzoom": 15,
+   "filter": [
+    "any",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     8
+    ],
+    [
+     "<",
+     [
+      "zoom"
+     ],
+     15
+    ]
+   ]
   },
   {
    "id": "building-edge",
@@ -770,7 +1112,29 @@
      3.5
     ]
    },
-   "minzoom": 14
+   "minzoom": 14,
+   "filter": [
+    "any",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     8
+    ],
+    [
+     "<",
+     [
+      "zoom"
+     ],
+     15
+    ]
+   ]
   },
   {
    "id": "rail",
@@ -835,43 +1199,43 @@
       "zoom"
      ],
      4,
-     2.6,
+     1.8,
      5,
-     2.6,
+     1.8,
      6,
-     2.6,
+     1.8,
      7,
-     2.6,
+     1.8,
      8,
-     2.6,
+     1.8,
      9,
-     2.6,
+     1.8,
      10,
-     2.6,
+     1.8,
      11,
-     2.6,
+     1.8,
      12,
-     2.6,
+     1.8,
      13,
-     2.6,
+     1.8,
      14,
-     2.6,
+     1.8,
      15,
-     4.048,
+     2.6,
      16,
-     8.095,
+     5.2,
      17,
-     16.191,
+     10.399,
      18,
-     32.382,
+     20.798,
      19,
-     64.764,
+     41.596,
      20,
-     129.527,
+     83.192,
      21,
-     259.054,
+     166.384,
      22,
-     518.109
+     332.769
     ],
     "line-opacity": [
      "interpolate",
@@ -929,43 +1293,43 @@
       "zoom"
      ],
      4,
-     3.0,
+     2.2,
      5,
-     3.0,
+     2.2,
      6,
-     3.0,
+     2.2,
      7,
-     3.0,
+     2.2,
      8,
-     3.0,
+     2.2,
      9,
-     3.0,
+     2.2,
      10,
-     3.0,
+     2.2,
      11,
-     3.0,
+     2.2,
      12,
-     3.0,
+     2.2,
      13,
-     3.0,
+     2.2,
      14,
-     3.06,
+     2.336,
      15,
-     6.121,
+     4.673,
      16,
-     12.242,
+     9.346,
      17,
-     24.484,
+     18.692,
      18,
-     48.968,
+     37.384,
      19,
-     97.935,
+     74.768,
      20,
-     195.87,
+     149.535,
      21,
-     391.741,
+     299.071,
      22,
-     783.481
+     598.142
     ],
     "line-opacity": [
      "interpolate",
@@ -1023,43 +1387,43 @@
       "zoom"
      ],
      4,
-     3.6,
+     2.8,
      5,
-     3.6,
+     2.8,
      6,
-     3.6,
+     2.8,
      7,
-     3.6,
+     2.8,
      8,
-     3.6,
+     2.8,
      9,
-     3.6,
+     2.8,
      10,
-     3.6,
+     2.8,
      11,
-     3.6,
+     2.8,
      12,
-     3.6,
+     2.8,
      13,
-     3.6,
+     2.8,
      14,
-     3.653,
+     2.929,
      15,
-     7.306,
+     5.858,
      16,
-     14.611,
+     11.715,
      17,
-     29.223,
+     23.431,
      18,
-     58.445,
+     46.861,
      19,
-     116.89,
+     93.723,
      20,
-     233.781,
+     187.446,
      21,
-     467.561,
+     374.892,
      22,
-     935.123
+     749.783
     ],
     "line-opacity": [
      "interpolate",
@@ -1117,43 +1481,43 @@
       "zoom"
      ],
      4,
-     4.0,
+     3.2,
      5,
-     4.0,
+     3.2,
      6,
-     4.0,
+     3.2,
      7,
-     4.0,
+     3.2,
      8,
-     4.0,
+     3.2,
      9,
-     4.0,
+     3.2,
      10,
-     4.0,
+     3.2,
      11,
-     4.0,
+     3.2,
      12,
-     4.0,
+     3.2,
      13,
-     4.0,
+     3.2,
      14,
-     4.0,
+     3.225,
      15,
-     7.898,
+     6.45,
      16,
-     15.796,
+     12.9,
      17,
-     31.592,
+     25.8,
      18,
-     63.184,
+     51.6,
      19,
-     126.368,
+     103.2,
      20,
-     252.736,
+     206.401,
      21,
-     505.472,
+     412.802,
      22,
-     1010.943
+     825.604
     ],
     "line-opacity": [
      "interpolate",
@@ -1211,43 +1575,43 @@
       "zoom"
      ],
      4,
-     4.6,
+     3.8,
      5,
-     4.6,
+     3.8,
      6,
-     4.6,
+     3.8,
      7,
-     4.6,
+     3.8,
      8,
-     4.6,
+     3.8,
      9,
-     4.6,
+     3.8,
      10,
-     4.6,
+     3.8,
      11,
-     4.6,
+     3.8,
      12,
-     4.6,
+     3.8,
      13,
-     4.6,
+     3.8,
      14,
-     4.6,
+     3.817,
      15,
-     9.083,
+     7.635,
      16,
-     18.165,
+     15.269,
      17,
-     36.331,
+     30.539,
      18,
-     72.662,
+     61.078,
      19,
-     145.323,
+     122.156,
      20,
-     290.646,
+     244.311,
      21,
-     581.293,
+     488.623,
      22,
-     1162.585
+     977.245
     ],
     "line-opacity": [
      "interpolate",
@@ -1305,43 +1669,43 @@
       "zoom"
      ],
      4,
-     5.2,
+     4.4,
      5,
-     5.2,
+     4.4,
      6,
-     5.2,
+     4.4,
      7,
-     5.2,
+     4.4,
      8,
-     5.2,
+     4.4,
      9,
-     5.2,
+     4.4,
      10,
-     5.2,
+     4.4,
      11,
-     5.2,
+     4.4,
      12,
-     5.2,
+     4.4,
      13,
-     5.2,
+     4.4,
      14,
-     5.2,
+     4.4,
      15,
-     9.675,
+     8.227,
      16,
-     19.35,
+     16.454,
      17,
-     38.7,
+     32.908,
      18,
-     77.4,
+     65.817,
      19,
-     154.801,
+     131.633,
      20,
-     309.601,
+     263.267,
      21,
-     619.203,
+     526.533,
      22,
-     1238.406
+     1053.066
     ],
     "line-opacity": [
      "interpolate",
@@ -1398,43 +1762,43 @@
       "zoom"
      ],
      4,
-     6.0,
+     5.2,
      5,
-     6.0,
+     5.2,
      6,
-     6.0,
+     5.2,
      7,
-     6.0,
+     5.2,
      8,
-     6.0,
+     5.2,
      9,
-     6.0,
+     5.2,
      10,
-     6.0,
+     5.2,
      11,
-     6.0,
+     5.2,
      12,
-     6.0,
+     5.2,
      13,
-     6.0,
+     5.2,
      14,
-     6.0,
+     5.2,
      15,
-     11.452,
+     10.004,
      16,
-     22.904,
+     20.008,
      17,
-     45.808,
+     40.017,
      18,
-     91.617,
+     80.033,
      19,
-     183.234,
+     160.066,
      20,
-     366.467,
+     320.132,
      21,
-     732.934,
+     640.264,
      22,
-     1465.868
+     1280.528
     ],
     "line-opacity": [
      "interpolate",
@@ -2043,7 +2407,7 @@
    ]
   },
   {
-   "id": "building-3d-10",
+   "id": "building-3d-8",
    "type": "fill-extrusion",
    "source": "openmaptiles",
    "source-layer": "building",
@@ -2060,7 +2424,7 @@
       ],
       0
      ],
-     10
+     8
     ],
     [
      "<",
@@ -2072,7 +2436,72 @@
       ],
       0
      ],
-     14
+     12
+    ]
+   ],
+   "paint": {
+    "fill-extrusion-pattern": "ez-pat-oak-px",
+    "fill-extrusion-height": [
+     "*",
+     [
+      "ceil",
+      [
+       "/",
+       [
+        "coalesce",
+        [
+         "get",
+         "render_height"
+        ],
+        0
+       ],
+       4
+      ]
+     ],
+     4
+    ],
+    "fill-extrusion-base": [
+     "coalesce",
+     [
+      "get",
+      "render_min_height"
+     ],
+     0
+    ],
+    "fill-extrusion-opacity": 1
+   }
+  },
+  {
+   "id": "building-3d-12",
+   "type": "fill-extrusion",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "minzoom": 14.5,
+   "filter": [
+    "all",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     12
+    ],
+    [
+     "<",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     16
     ]
    ],
    "paint": {
@@ -2108,7 +2537,7 @@
    }
   },
   {
-   "id": "building-3d-14",
+   "id": "building-3d-16",
    "type": "fill-extrusion",
    "source": "openmaptiles",
    "source-layer": "building",
@@ -2125,7 +2554,7 @@
       ],
       0
      ],
-     14
+     16
     ]
    ],
    "paint": {
@@ -2219,7 +2648,7 @@
     "text-letter-spacing": 0,
     "text-max-angle": 30,
     "text-padding": 2,
-    "symbol-spacing": 150
+    "symbol-spacing": 420
    },
    "paint": {
     "text-color": "#ffffff",
@@ -2245,27 +2674,28 @@
       0
      ],
      [
-      "match",
+      "concat",
+      "px-house-",
       [
-       "%",
+       "to-string",
        [
-        "to-number",
+        "+",
+        1,
         [
-         "id"
-        ],
-        0
-       ],
-       4
-      ],
-      0,
-      "px-house-1",
-      1,
-      "px-house-2",
-      2,
-      "px-house-3",
-      "px-house-4"
+         "%",
+         [
+          "to-number",
+          [
+           "id"
+          ],
+          0
+         ],
+         16
+        ]
+       ]
+      ]
      ],
-     10,
+     8,
      ""
     ],
     "icon-size": [

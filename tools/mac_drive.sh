@@ -12,7 +12,7 @@ P=$(ssh -o BatchMode=yes -o ConnectTimeout=10 "$H" ping 2>&1)
 TMP=$(mktemp -d); mkdir -p "$TMP/src"
 git archive --format=tar HEAD App Core Resources project.yml tools/mac_build.sh | tar -x -C "$TMP/src"
 # GM-067: Villager-Häuser (Bilder aus dem Spiel, vom Nutzer) nur lokal, nie im öffentlichen Repo – für Test-Builds mitschicken
-for d in App/Assets.xcassets/PixelQuest/px-house-*.imageset; do [ -d "$d" ] && cp -r "$d" "$TMP/src/App/Assets.xcassets/PixelQuest/"; done
+for d in App/Assets.xcassets/PixelQuest/px-house-*.imageset App/Assets.xcassets/PixelQuest/px-sky.imageset; do [ -d "$d" ] && cp -r "$d" "$TMP/src/App/Assets.xcassets/PixelQuest/"; done
 cp "$WPF" "$TMP/src/tools/drive.txt"; touch "$TMP/src/tools/.do_freedrive"
 sed -i "s/DRIVE_SECONDS:-360/DRIVE_SECONDS:-$SECS/" "$TMP/src/tools/mac_build.sh"
 # GM-061: optional Stil, Takt (Sekunden), Tempo (m/s), iPhone-Bilder 0/1 – z. B. STYLE=pixel-quest EVERY=1 PHONE=0

@@ -19,16 +19,6 @@
    "tileSize": 256,
    "maxzoom": 15,
    "attribution": "Höhen: <a href=\"https://registry.opendata.aws/terrain-tiles/\">Terrain Tiles</a> (SRTM, EU-DEM u. a.)"
-  },
-  "dem-broad": {
-   "type": "raster-dem",
-   "tiles": [
-    "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png"
-   ],
-   "encoding": "terrarium",
-   "tileSize": 256,
-   "maxzoom": 10,
-   "attribution": "Höhen: <a href=\"https://registry.opendata.aws/terrain-tiles/\">Terrain Tiles</a> (SRTM, EU-DEM u. a.)"
   }
  },
  "glyphs": "asset://Glyphs/{fontstack}/{range}.pbf",
@@ -46,14 +36,6 @@
    "paint": {
     "background-pattern": "fv2-paper-grain",
     "background-opacity": 0.45
-   }
-  },
-  {
-   "id": "land-meadow",
-   "type": "background",
-   "paint": {
-    "background-pattern": "fv2-meadow-paint",
-    "background-opacity": 0.9
    }
   },
   {
@@ -98,7 +80,7 @@
    "source": "openmaptiles",
    "source-layer": "landcover",
    "paint": {
-    "fill-pattern": "fv2-forest-paint",
+    "fill-pattern": "fv2-forest-canopy",
     "fill-opacity": [
      "interpolate",
      [
@@ -348,19 +330,6 @@
      ]
     ]
    ]
-  },
-  {
-   "id": "relief-broad",
-   "type": "hillshade",
-   "source": "dem-broad",
-   "paint": {
-    "hillshade-illumination-direction": 315,
-    "hillshade-illumination-anchor": "map",
-    "hillshade-exaggeration": 0.75,
-    "hillshade-shadow-color": "#232B14",
-    "hillshade-highlight-color": "#EADFB8",
-    "hillshade-accent-color": "#4E4A26"
-   }
   },
   {
    "id": "relief",

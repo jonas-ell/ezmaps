@@ -61,7 +61,8 @@ struct StyleName: View {
         case .wildWest:
             Text(title).font(.custom("Rye-Regular", size: size))
         case .pixelQuest:
-            Text(title).font(.custom("PressStart2P-Regular", size: size * 0.72)).shadow(color: .black, radius: 0, x: 2, y: 2)
+            Text(title).font(.custom("PressStart2P-Regular", size: size * 0.6)).lineLimit(1).minimumScaleFactor(0.5) // GM-072: kleiner
+                .shadow(color: .black, radius: 0, x: 2, y: 2)
         case .toyTown:
             Text(title).font(.custom("Fredoka-Bold", size: size))
         case .frontier:

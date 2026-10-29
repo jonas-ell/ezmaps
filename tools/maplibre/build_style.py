@@ -40,9 +40,13 @@ CLASSIC = dict(land="#f2efe9", residential="#ece7e0", industrial="#ebe3e8", farm
 # GM-057: Wild West nach den Red-Dead-Karten des Nutzers (Zielbild Runde 3, Farben gemessen): helles Pfirsich-Papier,
 # Straßen nur dünne dunkelbraune Linien, Wasser graugrün mit weichem Rand, Häuser kaum sichtbar, Schrift Old Standard TT (OFL).
 WESTERN = dict(land="#e4c9a8", residential="#e4c9a8", industrial="#e0c4a2", farm="#e4c9a8", park="#dec5a2", forest="#dcc29e",
-               water="#aaa392", building="#e8cfae", buildingEdge="#e8cfae",
-               pat=dict(land="ez-pat-paper-west", forest="ez-pat-forest-west", water="ez-pat-water-west"),
-               minzoom_shift={"secondary": 10, "tertiary": 11.5, "minor": 13.5, "service": 15}, rail_minzoom=11, rail="#4a3b2c", casing="#4a3b2c", label="#4a3b2c",
+               water="#aaa392", building="#ddc19c", buildingEdge="#b89a74",  # GM-072: Häuser sichtbar
+               # GM-072: Wohn-, Gewerbe-, Feld- und Parkflächen mit Papier (vorher harte helle Flecken), weit weg weniger Straßen
+               pat=dict(land="ez-pat-paper-west", forest="ez-pat-forest-west", water="ez-pat-water-west", residential="ez-pat-paper-west",
+                        industrial="ez-pat-paper-west", farm="ez-pat-paper-west", park="ez-pat-paper-west"),
+               minzoom_shift={"secondary": 11, "tertiary": 12.5, "minor": 14, "service": 15.5}, rail_minzoom=11,
+               # GM-072: Name neben der Linie (sonst Linie zwischen den Buchstaben = Punkte)
+               road_label_offset=[0, -0.85], rail="#4a3b2c", casing="#4a3b2c", label="#4a3b2c",
                road=lambda r: "#4a3b2c", widen=1.0, ink_lines={0: 3.2, 1: 3.0, 2: 2.6, 3: 2.2, 4: 1.8, 5: 1.3, 6: 1.0, 7: 0.8},
                water_soft=True, rail_ticks=True, label_halo="#e4c9a8", label_halo_width=2,
                font="Old Standard TT Regular", label_scale=0.85, letter_spacing=0.18,
@@ -84,11 +88,15 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              building_pattern=["ez-pat-oak-px", "ez-pat-spruce-px", "ez-pat-brick-px", "ez-pat-cobble-px"],
              building_shadow=True, block_edges=("#2a1d0e", "#d2a868"),
              # GM-067: Villager-Häuser (Bilder des Nutzers) auf kleinen Gebäuden, große bleiben Blöcke
+             # GM-072: 16 Varianten (gespiegelt, Fichte, Birke) statt 4, nur auf Gebäuden unter 8 m – darüber Blocktürme
              house_icons=dict(image=["step", ["coalesce", ["get", "render_height"], 0],
-                                     ["match", ["%", ["to-number", ["id"], 0], 4], 0, "px-house-1", 1, "px-house-2", 2, "px-house-3", "px-house-4"], 10, ""],
+                                     ["concat", "px-house-", ["to-string", ["+", 1, ["%", ["to-number", ["id"], 0], 16]]]], 8, ""],
                               size=["interpolate", ["linear"], ["zoom"], 15, 0.65, 17, 1.1, 19, 1.6], minzoom=15, anchor="bottom"),
              # GM-070: 3D – Gebäude ab 10 m als Blocktürme (Höhe in 4-m-Blöcken), Muster wie die Dächer
-             extrude=[(10, 14, "ez-pat-brick-px"), (14, None, "ez-pat-cobble-px")],
+             extrude=[(8, 12, "ez-pat-oak-px"), (12, 16, "ez-pat-brick-px"), (16, None, "ez-pat-cobble-px")],
+             small_hide=(8, 15),  # GM-072: ab Zoom 15 keine flachen Holzplatten unter den Villager-Häusern
+             label_spacing=420, casing_add=(0.8, 0.8), water_line_pattern="ez-pat-water-px",
+             zoom_patterns=["ez-pat-grass-px", "ez-pat-leaves-px", "ez-pat-farm-px", "ez-pat-stone-px"],  # GM-072: Blöcke wachsen beim Zoomen
              # GM-067: weit weg flach wie eine Karte im Spiel – Felder, Dächer, Industrie ohne Muster (Streifen und Krümel)
              far_flat=13.5, far_flat_ids=["farm", "industrial", "building", "building-1", "building-2", "building-3"], building_minzoom=13,
              font="Press Start 2P Regular", label_scale=0.5, text_transform="none", letter_spacing=0, label_halo_width=1.6,
@@ -120,14 +128,13 @@ FRONTIER = dict(land="#9C9A5E", residential="#9C9A5E", industrial="#B0A274", far
                 # Breiten in px je Zoom 8/12/15/18 (ART-DIRECTION Maßstäbe), Rand je Seite 0,8 px
                 road_px={0: (1.2, 2.0, 3.4, 6.5), 1: (1.1, 1.8, 3.1, 6.0), 2: (1.0, 1.5, 2.8, 5.5), 3: (0.7, 1.2, 2.3, 4.6),
                          4: (0.5, 1.0, 2.0, 4.0), 5: (0.4, 0.8, 1.5, 3.3), 6: (0.3, 0.6, 1.2, 2.6), 7: (0.2, 0.5, 1.0, 2.2)},
-                grain=("fv2-paper-grain", 0.45), meadow=("fv2-meadow-paint", 0.9),  # GM-070: gemalte Wiese überall
-                overlays=[("forest", "fv2-forest-paint"), ("grass", "fv2-grass-mottle"), ("park", "fv2-grass-mottle"),
+                grain=("fv2-paper-grain", 0.45),  # GM-072: Wiesen-Kachel und zweites Relief raus (ruckelte)
+                overlays=[("forest", "fv2-forest-canopy"), ("grass", "fv2-grass-mottle"), ("park", "fv2-grass-mottle"),
                           ("rock", "fv2-rock-grain"), ("water", "fv2-water-grain")],
                 relief=dict(tiles="https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png", maxzoom=15,
                             attribution="Höhen: <a href=\"https://registry.opendata.aws/terrain-tiles/\">Terrain Tiles</a> (SRTM, EU-DEM u. a.)",
                             exaggeration=["interpolate", ["linear"], ["zoom"], 7, 1.0, 12, 1.0, 15, 0.8, 18, 0.45],  # Vorgabe 0,65–0,8: im Taunus zu flach
-                            shadow="#232B14", highlight="#EADFB8", accent="#4E4A26",
-                            broad=dict(maxzoom=10, exaggeration=0.75)),  # GM-070: große Bergrücken auch nah sichtbar
+                            shadow="#232B14", highlight="#EADFB8", accent="#4E4A26"),
                 overlay_opacity={"forest": ["interpolate", ["linear"], ["zoom"], 8, 1, 14, 0.95, 17, 0.6]},
                 poi_scale=1.45, building_opacity=0.72,
                 minzoom_shift={"minor": 12.5, "service": 14.5},
@@ -209,7 +216,8 @@ def build(P, title):
         if thin and r >= 5:
             continue
         casing = P.get("casing_minor", P["casing"]) if r >= 4 else P["casing"]
-        layers.append(with_min(line(f"road-{cls}-casing", "transportation", casing, meters(WIDTH[r] * 0.75 * widen + 3, MIN_PX[r] + 1.6), road_filter(cls)), cls, P))
+        ca, cp = P.get("casing_add", (3, 1.6))  # GM-072: Pixel Quest schmaler Rand
+        layers.append(with_min(line(f"road-{cls}-casing", "transportation", casing, meters(WIDTH[r] * 0.75 * widen + ca, MIN_PX[r] + cp), road_filter(cls)), cls, P))
         if P.get("far_simple"): layers[-1]["paint"]["line-opacity"] = ["interpolate", ["linear"], ["zoom"], 12, 0, 14, 1]  # GM-059: weit weg ohne Rand
     for cls, r in (order if ink and not rpx else []):
         px = ink[r]
@@ -228,8 +236,8 @@ def build(P, title):
                 layers[-1]["paint"]["line-dasharray"] = [3, 3]
     if P.get("water_soft"):  # GM-057: weicher Übergang ins Papier
         i = next(k for k, l in enumerate(layers) if l["id"] == "water")
-        soft = line("water-soft", "water", P["water"], 10, ["!=", ["get", "class"], "swimming_pool"])
-        soft["paint"].update({"line-blur": 8, "line-opacity": 0.7})
+        soft = line("water-soft", "water", P["water"], ["interpolate", ["linear"], ["zoom"], 5, 1.5, 12, 6, 16, 10], ["!=", ["get", "class"], "swimming_pool"])
+        soft["paint"].update({"line-blur": ["interpolate", ["linear"], ["zoom"], 5, 0.5, 12, 4, 16, 8], "line-opacity": 0.7})  # GM-072: Küste weit weg scharf
         layers.insert(i, soft)
     rail_i = next(k for k, l in enumerate(layers) if l["id"] == "rail")
     if P.get("rail_ticks"):  # GM-057: Bahn mit Querstrichen (Wild West)
@@ -318,7 +326,8 @@ def build(P, title):
                    "text-font": [P.get("font", "Barlow Condensed SemiBold")],
                    "text-size": ["interpolate", ["linear"], ["zoom"], 13.5, round(11 * ls, 2), 16, round(14 * ls, 2), 18, round(17 * ls, 2)],
                    "text-transform": P.get("text_transform", "uppercase"), "text-letter-spacing": P.get("letter_spacing", 0.12),
-                   "text-max-angle": 30, "text-padding": 2, "symbol-spacing": 150},  # GM-063: Straßennamen öfter
+                   "text-max-angle": 30, "text-padding": 2, "symbol-spacing": P.get("label_spacing", 150),  # GM-063: Straßennamen öfter
+                   **({"text-offset": P["road_label_offset"]} if P.get("road_label_offset") else {})},
         "paint": paint,
     })
     if P.get("house_icons"):  # GM-065: Haus-Bild auf jedem Gebäude (Toy Town: Spielzeughäuser, GM-067 Pixel Quest: Villager-Häuser)
@@ -330,6 +339,21 @@ def build(P, title):
         k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
         layers.insert(k, {"id": "textile", "type": "background", "minzoom": 12,
                           "paint": {"background-pattern": P["textile"][0], "background-opacity": P["textile"][1]}})
+    if P.get("small_hide"):  # GM-072: kleine Gebäude ab Zoom z nur noch als Villager-Haus
+        lim, z = P["small_hide"]
+        keep = ["any", [">=", ["coalesce", ["get", "render_height"], 0], lim], ["<", ["zoom"], z]]
+        for l in layers:
+            if l.get("source-layer") == "building" and l["type"] in ("fill", "line"):
+                l["filter"] = ["all", l["filter"], keep] if l.get("filter") else keep
+    if P.get("water_line_pattern"):  # GM-072: Flüsse und Bäche mit der Wasser-Textur (vorher flach blau)
+        for l in layers:
+            if l["id"] in ("river", "stream"): l["paint"]["line-pattern"] = P["water_line_pattern"]
+    zp = P.get("zoom_patterns", [])
+    if zp:  # GM-072: Muster in 2×/4×/8× ab Zoom 16/17/18 – Blöcke bleiben in Weltgröße statt Bildschirmgröße
+        zs = lambda n: ["step", ["zoom"], n, 16, n + "-2", 17, n + "-4", 18, n + "-8"]
+        for l in layers:
+            for key in ("fill-pattern", "background-pattern"):
+                if l.get("paint", {}).get(key) in zp: l["paint"][key] = zs(l["paint"][key])
     if P.get("extrude"):  # GM-070: Pixel Quest 3D
         h = ["coalesce", ["get", "render_height"], 0]
         k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")

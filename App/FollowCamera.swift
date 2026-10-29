@@ -140,7 +140,7 @@ final class FollowCamera: NSObject {
             // Pfeil auf die Fahrposition setzen, gedreht relativ zur Karte; außerhalb des Bildes ausblenden
             let p = map.convert(CLLocationCoordinate2D(latitude: lat, longitude: lon), toPointTo: map)
             arrow.center = p
-            arrow.transform = CGAffineTransform(rotationAngle: CGFloat((heading - map.direction) * .pi / 180))
+            arrow.transform = markerStyle == .pixelQuest ? .identity : CGAffineTransform(rotationAngle: CGFloat((heading - map.direction) * .pi / 180)) // GM-072
             arrow.isHidden = !map.bounds.insetBy(dx: -30, dy: -30).contains(p)
             return
         }

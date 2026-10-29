@@ -121,6 +121,7 @@ struct ExploreMapView: UIViewRepresentable {
         init(onArea: @escaping (Set<UInt64>) -> Void) { self.onArea = onArea }
 
         func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
+            MainActor.assumeIsolated { RouteOverlay.registerImages(style) } // GM-072
             // Nebel: eine Fläche über allem (unter unseren Leuchtpunkten)
             var ring: [CLLocationCoordinate2D] = [
                 CLLocationCoordinate2D(latitude: 85, longitude: -180), CLLocationCoordinate2D(latitude: 85, longitude: 180),
