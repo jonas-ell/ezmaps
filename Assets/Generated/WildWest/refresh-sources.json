@@ -1,0 +1,149 @@
+[
+  {
+    "name": "forest-stamp-1",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-b78ee4f4-c4d7-454b-9ea8-aad740394d80.png",
+    "size": 32,
+    "tile": false,
+    "prompt": "Create one original forest-stamp-1 game map sprite, 1024x1024 transparent PNG master for display at only 32x32. A compact cluster of three pine trees drawn in 1890s frontier survey map pen style. Crisp dark sepia #3A2D20 contours, strong opaque outline equivalent to 1.2 pixels at final 32px, sparse light hatching, slightly irregular pen strokes. Transparent tree interiors and background, no paper fill. Centered with 8 percent padding. Clear strong silhouette visible on peach #E4C9A8. No blur, no faint grey strokes, no text, no logos. Original artwork."
+  },
+  {
+    "name": "forest-stamp-2",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-f90668d4-ba96-4a5a-80dd-2acd258aa59e.png",
+    "size": 32,
+    "tile": false,
+    "prompt": "Create one original forest-stamp-2 sprite. two tall slender firs, compact tree cluster drawn with slightly irregular 1890s frontier survey map pen strokes. Strong crisp dark sepia #3A2D20 outlines equivalent to 1 pixel at 32x32 display, sparse light interior hatching, ample open transparent interiors, no dense shading. 1024x1024 master, centered with 8% padding, readable at 32px on peach #E4C9A8. No paper fill, no blur, no faint grey lines, no text or logos."
+  },
+  {
+    "name": "forest-stamp-3",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-637d2109-27b1-4b58-a834-b106580dc491.png",
+    "size": 32,
+    "tile": false,
+    "prompt": "Create one original forest-stamp-3 sprite. one broad pine beside two short firs, compact tree cluster drawn with slightly irregular 1890s frontier survey map pen strokes. Strong crisp dark sepia #3A2D20 outlines equivalent to 1 pixel at 32x32 display, sparse light interior hatching, ample open transparent interiors, no dense shading. 1024x1024 master, centered with 8% padding, readable at 32px on peach #E4C9A8. No paper fill, no blur, no faint grey lines, no text or logos."
+  },
+  {
+    "name": "forest-stamp-4",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-face20f4-dc52-4fab-89ac-9cf97fa8df6b.png",
+    "size": 32,
+    "tile": false,
+    "prompt": "Create one original forest-stamp-4 sprite. four compact spruce trees, compact tree cluster drawn with slightly irregular 1890s frontier survey map pen strokes. Strong crisp dark sepia #3A2D20 outlines equivalent to 1 pixel at 32x32 display, sparse light interior hatching, ample open transparent interiors, no dense shading. 1024x1024 master, centered with 8% padding, readable at 32px on peach #E4C9A8. No paper fill, no blur, no faint grey lines, no text or logos."
+  },
+  {
+    "name": "forest-stamp-5",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-19397cdc-00e9-414d-b7c4-aa7f36b8c908.png",
+    "size": 32,
+    "tile": false,
+    "prompt": "Create one original forest-stamp-5 sprite. a tall pine with one small sapling, compact tree cluster drawn with slightly irregular 1890s frontier survey map pen strokes. Strong crisp dark sepia #3A2D20 outlines equivalent to 1 pixel at 32x32 display, sparse light interior hatching, ample open transparent interiors, no dense shading. 1024x1024 master, centered with 8% padding, readable at 32px on peach #E4C9A8. No paper fill, no blur, no faint grey lines, no text or logos."
+  },
+  {
+    "name": "forest-stamp-6",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-9978c61e-c1eb-40b3-9973-8830a95e12d5.png",
+    "size": 32,
+    "tile": false,
+    "prompt": "Create one original forest-stamp-6 sprite. three uneven rounded deciduous trees, compact tree cluster drawn with slightly irregular 1890s frontier survey map pen strokes. Strong crisp dark sepia #3A2D20 outlines equivalent to 1 pixel at 32x32 display, sparse light interior hatching, ample open transparent interiors, no dense shading. 1024x1024 master, centered with 8% padding, readable at 32px on peach #E4C9A8. No paper fill, no blur, no faint grey lines, no text or logos."
+  },
+  {
+    "name": "west-poi-parking",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-d52a20e1-a1f1-4d81-aa30-f81d3d345ec9.png",
+    "size": 36,
+    "tile": false,
+    "prompt": "Create one original production map badge west-poi-parking, 1024x1024 transparent PNG. Match this icon family: centered perfectly round solid black #000000 disk, diameter 92% canvas, thin cream #E9D5B6 circular rim about 1.5% canvas width. Centered bold solid WHITE #FFFFFF pictogram of front view of a parked automobile, no letter P, simple and recognizable at 36x36. Flat ink silhouette, no shading or texture, no words, letters, numbers, logos, no shadow. Transparent outside disk. Single badge only."
+  },
+  {
+    "name": "west-poi-hospital",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-9ee46b80-1f73-4854-bf47-5b8c2d149b6c.png",
+    "size": 36,
+    "tile": false,
+    "prompt": "Create one original production map badge west-poi-hospital, 1024x1024 transparent PNG. Match this icon family: centered perfectly round solid black #000000 disk, diameter 92% canvas, thin cream #E9D5B6 circular rim about 1.5% canvas width. Centered bold solid WHITE #FFFFFF pictogram of medical plus cross, simple and recognizable at 36x36. Flat ink silhouette, no shading or texture, no words, letters, numbers, logos, no shadow. Transparent outside disk. Single badge only."
+  },
+  {
+    "name": "west-poi-bank",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-d5049765-42a4-4150-b110-2d48263ecf90.png",
+    "size": 36,
+    "tile": false,
+    "prompt": "Create one original production map badge west-poi-bank, 1024x1024 transparent PNG. Match this icon family: centered perfectly round solid black #000000 disk, diameter 92% canvas, thin cream #E9D5B6 circular rim about 1.5% canvas width. Centered bold solid WHITE #FFFFFF pictogram of classical bank facade with three pillars, simple and recognizable at 36x36. Flat ink silhouette, no shading or texture, no words, letters, numbers, logos, no shadow. Transparent outside disk. Single badge only."
+  },
+  {
+    "name": "west-poi-hotel",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-a137516e-a18d-4cd2-b6c5-2c2e744a3519.png",
+    "size": 36,
+    "tile": false,
+    "prompt": "Create one original production map badge west-poi-hotel, 1024x1024 transparent PNG. Match this icon family: centered perfectly round solid black #000000 disk, diameter 92% canvas, thin cream #E9D5B6 circular rim about 1.5% canvas width. Centered bold solid WHITE #FFFFFF pictogram of bed with pillow, simple and recognizable at 36x36. Flat ink silhouette, no shading or texture, no words, letters, numbers, logos, no shadow. Transparent outside disk. Single badge only."
+  },
+  {
+    "name": "west-poi-school",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-ca0a1133-966f-4caf-a6dc-365a7f1c802f.png",
+    "size": 36,
+    "tile": false,
+    "prompt": "Create one original production map badge west-poi-school, 1024x1024 transparent PNG. Match this icon family: centered perfectly round solid black #000000 disk, diameter 92% canvas, thin cream #E9D5B6 circular rim about 1.5% canvas width. Centered bold solid WHITE #FFFFFF pictogram of open book, simple and recognizable at 36x36. Flat ink silhouette, no shading or texture, no words, letters, numbers, logos, no shadow. Transparent outside disk. Single badge only."
+  },
+  {
+    "name": "west-poi-church",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-cba24718-48f0-4d64-89b1-767251fb45ed.png",
+    "size": 36,
+    "tile": false,
+    "prompt": "Create one original production map badge west-poi-church, 1024x1024 transparent PNG. Match this icon family: centered perfectly round solid black #000000 disk, diameter 92% canvas, thin cream #E9D5B6 circular rim about 1.5% canvas width. Centered bold solid WHITE #FFFFFF pictogram of church with cross, simple and recognizable at 36x36. Flat ink silhouette, no shading or texture, no words, letters, numbers, logos, no shadow. Transparent outside disk. Single badge only."
+  },
+  {
+    "name": "west-poi-cinema",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-fda3471b-aa4c-445c-bede-f55b1a98e3da.png",
+    "size": 36,
+    "tile": false,
+    "prompt": "Create one original production map badge west-poi-cinema, 1024x1024 transparent PNG. Match this icon family: centered perfectly round solid black #000000 disk, diameter 92% canvas, thin cream #E9D5B6 circular rim about 1.5% canvas width. Centered bold solid WHITE #FFFFFF pictogram of film strip, simple and recognizable at 36x36. Flat ink silhouette, no shading or texture, no words, letters, numbers, logos, no shadow. Transparent outside disk. Single badge only."
+  },
+  {
+    "name": "west-poi-barber",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-89bee1f0-5011-40de-b779-08ed1983571d.png",
+    "size": 36,
+    "tile": false,
+    "prompt": "Create one original production map badge west-poi-barber, 1024x1024 transparent PNG. Match this icon family: centered perfectly round solid black #000000 disk, diameter 92% canvas, thin cream #E9D5B6 circular rim about 1.5% canvas width. Centered bold solid WHITE #FFFFFF pictogram of scissors, simple and recognizable at 36x36. Flat ink silhouette, no shading or texture, no words, letters, numbers, logos, no shadow. Transparent outside disk. Single badge only."
+  },
+  {
+    "name": "west-poi-clothing",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-7881d26b-0554-4775-9c5d-bcc15f08da8f.png",
+    "size": 36,
+    "tile": false,
+    "prompt": "Create one original production map badge west-poi-clothing, 1024x1024 transparent PNG. Match this icon family: centered perfectly round solid black #000000 disk, diameter 92% canvas, thin cream #E9D5B6 circular rim about 1.5% canvas width. Centered bold solid WHITE #FFFFFF pictogram of T shirt, simple and recognizable at 36x36. Flat ink silhouette, no shading or texture, no words, letters, numbers, logos, no shadow. Transparent outside disk. Single badge only."
+  },
+  {
+    "name": "west-poi-playground",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-708347e0-c6ec-40e6-9a90-84fda5b4a2a7.png",
+    "size": 36,
+    "tile": false,
+    "prompt": "Create one original production map badge west-poi-playground, 1024x1024 transparent PNG. Match this icon family: centered perfectly round solid black #000000 disk, diameter 92% canvas, thin cream #E9D5B6 circular rim about 1.5% canvas width. Centered bold solid WHITE #FFFFFF pictogram of swing set, simple and recognizable at 36x36. Flat ink silhouette, no shading or texture, no words, letters, numbers, logos, no shadow. Transparent outside disk. Single badge only."
+  },
+  {
+    "name": "player-arrow",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-f38cdeda-c30c-4b22-b277-3271d6312476.png",
+    "size": 64,
+    "tile": false,
+    "prompt": "Create one original production map asset player-arrow. Cream #F6EAD6 arrowhead pointing straight up, symmetrical pointed tip and indented bottom notch, crisp dark sepia #3A2D20 ink outline, small soft shadow. Slightly irregular hand-ink edge. 1024x1024 master. Centered with 10% clear padding, readable at 48 to 64px. Genuine transparent background. No text or logos."
+  },
+  {
+    "name": "waypoint-x",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-22d61f9b-a4c6-417d-bdd6-a811c504d70e.png",
+    "size": 48,
+    "tile": false,
+    "prompt": "Create one original production map asset waypoint-x. Hand inked red #A8261F X, two slightly uneven broad diagonal strokes with tapered ends. No other marks. 1024x1024 master. Centered with 10% clear padding, readable at 48 to 64px. Genuine transparent background. No text or logos."
+  },
+  {
+    "name": "paper-tile",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-c1db66fb-5256-434a-bd36-29a6e1ee7522.png",
+    "size": 512,
+    "tile": true,
+    "prompt": "Refine the referenced paper texture into one original seamless 1024x1024 transparent PNG paper-tile master. Reference is style guide only. Preserve the VERY FINE dense microscopic grain scale and softly mottled handmade paper character; no large curls or long strands. Tiny sepia #3A2D20 flecks, short fine fibers only 1 to 8 pixels long in a 1024 canvas, gentle broad irregular mottling with no stains. Transparent overlay for peach #E4C9A8 background. Visibly stronger texture than the reference but subtle enough beneath map roads. No drawings, no objects, no text, no logos, no border, no vignette. Pattern must tile seamlessly in both directions. Genuine alpha transparency, unmarked areas transparent, no opaque paper rectangle."
+  },
+  {
+    "name": "hill-hatch",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-39c8bd4e-f9b4-4450-8664-66ca4fa09fde.png",
+    "size": 256,
+    "tile": true,
+    "prompt": "Create one original production map asset hill-hatch. Seamless repeating sparse groups of short curved parallel pen hatching lines indicating hill slopes on an 1890s frontier survey map. Sepia #3A2D20 ink, crisp and clearly visible but subtle, transparent spaces. No mountain silhouettes, no paper fill. 1024x1024 master. Uniform edge-to-edge seamless pattern, no central focus. Genuine transparent background. No text or logos."
+  },
+  {
+    "name": "water-edge",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a18482-1799-7c53-bfbc-a6810e427531\\exec-2dd801cc-0c47-4487-a2d7-b32e914be094.png",
+    "size": 256,
+    "tile": true,
+    "prompt": "Create one original production map asset water-edge. Seamless repeating irregular horizontal fine rippling pen strokes for water on an 1890s frontier survey map. Sepia #3A2D20 ink, crisp visible but subtle, transparent spaces. No literal shore boundary, no paper fill. 1024x1024 master. Uniform edge-to-edge seamless pattern, no central focus. Genuine transparent background. No text or logos."
+  }
+]

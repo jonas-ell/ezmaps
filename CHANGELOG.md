@@ -2,6 +2,22 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-073 – Pixel Quest: Symbole und Pfeil viel größer; Stand von main übernommen
+
+**Ziel:** Nutzer: „bei pixelquest müssen die icons und der navigationspfeil viel größer sein“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `App/FollowCamera.swift`, `App/NeonMapView.swift`, `CHANGELOG.md`; Merge von `main` (GM-063 bis GM-065).
+
+**Geändert:**
+- POI-Symbole: neuer Faktor `poi_scale` je Stil, Pixel Quest 2,2× (Größe 0,79 → 1,14 statt 0,36 → 0,52). Andere Stile unverändert.
+- Fahr-Pfeil Pixel Quest: 88-pt-Fläche, Pfeil 70 pt hoch (vorher 44 pt in 60 pt), scharf ohne Glätten; `arrow.bounds` richtet sich nach dem Bild.
+- Standort-Marker im Stand: Pixel Quest 64 pt (vorher 46 pt).
+- Merge mit main: doppelte, ungenutzte Toy-Town-/Wild-West-Bilder aus GM-071 entfernt (main nutzt die Codex-Bilder unter eigenen Namen). Wasser-Pause beim Fahren (GM-069) nach dem Merge wieder drin.
+
+**Tatsächlich geprüft:** `check_style.py` → STIL OK; Swift-Dateien parsen; `Core` `swift test` grün (Linux).
+
+**Ungetestet:** Nicht auf dem Mac gebaut. Größe auf dem Gerät (zu groß? überlappt?) nicht gesehen. Dorfhäuser für Pixel Quest fehlen weiter – die Bilder liegen nur lokal (`Assets/Generated/minecraft/`, nicht im Repo).
+
 ## GM-072 – Pixel-Quest-Satz von Codex wieder raus
 
 **Ziel:** Nutzer: „lass pixelquest assets raus“.
@@ -118,6 +134,33 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 **Tatsächlich geprüft:** `swift test` Core grün (Linux). Prototyp-Video erzeugt und angesehen. `swiftc -parse` ReplayExporter.
 
 **Ungetestet:** App-Export auf dem Mac. Seit GM-057 gibt es einen Standort-Marker je Stil – das Replay sollte den Marker des aktiven Stils nehmen statt immer `PlayerNeonGlow` (für den lokalen Claude).
+
+## GM-065 – Toy Town mit Codex-Grafiken, Pixel-Pfeil von Codex, Standort-Marker sichtbar
+
+**Ziel:** Nutzer schickt ZIP mit den Toy-Town- und Pixel-Quest-Grafiken; „Standort-Pfeil wird nicht angezeigt“; Screenshots mobil und CarPlay, Fehler suchen.
+
+**Dateien:** `Assets/Generated/ToyTown/`, `Assets/Generated/PixelQuest/` (aus dem ZIP), `App/Assets.xcassets/ToyTown/` (neu), `App/Assets.xcassets/PixelQuest/px-player`, `px-cross`, `px-parking`, `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `App/NeonMapView.swift`, `App/FollowCamera.swift`
+
+**Geändert:**
+- Toy Town: Spielzeughaus auf jedem Gebäude (Art nach Höhe: Familienhäuser, Laden/Schule/Polizei, Hochhaus), Gras-, Wald- (Bäume), Park- (Büsche) und Wasser-Kachel, 6 Symbole, rotes Auto als Standort, karierte Fahne als Ziel.
+- Pixel Quest: weißer Pixel-Pfeil von Codex als Standort (vorher „Flasche“), Heiltrank-Herz und P-Schild von Codex; übrige Symbole bleiben die Items des Nutzers.
+- Standort-Marker ohne Navigation: Rahmen 46 statt 34 pt, Marker im Bild größer gezeichnet (iPhone-Bilder: Wild West, Pixel, Toy fast unsichtbar).
+
+**Tatsächlich geprüft:** STIL OK; iPhone-Testbilder (vorheriger Stand) zeigten den Fehler.
+
+**Ungetestet:** siehe Mac-Lauf.
+
+## GM-064 – Wild West mit den Codex-Grafiken
+
+**Ziel:** Nutzer: auf Codex warten, alle Grafiken einbauen, auf dem Mac laufen lassen, aufs Handy, CarPlay-Bilder.
+
+**Dateien:** `Assets/Generated/WildWest/` (Codex, Runde 2), `App/Assets.xcassets/WildWest/` (16 Symbole, Pfeil, X, Papier-, Wasser-, Wald-Kachel), `tools/maplibre/build_style.py`, `App/MapStyles/style-wild-west.json`, `App/NeonMapView.swift`, `App/FollowCamera.swift`
+
+**Geändert:** alle 16 Wild-West-Symbole, Standort-Pfeil und rotes X von Codex; Hintergrund Papier-Kachel, Wasser mit Federstrichen, Wald aus Hügelschraffur und Tinten-Baumstempeln (transparente Codex-Kacheln auf die Untergrundfarbe gelegt, weil MapLibre-Muster deckend sein müssen). Toy Town: Codex hat erneut keine Bilder geliefert (nur Beschreibung).
+
+**Tatsächlich geprüft:** STIL OK; Codex-Dateien angesehen.
+
+**Ungetestet:** siehe Mac-Lauf.
 
 ## GM-063 – Fehler aus CarPlay-Bildern und Wiesbaden-Clip
 

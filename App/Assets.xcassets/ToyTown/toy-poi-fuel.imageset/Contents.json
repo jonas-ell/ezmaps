@@ -1,11 +1,6 @@
 {
  "images": [
   {
-   "filename": "toy-poi-fuel.png",
-   "idiom": "universal",
-   "scale": "1x"
-  },
-  {
    "filename": "toy-poi-fuel@2x.png",
    "idiom": "universal",
    "scale": "2x"

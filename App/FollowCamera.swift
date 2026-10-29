@@ -30,6 +30,8 @@ final class FollowCamera: NSObject {
         plainArrow = m.plain
         glowArrow = m.glow
         arrow.image = plainArrow
+        arrow.bounds = CGRect(origin: .zero, size: plainArrow.size) // GM-073: Pixel-Pfeil 88 pt, andere 60 pt
+        arrow.layer.magnificationFilter = style == .pixelQuest ? .nearest : .linear
         lastSet = nil
     }
     private lazy var arrow = UIImageView(image: plainArrow)
@@ -151,6 +153,8 @@ final class FollowCamera: NSObject {
         let inset = UIEdgeInsets(top: max(0, 2 * ay - map.bounds.height), left: max(0, 2 * ax - map.bounds.width),
                                  bottom: max(0, map.bounds.height - 2 * ay), right: max(0, map.bounds.width - 2 * ax))
         if map.contentInset != inset { map.contentInset = inset }
+        // GM-027/063: kein zweiter (grauer) GPS-Punkt neben dem Pfeil – vor dem Überspringen im Stand prüfen (sonst blieb er stehen)
+        if map.showsUserLocation { map.showsUserLocation = false }
         // GM-028: im Stand nichts neu setzen – spart Rechenzeit (Kamera und Pfeil sind schon richtig)
         if let p = lastSet, abs(p.0 - lat) < 1e-7, abs(p.1 - lon) < 1e-7, abs(p.2 - heading) < 0.05, abs(p.3 - altitude) < 0.5, p.4 == CGPoint(x: ax, y: ay) {
             return
@@ -164,7 +168,6 @@ final class FollowCamera: NSObject {
         if arrow.image !== img { arrow.image = img }
         arrow.isHidden = false
         if arrow.superview === map { map.bringSubviewToFront(arrow) }
-        if map.showsUserLocation { map.showsUserLocation = false } // GM-027: kein zweiter (grauer) GPS-Punkt neben dem Pfeil
     }
 }
 
@@ -180,10 +183,15 @@ enum PlayerMarker {
             let img = pixel(UIImage(named: green ? "px-player-green" : "px-player"))
             return (img, img)
         case .toyTown:
-            let car = UIImage(named: "toy-car-red") ?? toyCar() // GM-071: Spielzeugauto von Codex
+            let car = UIImage(named: "toy-car").map { img in // GM-065: Codex-Auto
+                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { _ in img.draw(in: CGRect(x: 9, y: 3, width: 42, height: 54)) }
+            } ?? toyCar()
             return (car, car)
         case .wildWest:
-            let a = UIImage(named: "west-player-arrow") ?? arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60) // GM-071: Codex
+            // GM-064: Codex-Pfeil, sonst gezeichnet
+            let a = UIImage(named: "west-arrow").map { img in
+                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { _ in img.draw(in: CGRect(x: 4, y: 4, width: 52, height: 52)) }
+            } ?? arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60)
             return (a, a)
         case .classic:
             let a = classic()
@@ -194,9 +202,11 @@ enum PlayerMarker {
     /// Marker der Nutzer-Grafik scharf (ohne Glätten) auf 60 pt
     static func pixel(_ img: UIImage?) -> UIImage {
         guard let img else { return RouteOverlay.arrowImage() }
-        return UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { ctx in
+        // GM-073: viel größer (Nutzer) – 88 pt Fläche, Pfeil 70 pt hoch, ohne Glätten
+        return UIGraphicsImageRenderer(size: CGSize(width: 88, height: 88)).image { ctx in
             ctx.cgContext.interpolationQuality = .none
-            img.draw(in: CGRect(x: 18, y: 14, width: 24, height: 32)) // GM-063: kleiner (CarPlay: wirkte wie eine Flasche)
+            let w: CGFloat = img.size.width >= img.size.height ? 70 : 52 // GM-065: Codex-Pfeil ist quadratisch
+            img.draw(in: CGRect(x: 44 - w / 2, y: 9, width: w, height: 70))
         }
     }
 
@@ -229,6 +239,9 @@ enum PlayerMarker {
     static func toyCar() -> UIImage {
         UIGraphicsImageRenderer(size: CGSize(width: 44, height: 60)).image { ctx in
             let g = ctx.cgContext
+            // GM-063: 70 % Größe (CarPlay: Auto zu groß)
+            g.translateBy(x: 22 * 0.3, y: 30 * 0.3)
+            g.scaleBy(x: 0.7, y: 0.7)
             let ink = StyleTheme.hex(0x2f3640)
             ink.setFill()
             for (x, y) in [(5.0, 12.0), (35.0, 12.0), (5.0, 36.0), (35.0, 36.0)] { UIBezierPath(roundedRect: CGRect(x: x, y: y, width: 5, height: 11), cornerRadius: 1.5).fill() }

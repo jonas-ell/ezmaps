@@ -1,11 +1,6 @@
 {
  "images": [
   {
-   "filename": "toy-poi-parking.png",
-   "idiom": "universal",
-   "scale": "1x"
-  },
-  {
    "filename": "toy-poi-parking@2x.png",
    "idiom": "universal",
    "scale": "2x"

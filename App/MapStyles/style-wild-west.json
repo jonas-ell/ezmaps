@@ -196,7 +196,8 @@
    "source-layer": "water",
    "paint": {
     "fill-color": "#aaa392",
-    "fill-antialias": true
+    "fill-antialias": true,
+    "fill-pattern": "ez-pat-water-west"
    },
    "filter": [
     "!=",

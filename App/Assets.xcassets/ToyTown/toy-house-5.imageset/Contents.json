@@ -1,11 +1,6 @@
 {
  "images": [
   {
-   "filename": "toy-house-5.png",
-   "idiom": "universal",
-   "scale": "1x"
-  },
-  {
    "filename": "toy-house-5@2x.png",
    "idiom": "universal",
    "scale": "2x"

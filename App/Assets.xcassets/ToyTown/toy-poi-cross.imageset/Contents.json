@@ -1,11 +1,6 @@
 {
  "images": [
   {
-   "filename": "toy-poi-cross.png",
-   "idiom": "universal",
-   "scale": "1x"
-  },
-  {
    "filename": "toy-poi-cross@2x.png",
    "idiom": "universal",
    "scale": "2x"

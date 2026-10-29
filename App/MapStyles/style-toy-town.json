@@ -175,7 +175,8 @@
    "source-layer": "water",
    "paint": {
     "fill-color": "#4ab0ea",
-    "fill-antialias": true
+    "fill-antialias": true,
+    "fill-pattern": "ez-pat-water-toy"
    },
    "filter": [
     "!=",
@@ -2135,6 +2136,90 @@
     "text-color": "#ffffff",
     "text-halo-color": "#2f3640",
     "text-halo-width": 2
+   }
+  },
+  {
+   "id": "building-icons",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "minzoom": 15,
+   "layout": {
+    "icon-image": [
+     "step",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     [
+      "match",
+      [
+       "%",
+       [
+        "to-number",
+        [
+         "id"
+        ],
+        0
+       ],
+       6
+      ],
+      0,
+      "toy-house-1",
+      1,
+      "toy-house-2",
+      2,
+      "toy-house-3",
+      3,
+      "toy-house-4",
+      4,
+      "toy-house-5",
+      "toy-house-6"
+     ],
+     10,
+     [
+      "match",
+      [
+       "%",
+       [
+        "to-number",
+        [
+         "id"
+        ],
+        0
+       ],
+       3
+      ],
+      0,
+      "toy-shop",
+      1,
+      "toy-school",
+      "toy-police"
+     ],
+     14,
+     "toy-apartment"
+    ],
+    "icon-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     15,
+     0.3,
+     17,
+     0.55,
+     19,
+     0.9
+    ],
+    "icon-padding": 0,
+    "icon-allow-overlap": false
    }
   },
   {

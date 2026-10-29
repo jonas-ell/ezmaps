@@ -1,11 +1,6 @@
 {
  "images": [
   {
-   "filename": "toy-fire-station.png",
-   "idiom": "universal",
-   "scale": "1x"
-  },
-  {
    "filename": "toy-fire-station@2x.png",
    "idiom": "universal",
    "scale": "2x"

@@ -1,11 +1,6 @@
 {
  "images": [
   {
-   "filename": "toy-flag.png",
-   "idiom": "universal",
-   "scale": "1x"
-  },
-  {
    "filename": "toy-flag@2x.png",
    "idiom": "universal",
    "scale": "2x"

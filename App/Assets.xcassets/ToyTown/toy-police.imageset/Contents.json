@@ -1,11 +1,6 @@
 {
  "images": [
   {
-   "filename": "toy-police.png",
-   "idiom": "universal",
-   "scale": "1x"
-  },
-  {
    "filename": "toy-police@2x.png",
    "idiom": "universal",
    "scale": "2x"

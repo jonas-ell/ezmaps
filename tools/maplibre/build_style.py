@@ -41,7 +41,7 @@ CLASSIC = dict(land="#f2efe9", residential="#ece7e0", industrial="#ebe3e8", farm
 # Straßen nur dünne dunkelbraune Linien, Wasser graugrün mit weichem Rand, Häuser kaum sichtbar, Schrift Old Standard TT (OFL).
 WESTERN = dict(land="#e4c9a8", residential="#e4c9a8", industrial="#e0c4a2", farm="#e4c9a8", park="#dec5a2", forest="#dcc29e",
                water="#aaa392", building="#e8cfae", buildingEdge="#e8cfae",
-               pat=dict(land="ez-pat-paper-west", forest="ez-pat-forest-west"),
+               pat=dict(land="ez-pat-paper-west", forest="ez-pat-forest-west", water="ez-pat-water-west"),
                minzoom_shift={"secondary": 10, "tertiary": 11.5, "minor": 13.5, "service": 15}, rail_minzoom=11, rail="#4a3b2c", casing="#4a3b2c", label="#4a3b2c",
                road=lambda r: "#4a3b2c", widen=1.0, ink_lines={0: 3.2, 1: 3.0, 2: 2.6, 3: 2.2, 4: 1.8, 5: 1.3, 6: 1.0, 7: 0.8},
                water_soft=True, rail_ticks=True, label_halo="#e4c9a8", label_halo_width=2,
@@ -84,12 +84,13 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              building_pattern=["ez-pat-oak-px", "ez-pat-spruce-px", "ez-pat-brick-px", "ez-pat-cobble-px"],
              building_shadow=True, block_edges=("#2a1d0e", "#d2a868"),
              font="Press Start 2P Regular", label_scale=0.5, text_transform="none", letter_spacing=0, label_halo_width=1.6,
-             poi_suffix="-px", poi_minzoom=14, place_color="#ffffff", place_halo="#000000", place_halo_width=2, place_transform="none")
+             poi_suffix="-px", poi_minzoom=14, poi_scale=2.2, place_color="#ffffff", place_halo="#000000", place_halo_width=2, place_transform="none")
 TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b9d86a", park="#7cc142", forest="#62b235",
            water="#4ab0ea", building=by_height(["#e3412f", "#ef7d2d", "#3d78c9", "#8b8f96"]),
            buildingEdge="#2f3640", rail="#2f3640", casing="#c9cbce", label="#ffffff",
            road=lambda r: "#66686c", widen=1.4, label_halo="#2f3640",
-           pat=dict(land="ez-pat-lawn-toy", forest="ez-pat-trees-toy", park="ez-pat-park-toy"),
+           pat=dict(land="ez-pat-lawn-toy", forest="ez-pat-trees-toy", park="ez-pat-park-toy", water="ez-pat-water-toy"),
+           house_icons=True,
            water_edge="#f2d48b", road_dash="#ffffff", building_ink="#2f3640",
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
            poi_suffix="-toy", poi_minzoom=14, place_color="#ffffff", place_halo="#2f3640", place_halo_width=2.4, place_transform="none")
@@ -224,6 +225,15 @@ def build(P, title):
                    "text-max-angle": 30, "text-padding": 2, "symbol-spacing": 150},  # GM-063: Straßennamen öfter
         "paint": paint,
     })
+    if P.get("house_icons"):  # GM-065: Toy Town – Spielzeughaus (Codex) auf jedem Gebäude, Art nach Höhe
+        layers.append({"id": "building-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "building", "minzoom": 15,
+                       "layout": {"icon-image": ["step", ["coalesce", ["get", "render_height"], 0],
+                                                 ["match", ["%", ["to-number", ["id"], 0], 6], 0, "toy-house-1", 1, "toy-house-2", 2, "toy-house-3",
+                                                  3, "toy-house-4", 4, "toy-house-5", "toy-house-6"],
+                                                 10, ["match", ["%", ["to-number", ["id"], 0], 3], 0, "toy-shop", 1, "toy-school", "toy-police"],
+                                                 14, "toy-apartment"],
+                                  "icon-size": ["interpolate", ["linear"], ["zoom"], 15, 0.3, 17, 0.55, 19, 0.9],
+                                  "icon-padding": 0, "icon-allow-overlap": False}})
     layers.append(poi_layer(P))
     layers.append(place_layer(P))  # GM-058: Orts- und Stadtnamen (vorher keine – beim Rauszoomen kein „Frankfurt“)
     return {
@@ -262,7 +272,9 @@ def poi_layer(P):
     return {
         "id": "poi-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": P.get("poi_minzoom", 14.5),
         "filter": ["in", ["get", "class"], ["literal", list(POI)]],
-        "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.36, 17, 0.52], "icon-padding": 44},  # GM-063: kleiner, weniger dicht (Wiesbaden-Clip)
+        # GM-063: kleiner, weniger dicht (Wiesbaden-Clip). GM-073: Faktor je Stil (Pixel Quest viel größer, Nutzer)
+        "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, round(0.36 * P.get("poi_scale", 1), 3), 17, round(0.52 * P.get("poi_scale", 1), 3)],
+                   "icon-padding": 44},
     }
 
 
