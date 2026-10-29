@@ -24,12 +24,10 @@
       "zoom"
      ],
      "ez-pat-grass-px",
-     16,
+     16.5,
      "ez-pat-grass-px-2",
-     17,
-     "ez-pat-grass-px-4",
      18,
-     "ez-pat-grass-px-8"
+     "ez-pat-grass-px-4"
     ]
    }
   },
@@ -66,12 +64,10 @@
       "zoom"
      ],
      "ez-pat-farm-px",
-     16,
+     16.5,
      "ez-pat-farm-px-2",
-     17,
-     "ez-pat-farm-px-4",
      18,
-     "ez-pat-farm-px-8"
+     "ez-pat-farm-px-4"
     ]
    },
    "filter": [
@@ -98,12 +94,10 @@
       "zoom"
      ],
      "ez-pat-leaves-px",
-     16,
+     16.5,
      "ez-pat-leaves-px-2",
-     17,
-     "ez-pat-leaves-px-4",
      18,
-     "ez-pat-leaves-px-8"
+     "ez-pat-leaves-px-4"
     ]
    },
    "filter": [
@@ -129,12 +123,10 @@
       "zoom"
      ],
      "ez-pat-grass-px",
-     16,
+     16.5,
      "ez-pat-grass-px-2",
-     17,
-     "ez-pat-grass-px-4",
      18,
-     "ez-pat-grass-px-8"
+     "ez-pat-grass-px-4"
     ]
    },
    "filter": [
@@ -160,12 +152,10 @@
       "zoom"
      ],
      "ez-pat-grass-px",
-     16,
+     16.5,
      "ez-pat-grass-px-2",
-     17,
-     "ez-pat-grass-px-4",
      18,
-     "ez-pat-grass-px-8"
+     "ez-pat-grass-px-4"
     ]
    }
   },
@@ -183,12 +173,10 @@
       "zoom"
      ],
      "ez-pat-grass-px",
-     16,
+     16.5,
      "ez-pat-grass-px-2",
-     17,
-     "ez-pat-grass-px-4",
      18,
-     "ez-pat-grass-px-8"
+     "ez-pat-grass-px-4"
     ]
    },
    "filter": [
@@ -249,12 +237,10 @@
       "zoom"
      ],
      "ez-pat-stone-px",
-     16,
+     16.5,
      "ez-pat-stone-px-2",
-     17,
-     "ez-pat-stone-px-4",
      18,
-     "ez-pat-stone-px-8"
+     "ez-pat-stone-px-4"
     ]
    },
    "filter": [
@@ -290,12 +276,10 @@
       "zoom"
      ],
      "ez-pat-grass-px",
-     16,
+     16.5,
      "ez-pat-grass-px-2",
-     17,
-     "ez-pat-grass-px-4",
      18,
-     "ez-pat-grass-px-8"
+     "ez-pat-grass-px-4"
     ]
    },
    "filter": [
@@ -1770,26 +1754,30 @@
    "paint": {
     "fill-extrusion-color": "#7a5a32",
     "fill-extrusion-height": [
-     "max",
-     4,
+     "min",
+     12,
      [
-      "*",
+      "max",
+      4,
       [
-       "ceil",
+       "*",
        [
-        "/",
+        "ceil",
         [
-         "coalesce",
+         "/",
          [
-          "get",
-          "render_height"
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
          ],
-         0
-        ],
-        4
-       ]
-      ],
-      4
+         4
+        ]
+       ],
+       4
+      ]
      ]
     ],
     "fill-extrusion-base": 0,
@@ -1835,26 +1823,30 @@
    "paint": {
     "fill-extrusion-pattern": "ez-pat-spruce-px",
     "fill-extrusion-height": [
-     "max",
-     4,
+     "min",
+     12,
      [
-      "*",
+      "max",
+      4,
       [
-       "ceil",
+       "*",
        [
-        "/",
+        "ceil",
         [
-         "coalesce",
+         "/",
          [
-          "get",
-          "render_height"
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
          ],
-         0
-        ],
-        4
-       ]
-      ],
-      4
+         4
+        ]
+       ],
+       4
+      ]
      ]
     ],
     "fill-extrusion-base": 0,
@@ -1900,26 +1892,30 @@
    "paint": {
     "fill-extrusion-pattern": "ez-pat-oak-px",
     "fill-extrusion-height": [
-     "max",
-     4,
+     "min",
+     12,
      [
-      "*",
+      "max",
+      4,
       [
-       "ceil",
+       "*",
        [
-        "/",
+        "ceil",
         [
-         "coalesce",
+         "/",
          [
-          "get",
-          "render_height"
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
          ],
-         0
-        ],
-        4
-       ]
-      ],
-      4
+         4
+        ]
+       ],
+       4
+      ]
      ]
     ],
     "fill-extrusion-base": [
@@ -1969,26 +1965,30 @@
    "paint": {
     "fill-extrusion-pattern": "ez-pat-spruce-px",
     "fill-extrusion-height": [
-     "max",
-     4,
+     "min",
+     12,
      [
-      "*",
+      "max",
+      4,
       [
-       "ceil",
+       "*",
        [
-        "/",
+        "ceil",
         [
-         "coalesce",
+         "/",
          [
-          "get",
-          "render_height"
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
          ],
-         0
-        ],
-        4
-       ]
-      ],
-      4
+         4
+        ]
+       ],
+       4
+      ]
      ]
     ],
     "fill-extrusion-base": [
@@ -2038,26 +2038,30 @@
    "paint": {
     "fill-extrusion-pattern": "ez-pat-brick-px",
     "fill-extrusion-height": [
-     "max",
-     4,
+     "min",
+     12,
      [
-      "*",
+      "max",
+      4,
       [
-       "ceil",
+       "*",
        [
-        "/",
+        "ceil",
         [
-         "coalesce",
+         "/",
          [
-          "get",
-          "render_height"
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
          ],
-         0
-        ],
-        4
-       ]
-      ],
-      4
+         4
+        ]
+       ],
+       4
+      ]
      ]
     ],
     "fill-extrusion-base": [
@@ -2095,26 +2099,30 @@
    "paint": {
     "fill-extrusion-pattern": "ez-pat-cobble-px",
     "fill-extrusion-height": [
-     "max",
-     4,
+     "min",
+     12,
      [
-      "*",
+      "max",
+      4,
       [
-       "ceil",
+       "*",
        [
-        "/",
+        "ceil",
         [
-         "coalesce",
+         "/",
          [
-          "get",
-          "render_height"
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
          ],
-         0
-        ],
-        4
-       ]
-      ],
-      4
+         4
+        ]
+       ],
+       4
+      ]
      ]
     ],
     "fill-extrusion-base": [

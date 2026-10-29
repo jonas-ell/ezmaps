@@ -247,7 +247,7 @@ final class RouteOverlay {
 
     /// GM-050: Pin und Fahnen stehen auf dem Ziel (Anker unten), Raute und X liegen mittig darauf
     /// GM-070: Pixel Quest in 3D (schräge Kamera, Blocktürme), alle anderen flach von oben
-    static func pitch(for style: MapStyle) -> CGFloat { style == .pixelQuest ? 50 : 0 }
+    static func pitch(for style: MapStyle) -> CGFloat { style == .pixelQuest ? 32 : 0 } // GM-077: 32° statt 50° – kein Horizont, kein Himmel nötig
 
     static func destinationStandsUp(_ style: MapStyle) -> Bool { [.classic, .pixelQuest, .toyTown, .frontier].contains(style) }
 
@@ -486,7 +486,6 @@ struct NeonMapView: UIViewRepresentable {
             }
         }
         c.camera?.setStyle(style) // GM-057: Fahr-Pfeil je Stil
-        SkyOverlay.update(on: map, style: style) // GM-072
         if c.trailCount != trail.count {
             c.trailCount = trail.count
             c.overlay?.showTrail(trail)
@@ -624,31 +623,6 @@ final class CrosshairView: UIView {
                 p.stroke()
             }
         }
-    }
-}
-
-/// GM-072: Himmel des Nutzers (px-sky) oben über der schrägen Pixel-Quest-Karte, weich in die Ferne übergeblendet
-/// wie die Sichtweite im Blockspiel. Nicht bedienbar, liegt unter den Knöpfen.
-final class SkyOverlay: UIImageView {
-    private let fade = CAGradientLayer()
-
-    static func update(on map: MLNMapView, style: MapStyle) {
-        let existing = map.subviews.compactMap { $0 as? SkyOverlay }.first
-        guard style == .pixelQuest, let img = UIImage(named: "px-sky") else { existing?.removeFromSuperview(); return }
-        let v = existing ?? SkyOverlay(image: img)
-        if existing == nil {
-            v.contentMode = .scaleAspectFill
-            v.clipsToBounds = true
-            v.isUserInteractionEnabled = false
-            v.layer.magnificationFilter = .nearest
-            v.fade.colors = [UIColor.black.cgColor, UIColor.black.cgColor, UIColor.clear.cgColor]
-            v.fade.locations = [0, 0.55, 1]
-            v.layer.mask = v.fade
-            map.insertSubview(v, at: map.subviews.count > 0 ? 1 : 0)
-        }
-        let h = map.bounds.height * 0.24
-        v.frame = CGRect(x: 0, y: 0, width: map.bounds.width, height: h)
-        v.fade.frame = v.bounds
     }
 }
 
@@ -851,7 +825,6 @@ enum StylePatterns {
         out["ez-pat-water-west"] = UIImage(named: "west-tex-water") ?? pixelTile(2) { _, _ in rgb(170, 163, 146) }
         // GM-065: Toy Town – Codex-Kacheln und Haus-Symbole ("toy-house-1" … in Assets ToyTown)
         for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment",
-                     "px-sky", // GM-072
                      "fv2-paper-grain", "fv2-forest-canopy", "fv2-grass-mottle", "fv2-rock-grain", "fv2-water-grain", // GM-068: Frontier-Körnung
                      "fv2-forest-paint", "fv2-meadow-paint", // GM-070: gemalte Kacheln
                      "toy-tex-weave", "toy-tree"] { // GM-071: Teppich-Flor; GM-073: Baum am Waldrand

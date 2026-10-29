@@ -2,6 +2,22 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-077 – Pixel Quest: Himmel raus, flachere Kamera, Blöcke höchstens 3 hoch
+
+**Ziel:** Nutzer: „das sieht so schlecht aus, mach den Himmel weg, das ist schrecklich. Hast du keine andere Lösung?“
+
+**Dateien:** `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `tools/prototype/js/stylepreview.js`
+
+**Geändert:**
+- Himmel (SkyOverlay) komplett entfernt.
+- Kamera 32° statt 50° geneigt: Der Horizont ist nicht mehr zu sehen, ein Himmel ist nicht nötig.
+- Blöcke höchstens 12 m (3 Blöcke). Vorher ragten in Städten graue Hochhaus-Wände über die ganze Karte.
+- Gras, Laub, Weizen und Stein höchstens 4× vergrößert (8× wirkte nah wie riesige Kacheln).
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest Zoom 13,5–18.
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
 ## GM-076 – Frontier: Knopf-Symbole wie im Zielbild, Ruckeln; Neon-Pfeil nach Stilwechsel winzig
 
 **Ziel:** Nutzer: Frontier „ruckelt extremst und du hast die falschen Icons genutzt“; „wieso ist der Pfeil bei Neon City auf einmal so klein?!“.

@@ -353,7 +353,7 @@ def build(P, title):
             if l["id"] in ("river", "stream"): l["paint"]["line-pattern"] = P["water_line_pattern"]
     zp = P.get("zoom_patterns", [])
     if zp:  # GM-072: Muster in 2×/4×/8× ab Zoom 16/17/18 – Blöcke bleiben in Weltgröße statt Bildschirmgröße
-        zs = lambda n: ["step", ["zoom"], n, 16, n + "-2", 17, n + "-4", 18, n + "-8"]
+        zs = lambda n: ["step", ["zoom"], n, 16.5, n + "-2", 18, n + "-4"]  # GM-077: höchstens 4× (8× wirkte wie riesige Kacheln)
         for l in layers:
             for key in ("fill-pattern", "background-pattern"):
                 if l.get("paint", {}).get(key) in zp: l["paint"][key] = zs(l["paint"][key])
@@ -367,7 +367,7 @@ def build(P, title):
             z0, col = P["extrude_far"]
             layers.insert(k, {"id": "building-3d-far", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
                               "minzoom": z0, "maxzoom": P.get("extrude_minzoom", 15),
-                              "paint": {"fill-extrusion-color": col, "fill-extrusion-height": ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]],
+                              "paint": {"fill-extrusion-color": col, "fill-extrusion-height": ["min", 12, ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]]],
                                         "fill-extrusion-base": 0, "fill-extrusion-vertical-gradient": True}})
             k += 1
         for lo, hi_, pat_ in P["extrude"]:
@@ -376,13 +376,13 @@ def build(P, title):
                 f = ["all", ["<", h, hi_], ["!=", ["%", ["to-number", ["id"], 0], 3], 0]]
                 layers.insert(k, {**json.loads(json.dumps({"id": "building-3d-spruce", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
                               "minzoom": P.get("extrude_minzoom", 14.5), "filter": ["all", ["<", h, hi_], ["==", ["%", ["to-number", ["id"], 0], 3], 0]],
-                              "paint": {"fill-extrusion-pattern": "ez-pat-spruce-px", "fill-extrusion-height": ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]],
+                              "paint": {"fill-extrusion-pattern": "ez-pat-spruce-px", "fill-extrusion-height": ["min", 12, ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]]],
                                         "fill-extrusion-base": 0, "fill-extrusion-opacity": 1}}))})
                 k += 1
             layers.insert(k, {"id": f"building-3d-{lo}", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
                               "minzoom": P.get("extrude_minzoom", 14.5), "filter": f,
                               "paint": {"fill-extrusion-pattern": pat_,
-                                        "fill-extrusion-height": ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]],
+                                        "fill-extrusion-height": ["min", 12, ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]]],
                                         "fill-extrusion-base": ["coalesce", ["get", "render_min_height"], 0],
                                         "fill-extrusion-opacity": 1}})
             k += 1
