@@ -129,7 +129,7 @@ FRONTIER = dict(land="#9C9A5E", residential="#9C9A5E", industrial="#B0A274", far
                          4: (0.5, 1.0, 2.0, 4.0), 5: (0.4, 0.8, 1.5, 3.3), 6: (0.3, 0.6, 1.2, 2.6), 7: (0.2, 0.5, 1.0, 2.2)},
                 # GM-075: ruckelte weiter – nur noch Wald-Körnung, kein Vollbild-Papierkorn (bis die gemalten Kacheln kommen)
                 overlays=[],  # GM-076: auch Wald-Körnung raus (Ruckeln)
-                relief=dict(tiles="https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png", maxzoom=11,  # GM-076: vorher 15 – jede Kachel neu laden und schattieren ruckelte extrem
+                relief=dict(tiles="https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png", maxzoom=11, minzoom=8,  # GM-080: ganz weit weg ruckelte es  # GM-076: vorher 15 – jede Kachel neu laden und schattieren ruckelte extrem
                             attribution="Höhen: <a href=\"https://registry.opendata.aws/terrain-tiles/\">Terrain Tiles</a> (SRTM, EU-DEM u. a.)",
                             exaggeration=["interpolate", ["linear"], ["zoom"], 7, 1.0, 12, 1.0, 15, 0.8, 18, 0.45],  # Vorgabe 0,65–0,8: im Taunus zu flach
                             shadow="#232B14", highlight="#EADFB8", accent="#4E4A26"),
@@ -275,7 +275,7 @@ def build(P, title):
                                         "hillshade-exaggeration": rl["broad"]["exaggeration"], "hillshade-shadow-color": rl["shadow"],
                                         "hillshade-highlight-color": rl["highlight"], "hillshade-accent-color": rl["accent"]}})
             k += 1
-        layers.insert(k, {"id": "relief", "type": "hillshade", "source": "dem",
+        layers.insert(k, {"id": "relief", "type": "hillshade", "source": "dem", "minzoom": rl.get("minzoom", 0),  # GM-080
                           "paint": {"hillshade-illumination-direction": 315, "hillshade-illumination-anchor": "map",
                                     "hillshade-exaggeration": rl["exaggeration"], "hillshade-shadow-color": rl["shadow"],
                                     "hillshade-highlight-color": rl["highlight"], "hillshade-accent-color": rl["accent"]}})

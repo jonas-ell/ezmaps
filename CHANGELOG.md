@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-080 – Frontier: ganz herausgezoomt kein Relief mehr
+
+**Ziel:** Nutzer: „wenn man bei der Far-Cry-Map ganz rauszoomt, laggt es“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-frontier.json`
+
+**Geändert:** Relief erst ab Zoom 8. Darunter musste MapLibre Höhen für ganze Länder laden und schattieren.
+
+**Tatsächlich geprüft:** STIL OK. GM-079 (Items größer): Mac-Lauf ALLES OK, auf dem iPhone installiert.
+
+**Ungetestet:** Mac-Lauf GM-080, iPhone.
+
 ## GM-079 – Pixel Quest: Items größer
 
 **Ziel:** Nutzer (Bild mit kleinem Hähnchen auf dem Dach): „das Chicken z. B. muss größer sein“.

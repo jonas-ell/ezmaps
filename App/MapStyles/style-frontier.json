@@ -201,6 +201,7 @@
    "id": "relief",
    "type": "hillshade",
    "source": "dem",
+   "minzoom": 8,
    "paint": {
     "hillshade-illumination-direction": 315,
     "hillshade-illumination-anchor": "map",
