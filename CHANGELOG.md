@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-074 – Frontier: Grundlage für gemalte Kartenkacheln (Daten, Rechen-Skript, Codex-Prompts)
+
+**Ziel:** Nutzer: „ja gut, hol das alles und für Assets gib Prompts“ (gemalter Frontier-Look über vorberechnete Bildkacheln).
+
+**Dateien:** `tools/terrain/fetch_data.py` (neu), `tools/terrain/render_tiles.py` (neu), `docs/FRONTIER_KACHELN.md` (neu), `docs/frontier-v2/kacheln-z11.jpg`, `-z12.jpg`, `-z14.jpg`
+
+**Geändert:**
+- Copernicus DEM GLO-30 (78 Kacheln) und ESA WorldCover 2021 (15 Kacheln) für Deutschland geladen, 3,6 GB in `C:/Users/jonas/EzMapsData` (außerhalb von OneDrive und Repo).
+- Rechen-Skript: Höhen und Bodenklassen je Kachel nach Web-Mercator, Materialien weich gemischt (über Weltpixel, nahtlos), Relief mit Licht 315° (olivbrauner Schatten, warmes Licht), dunkles Ufer, leichter Malfilter. Höhen und Klassen werden passend zum Zoom geglättet (vorher Treppen im Relief, eckige Flächen bei Zoom 14). Bis Codex liefert: berechnete Platzhalter-Materialien.
+- Doku mit Quellenhinweisen und 9 Codex-Prompts (Wald, Wiese, Feld, Fels, Busch, Feuchtgebiet, Siedlung, Wasser, Schnee).
+
+**Tatsächlich geprüft:** Vorschau Taunus bei Zoom 11, 12 und 14 gerechnet und angesehen.
+
+**Ungetestet:** App (noch keine Kacheln online), echte Materialien, Rechenzeit für ganz Deutschland.
+
 ## GM-073 – Pixel Quest nur noch 3D-Blöcke, Toy Town flach bedruckt wie ein echter Spielteppich
 
 **Ziel:** Nutzer: „die Häuser-Kacheln dürfen nie zu sehen sein, es muss immer ein hochgezogenes 3D-Modell sein“; „beim Spielteppich nerven die Kacheln, schau dir echte Spielteppiche an“.
