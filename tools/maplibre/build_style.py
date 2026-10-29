@@ -107,9 +107,10 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
            # GM-073: echte Spielteppiche sind flach bedruckt – keine sich wiederholenden Kacheln mehr, Bäume einzeln am Waldrand
            tree_edges=dict(image="toy-tree", spacing=34, size=["interpolate", ["linear"], ["zoom"], 13, 0.35, 16, 0.6, 18, 0.9]),
            house_icons=dict(image=["step", ["coalesce", ["get", "render_height"], 0],
-                                   ["match", ["%", ["to-number", ["id"], 0], 6], 0, "toy-house-1", 1, "toy-house-2", 2, "toy-house-3",
-                                    3, "toy-house-4", 4, "toy-house-5", "toy-house-6"],
-                                   10, ["match", ["%", ["to-number", ["id"], 0], 3], 0, "toy-shop", 1, "toy-school", "toy-police"],
+                                   # GM-083: Variante nach Höhe (["id"] wirkte nicht – überall dasselbe Häuschen)
+                                   ["match", ["%", ["floor", ["*", ["coalesce", ["get", "render_height"], 0], 2.3]], 6], 0, "toy-house-1", 1, "toy-house-2",
+                                    2, "toy-house-3", 3, "toy-house-4", 4, "toy-house-5", "toy-house-6"],
+                                   10, ["match", ["%", ["floor", ["*", ["coalesce", ["get", "render_height"], 0], 1.3]], 3], 0, "toy-shop", 1, "toy-school", "toy-police"],
                                    14, "toy-apartment"],
                             size=["interpolate", ["exponential", 1.6], ["zoom"], 15, 0.4, 17, 0.75, 19, 1.9, 20, 2.8]),  # GM-075: nah mitwachsen
            water_edge="#f2d48b", road_dash="#ffffff", building_ink="#2f3640",

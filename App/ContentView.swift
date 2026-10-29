@@ -111,17 +111,18 @@ struct MapHome: View {
             HStack(alignment: .top) {
                 if let r = model.trialRemaining { TrialBadge(model: model, remaining: r) }
                 Spacer()
-                VStack(spacing: 10) {
-                    GlassRoundButton(systemImage: "location.north.line", label: L("Auf meinen Standort zentrieren")) { model.recenter() }
-                        .padding(.top, 54) // GM-050: Platz für den Kompass oben rechts (überlappte vorher)
-                    GlassRoundButton(systemImage: "paintpalette", label: L("Stile")) { model.shopRequest = .classic }
-                    GlassRoundButton(systemImage: "map", label: L("Entdecken")) { showExplore = true }
-                    GlassRoundButton(systemImage: "gearshape", label: L("Einstellungen")) { showSettings = true }
-                }
+                // GM-083: eine schmale Leiste statt vier runder Knöpfe (verdeckten Straßennamen); Kompass zeigt MapLibre nur bei gedrehter Karte
+                HUDBar(items: [
+                    .init(systemImage: "location.north.line", label: L("Auf meinen Standort zentrieren")) { model.recenter() },
+                    .init(systemImage: "paintpalette", label: L("Stile")) { model.shopRequest = .classic },
+                    .init(systemImage: "map", label: L("Entdecken")) { showExplore = true },
+                    .init(systemImage: "gearshape", label: L("Einstellungen")) { showSettings = true },
+                ])
+                .padding(.top, 54) // GM-050: Platz für den Kompass oben rechts
             }
             Spacer()
             if model.location.isDenied { LocationDeniedCard() }
-            HStack { Spacer(); OSMAttribution() }
+            HStack { OSMAttribution(); Spacer() } // GM-083: in die Ecke
             VStack(alignment: .leading, spacing: 10) {
                 SheetGrabber()
                 if !model.journal.mission.done { MissionCard(mission: model.journal.mission) }
@@ -454,6 +455,14 @@ struct NavigationHUD: View {
                     if look.showsAction, let m = s?.maneuver, !Self.street(s).isEmpty {
                         Text(m.text).font(look.actionFont).opacity(0.75).lineLimit(1)
                     }
+                    // GM-083: „danach“ im Panel statt eigenem Balken
+                    if let then = s?.thenManeuver, then.kind != .destination {
+                        Text(L("danach") + " " + NavigationSession.lowerFirst(then.text) + (then.street.isEmpty ? "" : " · " + then.street))
+                            .font(look.actionFont).opacity(0.8).lineLimit(1).minimumScaleFactor(0.7)
+                            .padding(.horizontal, 8).padding(.vertical, 3)
+                            .background(look.text.opacity(0.12), in: Capsule())
+                            .padding(.top, 2)
+                    }
                 }
                 Spacer(minLength: 0)
             }
@@ -465,15 +474,6 @@ struct NavigationHUD: View {
 
             if let n = model.roadNotice { RoadNoticeBanner(ahead: n) }
 
-            HStack(alignment: .top) {
-                if let then = s?.thenManeuver, then.kind != .destination {
-                    Text(L("danach") + " " + NavigationSession.lowerFirst(then.text) + (then.street.isEmpty ? "" : " · " + then.street))
-                        .font(.footnote.weight(.semibold)).foregroundStyle(.white).lineLimit(1)
-                        .padding(.horizontal, 10).padding(.vertical, 7).neutralGlass(12)
-                }
-                Spacer()
-                if model.settings.showSpeedLimit, let limit = s?.speedLimit { SpeedLimitSign(limit: limit) }
-            }
             Spacer()
             HStack(alignment: .bottom) {
                 if model.isSpeaking && model.settings.duckMusic {
@@ -481,38 +481,38 @@ struct NavigationHUD: View {
                         .padding(.horizontal, 8).padding(.vertical, 5).neutralGlass(10)
                 }
                 Spacer()
-                VStack(spacing: 10) {
-                    // GM-050: Ansagen während der Fahrt aus/an
-                    GlassRoundButton(systemImage: model.settings.voice ? "speaker.wave.2.fill" : "speaker.slash.fill",
-                                     label: model.settings.voice ? L("Ansagen aus") : L("Ansagen an")) { model.toggleVoice() }
-                    GlassRoundButton(systemImage: "location.north.line", label: L("Auf meinen Standort zentrieren")) { model.recenter() }
-                }
             }
-            HStack { Spacer(); OSMAttribution() }
-            HStack(spacing: 12) {
+            HStack { OSMAttribution(); Spacer() } // GM-083: in die Ecke
+            // GM-083: Leiste im Stil des Abbiege-Panels – Tempo-Schild links, Ankunft, Ton und Zentrieren, kleines X
+            HStack(spacing: 10) {
                 if let r = model.trialRemaining {
                     let sec = Int(r.rounded(.up))
-                    Text(String(format: "%d:%02d", sec / 60, sec % 60)).font(.system(size: 13, weight: .heavy).monospacedDigit())
-                        .frame(width: 48, height: 48).neutralGlass(24, selected: true)
+                    Text(String(format: "%d:%02d", sec / 60, sec % 60)).font(.system(size: 12, weight: .heavy).monospacedDigit())
+                        .frame(width: 44, height: 44).neutralGlass(22, selected: true)
                         .accessibilityLabel(L("Test läuft"))
-                } else {
-                    SwiftUI.Color.clear.frame(width: 48, height: 48)
                 }
-                VStack(spacing: 2) {
+                if model.settings.showSpeedLimit, let limit = s?.speedLimit {
+                    SpeedLimitSign(limit: limit).scaleEffect(0.75).frame(width: 48, height: 48)
+                }
+                VStack(spacing: 1) {
                     Text(s.map { Formatting.clock(Date().addingTimeInterval($0.remainingTime)) } ?? "…")
-                        .font(.system(size: 26, weight: .heavy))
+                        .font(.system(size: 24, weight: .heavy))
                     Text(s.map { Formatting.minutes($0.remainingTime) + " · " + Formatting.distance($0.remainingDistance) } ?? "")
-                        .font(.system(size: 13, weight: .medium)).foregroundStyle(GlassTokens.secondary)
+                        .font(.system(size: 12.5, weight: .medium)).opacity(0.7)
                 }
                 .frame(maxWidth: .infinity)
+                NavBarButton(systemImage: model.settings.voice ? "speaker.wave.2.fill" : "speaker.slash.fill",
+                             label: model.settings.voice ? L("Ansagen aus") : L("Ansagen an"), color: look.text) { model.toggleVoice() }
+                NavBarButton(systemImage: "location.north.line", label: L("Auf meinen Standort zentrieren"), color: look.text) { model.recenter() }
                 Button { model.endNavigation() } label: {
-                    Image(systemName: "xmark").font(.system(size: 18, weight: .bold)).foregroundStyle(.white)
-                        .frame(width: 48, height: 48).background(GlassTokens.danger, in: Circle())
+                    Image(systemName: "xmark").font(.system(size: 14, weight: .bold)).foregroundStyle(.white)
+                        .frame(width: 38, height: 38).background(GlassTokens.danger, in: Circle())
                 }
                 .accessibilityLabel(L("Navigation beenden"))
             }
-            .padding(12)
-            .glass()
+            .foregroundStyle(look.text)
+            .padding(.horizontal, 12).padding(.vertical, 10)
+            .modifier(NavPanel(look: look))
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
@@ -533,6 +533,58 @@ struct NavigationHUD: View {
         case .some(.destination): return "flag.checkered"
         case .none: return "arrow.up"
         }
+    }
+}
+
+/// GM-083: runder Knopf in der Navigations-Leiste, Farbe aus dem Stil
+struct NavBarButton: View {
+    let systemImage: String
+    let label: String
+    let color: SwiftUI.Color
+    let action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: systemImage).font(.system(size: 17, weight: .bold)).foregroundStyle(color)
+                .frame(width: 44, height: 44)
+                .background(color.opacity(0.12), in: Circle())
+                .overlay(Circle().strokeBorder(color.opacity(0.35), lineWidth: 1.5))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
+    }
+}
+
+/// GM-083: senkrechte Knopf-Leiste rechts (statt einzelner runder Knöpfe)
+struct HUDBar: View {
+    struct Item: Identifiable {
+        let systemImage: String
+        let label: String
+        let action: () -> Void
+        var id: String { systemImage }
+    }
+    let items: [Item]
+    var body: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(items.enumerated()), id: \.element.id) { i, item in
+                Button(action: item.action) {
+                    Group {
+                        if let name = GlassRoundButton.hud[item.systemImage], UIImage(named: name) != nil {
+                            Image(name).resizable().interpolation(.high).frame(width: 24, height: 24)
+                        } else {
+                            Image(systemName: item.systemImage).font(.system(size: 17, weight: .semibold)).foregroundStyle(.white)
+                        }
+                    }
+                    .frame(width: 46, height: 46)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(item.label)
+                if i < items.count - 1 { Rectangle().fill(.white.opacity(0.15)).frame(width: 28, height: 1) }
+            }
+        }
+        .background(SwiftUI.Color(white: 0.043).opacity(0.85), in: Capsule())
+        .overlay(Capsule().strokeBorder(.white.opacity(0.18), lineWidth: 1.5))
+        .shadow(color: .black.opacity(0.35), radius: 6, y: 3)
     }
 }
 

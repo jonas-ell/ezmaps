@@ -2202,11 +2202,19 @@
       [
        "%",
        [
-        "to-number",
+        "floor",
         [
-         "id"
-        ],
-        0
+         "*",
+         [
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
+         ],
+         2.3
+        ]
        ],
        6
       ],
@@ -2228,11 +2236,19 @@
       [
        "%",
        [
-        "to-number",
+        "floor",
         [
-         "id"
-        ],
-        0
+         "*",
+         [
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
+         ],
+         1.3
+        ]
        ],
        3
       ],

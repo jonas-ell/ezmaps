@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-083 – Overlays: Knopf-Leiste, kleiner Hinweis, Navigation aufgeräumt; Toy-Town-Häuschen gemischt
+
+**Ziel:** Nutzer gibt Overlay-Vorschläge 3, 4, 6, 7, 8, 9 und 11 frei (1 und 2 ausdrücklich nicht; 5 offen).
+
+**Dateien:** `App/ContentView.swift`, `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `docs/overlay-vorschlag/` (Vorher/Nachher-Bilder)
+
+**Geändert:**
+- 3: Hinweis „© OpenMapTiles · © OpenStreetMap-Mitwirkende“ kleiner (9 pt), halbtransparent, unten links. Bleibt auf jedem Kartenbildschirm.
+- 4: Karte ohne Navigation: eine schmale Knopf-Leiste (Zentrieren, Stile, Entdecken, Einstellungen) statt vier runder Knöpfe. Kompass blendet MapLibre nur bei gedrehter Karte ein.
+- 6: „danach …“ als Zeile im Abbiege-Panel statt eigenem Balken.
+- 7, 8, 9: Unten eine Leiste im Stil des Abbiege-Panels: Tempo-Schild links, Ankunftszeit, Ton und Zentrieren, kleineres X. Kein Tempo-Schild mehr rechts oben, keine Knöpfe mehr über der Route.
+- 11: Toy-Town-Häuschen nach Höhe gemischt (Ausdruck mit `id` gab überall dasselbe Häuschen).
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** Mac-Lauf, Simulator-Bilder, iPhone.
+
 ## GM-082 – Pixel Quest: Schienen in echter Breite, Straßen weit weg ohne dunklen Rand
 
 **Ziel:** Nutzer: „Schienen und generell Sachen sollen bei ihrer gleichen Größe bleiben und nicht immer kleiner werden, wenn man nah ranzoomt“; Bilder mit dunklen Straßen weit weg.

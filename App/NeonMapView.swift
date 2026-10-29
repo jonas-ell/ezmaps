@@ -630,11 +630,11 @@ final class CrosshairView: UIView {
 struct OSMAttribution: View {
     var body: some View {
         Text(L("© OpenMapTiles · © OpenStreetMap-Mitwirkende")) // GM-020: OpenFreeMap verlangt beide Hinweise
-            .font(.caption2)
+            .font(.system(size: 9, weight: .medium)) // GM-083: kleiner, weniger dominant (bleibt immer sichtbar)
             .foregroundStyle(.white.opacity(0.85))
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background(.black.opacity(0.55), in: RoundedRectangle(cornerRadius: 4))
+            .padding(.horizontal, 5)
+            .padding(.vertical, 1.5)
+            .background(.black.opacity(0.3), in: RoundedRectangle(cornerRadius: 3))
             .accessibilityLabel(L("© OpenMapTiles · © OpenStreetMap-Mitwirkende"))
     }
 }
