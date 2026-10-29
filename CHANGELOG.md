@@ -15,7 +15,9 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest Zoom 13,5–18.
 
-**Ungetestet:** Mac-Lauf, Ruckeln auf dem iPhone.
+**Nachtrag:** erster Mac-Lauf scheiterte (Kommentar verschluckte die Klammer am Wasser-Timer), behoben; dann ALLES OK, auf dem iPhone installiert.
+
+**Ungetestet:** Ruckeln auf dem iPhone.
 
 ## GM-074 – Frontier: Grundlage für gemalte Kartenkacheln (Daten, Rechen-Skript, Codex-Prompts)
 
