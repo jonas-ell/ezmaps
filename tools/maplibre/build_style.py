@@ -83,6 +83,12 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              far_simple=True, minzoom_shift={"tertiary": 12, "minor": 13.5, "service": 15},
              building_pattern=["ez-pat-oak-px", "ez-pat-spruce-px", "ez-pat-brick-px", "ez-pat-cobble-px"],
              building_shadow=True, block_edges=("#2a1d0e", "#d2a868"),
+             # GM-067: Villager-Häuser (Bilder des Nutzers) auf kleinen Gebäuden, große bleiben Blöcke
+             house_icons=dict(image=["step", ["coalesce", ["get", "render_height"], 0],
+                                     ["match", ["%", ["to-number", ["id"], 0], 4], 0, "px-house-1", 1, "px-house-2", 2, "px-house-3", "px-house-4"], 14, ""],
+                              size=["interpolate", ["linear"], ["zoom"], 15, 0.65, 17, 1.1, 19, 1.6], minzoom=15),
+             # GM-067: weit weg flach wie eine Karte im Spiel – Felder, Dächer, Industrie ohne Muster (Streifen und Krümel)
+             far_flat=13.5, far_flat_ids=["farm", "industrial", "building", "building-1", "building-2", "building-3"], building_minzoom=13,
              font="Press Start 2P Regular", label_scale=0.5, text_transform="none", letter_spacing=0, label_halo_width=1.6,
              poi_suffix="-px", poi_minzoom=14, place_color="#ffffff", place_halo="#000000", place_halo_width=2, place_transform="none")
 TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b9d86a", park="#7cc142", forest="#62b235",
@@ -90,7 +96,12 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
            buildingEdge="#2f3640", rail="#2f3640", casing="#c9cbce", label="#ffffff",
            road=lambda r: "#66686c", widen=1.4, label_halo="#2f3640",
            pat=dict(land="ez-pat-lawn-toy", forest="ez-pat-trees-toy", park="ez-pat-park-toy", water="ez-pat-water-toy"),
-           house_icons=True,
+           house_icons=dict(image=["step", ["coalesce", ["get", "render_height"], 0],
+                                   ["match", ["%", ["to-number", ["id"], 0], 6], 0, "toy-house-1", 1, "toy-house-2", 2, "toy-house-3",
+                                    3, "toy-house-4", 4, "toy-house-5", "toy-house-6"],
+                                   10, ["match", ["%", ["to-number", ["id"], 0], 3], 0, "toy-shop", 1, "toy-school", "toy-police"],
+                                   14, "toy-apartment"],
+                            size=["interpolate", ["linear"], ["zoom"], 15, 0.4, 17, 0.7, 19, 1.05]),  # GM-067: größer
            water_edge="#f2d48b", road_dash="#ffffff", building_ink="#2f3640",
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
            poi_suffix="-toy", poi_minzoom=14, place_color="#ffffff", place_halo="#2f3640", place_halo_width=2.4, place_transform="none")
@@ -206,6 +217,18 @@ def build(P, title):
         edge = {**line("building-edge", "building", dark, w(0.8, 3.5)), "minzoom": 14}
         edge["layout"]["line-join"] = "miter"
         layers[i + 1:i + 1] = [hi, edge]
+    if P.get("far_flat"):  # GM-067: Muster erst ab Zoom far_flat, darunter flache Kopie
+        z = P["far_flat"]
+        for lid in P.get("far_flat_ids", []):
+            k = next((n for n, l in enumerate(layers) if l["id"] == lid), None)
+            if k is None or "fill-pattern" not in layers[k]["paint"]: continue
+            flat = json.loads(json.dumps(layers[k])); flat["id"] = lid + "-far"; flat["maxzoom"] = z
+            del flat["paint"]["fill-pattern"]
+            layers[k]["minzoom"] = max(layers[k].get("minzoom", 0), z)
+            layers.insert(k, flat)
+    if P.get("building_minzoom"):  # GM-067: weit weg keine Haus-Krümel
+        for l in layers:
+            if l.get("source-layer") == "building": l["minzoom"] = max(l.get("minzoom", 0), P["building_minzoom"])
     if P.get("building_ink"):
         i = next(k for k, l in enumerate(layers) if l["id"] == "building")
         layers.insert(i + 1, {**line("building-ink", "building", P["building_ink"], ["interpolate", ["linear"], ["zoom"], 14, 0.6, 18, 1.8]), "minzoom": 14})
@@ -225,14 +248,10 @@ def build(P, title):
                    "text-max-angle": 30, "text-padding": 2, "symbol-spacing": 150},  # GM-063: Straßennamen öfter
         "paint": paint,
     })
-    if P.get("house_icons"):  # GM-065: Toy Town – Spielzeughaus (Codex) auf jedem Gebäude, Art nach Höhe
-        layers.append({"id": "building-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "building", "minzoom": 15,
-                       "layout": {"icon-image": ["step", ["coalesce", ["get", "render_height"], 0],
-                                                 ["match", ["%", ["to-number", ["id"], 0], 6], 0, "toy-house-1", 1, "toy-house-2", 2, "toy-house-3",
-                                                  3, "toy-house-4", 4, "toy-house-5", "toy-house-6"],
-                                                 10, ["match", ["%", ["to-number", ["id"], 0], 3], 0, "toy-shop", 1, "toy-school", "toy-police"],
-                                                 14, "toy-apartment"],
-                                  "icon-size": ["interpolate", ["linear"], ["zoom"], 15, 0.3, 17, 0.55, 19, 0.9],
+    if P.get("house_icons"):  # GM-065: Haus-Bild auf jedem Gebäude (Toy Town: Spielzeughäuser, GM-067 Pixel Quest: Villager-Häuser)
+        hi = P["house_icons"]
+        layers.append({"id": "building-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "building", "minzoom": hi.get("minzoom", 15),
+                       "layout": {"icon-image": hi["image"], "icon-size": hi["size"], "icon-anchor": hi.get("anchor", "center"),
                                   "icon-padding": 0, "icon-allow-overlap": False}})
     layers.append(poi_layer(P))
     layers.append(place_layer(P))  # GM-058: Orts- und Stadtnamen (vorher keine – beim Rauszoomen kein „Frankfurt“)
@@ -272,7 +291,7 @@ def poi_layer(P):
     return {
         "id": "poi-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": P.get("poi_minzoom", 14.5),
         "filter": ["in", ["get", "class"], ["literal", list(POI)]],
-        "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.36, 17, 0.52], "icon-padding": 44},  # GM-063: kleiner, weniger dicht (Wiesbaden-Clip)
+        "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.5, 17, 0.72], "icon-padding": 44},  # GM-067: größer (Nutzer: „Icons zu klein“)
     }
 
 

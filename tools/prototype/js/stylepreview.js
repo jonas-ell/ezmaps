@@ -11,6 +11,7 @@
   const pts = (await (await fetch(BASE + 'tools/drive_wallrabenstein.txt')).text()).trim().split(/\s+/).map(s => s.split(',').map(Number));
   const st = await (await fetch(`${BASE}App/MapStyles/style-${style}.json`)).json();
   st.glyphs = BASE + 'Resources/Glyphs/{fontstack}/{range}.pbf';
+  await preloadAssetImages(BASE);
   const here = pts[i0], h = bearing(here, pts[i0 + 2]);
   document.getElementById('a').src = `${BASE}App/Assets.xcassets/PlayerNeon${style === 'neon-city' ? 'Glow' : ''}.imageset/player-neon-v2${style === 'neon-city' ? '-glow' : ''}@3x.png`;
   const H = innerHeight;

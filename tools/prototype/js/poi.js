@@ -132,8 +132,22 @@ function toyBadge(kind) {
     g.drawImage(t, 9, 9, 22, 22);
   });
 }
+// GM-067: Haus-Bilder wie in der App aus dem Asset-Katalog (Toy Town: Spielzeughäuser, Pixel Quest: Villager-Häuser) – vor der Karte laden
+const ASSET_IMAGES = {};
+async function preloadAssetImages(base) {
+  const sets = { ToyTown: ['toy-house-1', 'toy-house-2', 'toy-house-3', 'toy-house-4', 'toy-house-5', 'toy-house-6', 'toy-shop', 'toy-school', 'toy-police', 'toy-apartment'],
+    PixelQuest: ['px-house-1', 'px-house-2', 'px-house-3', 'px-house-4'] };
+  const jobs = [];
+  for (const [dir, names] of Object.entries(sets)) for (const n of names) {
+    jobs.push(new Promise(ok => { const im = new Image(); im.onload = () => { ASSET_IMAGES[n] = im; ok(); }; im.onerror = ok;
+      im.src = `${base}App/Assets.xcassets/${dir}/${n}.imageset/${n}@2x.png`; }));
+  }
+  await Promise.all(jobs);
+}
+
 // Bild für einen fehlenden Namen (styleimagemissing): Symbole und Muster aller Stile; pixelRatio dazu
 function styleImage(id) {
+  if (ASSET_IMAGES[id]) return { data: ASSET_IMAGES[id], pixelRatio: 2 };
   if (PATTERNS[id]) return { data: PATTERNS[id](), pixelRatio: 2 };
   const m = /^ez-poi-([a-z]+)(-neon|-west|-px|-toy)?$/.exec(id); if (!m) return null;
   if (m[2] === '-px') return { data: pixelSign(m[1]), pixelRatio: 2 };

@@ -2212,12 +2212,13 @@
       "zoom"
      ],
      15,
-     0.3,
+     0.4,
      17,
-     0.55,
+     0.7,
      19,
-     0.9
+     1.05
     ],
+    "icon-anchor": "center",
     "icon-padding": 0,
     "icon-allow-overlap": false
    }
@@ -2321,9 +2322,9 @@
       "zoom"
      ],
      14.5,
-     0.36,
+     0.5,
      17,
-     0.52
+     0.72
     ],
     "icon-padding": 44
    }

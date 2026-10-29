@@ -22,6 +22,25 @@
    }
   },
   {
+   "id": "farm-far",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landcover",
+   "paint": {
+    "fill-color": "#b59a45",
+    "fill-antialias": true
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "farmland"
+   ],
+   "maxzoom": 13.5
+  },
+  {
    "id": "farm",
    "type": "fill",
    "source": "openmaptiles",
@@ -38,7 +57,8 @@
      "class"
     ],
     "farmland"
-   ]
+   ],
+   "minzoom": 13.5
   },
   {
    "id": "forest",
@@ -116,6 +136,34 @@
    ]
   },
   {
+   "id": "industrial-far",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#8a8a8a",
+    "fill-antialias": true
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "industrial",
+      "commercial",
+      "retail",
+      "railway",
+      "garages"
+     ]
+    ]
+   ],
+   "maxzoom": 13.5
+  },
+  {
    "id": "industrial",
    "type": "fill",
    "source": "openmaptiles",
@@ -141,7 +189,8 @@
       "garages"
      ]
     ]
-   ]
+   ],
+   "minzoom": 13.5
   },
   {
    "id": "landuse-green",
@@ -377,7 +426,36 @@
       ]
      ]
     ]
-   }
+   },
+   "minzoom": 13
+  },
+  {
+   "id": "building-far",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "paint": {
+    "fill-color": "#8b6a3e",
+    "fill-antialias": true,
+    "fill-outline-color": "#3b2a17"
+   },
+   "filter": [
+    "all",
+    [
+     "<",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     7
+    ]
+   ],
+   "maxzoom": 13.5,
+   "minzoom": 13
   },
   {
    "id": "building",
@@ -404,7 +482,48 @@
      ],
      7
     ]
-   ]
+   ],
+   "minzoom": 13.5
+  },
+  {
+   "id": "building-1-far",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "paint": {
+    "fill-color": "#8b6a3e",
+    "fill-antialias": true,
+    "fill-outline-color": "#3b2a17"
+   },
+   "filter": [
+    "all",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     7
+    ],
+    [
+     "<",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     10
+    ]
+   ],
+   "maxzoom": 13.5,
+   "minzoom": 13
   },
   {
    "id": "building-1",
@@ -443,7 +562,48 @@
      ],
      10
     ]
-   ]
+   ],
+   "minzoom": 13.5
+  },
+  {
+   "id": "building-2-far",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "paint": {
+    "fill-color": "#8b6a3e",
+    "fill-antialias": true,
+    "fill-outline-color": "#3b2a17"
+   },
+   "filter": [
+    "all",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     10
+    ],
+    [
+     "<",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     14
+    ]
+   ],
+   "maxzoom": 13.5,
+   "minzoom": 13
   },
   {
    "id": "building-2",
@@ -482,7 +642,36 @@
      ],
      14
     ]
-   ]
+   ],
+   "minzoom": 13.5
+  },
+  {
+   "id": "building-3-far",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "paint": {
+    "fill-color": "#8b6a3e",
+    "fill-antialias": true,
+    "fill-outline-color": "#3b2a17"
+   },
+   "filter": [
+    "all",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     14
+    ]
+   ],
+   "maxzoom": 13.5,
+   "minzoom": 13
   },
   {
    "id": "building-3",
@@ -509,7 +698,8 @@
      ],
      14
     ]
-   ]
+   ],
+   "minzoom": 13.5
   },
   {
    "id": "building-highlight",
@@ -1920,6 +2110,67 @@
    }
   },
   {
+   "id": "building-icons",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "minzoom": 15,
+   "layout": {
+    "icon-image": [
+     "step",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     [
+      "match",
+      [
+       "%",
+       [
+        "to-number",
+        [
+         "id"
+        ],
+        0
+       ],
+       4
+      ],
+      0,
+      "px-house-1",
+      1,
+      "px-house-2",
+      2,
+      "px-house-3",
+      "px-house-4"
+     ],
+     14,
+     ""
+    ],
+    "icon-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     15,
+     0.65,
+     17,
+     1.1,
+     19,
+     1.6
+    ],
+    "icon-anchor": "center",
+    "icon-padding": 0,
+    "icon-allow-overlap": false
+   }
+  },
+  {
    "id": "poi-icons",
    "type": "symbol",
    "source": "openmaptiles",
@@ -2018,9 +2269,9 @@
       "zoom"
      ],
      14.5,
-     0.36,
+     0.5,
      17,
-     0.52
+     0.72
     ],
     "icon-padding": 44
    }

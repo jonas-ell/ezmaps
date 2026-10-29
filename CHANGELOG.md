@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-067 – Pixel Quest mit Villager-Häusern, ruhige Fernansicht, größere Symbole
+
+**Ziel:** Nutzer: „Du nutzt nicht mal die Villager-Häuser für die Pixel-Quest-Map, im rausgezoomten Modus sieht die Map schlecht aus, die Icons sind zu klein.“
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `tools/prototype/js/poi.js`, `live.js`, `stylepreview.js`, `tools/mac_device.sh`, `mac_drive.sh`, `mac_screens.sh`, `.gitignore`
+
+**Geändert:**
+- Pixel Quest: Villager-Häuser (4 Bilder des Nutzers aus `Assets/Generated/minecraft/`) stehen ab Zoom 15 auf kleinen Gebäuden, große Gebäude bleiben Blöcke. `house_icons` ist jetzt je Stil einstellbar (Bild-Ausdruck, Größe).
+- Pixel Quest weit weg (unter Zoom 13,5): Felder, Dächer und Industrie flach statt Muster (Weizen wurde zu großen Streifen), Gebäude erst ab Zoom 13 (vorher braune Krümel).
+- Symbole in allen Stilen etwa 40 % größer, Toy-Town-Häuser größer.
+- Die Villager-Bilder sind Spielbilder: Sie liegen nur lokal (`.gitignore`), Test-Builds schicken sie mit. Store-Build (`mac_archive.sh`) ohne sie, vor dem Store braucht es eigene Häuser (Codex).
+- Prototyp lädt die Haus-Bilder aus dem Asset-Katalog wie die App.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest und Toy Town bei Zoom 12, 13, 14, 15,5 und 17 angesehen.
+
+**Ungetestet:** App auf dem Mac (folgt), iPhone, CarPlay.
+
 ## GM-066 – Wild-West-Pfeil mit dunklem Rand
 
 **Ziel:** Nutzer: „schau ins repo und mach weiter“, App aufs iPhone. Fehlersuche in den neuen iPhone-Testbildern (GM-065).

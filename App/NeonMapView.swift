@@ -765,7 +765,8 @@ enum StylePatterns {
         if let f = UIImage(named: "west-tex-forest") { out["ez-pat-forest-west"] = f }
         out["ez-pat-water-west"] = UIImage(named: "west-tex-water") ?? pixelTile(2) { _, _ in rgb(170, 163, 146) }
         // GM-065: Toy Town – Codex-Kacheln und Haus-Symbole ("toy-house-1" … in Assets ToyTown)
-        for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment"] {
+        for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment",
+                     "px-house-1", "px-house-2", "px-house-3", "px-house-4"] { // GM-067: Villager-Häuser
             if let img = UIImage(named: name) { out[name] = img }
         }
         // Toy Town (gezeichnet; Codex-Kacheln weiter unten haben Vorrang)

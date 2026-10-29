@@ -190,6 +190,7 @@ class FollowCamera {
 
 // ---------- Bedienung ----------
 const $ = id => document.getElementById(id);
+preloadAssetImages(BASE); // GM-067: Haus-Bilder aus dem Asset-Katalog (Stile laden ohnehin später)
 const pmap = makeMap($('pmap')), cmap = makeMap($('cmap'), 2 * devicePixelRatio); // CarPlay: 2× wie der Simulator
 const maps = () => [pmap, cmap];
 const pcam = new FollowCamera(pmap, $('parrow'), { pitch: 0, arrowY: 0.62, glow: () => true,     // GM-045: iPhone flach wie CarPlay
