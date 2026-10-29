@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-081 – Pixel Quest: Pflaster mittelweit wieder sichtbar, Schieferdächer zwischen den roten
+
+**Ziel:** Nutzer schickt 4 iPhone-Bilder (Frankfurt, Pixel Quest) ohne Text – Fehler selbst suchen.
+
+**Dateien:** `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `tools/prototype/js/poi.js`
+
+**Geändert:**
+- Straßen: Das 4×4-Pflaster (GM-072) wurde mittelweit auf die schmale Linie gequetscht und verschwamm zu Dunkelgrau. Jetzt einfaches Pflaster, 4×4 erst ab Zoom 17,5.
+- Dächer: Altstadt war eine einzige rote Fläche. Jetzt gibt es eine eigene Ebene mit grauem Schiefer, Verteilung nach Höhe. Muster je Gebäude als Ausdruck und Filter nach `id` funktionierten in MapLibre nicht verlässlich (alle gleich), deshalb getrennte Ebenen und Höhe als Merkmal.
+- Bekannt, nicht behebbar mit MapLibre: Symbole liegen am Boden und wirken in 3D wie an Hauswänden.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Idstein Zoom 15,5–18 (Pflaster überall, Schiefer gemischt).
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
 ## GM-080 – Frontier: ganz herausgezoomt kein Relief mehr
 
 **Ziel:** Nutzer: „wenn man bei der Far-Cry-Map ganz rauszoomt, laggt es“.

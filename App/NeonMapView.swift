@@ -801,6 +801,13 @@ enum StylePatterns {
             if fy == 1 && fx == 1 { return rgb(186, 222, 240) }                                              // Glanz
             return hash(x / 4, y / 4, 13) < 0.08 ? rgb(232, 196, 110) : rgb(98, 146, 186)                    // Glas, wenige erleuchtet
         }
+        // GM-081: zweites Dach – dunkles Schiefer-Grau (Altstadt war eine einzige rote Fläche)
+        out["ez-pat-roof2-px"] = pixelTile(16) { x, y in
+            let off = (x + (y / 4) % 2 * 2) % 4
+            if y % 4 == 3 { return rgb(38, 42, 52) }
+            if off == 0 { return rgb(52, 58, 70) }
+            return hash(x, y, 16) < 0.3 ? rgb(86, 94, 110) : rgb(72, 80, 94)
+        }
         // GM-078: Dächer – Schindeln (Häuser) und Steinplatte (Hochhäuser), oben auf jedem Block
         out["ez-pat-roof-px"] = pixelTile(16) { x, y in
             let row = y / 4, off = (x + row % 2 * 2) % 4
@@ -851,7 +858,7 @@ enum StylePatterns {
         }
         for k in 1...16 { if let img = UIImage(named: "px-house-\(k)") { out["px-house-\(k)"] = img } } // GM-072: 16 Villager-Varianten
         // GM-072: Straße aus 4 × 4 Bruchstein-Blöcken (line-pattern zieht das Bild auf Straßenbreite – vorher graue Streifen)
-        if let c = out["ez-pat-road-px"] { out["ez-pat-road-px"] = tiled(c, 4) }
+        if let c = out["ez-pat-road-px"] { out["ez-pat-road-px-4"] = tiled(c, 4) } // GM-081: nur nah (mittelweit verschwamm es zu Grau)
         // GM-072: Blöcke wachsen beim Heranzoomen (build_style zoom_patterns: 2×/4×/8× ab Zoom 16/17/18)
         for n in ["ez-pat-grass-px", "ez-pat-leaves-px", "ez-pat-farm-px", "ez-pat-stone-px"] {
             guard let img = out[n] else { continue }

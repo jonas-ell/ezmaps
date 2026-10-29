@@ -1231,7 +1231,15 @@
      22,
      265.373
     ],
-    "line-pattern": "ez-pat-road-px"
+    "line-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-road-px",
+     17.5,
+     "ez-pat-road-px-4"
+    ]
    },
    "filter": [
     "all",
@@ -1313,7 +1321,15 @@
      22,
      530.745
     ],
-    "line-pattern": "ez-pat-road-px"
+    "line-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-road-px",
+     17.5,
+     "ez-pat-road-px-4"
+    ]
    },
    "filter": [
     "all",
@@ -1395,7 +1411,15 @@
      22,
      682.387
     ],
-    "line-pattern": "ez-pat-road-px"
+    "line-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-road-px",
+     17.5,
+     "ez-pat-road-px-4"
+    ]
    },
    "filter": [
     "all",
@@ -1477,7 +1501,15 @@
      22,
      758.208
     ],
-    "line-pattern": "ez-pat-road-px"
+    "line-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-road-px",
+     17.5,
+     "ez-pat-road-px-4"
+    ]
    },
    "filter": [
     "all",
@@ -1559,7 +1591,15 @@
      22,
      909.849
     ],
-    "line-pattern": "ez-pat-road-px"
+    "line-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-road-px",
+     17.5,
+     "ez-pat-road-px-4"
+    ]
    },
    "filter": [
     "all",
@@ -1641,7 +1681,15 @@
      22,
      985.67
     ],
-    "line-pattern": "ez-pat-road-px"
+    "line-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-road-px",
+     17.5,
+     "ez-pat-road-px-4"
+    ]
    },
    "filter": [
     "all",
@@ -1722,7 +1770,15 @@
      22,
      1213.132
     ],
-    "line-pattern": "ez-pat-road-px"
+    "line-pattern": [
+     "step",
+     [
+      "zoom"
+     ],
+     "ez-pat-road-px",
+     17.5,
+     "ez-pat-road-px-4"
+    ]
    },
    "filter": [
     "all",
@@ -2113,6 +2169,117 @@
    }
   },
   {
+   "id": "roof-0-alt",
+   "type": "fill-extrusion",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "minzoom": 15,
+   "filter": [
+    "all",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     0
+    ],
+    [
+     "<",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     20
+    ],
+    [
+     "==",
+     [
+      "%",
+      [
+       "floor",
+       [
+        "*",
+        [
+         "coalesce",
+         [
+          "get",
+          "render_height"
+         ],
+         0
+        ],
+        1.7
+       ]
+      ],
+      3
+     ],
+     0
+    ]
+   ],
+   "paint": {
+    "fill-extrusion-pattern": "ez-pat-roof2-px",
+    "fill-extrusion-base": [
+     "max",
+     4,
+     [
+      "*",
+      [
+       "ceil",
+       [
+        "/",
+        [
+         "coalesce",
+         [
+          "get",
+          "render_height"
+         ],
+         0
+        ],
+        4
+       ]
+      ],
+      4
+     ]
+    ],
+    "fill-extrusion-height": [
+     "+",
+     [
+      "max",
+      4,
+      [
+       "*",
+       [
+        "ceil",
+        [
+         "/",
+         [
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
+         ],
+         4
+        ]
+       ],
+       4
+      ]
+     ],
+     1
+    ],
+    "fill-extrusion-opacity": 1
+   }
+  },
+  {
    "id": "roof-0",
    "type": "fill-extrusion",
    "source": "openmaptiles",
@@ -2143,6 +2310,32 @@
       0
      ],
      20
+    ],
+    [
+     "!",
+     [
+      "==",
+      [
+       "%",
+       [
+        "floor",
+        [
+         "*",
+         [
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
+         ],
+         1.7
+        ]
+       ],
+       3
+      ],
+      0
+     ]
     ]
    ],
    "paint": {

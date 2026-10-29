@@ -90,7 +90,8 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              # GM-073: Nutzer „die Häuser-Kacheln dürfen nie zu sehen sein, immer ein hochgezogenes 3D-Modell“ – jedes Gebäude ist ein Block
              # (Höhe in 4-m-Schritten, mindestens 1 Block), Holz/Fichte/Ziegel/Bruchstein nach Höhe; Villager-Bilder raus (bis 3D-Modelle kommen)
              extrude=[(0, 8, "ez-pat-oak-px"), (8, 12, "ez-pat-spruce-px"), (12, 20, "ez-pat-brick-px"), (20, None, "ez-pat-tower-px")],  # GM-078: echte Höhen, Hochhäuser Glas
-             roofs=[((0, 20), "ez-pat-roof-px"), ((20, None), "ez-pat-slab-px")],
+             roofs=[((0, 20), "ez-pat-roof-px"), ((20, None), "ez-pat-slab-px")], roof_alt=("ez-pat-roof2-px", 3),  # GM-081: jedes 3. Haus Schiefer
+             road_pattern_near=True,
              poi_scale=1.6, poi_near=1.8,  # GM-079: Items größer (Nutzer: „das Chicken muss größer sein“)
              extrude_only=True, extrude_minzoom=15, extrude_far=(13, "#7a5a32"),  # GM-075: ruckelte – unter Zoom 15 einfarbig
              label_spacing=420, casing_add=(0.8, 0.8), water_line_pattern="ez-pat-water-px",
@@ -224,7 +225,9 @@ def build(P, title):
     for cls, r in (order if not ink else []):
         w = meters(WIDTH[r] * 0.75 * widen * (0.42 if thin and r >= 5 else 1), MIN_PX[r] * (2.4 * 0.42 if thin and r >= 5 else 1))
         layers.append(with_min(line(f"road-{cls}", "transportation", P["road"](r), w, road_filter(cls)), cls, P))
-        if P.get("road_pattern"): layers[-1]["paint"]["line-pattern"] = P["road_pattern"]  # GM-050: Steinstraße (Pixel Quest)
+        if P.get("road_pattern"):  # GM-050: Steinstraße (Pixel Quest); GM-081: 4×4-Pflaster erst nah
+            rp = P["road_pattern"]
+            layers[-1]["paint"]["line-pattern"] = ["step", ["zoom"], rp, 17.5, rp + "-4"] if P.get("road_pattern_near") else rp
     # GM-050: Toy Town – weiße Mittellinie auf größeren Straßen, Sandrand am Wasser, dunkle Kontur um die Häuser
     if P.get("road_dash"):
         for cls, r in order:
@@ -391,9 +394,17 @@ def build(P, title):
     if P.get("roofs"):  # GM-078: Dach-Platte (1 m) oben auf jedem Block – Oberseite sieht anders aus als die Wand
         hb = ["max", 4, ["*", ["ceil", ["/", ["coalesce", ["get", "render_height"], 0], 4]], 4]]
         k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
-        for lim, pat_ in P["roofs"]:
+        roofs = []
+        for lim, pat_ in P["roofs"]:  # GM-081: Muster je Gebäude nur über eigene Ebenen (Ausdruck zeichnete fast nur eines)
             lo, hi_ = lim
             f = ["all", [">=", ["coalesce", ["get", "render_height"], 0], lo]] + ([["<", ["coalesce", ["get", "render_height"], 0], hi_]] if hi_ else [])
+            if lo == 0 and P.get("roof_alt"):
+                alt, n = P["roof_alt"]
+                sel = ["==", ["%", ["floor", ["*", ["coalesce", ["get", "render_height"], 0], 1.7]], n], 0]  # ["id"] wirkte im Filter nicht
+                roofs.append((f"{lo}-alt", f + [sel], alt))
+                f = f + [["!", sel]]
+            roofs.append((lo, f, pat_))
+        for lo, f, pat_ in roofs:
             layers.insert(k, {"id": f"roof-{lo}", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
                               "minzoom": P.get("extrude_minzoom", 14.5), "filter": f,
                               "paint": {"fill-extrusion-pattern": pat_, "fill-extrusion-base": hb, "fill-extrusion-height": ["+", hb, 1],

@@ -105,6 +105,9 @@ const PATTERNS = {
     return patHash(x, y, 14) < 0.3 ? rgbS(150, 62, 44) : rgbS(128, 52, 38); }),
   'ez-pat-slab-px': () => pixelTile(16, (x, y) => (x === 0 || y === 0) ? rgbS(120, 120, 120) : (x === 8 || y === 8) ? rgbS(140, 140, 140)
     : patHash(x, y, 15) < 0.25 ? rgbS(176, 176, 176) : rgbS(162, 162, 162)),
+  'ez-pat-roof2-px': () => pixelTile(16, (x, y) => { const off = (x + (Math.floor(y / 4) % 2) * 2) % 4; // GM-081
+    if (y % 4 === 3) return rgbS(38, 42, 52); if (off === 0) return rgbS(52, 58, 70);
+    return patHash(x, y, 16) < 0.3 ? rgbS(86, 94, 110) : rgbS(72, 80, 94); }),
   'ez-pat-brick-px': () => pixelTile(16, (x, y) => (y % 4 === 3 || (x + (Math.floor(y / 4) % 2) * 4) % 8 === 7) ? rgbS(196, 180, 170) : patHash(x, y, 11) < 0.3 ? rgbS(160, 70, 52) : rgbS(146, 60, 44)),
   'ez-pat-lawn-toy': () => canvasTile(64, g => { g.fillStyle = rgbS(141, 198, 63); g.fillRect(0, 0, 64, 64); g.fillStyle = rgbS(163, 214, 90);
     g.beginPath(); g.ellipse(17, 16.5, 11, 6.5, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(47, 45.5, 9, 5.5, 0, 0, 7); g.fill(); }),
