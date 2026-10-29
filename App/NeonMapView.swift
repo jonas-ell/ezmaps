@@ -240,7 +240,7 @@ final class RouteOverlay {
     }
 
     /// GM-050: Pin und Fahnen stehen auf dem Ziel (Anker unten), Raute und X liegen mittig darauf
-    static func destinationStandsUp(_ style: MapStyle) -> Bool { [.classic, .pixelQuest, .toyTown].contains(style) }
+    static func destinationStandsUp(_ style: MapStyle) -> Bool { [.classic, .pixelQuest, .toyTown, .frontier].contains(style) }
 
     /// GM-050: Ziel-Symbol je Stil (eigene Formen): Klassik rote Stecknadel, Neon City leuchtende lila Raute,
     /// Wild West rotes Tinten-X im Kreis, Pixel Quest Pixel-Fahne, Toy Town karierte Spielzeug-Fahne. Mirror: tools/prototype/js/poi.js
@@ -292,6 +292,14 @@ final class RouteOverlay {
                 px(2, 1, 2, 15, 0x1b1206); px(3, 1, 1, 14, 0x8a5a2b)           // Stange mit Rand
                 px(4, 1, 9, 7, 0x1b1206); px(4, 2, 8, 5, 0xe8453c); px(5, 3, 3, 2, 0xffcc33)   // Fahne
                 px(0, 15, 7, 1, 0x1b1206)                                       // Fuß
+            case .frontier:
+                if let f = UIImage(named: "fv2-destination") { // GM-068: Fahne, Fuß unten
+                    f.draw(in: CGRect(x: 2, y: 2, width: 44, height: 44))
+                    return
+                }
+                let x = UIBezierPath(ovalIn: CGRect(x: 14, y: 14, width: 20, height: 20))
+                StyleTheme.hex(0xe0a047).setFill(); x.fill()
+                StyleTheme.hex(0x303121).setStroke(); x.lineWidth = 3; x.stroke()
             case .toyTown:
                 if let f = UIImage(named: "toy-flag") { // GM-065: Codex
                     f.draw(in: CGRect(x: 4, y: 4, width: 40, height: 40))
@@ -319,7 +327,11 @@ final class RouteOverlay {
         "barber": ("scissors", .white), "hotel": ("bed.double.fill", .white), "school": ("book.fill", .white),
         "church": ("bell.fill", .white), "playground": ("figure.play", .white)
     ]
-    static let poiSuffixes = ["", "-neon", "-west", "-px", "-toy"]
+    static let poiSuffixes = ["", "-neon", "-west", "-px", "-toy", "-fv2"]
+    /// GM-068: Frontier-Zeichen (Assets Frontier/fv2-poi-<datei>) je Art
+    static let frontierPoi = ["shop": "shop", "cross": "hospital", "fuel": "fuel", "parking": "parking", "food": "food", "fastfood": "food",
+                              "coffee": "coffee", "charge": "charge", "shirt": "clothing", "cash": "bank", "cinema": "cinema", "barber": "barber",
+                              "hotel": "hotel", "school": "school", "church": "church", "playground": "playground"]
 
     /// GM-026/057: Kartensymbole je Stil – Klassik/Neon weiße (Neon teils farbige) Silhouette mit schwarzem Rand,
     /// Wild West schwarzer Knopf, Pixel Quest Item-Grafiken des Nutzers (Assets PixelQuest/px-<art>), Toy Town bunte Knöpfe
@@ -359,6 +371,7 @@ final class RouteOverlay {
             out["ez-poi-" + kind + "-west"] = UIImage(named: "west-poi-" + kind) ?? westBadge(sym) // GM-062: Codex-Knöpfe, wo vorhanden
             out["ez-poi-" + kind + "-px"] = UIImage(named: "px-" + kind).map(StylePatterns.pixelIcon) ?? StylePatterns.pixelSign(kind)
             out["ez-poi-" + kind + "-toy"] = UIImage(named: "toy-poi-" + kind) ?? StylePatterns.toyBadge(kind, symbol: sym) // GM-065: Codex
+            out["ez-poi-" + kind + "-fv2"] = frontierPoi[kind].flatMap { UIImage(named: "fv2-poi-" + $0) } ?? outlined(sym, StyleTheme.hex(0xf4e7c2))
         }
         return out
     }
@@ -559,6 +572,7 @@ final class CrosshairView: UIView {
         switch style {
         case .neonCity: return UIColor(white: 1, alpha: 0.9)
         case .wildWest: return UIColor(red: 0x9b / 255.0, green: 0x16 / 255.0, blue: 0x12 / 255.0, alpha: 0.9)
+        case .frontier: return UIColor(red: 0xf4 / 255.0, green: 0xe7 / 255.0, blue: 0xc2 / 255.0, alpha: 0.9) // GM-068: offenes cremefarbenes Kreuz
         default: return nil
         }
     }
@@ -766,7 +780,8 @@ enum StylePatterns {
         out["ez-pat-water-west"] = UIImage(named: "west-tex-water") ?? pixelTile(2) { _, _ in rgb(170, 163, 146) }
         // GM-065: Toy Town – Codex-Kacheln und Haus-Symbole ("toy-house-1" … in Assets ToyTown)
         for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment",
-                     "px-house-1", "px-house-2", "px-house-3", "px-house-4"] { // GM-067: Villager-Häuser
+                     "px-house-1", "px-house-2", "px-house-3", "px-house-4", // GM-067: Villager-Häuser
+                     "fv2-paper-grain", "fv2-forest-canopy", "fv2-grass-mottle", "fv2-rock-grain", "fv2-water-grain"] { // GM-068: Frontier-Körnung
             if let img = UIImage(named: name) { out[name] = img }
         }
         // Toy Town (gezeichnet; Codex-Kacheln weiter unten haben Vorrang)

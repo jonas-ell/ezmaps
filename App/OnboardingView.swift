@@ -74,6 +74,7 @@ struct OnboardingView: View {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
                         ForEach([MapStyle.neonCity, .wildWest, .pixelQuest, .toyTown], id: \.self) { s in styleCard(s).frame(height: 128) }
                     }
+                    styleCard(.frontier).frame(height: 112) // GM-068
                 }
             }
             Button(pick == .classic ? L("Weiter mit Klassik") : String(format: L("%@ 10 Minuten testen"), L(pick.titleKey))) {

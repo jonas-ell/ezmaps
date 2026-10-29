@@ -106,6 +106,29 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
            poi_suffix="-toy", poi_minzoom=14, place_color="#ffffff", place_halo="#2f3640", place_halo_width=2.4, place_transform="none")
 
+# GM-068: Frontier (Paket ezmaps-frontier-v2, docs/frontier-v2): gedruckte Feldkarte mit echtem Relief aus Höhendaten,
+# oliv/khaki, dichter Wald, blasses Wasser mit dunklem Ufer, schmale Sandstraßen, kleine helle Zeichen, Route Amber.
+# Höhen: Terrain Tiles (AWS Open Data, Terrarium) – Quellen-Hinweis in der Attribution.
+FRONTIER = dict(land="#A69E70", residential="#A69E70", industrial="#B4A77B", farm="#B4A77B", park="#92915A", forest="#626A3E",
+                water="#98ADB0", building="#3D3D2A", buildingEdge="#3D3D2A", rail="#69613F", casing="#69613F", label="#F4E7C2",
+                road=lambda r: "#D5C38C", widen=1.0, label_halo="#303121", label_halo_width=1.6,
+                rock="#B7AD85", water_bank="#666F4A",
+                # Breiten in px je Zoom 8/12/15/18 (ART-DIRECTION Maßstäbe), Rand je Seite 0,8 px
+                road_px={0: (1.2, 2.0, 3.4, 6.5), 1: (1.1, 1.8, 3.1, 6.0), 2: (1.0, 1.5, 2.8, 5.5), 3: (0.7, 1.2, 2.3, 4.6),
+                         4: (0.5, 1.0, 2.0, 4.0), 5: (0.4, 0.8, 1.5, 3.3), 6: (0.3, 0.6, 1.2, 2.6), 7: (0.2, 0.5, 1.0, 2.2)},
+                grain=("fv2-paper-grain", 0.45),
+                overlays=[("forest", "fv2-forest-canopy"), ("grass", "fv2-grass-mottle"), ("park", "fv2-grass-mottle"),
+                          ("rock", "fv2-rock-grain"), ("water", "fv2-water-grain")],
+                relief=dict(tiles="https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png", maxzoom=15,
+                            attribution="Höhen: <a href=\"https://registry.opendata.aws/terrain-tiles/\">Terrain Tiles</a> (SRTM, EU-DEM u. a.)",
+                            exaggeration=["interpolate", ["linear"], ["zoom"], 7, 0.9, 12, 1.0, 15, 0.75, 18, 0.4],  # Vorgabe 0,65–0,8: im Taunus zu flach
+                            shadow="#2E3520", highlight="#E2D8B4", accent="#5F5A35"),
+                overlay_opacity={"forest": ["interpolate", ["linear"], ["zoom"], 8, 0.95, 13, 0.8, 17, 0.35]},
+                poi_scale=1.45, building_opacity=0.88,
+                minzoom_shift={"minor": 12.5, "service": 14.5},
+                font="Barlow Condensed SemiBold", label_scale=0.95, letter_spacing=0.06, text_transform="none",
+                poi_suffix="-fv2", poi_minzoom=13, place_color="#F4E7C2", place_halo="#303121", place_halo_width=1.8, place_spacing=0.18)
+
 WIDTH = {0: 16, 1: 13, 2: 12, 3: 10, 4: 9, 5: 7, 6: 6, 7: 3.5}       # Meter
 MIN_PX = {0: 4.4, 1: 3.6, 2: 3, 3: 2.4, 4: 2, 5: 1.4, 6: 1.2, 7: 1}   # Bildpunkte
 WIDEN, URBAN_REACH = 1.5, 46
@@ -147,6 +170,7 @@ def build(P, title):
         fill("farm", "landcover", P["farm"], ["==", ["get", "class"], "farmland"], pattern=pat.get("farm")),
         fill("forest", "landcover", P["forest"], ["==", ["get", "class"], "wood"], pattern=pat.get("forest")),
         fill("grass", "landcover", P["park"], ["==", ["get", "class"], "grass"], pattern=pat.get("park")),
+        *([fill("rock", "landcover", P["rock"], ["in", ["get", "class"], ["literal", ["rock", "sand"]]])] if P.get("rock") else []),
         fill("park", "park", P["park"], pattern=pat.get("park")),
         fill("residential", "landuse", P["residential"], ["in", ["get", "class"], ["literal", ["residential", "suburb", "neighbourhood"]]], pattern=pat.get("residential")),
         fill("industrial", "landuse", P["industrial"], ["in", ["get", "class"], ["literal", ["industrial", "commercial", "retail", "railway", "garages"]]], pattern=pat.get("industrial")),
@@ -166,13 +190,23 @@ def build(P, title):
     widen = P["widen"]
     thin = P.get("thin_minor", False)  # Wild West: kleine Straßen als dünne braune Linien ohne Rand
     ink = P.get("ink_lines")  # GM-057: Wild West – nur eine dünne Tintenlinie je Straße
+    rpx = P.get("road_px")  # GM-068: Frontier – schmale Linien in festen px je Zoom, schmaler Rand
+    if rpx: ink = rpx
+    for cls, r in (order if rpx else []):
+        a, b, c, d = rpx[r]
+        layers.append(with_min(line(f"road-{cls}-casing", "transportation", P["casing"],
+                                    ["interpolate", ["linear"], ["zoom"], 8, a + 0.8, 12, b + 1.2, 15, c + 1.6, 18, d + 1.6], road_filter(cls)), cls, P))
+    for cls, r in (order if rpx else []):
+        a, b, c, d = rpx[r]
+        layers.append(with_min(line(f"road-{cls}", "transportation", P["road"](r),
+                                    ["interpolate", ["linear"], ["zoom"], 8, a, 12, b, 15, c, 18, d], road_filter(cls)), cls, P))
     for cls, r in (order if not ink else []):
         if thin and r >= 5:
             continue
         casing = P.get("casing_minor", P["casing"]) if r >= 4 else P["casing"]
         layers.append(with_min(line(f"road-{cls}-casing", "transportation", casing, meters(WIDTH[r] * 0.75 * widen + 3, MIN_PX[r] + 1.6), road_filter(cls)), cls, P))
         if P.get("far_simple"): layers[-1]["paint"]["line-opacity"] = ["interpolate", ["linear"], ["zoom"], 12, 0, 14, 1]  # GM-059: weit weg ohne Rand
-    for cls, r in (order if ink else []):
+    for cls, r in (order if ink and not rpx else []):
         px = ink[r]
         layers.append(with_min(line(f"road-{cls}", "transportation", P["road"](r),
                                     ["interpolate", ["linear"], ["zoom"], 8, px * 0.3, 12, px * 0.6, 15, px, 18, px * 1.6], road_filter(cls)), cls, P))
@@ -217,6 +251,31 @@ def build(P, title):
         edge = {**line("building-edge", "building", dark, w(0.8, 3.5)), "minzoom": 14}
         edge["layout"]["line-join"] = "miter"
         layers[i + 1:i + 1] = [hi, edge]
+    sources_extra = {}
+    if P.get("relief"):  # GM-068: Relief aus echten Höhen – unter Wasser, Gebäuden und Straßen, über Land und Wald
+        rl = P["relief"]
+        sources_extra["dem"] = {"type": "raster-dem", "tiles": [rl["tiles"]], "encoding": "terrarium", "tileSize": 256, "maxzoom": rl["maxzoom"],
+                                "attribution": rl["attribution"]}
+        k = next(n for n, l in enumerate(layers) if l["id"] == "water")
+        layers.insert(k, {"id": "relief", "type": "hillshade", "source": "dem",
+                          "paint": {"hillshade-illumination-direction": 315, "hillshade-illumination-anchor": "map",
+                                    "hillshade-exaggeration": rl["exaggeration"], "hillshade-shadow-color": rl["shadow"],
+                                    "hillshade-highlight-color": rl["highlight"], "hillshade-accent-color": rl["accent"]}})
+    for lid, pname in P.get("overlays", []):  # GM-068: transparente Materialkörnung nur auf der passenden Fläche
+        k = next((n for n, l in enumerate(layers) if l["id"] == lid), None)
+        if k is None: continue
+        t = json.loads(json.dumps(layers[k])); t["id"] = lid + "-tex"
+        t["paint"] = {"fill-pattern": pname, "fill-opacity": P.get("overlay_opacity", {}).get(lid,
+                      ["interpolate", ["linear"], ["zoom"], 8, 0.65, 13, 0.5, 17, 0.2] if lid != "water" else 0.35)}
+        layers.insert(k + 1, t)
+    if P.get("building_opacity"):
+        for l in layers:
+            if l["id"].startswith("building") and l["type"] == "fill": l["paint"]["fill-opacity"] = P["building_opacity"]
+    if P.get("grain"):
+        layers.insert(1, {"id": "land-grain", "type": "background", "paint": {"background-pattern": P["grain"][0], "background-opacity": P["grain"][1]}})
+    if P.get("water_bank"):
+        k = max(n for n, l in enumerate(layers) if l["id"].startswith("water"))
+        layers.insert(k + 1, line("water-bank", "water", P["water_bank"], ["interpolate", ["linear"], ["zoom"], 8, 0.6, 14, 1.2, 18, 2], ["!=", ["get", "class"], "swimming_pool"]))
     if P.get("far_flat"):  # GM-067: Muster erst ab Zoom far_flat, darunter flache Kopie
         z = P["far_flat"]
         for lid in P.get("far_flat_ids", []):
@@ -259,9 +318,9 @@ def build(P, title):
         "version": 8,
         "name": f"EzMaps {title}",
         "metadata": {"ezmaps:source": "tools/maplibre/build_style.py – Werte aus tools/prototype/js/map.js"},
-        "sources": {"openmaptiles": {"type": "vector", "url": "https://tiles.openfreemap.org/planet",
+        "sources": {**{"openmaptiles": {"type": "vector", "url": "https://tiles.openfreemap.org/planet",
                                      # GM-020: OpenFreeMap verlangt den Hinweis auf OpenMapTiles und OpenStreetMap
-                                     "attribution": "<a href=\"https://openfreemap.org\">OpenFreeMap</a> · © <a href=\"https://www.openmaptiles.org/\">OpenMapTiles</a> · © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap-Mitwirkende</a>"}},
+                                     "attribution": "<a href=\"https://openfreemap.org\">OpenFreeMap</a> · © <a href=\"https://www.openmaptiles.org/\">OpenMapTiles</a> · © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap-Mitwirkende</a>"}}, **sources_extra},
         # GM-028: Glyphen liegen in der App (Resources/Glyphs, erzeugt von build_glyphs.py) – asset:// = App-Bundle
         "glyphs": "asset://Glyphs/{fontstack}/{range}.pbf",
         "layers": layers,
@@ -291,7 +350,7 @@ def poi_layer(P):
     return {
         "id": "poi-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": P.get("poi_minzoom", 14.5),
         "filter": ["in", ["get", "class"], ["literal", list(POI)]],
-        "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, 0.5, 17, 0.72], "icon-padding": 44},  # GM-067: größer (Nutzer: „Icons zu klein“)
+        "layout": {"icon-image": match, "icon-size": ["interpolate", ["linear"], ["zoom"], 14.5, round(0.5 * P.get("poi_scale", 1), 2), 17, round(0.72 * P.get("poi_scale", 1), 2)], "icon-padding": 44},  # GM-067: größer (Nutzer: „Icons zu klein“)
     }
 
 
@@ -318,7 +377,7 @@ def place_layer(P):
 
 # Dateinamen = MapStyle.styleFileName (Core/Sources/EzMapsCore/MapStyle.swift)
 STYLES = {"classic": (CLASSIC, "Klassik"), "neon-city": (NEON, "Neon City"), "wild-west": (WESTERN, "Wild West"),
-          "pixel-quest": (PIXEL, "Pixel Quest"), "toy-town": (TOY, "Toy Town")}
+          "pixel-quest": (PIXEL, "Pixel Quest"), "toy-town": (TOY, "Toy Town"), "frontier": (FRONTIER, "Frontier")}
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 for key, (P, title) in STYLES.items():
     out = OUT_DIR / f"style-{key}.json"

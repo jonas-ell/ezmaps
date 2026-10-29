@@ -4,6 +4,7 @@
 "Wilder Westen" = "Wild West";
 "Pixel Quest" = "Pixel Quest";
 "Toy Town" = "Toy Town";
+"Frontier" = "Frontier";
 "© OpenStreetMap-Mitwirkende" = "© OpenStreetMap contributors";
 // GM-020: iPhone-Ablauf, Einstellungen, CarPlay
 "Abbrechen" = "Cancel";
@@ -187,6 +188,7 @@
 "Shop gerade nicht erreichbar" = "Store not available right now";
 "Sperrung" = "Closure";
 "Spielteppich" = "Play mat";
+"Feldkarte mit Bergrelief" = "Field map with mountain relief";
 "Sprechtempo" = "Speech rate";
 "Später" = "Later";
 "Standort erlauben" = "Allow location";
@@ -251,7 +253,7 @@
 "Eigene Karte" = "Own map";
 "Eigenes Ziel" = "Own marker";
 "Bester Deal" = "Best deal";
-"alle 5 Stile + jeder neue" = "all 5 styles + every new one";
+"alle 6 Stile + jeder neue" = "all 6 styles + every new one";
 "Nur dieser Stil" = "Just this style";
 "gehört dir für immer" = "yours forever";
 "kein Abo" = "no subscription";

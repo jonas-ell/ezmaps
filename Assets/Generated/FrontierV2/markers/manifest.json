@@ -1,0 +1,290 @@
+[
+  {
+    "id": "fv2-player",
+    "folder": "markers",
+    "base": 64,
+    "description": "Cream north-pointing player arrow with an indented tail; rotate with heading.",
+    "svg": "fv2-player.svg",
+    "files": [
+      {
+        "file": "fv2-player.png",
+        "width": 64,
+        "height": 64,
+        "scale": 1
+      },
+      {
+        "file": "fv2-player@2x.png",
+        "width": 128,
+        "height": 128,
+        "scale": 2
+      },
+      {
+        "file": "fv2-player@3x.png",
+        "width": 192,
+        "height": 192,
+        "scale": 3
+      },
+      {
+        "file": "fv2-player-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-friend-cyan",
+    "folder": "markers",
+    "base": 40,
+    "description": "cyan friend dot with short heading wedge; rotate with course.",
+    "svg": "fv2-friend-cyan.svg",
+    "files": [
+      {
+        "file": "fv2-friend-cyan.png",
+        "width": 40,
+        "height": 40,
+        "scale": 1
+      },
+      {
+        "file": "fv2-friend-cyan@2x.png",
+        "width": 80,
+        "height": 80,
+        "scale": 2
+      },
+      {
+        "file": "fv2-friend-cyan@3x.png",
+        "width": 120,
+        "height": 120,
+        "scale": 3
+      },
+      {
+        "file": "fv2-friend-cyan-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-friend-green",
+    "folder": "markers",
+    "base": 40,
+    "description": "green friend dot with short heading wedge; rotate with course.",
+    "svg": "fv2-friend-green.svg",
+    "files": [
+      {
+        "file": "fv2-friend-green.png",
+        "width": 40,
+        "height": 40,
+        "scale": 1
+      },
+      {
+        "file": "fv2-friend-green@2x.png",
+        "width": 80,
+        "height": 80,
+        "scale": 2
+      },
+      {
+        "file": "fv2-friend-green@3x.png",
+        "width": 120,
+        "height": 120,
+        "scale": 3
+      },
+      {
+        "file": "fv2-friend-green-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-friend-amber",
+    "folder": "markers",
+    "base": 40,
+    "description": "amber friend dot with short heading wedge; rotate with course.",
+    "svg": "fv2-friend-amber.svg",
+    "files": [
+      {
+        "file": "fv2-friend-amber.png",
+        "width": 40,
+        "height": 40,
+        "scale": 1
+      },
+      {
+        "file": "fv2-friend-amber@2x.png",
+        "width": 80,
+        "height": 80,
+        "scale": 2
+      },
+      {
+        "file": "fv2-friend-amber@3x.png",
+        "width": 120,
+        "height": 120,
+        "scale": 3
+      },
+      {
+        "file": "fv2-friend-amber-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-friend-selected",
+    "folder": "markers",
+    "base": 56,
+    "description": "Transparent selected-friend ring overlay.",
+    "svg": "fv2-friend-selected.svg",
+    "files": [
+      {
+        "file": "fv2-friend-selected.png",
+        "width": 56,
+        "height": 56,
+        "scale": 1
+      },
+      {
+        "file": "fv2-friend-selected@2x.png",
+        "width": 112,
+        "height": 112,
+        "scale": 2
+      },
+      {
+        "file": "fv2-friend-selected@3x.png",
+        "width": 168,
+        "height": 168,
+        "scale": 3
+      },
+      {
+        "file": "fv2-friend-selected-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-destination",
+    "folder": "markers",
+    "base": 64,
+    "description": "Cream cloth destination flag; pole foot points to destination.",
+    "svg": "fv2-destination.svg",
+    "files": [
+      {
+        "file": "fv2-destination.png",
+        "width": 64,
+        "height": 64,
+        "scale": 1
+      },
+      {
+        "file": "fv2-destination@2x.png",
+        "width": 128,
+        "height": 128,
+        "scale": 2
+      },
+      {
+        "file": "fv2-destination@3x.png",
+        "width": 192,
+        "height": 192,
+        "scale": 3
+      },
+      {
+        "file": "fv2-destination-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "bottom",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-waypoint",
+    "folder": "markers",
+    "base": 48,
+    "description": "Small amber waypoint diamond.",
+    "svg": "fv2-waypoint.svg",
+    "files": [
+      {
+        "file": "fv2-waypoint.png",
+        "width": 48,
+        "height": 48,
+        "scale": 1
+      },
+      {
+        "file": "fv2-waypoint@2x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 2
+      },
+      {
+        "file": "fv2-waypoint@3x.png",
+        "width": 144,
+        "height": 144,
+        "scale": 3
+      },
+      {
+        "file": "fv2-waypoint-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-parked-car",
+    "folder": "markers",
+    "base": 48,
+    "description": "Compact cream parked-car silhouette.",
+    "svg": "fv2-parked-car.svg",
+    "files": [
+      {
+        "file": "fv2-parked-car.png",
+        "width": 48,
+        "height": 48,
+        "scale": 1
+      },
+      {
+        "file": "fv2-parked-car@2x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 2
+      },
+      {
+        "file": "fv2-parked-car@3x.png",
+        "width": 144,
+        "height": 144,
+        "scale": 3
+      },
+      {
+        "file": "fv2-parked-car-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  }
+]

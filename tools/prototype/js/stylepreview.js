@@ -5,7 +5,7 @@
   const q = new URLSearchParams(location.search);
   const style = q.get('style') || 'neon-city', zoom = +(q.get('z') || 16.2), i0 = +(q.get('i') || 16); // Zoom: CarPlay-Kamera bei 50 km/h (440 m Höhe, 480 px)
   const THEME = { 'classic': ['#1a73e8', '#0b3d91'], 'neon-city': ['#a13df0', '#4b1a73'], 'wild-west': ['#c0261f', '#4a0d0a'],
-    'pixel-quest': ['#e0362b', '#4a0d08'], 'toy-town': ['#ff7a00', '#ffffff'] }[style];
+    'pixel-quest': ['#e0362b', '#4a0d08'], 'toy-town': ['#ff7a00', '#ffffff'], 'frontier': ['#E0A047', '#303121'] }[style];
   const rad = Math.PI / 180;
   const bearing = (a, b) => { const y = Math.sin((b[1] - a[1]) * rad) * Math.cos(b[0] * rad); const x = Math.cos(a[0] * rad) * Math.sin(b[0] * rad) - Math.sin(a[0] * rad) * Math.cos(b[0] * rad) * Math.cos((b[1] - a[1]) * rad); return (Math.atan2(y, x) / rad + 360) % 360; };
   const pts = (await (await fetch(BASE + 'tools/drive_wallrabenstein.txt')).text()).trim().split(/\s+/).map(s => s.split(',').map(Number));

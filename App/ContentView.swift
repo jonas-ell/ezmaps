@@ -736,6 +736,12 @@ struct NavPanelLook {
             return NavPanelLook(kind: .pixel, text: .white, symbol: .white,
                                 distanceFont: .custom("PressStart2P-Regular", size: 24), streetFont: .custom("PressStart2P-Regular", size: 10),
                                 actionFont: .custom("PressStart2P-Regular", size: 8), uppercaseStreet: true, showsAction: true)
+        case .frontier:
+            // GM-068: dunkles ruhiges Panel (#222719), cremefarbene Schrift
+            let cream = SwiftUI.Color(red: 0xf4 / 255.0, green: 0xe7 / 255.0, blue: 0xc2 / 255.0)
+            return NavPanelLook(kind: .glass(SwiftUI.Color(red: 0x22 / 255.0, green: 0x27 / 255.0, blue: 0x19 / 255.0)), text: cream, symbol: cream,
+                                distanceFont: .system(size: 36, weight: .heavy, design: .serif), streetFont: .system(size: 16, weight: .bold),
+                                actionFont: .system(size: 12, weight: .semibold), uppercaseStreet: false, showsAction: true)
         case .toyTown:
             return NavPanelLook(kind: .toy, text: toyInk, symbol: toyInk,
                                 distanceFont: .custom("Fredoka-Bold", size: 36), streetFont: .custom("Fredoka-Bold", size: 16),

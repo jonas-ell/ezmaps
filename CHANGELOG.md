@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-068 – Neuer Stil Frontier (Feldkarte mit echtem Bergrelief)
+
+**Ziel:** Nutzer schickt `Assets/Generated/Maneuvers/ezmaps-frontier-v2-claude.zip` („hier eine neue Map“): Paket Frontier V2 mit Zielbildern, 39 Grafiken und Gestaltungsauftrag.
+
+**Dateien:** `Assets/Generated/FrontierV2/` (Paket, ohne 1024er-Master und Atlas), `docs/frontier-v2/` (Auftrag, Zielbilder, Palette), `App/Assets.xcassets/Frontier/` (20 Zeichen, Pfeil, Fahne, Wegpunkt, Parkauto, Fadenkreuz, 5 Körnungen), `tools/maplibre/build_style.py`, `check_style.py`, `render_previews.py`, `App/MapStyles/style-frontier.json` (neu), `Core/Sources/EzMapsCore/MapStyle.swift`, `Purchases.swift`, `TestStore.swift`, `App/StyleTheme.swift`, `ContentView.swift`, `FollowCamera.swift`, `NeonMapView.swift`, `OnboardingView.swift`, `ShopScreens.swift`, `en.lproj/Localizable.strings`, `EzMaps.storekit`, `tools/mac_build.sh`, `tools/prototype/js/poi.js`, `stylepreview.js`
+
+**Geändert:**
+- Neuer Stil `frontier`: Boden oliv/khaki, Wald `#626A3E` mit feiner Kronen-Körnung, Fels, blasses Wasser mit dunklem Ufer, dunkle echte Grundrisse, schmale Sandstraßen mit Rand (Breiten je Zoom nach ART-DIRECTION), Papierkorn, Orts- und Straßennamen creme mit dunklem Halo.
+- Relief aus echten Höhen: Terrain Tiles (AWS Open Data, Terrarium), Licht 315° an die Karte gebunden, olivbrauner Schatten, kreidiges Licht; unter Wasser, Häusern und Straßen. Stärke etwas über der Vorgabe (Taunus sonst zu flach).
+- Route Amber `#E0A047` mit dunkler Einfassung, cremefarbener Pfeil, Fahne mit Fuß unten, offenes cremefarbenes Fadenkreuz beim Umschauen, dunkles Navi-Panel `#222719`.
+- Einzelkauf `ezmaps.style.frontier` (Test 29,99 €), Plus-Text „alle 6 Stile“, Onboarding-Karte, StoreKit-Testdatei.
+- Mac-Testbilder und CarPlay „frei“ mit Frontier.
+
+**Tatsächlich geprüft:** STIL OK (6 Stile, gl-style-validate); Web-Vorschau Idstein/Taunus bei Zoom 10, 11,5, 13, 14,5 und 16,5 mit dem Zielbild verglichen.
+
+**Ungetestet:** App auf dem Mac (folgt), iPhone, CarPlay. Hinweis Höhen-Quelle in der Attribution prüfen; vor dem Store Nutzungsbedingungen der Terrain Tiles klären und Produkt in App Store Connect anlegen.
+
 ## GM-067 – Pixel Quest mit Villager-Häusern, ruhige Fernansicht, größere Symbole
 
 **Ziel:** Nutzer: „Du nutzt nicht mal die Villager-Häuser für die Pixel-Quest-Map, im rausgezoomten Modus sieht die Map schlecht aus, die Icons sind zu klein.“

@@ -1,0 +1,18 @@
+{
+  "ground": "#A69E70",
+  "dry_ground": "#B4A77B",
+  "forest": "#626A3E",
+  "grass": "#92915A",
+  "rock": "#B7AD85",
+  "water": "#98ADB0",
+  "bank": "#666F4A",
+  "buildings": "#3D3D2A",
+  "road": "#D5C38C",
+  "road_casing": "#69613F",
+  "ink": "#303121",
+  "cream": "#F4E7C2",
+  "route": "#E0A047",
+  "relief_shadow": "#41482C",
+  "relief_highlight": "#D5CAA6",
+  "relief_accent": "#777044"
+}

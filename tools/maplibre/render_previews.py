@@ -13,7 +13,7 @@ from playwright.async_api import async_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 URL = "http://localhost:8765/tools/prototype/stylepreview.html"
-STYLES = ["classic", "neon-city", "wild-west", "pixel-quest", "toy-town"]
+STYLES = ["classic", "neon-city", "wild-west", "pixel-quest", "toy-town", "frontier"]
 W, H = 240, 160  # Punkte; Karten im Onboarding/Shop schneiden mit scaledToFill zu
 
 

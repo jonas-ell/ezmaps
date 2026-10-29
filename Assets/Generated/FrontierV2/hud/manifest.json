@@ -1,0 +1,218 @@
+[
+  {
+    "id": "fv2-hud-zoom-in",
+    "folder": "hud",
+    "base": 32,
+    "description": "Cream zoom-in UI glyph; mount on a dark button surface.",
+    "svg": "fv2-hud-zoom-in.svg",
+    "files": [
+      {
+        "file": "fv2-hud-zoom-in.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-hud-zoom-in@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-hud-zoom-in@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-hud-zoom-in-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-hud-zoom-out",
+    "folder": "hud",
+    "base": 32,
+    "description": "Cream zoom-out UI glyph; mount on a dark button surface.",
+    "svg": "fv2-hud-zoom-out.svg",
+    "files": [
+      {
+        "file": "fv2-hud-zoom-out.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-hud-zoom-out@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-hud-zoom-out@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-hud-zoom-out-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-hud-recenter",
+    "folder": "hud",
+    "base": 32,
+    "description": "Cream recenter UI glyph; mount on a dark button surface.",
+    "svg": "fv2-hud-recenter.svg",
+    "files": [
+      {
+        "file": "fv2-hud-recenter.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-hud-recenter@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-hud-recenter@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-hud-recenter-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-hud-volume",
+    "folder": "hud",
+    "base": 32,
+    "description": "Cream volume UI glyph; mount on a dark button surface.",
+    "svg": "fv2-hud-volume.svg",
+    "files": [
+      {
+        "file": "fv2-hud-volume.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-hud-volume@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-hud-volume@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-hud-volume-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-hud-compass",
+    "folder": "hud",
+    "base": 32,
+    "description": "Cream compass UI glyph; mount on a dark button surface.",
+    "svg": "fv2-hud-compass.svg",
+    "files": [
+      {
+        "file": "fv2-hud-compass.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-hud-compass@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-hud-compass@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-hud-compass-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-crosshair",
+    "folder": "hud",
+    "base": 256,
+    "description": "Open map-pan crosshair. Fixed viewport overlay; not a geographic marker.",
+    "svg": "fv2-crosshair.svg",
+    "files": [
+      {
+        "file": "fv2-crosshair.png",
+        "width": 256,
+        "height": 256,
+        "scale": 1
+      },
+      {
+        "file": "fv2-crosshair@2x.png",
+        "width": 512,
+        "height": 512,
+        "scale": 2
+      },
+      {
+        "file": "fv2-crosshair@3x.png",
+        "width": 768,
+        "height": 768,
+        "scale": 3
+      },
+      {
+        "file": "fv2-crosshair-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  }
+]

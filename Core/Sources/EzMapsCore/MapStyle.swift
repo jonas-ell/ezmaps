@@ -9,6 +9,7 @@ public enum MapStyle: String, CaseIterable, Codable, Sendable {
     case wildWest = "wild-west"
     case pixelQuest = "pixel-quest"
     case toyTown = "toy-town"
+    case frontier = "frontier" // GM-068: Feldkarte mit Bergrelief (Paket Frontier V2)
 
     /// Der Stil, der gratis enthalten ist (inkl. CarPlay).
     public static let free: MapStyle = .classic
@@ -21,6 +22,7 @@ public enum MapStyle: String, CaseIterable, Codable, Sendable {
         case .wildWest: return "Wild West"
         case .pixelQuest: return "Pixel Quest"
         case .toyTown: return "Toy Town"
+        case .frontier: return "Frontier"
         }
     }
 
@@ -32,6 +34,7 @@ public enum MapStyle: String, CaseIterable, Codable, Sendable {
         case .wildWest: return "Papierkarte, rote Route"
         case .pixelQuest: return "Retro-Oberwelt"
         case .toyTown: return "Spielteppich"
+        case .frontier: return "Feldkarte mit Bergrelief"
         }
     }
 
@@ -48,6 +51,7 @@ public enum MapStyle: String, CaseIterable, Codable, Sendable {
         case .wildWest: return "western"
         case .pixelQuest: return "pixel"
         case .toyTown: return "toy"
+        case .frontier: return "frontier"
         }
     }
 }

@@ -207,7 +207,7 @@ if [ -f tools/.do_testshots ]; then
     shoot "$BIG" "verweigert-karte" karte de 8
     xcrun simctl privacy "$BIG" grant location "$BID"
     # GM-051: jeder Stil auf dem großen iPhone (gegen die Referenzen des Nutzers prüfen – Stile nie gleich)
-    for ST in classic wild-west pixel-quest toy-town; do shoot "$BIG" "stil-$ST-karte" karte de 12 "$ST"; shoot "$BIG" "stil-$ST-navigation" navigation de 28 "$ST"; done
+    for ST in classic wild-west pixel-quest toy-town frontier; do shoot "$BIG" "stil-$ST-karte" karte de 12 "$ST"; shoot "$BIG" "stil-$ST-navigation" navigation de 28 "$ST"; done
   fi
   # GM-030: Absturzberichte der letzten Stunde
   find "$HOME/Library/Logs/DiagnosticReports" -name "EzMaps*" -mmin -60 2>/dev/null | while read -r R; do
@@ -266,7 +266,7 @@ OSA
   xcrun simctl location "$SID" start --speed=12.5 50.21712,8.25734 50.21780,8.25900 50.21930,8.26250 50.22010,8.26520 50.22130,8.26690 50.22230,8.26900 50.22420,8.27100 || echo "Standort-Fahrt nicht möglich"
   # GM-030: mehr CarPlay-Fälle – Ziele-Liste (Knopf „Ziele“ antippen), Ankunft, Fahrt ohne Route nachts nicht nötig
   # GM-061: freie Fahrt in jedem Stil (frei-<stil>), Rest in Neon City
-  for ENTRY in frei:14 frei-classic:14 frei-wild-west:14 frei-pixel-quest:14 frei-toy-town:14 vorschau:16 navigation:28 ankunft:30 ziele:8; do
+  for ENTRY in frei:14 frei-classic:14 frei-wild-west:14 frei-pixel-quest:14 frei-toy-town:14 frei-frontier:14 vorschau:16 navigation:28 ankunft:30 ziele:8; do
     NAME=${ENTRY%%:*}; WAIT=${ENTRY##*:}
     CSTYLE=neon-city; case "$NAME" in frei-*) CSTYLE=${NAME#frei-};; esac
     xcrun simctl terminate "$SID" "$BID" 2>/dev/null

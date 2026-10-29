@@ -1,0 +1,443 @@
+[
+  {
+    "id": "fv2-ground",
+    "type": "background",
+    "paint": {
+      "background-color": "#A69E70"
+    }
+  },
+  {
+    "id": "fv2-grain",
+    "type": "background",
+    "paint": {
+      "background-pattern": "fv2-paper-grain",
+      "background-opacity": 0.45
+    }
+  },
+  {
+    "id": "fv2-grass",
+    "type": "fill",
+    "source": "__grass__",
+    "paint": {
+      "fill-color": "#92915A"
+    }
+  },
+  {
+    "id": "fv2-grass-texture",
+    "type": "fill",
+    "source": "__grass__",
+    "paint": {
+      "fill-pattern": "fv2-grass-mottle",
+      "fill-opacity": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        8,
+        0.65,
+        13,
+        0.5,
+        17,
+        0.2
+      ]
+    }
+  },
+  {
+    "id": "fv2-forest",
+    "type": "fill",
+    "source": "__forest__",
+    "paint": {
+      "fill-color": "#626A3E"
+    }
+  },
+  {
+    "id": "fv2-forest-texture",
+    "type": "fill",
+    "source": "__forest__",
+    "paint": {
+      "fill-pattern": "fv2-forest-canopy",
+      "fill-opacity": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        8,
+        0.65,
+        13,
+        0.5,
+        17,
+        0.2
+      ]
+    }
+  },
+  {
+    "id": "fv2-rock",
+    "type": "fill",
+    "source": "__rock__",
+    "paint": {
+      "fill-color": "#B7AD85"
+    }
+  },
+  {
+    "id": "fv2-rock-texture",
+    "type": "fill",
+    "source": "__rock__",
+    "paint": {
+      "fill-pattern": "fv2-rock-grain",
+      "fill-opacity": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        8,
+        0.65,
+        13,
+        0.5,
+        17,
+        0.2
+      ]
+    }
+  },
+  {
+    "id": "fv2-relief",
+    "type": "hillshade",
+    "source": "__dem__",
+    "paint": {
+      "hillshade-illumination-direction": 315,
+      "hillshade-illumination-anchor": "map",
+      "hillshade-exaggeration": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        7,
+        0.65,
+        12,
+        0.8,
+        15,
+        0.55,
+        18,
+        0.3
+      ],
+      "hillshade-shadow-color": "#41482C",
+      "hillshade-highlight-color": "#D5CAA6",
+      "hillshade-accent-color": "#777044"
+    }
+  },
+  {
+    "id": "fv2-water",
+    "type": "fill",
+    "source": "__water__",
+    "paint": {
+      "fill-color": "#98ADB0",
+      "fill-outline-color": "#666F4A"
+    }
+  },
+  {
+    "id": "fv2-water-grain",
+    "type": "fill",
+    "source": "__water__",
+    "paint": {
+      "fill-pattern": "fv2-water-grain",
+      "fill-opacity": 0.45
+    }
+  },
+  {
+    "id": "fv2-shore",
+    "type": "line",
+    "source": "__water__",
+    "paint": {
+      "line-color": "#666F4A",
+      "line-width": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        8,
+        0.5,
+        14,
+        1.5,
+        18,
+        2
+      ],
+      "line-opacity": 0.65
+    }
+  },
+  {
+    "id": "fv2-buildings",
+    "type": "fill",
+    "minzoom": 13,
+    "source": "__buildings__",
+    "paint": {
+      "fill-color": "#3D3D2A",
+      "fill-opacity": 0.85
+    }
+  },
+  {
+    "id": "fv2-roads_minor-casing",
+    "type": "line",
+    "source": "__roads_minor__",
+    "paint": {
+      "line-color": "#69613F",
+      "line-width": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        9,
+        1.2000000000000002,
+        12,
+        1.6,
+        15,
+        2.3,
+        18,
+        4.1
+      ],
+      "line-opacity": 0.7
+    },
+    "layout": {
+      "line-cap": "round",
+      "line-join": "round"
+    }
+  },
+  {
+    "id": "fv2-roads_minor",
+    "type": "line",
+    "source": "__roads_minor__",
+    "paint": {
+      "line-color": "#D5C38C",
+      "line-width": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        9,
+        0.4,
+        12,
+        0.8,
+        15,
+        1.5,
+        18,
+        3.3
+      ]
+    },
+    "layout": {
+      "line-cap": "round",
+      "line-join": "round"
+    }
+  },
+  {
+    "id": "fv2-roads_major-casing",
+    "type": "line",
+    "source": "__roads_major__",
+    "paint": {
+      "line-color": "#69613F",
+      "line-width": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        7,
+        1.4,
+        12,
+        2.3,
+        15,
+        3.5999999999999996,
+        18,
+        6.3
+      ],
+      "line-opacity": 0.7
+    },
+    "layout": {
+      "line-cap": "round",
+      "line-join": "round"
+    }
+  },
+  {
+    "id": "fv2-roads_major",
+    "type": "line",
+    "source": "__roads_major__",
+    "paint": {
+      "line-color": "#D5C38C",
+      "line-width": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        7,
+        0.6,
+        12,
+        1.5,
+        15,
+        2.8,
+        18,
+        5.5
+      ]
+    },
+    "layout": {
+      "line-cap": "round",
+      "line-join": "round"
+    }
+  },
+  {
+    "id": "fv2-route-casing",
+    "type": "line",
+    "source": "__route__",
+    "paint": {
+      "line-color": "#303121",
+      "line-width": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        8,
+        4,
+        13,
+        6,
+        17,
+        9
+      ]
+    },
+    "layout": {
+      "line-cap": "round",
+      "line-join": "round"
+    }
+  },
+  {
+    "id": "fv2-route",
+    "type": "line",
+    "source": "__route__",
+    "paint": {
+      "line-color": "#E0A047",
+      "line-width": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        8,
+        2.5,
+        13,
+        4,
+        17,
+        6
+      ]
+    },
+    "layout": {
+      "line-cap": "round",
+      "line-join": "round"
+    }
+  },
+  {
+    "id": "fv2-poi",
+    "type": "symbol",
+    "minzoom": 11,
+    "source": "__poi__",
+    "layout": {
+      "icon-image": [
+        "get",
+        "sprite"
+      ],
+      "icon-size": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "zoom"
+        ],
+        10,
+        0.7,
+        14,
+        0.85,
+        17,
+        1
+      ],
+      "icon-padding": 10,
+      "icon-allow-overlap": false,
+      "symbol-sort-key": [
+        "get",
+        "priority"
+      ]
+    }
+  },
+  {
+    "id": "fv2-friends",
+    "type": "symbol",
+    "source": "__friends__",
+    "layout": {
+      "icon-image": [
+        "get",
+        "sprite"
+      ],
+      "icon-size": 0.8,
+      "icon-rotate": [
+        "get",
+        "bearing"
+      ],
+      "icon-rotation-alignment": "map",
+      "icon-pitch-alignment": "viewport",
+      "icon-allow-overlap": false
+    }
+  },
+  {
+    "id": "fv2-destination",
+    "type": "symbol",
+    "source": "__destination__",
+    "layout": {
+      "icon-image": "fv2-destination",
+      "icon-size": 0.7,
+      "icon-anchor": "bottom",
+      "icon-allow-overlap": true
+    }
+  },
+  {
+    "id": "fv2-player",
+    "type": "symbol",
+    "source": "__player__",
+    "layout": {
+      "icon-image": "fv2-player",
+      "icon-size": 0.8,
+      "icon-rotate": [
+        "get",
+        "bearing"
+      ],
+      "icon-rotation-alignment": "map",
+      "icon-pitch-alignment": "viewport",
+      "icon-allow-overlap": true,
+      "icon-ignore-placement": true
+    }
+  }
+]

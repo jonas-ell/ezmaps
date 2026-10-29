@@ -1,0 +1,182 @@
+[
+  {
+    "id": "fv2-paper-grain",
+    "folder": "textures",
+    "base": 256,
+    "description": "Transparent periodic paper-grain material overlay; never a replacement for real topography.",
+    "svg": null,
+    "files": [
+      {
+        "file": "fv2-paper-grain.png",
+        "width": 256,
+        "height": 256,
+        "scale": 1
+      },
+      {
+        "file": "fv2-paper-grain@2x.png",
+        "width": 512,
+        "height": 512,
+        "scale": 2
+      },
+      {
+        "file": "fv2-paper-grain@3x.png",
+        "width": 768,
+        "height": 768,
+        "scale": 3
+      },
+      {
+        "file": "fv2-paper-grain-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": true,
+    "sdf": false
+  },
+  {
+    "id": "fv2-forest-canopy",
+    "folder": "textures",
+    "base": 256,
+    "description": "Transparent periodic forest-canopy material overlay; never a replacement for real topography.",
+    "svg": null,
+    "files": [
+      {
+        "file": "fv2-forest-canopy.png",
+        "width": 256,
+        "height": 256,
+        "scale": 1
+      },
+      {
+        "file": "fv2-forest-canopy@2x.png",
+        "width": 512,
+        "height": 512,
+        "scale": 2
+      },
+      {
+        "file": "fv2-forest-canopy@3x.png",
+        "width": 768,
+        "height": 768,
+        "scale": 3
+      },
+      {
+        "file": "fv2-forest-canopy-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": true,
+    "sdf": false
+  },
+  {
+    "id": "fv2-grass-mottle",
+    "folder": "textures",
+    "base": 256,
+    "description": "Transparent periodic grass-mottle material overlay; never a replacement for real topography.",
+    "svg": null,
+    "files": [
+      {
+        "file": "fv2-grass-mottle.png",
+        "width": 256,
+        "height": 256,
+        "scale": 1
+      },
+      {
+        "file": "fv2-grass-mottle@2x.png",
+        "width": 512,
+        "height": 512,
+        "scale": 2
+      },
+      {
+        "file": "fv2-grass-mottle@3x.png",
+        "width": 768,
+        "height": 768,
+        "scale": 3
+      },
+      {
+        "file": "fv2-grass-mottle-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": true,
+    "sdf": false
+  },
+  {
+    "id": "fv2-rock-grain",
+    "folder": "textures",
+    "base": 256,
+    "description": "Transparent periodic rock-grain material overlay; never a replacement for real topography.",
+    "svg": null,
+    "files": [
+      {
+        "file": "fv2-rock-grain.png",
+        "width": 256,
+        "height": 256,
+        "scale": 1
+      },
+      {
+        "file": "fv2-rock-grain@2x.png",
+        "width": 512,
+        "height": 512,
+        "scale": 2
+      },
+      {
+        "file": "fv2-rock-grain@3x.png",
+        "width": 768,
+        "height": 768,
+        "scale": 3
+      },
+      {
+        "file": "fv2-rock-grain-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": true,
+    "sdf": false
+  },
+  {
+    "id": "fv2-water-grain",
+    "folder": "textures",
+    "base": 256,
+    "description": "Transparent periodic water-grain material overlay; never a replacement for real topography.",
+    "svg": null,
+    "files": [
+      {
+        "file": "fv2-water-grain.png",
+        "width": 256,
+        "height": 256,
+        "scale": 1
+      },
+      {
+        "file": "fv2-water-grain@2x.png",
+        "width": 512,
+        "height": 512,
+        "scale": 2
+      },
+      {
+        "file": "fv2-water-grain@3x.png",
+        "width": 768,
+        "height": 768,
+        "scale": 3
+      },
+      {
+        "file": "fv2-water-grain-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": true,
+    "sdf": false
+  }
+]
