@@ -82,7 +82,8 @@ final class RouteOverlay {
         waterTimer?.invalidate()
         waterTimer = nil
         guard on, !Self.waterFrames.isEmpty else { return }
-        waterTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) // GM-075: 0,2 s zeichnete die 3D-Karte 5× je Sekunde neu (Ruckeln) { [weak self] _ in
+        // GM-075: 0,5 s statt 0,2 s – jedes Bild zeichnete die 3D-Karte neu (Ruckeln)
+        waterTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let self, self.styleReady, let style = self.map?.style else { return }
                 self.waterFrame = (self.waterFrame + 1) % Self.waterFrames.count
