@@ -14,7 +14,9 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest (Zoom 13,5–18, schräg) und Toy Town (Zoom 13–17,5).
 
-**Ungetestet:** Mac-Lauf, iPhone, Leistung mit allen Gebäuden in 3D.
+**Tatsächlich geprüft (Nachtrag):** Mac-Lauf ALLES OK (64 Tests), 22 Simulator-Bilder, auf dem iPhone installiert. Vorschaubilder aller 6 Stile neu aus den App-Bildern (`tiles_from_app.py`), erst im nächsten Build auf dem iPhone.
+
+**Ungetestet:** Leistung mit allen Gebäuden in 3D auf dem iPhone und in CarPlay.
 
 ## GM-072 – Mängelliste Pixel Quest, Wild West, Stil-Seite; Himmel; Frontier ruckelt weniger
 
