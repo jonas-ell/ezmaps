@@ -207,7 +207,7 @@ if [ -f tools/.do_testshots ]; then
     shoot "$BIG" "verweigert-karte" karte de 8
     xcrun simctl privacy "$BIG" grant location "$BID"
     # GM-051: jeder Stil auf dem großen iPhone (gegen die Referenzen des Nutzers prüfen – Stile nie gleich)
-    for ST in classic wild-west pixel-quest toy-town frontier; do shoot "$BIG" "stil-$ST-karte" karte de 12 "$ST"; shoot "$BIG" "stil-$ST-navigation" navigation de 28 "$ST"; done
+    for ST in classic neon-city wild-west pixel-quest toy-town frontier; do shoot "$BIG" "stil-$ST-karte" karte de 12 "$ST"; shoot "$BIG" "stil-$ST-navigation" navigation de 28 "$ST"; done
   fi
   # GM-030: Absturzberichte der letzten Stunde
   find "$HOME/Library/Logs/DiagnosticReports" -name "EzMaps*" -mmin -60 2>/dev/null | while read -r R; do

@@ -2043,6 +2043,124 @@
    ]
   },
   {
+   "id": "building-3d-10",
+   "type": "fill-extrusion",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "minzoom": 14.5,
+   "filter": [
+    "all",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     10
+    ],
+    [
+     "<",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     14
+    ]
+   ],
+   "paint": {
+    "fill-extrusion-pattern": "ez-pat-brick-px",
+    "fill-extrusion-height": [
+     "*",
+     [
+      "ceil",
+      [
+       "/",
+       [
+        "coalesce",
+        [
+         "get",
+         "render_height"
+        ],
+        0
+       ],
+       4
+      ]
+     ],
+     4
+    ],
+    "fill-extrusion-base": [
+     "coalesce",
+     [
+      "get",
+      "render_min_height"
+     ],
+     0
+    ],
+    "fill-extrusion-opacity": 1
+   }
+  },
+  {
+   "id": "building-3d-14",
+   "type": "fill-extrusion",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "minzoom": 14.5,
+   "filter": [
+    "all",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     14
+    ]
+   ],
+   "paint": {
+    "fill-extrusion-pattern": "ez-pat-cobble-px",
+    "fill-extrusion-height": [
+     "*",
+     [
+      "ceil",
+      [
+       "/",
+       [
+        "coalesce",
+        [
+         "get",
+         "render_height"
+        ],
+        0
+       ],
+       4
+      ]
+     ],
+     4
+    ],
+    "fill-extrusion-base": [
+     "coalesce",
+     [
+      "get",
+      "render_min_height"
+     ],
+     0
+    ],
+    "fill-extrusion-opacity": 1
+   }
+  },
+  {
    "id": "road-names",
    "type": "symbol",
    "source": "openmaptiles",
@@ -2147,7 +2265,7 @@
       "px-house-3",
       "px-house-4"
      ],
-     14,
+     10,
      ""
     ],
     "icon-size": [
@@ -2165,7 +2283,7 @@
      19,
      1.6
     ],
-    "icon-anchor": "center",
+    "icon-anchor": "bottom",
     "icon-padding": 0,
     "icon-allow-overlap": false
    }

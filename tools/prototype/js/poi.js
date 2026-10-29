@@ -137,7 +137,7 @@ const ASSET_IMAGES = {};
 async function preloadAssetImages(base) {
   const sets = { ToyTown: ['toy-house-1', 'toy-house-2', 'toy-house-3', 'toy-house-4', 'toy-house-5', 'toy-house-6', 'toy-shop', 'toy-school', 'toy-police', 'toy-apartment'],
     PixelQuest: ['px-house-1', 'px-house-2', 'px-house-3', 'px-house-4'],
-    Frontier: ['fv2-paper-grain', 'fv2-forest-canopy', 'fv2-grass-mottle', 'fv2-rock-grain', 'fv2-water-grain'] };
+    Frontier: ['fv2-paper-grain', 'fv2-forest-canopy', 'fv2-grass-mottle', 'fv2-rock-grain', 'fv2-water-grain', 'fv2-forest-paint', 'fv2-meadow-paint'] };
   const jobs = [];
   // GM-068: Frontier-Symbole unter den Namen der Stile (ez-poi-<art>-fv2 → fv2-poi-<datei>), wie RouteOverlay in der App
   const fv2 = { shop: 'shop', cross: 'hospital', fuel: 'fuel', parking: 'parking', food: 'food', fastfood: 'food', coffee: 'coffee', charge: 'charge',

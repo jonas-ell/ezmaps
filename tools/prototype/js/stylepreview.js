@@ -15,7 +15,8 @@
   const here = pts[i0], h = bearing(here, pts[i0 + 2]);
   document.getElementById('a').src = `${BASE}App/Assets.xcassets/PlayerNeon${style === 'neon-city' ? 'Glow' : ''}.imageset/player-neon-v2${style === 'neon-city' ? '-glow' : ''}@3x.png`;
   const H = innerHeight;
-  const map = new maplibregl.Map({ container: 'm', style: st, center: [here[1], here[0]], zoom, bearing: h, attributionControl: false, interactive: false,
+  const map = new maplibregl.Map({ container: 'm', style: st, center: [here[1], here[0]], zoom, bearing: h, pitch: style === 'pixel-quest' ? 50 : 0, // GM-070: Pixel Quest 3D
+    attributionControl: false, interactive: false,
     preserveDrawingBuffer: true, padding: { top: Math.max(0, 2 * H * 0.58 - H), bottom: 0, left: 0, right: 0 } });
   window.previewMap = map; // zum Prüfen im Browser
   map.on('styleimagemissing', e => {

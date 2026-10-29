@@ -1,4 +1,5 @@
-"""GM-049: Stil-Vorschauen „wie im Einsatz in CarPlay“ aus den echten App-Stilen rendern.
+"""Veraltet seit GM-070 – Kacheln kommen aus echten App-Bildern: tools/maplibre/tiles_from_app.py.
+GM-049: Stil-Vorschauen „wie im Einsatz in CarPlay“ aus den echten App-Stilen rendern.
 
 Vorher in einem zweiten Fenster: python tools/prototype/serve.py (Server auf Port 8765, Repo-Hauptordner).
 Aufruf: python tools/maplibre/render_previews.py

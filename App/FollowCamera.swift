@@ -23,6 +23,8 @@ final class FollowCamera: NSObject {
 
     /// GM-057: Standort-Marker je Stil (Zielbilder): Neon Codex-Pfeil, Pixel Quest Marker des Nutzers, Toy Town Spielzeugauto …
     func setStyle(_ style: MapStyle) {
+        let p = RouteOverlay.pitch(for: style) // GM-070: Pixel Quest schräg (3D)
+        if pitch != p { pitch = p; lastSet = nil }
         let key = style
         guard markerStyle != key || style == .pixelQuest else { return }
         markerStyle = key
@@ -219,8 +221,7 @@ enum PlayerMarker {
         guard let img else { return RouteOverlay.arrowImage() }
         return UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { ctx in
             ctx.cgContext.interpolationQuality = .none
-            let w: CGFloat = img.size.width >= img.size.height ? 44 : 33 // GM-065: Codex-Pfeil ist quadratisch; größer (kaum sichtbar)
-            img.draw(in: CGRect(x: 30 - w / 2, y: 8, width: w, height: 44))
+            img.draw(in: CGRect(x: 10, y: 2, width: 40, height: 56)) // GM-070: Marker des Nutzers (10 × 14 Pixel), groß
         }
     }
 

@@ -85,8 +85,10 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              building_shadow=True, block_edges=("#2a1d0e", "#d2a868"),
              # GM-067: Villager-Häuser (Bilder des Nutzers) auf kleinen Gebäuden, große bleiben Blöcke
              house_icons=dict(image=["step", ["coalesce", ["get", "render_height"], 0],
-                                     ["match", ["%", ["to-number", ["id"], 0], 4], 0, "px-house-1", 1, "px-house-2", 2, "px-house-3", "px-house-4"], 14, ""],
-                              size=["interpolate", ["linear"], ["zoom"], 15, 0.65, 17, 1.1, 19, 1.6], minzoom=15),
+                                     ["match", ["%", ["to-number", ["id"], 0], 4], 0, "px-house-1", 1, "px-house-2", 2, "px-house-3", "px-house-4"], 10, ""],
+                              size=["interpolate", ["linear"], ["zoom"], 15, 0.65, 17, 1.1, 19, 1.6], minzoom=15, anchor="bottom"),
+             # GM-070: 3D – Gebäude ab 10 m als Blocktürme (Höhe in 4-m-Blöcken), Muster wie die Dächer
+             extrude=[(10, 14, "ez-pat-brick-px"), (14, None, "ez-pat-cobble-px")],
              # GM-067: weit weg flach wie eine Karte im Spiel – Felder, Dächer, Industrie ohne Muster (Streifen und Krümel)
              far_flat=13.5, far_flat_ids=["farm", "industrial", "building", "building-1", "building-2", "building-3"], building_minzoom=13,
              font="Press Start 2P Regular", label_scale=0.5, text_transform="none", letter_spacing=0, label_halo_width=1.6,
@@ -111,21 +113,22 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
 # Höhen: Terrain Tiles (AWS Open Data, Terrarium) – Quellen-Hinweis in der Attribution.
 # GM-069: Nutzer „soll wie eine gemalte Open-World-Geländekarte aussehen“ – Grün satter, Wald tiefer, Wasser kühler, Relief kräftiger
 FRONTIER = dict(land="#9C9A5E", residential="#9C9A5E", industrial="#B0A274", farm="#ADA36A", park="#86924E", forest="#4F6230",
-                water="#86A6AC", building="#3D3D2A", buildingEdge="#3D3D2A", rail="#69613F", casing="#69613F", label="#F4E7C2",
+                water="#86A6AC", building="#4A4630", buildingEdge="#4A4630", rail="#69613F", casing="#69613F", label="#F4E7C2",
                 road=lambda r: "#D5C38C", widen=1.0, label_halo="#303121", label_halo_width=1.6,
                 rock="#B7AD85", water_bank="#666F4A",
                 # Breiten in px je Zoom 8/12/15/18 (ART-DIRECTION Maßstäbe), Rand je Seite 0,8 px
                 road_px={0: (1.2, 2.0, 3.4, 6.5), 1: (1.1, 1.8, 3.1, 6.0), 2: (1.0, 1.5, 2.8, 5.5), 3: (0.7, 1.2, 2.3, 4.6),
                          4: (0.5, 1.0, 2.0, 4.0), 5: (0.4, 0.8, 1.5, 3.3), 6: (0.3, 0.6, 1.2, 2.6), 7: (0.2, 0.5, 1.0, 2.2)},
-                grain=("fv2-paper-grain", 0.45),
-                overlays=[("forest", "fv2-forest-canopy"), ("grass", "fv2-grass-mottle"), ("park", "fv2-grass-mottle"),
+                grain=("fv2-paper-grain", 0.45), meadow=("fv2-meadow-paint", 0.9),  # GM-070: gemalte Wiese überall
+                overlays=[("forest", "fv2-forest-paint"), ("grass", "fv2-grass-mottle"), ("park", "fv2-grass-mottle"),
                           ("rock", "fv2-rock-grain"), ("water", "fv2-water-grain")],
                 relief=dict(tiles="https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png", maxzoom=15,
                             attribution="Höhen: <a href=\"https://registry.opendata.aws/terrain-tiles/\">Terrain Tiles</a> (SRTM, EU-DEM u. a.)",
                             exaggeration=["interpolate", ["linear"], ["zoom"], 7, 1.0, 12, 1.0, 15, 0.8, 18, 0.45],  # Vorgabe 0,65–0,8: im Taunus zu flach
-                            shadow="#232B14", highlight="#EADFB8", accent="#4E4A26"),
-                overlay_opacity={"forest": ["interpolate", ["linear"], ["zoom"], 8, 0.95, 13, 0.8, 17, 0.35]},
-                poi_scale=1.45, building_opacity=0.88,
+                            shadow="#232B14", highlight="#EADFB8", accent="#4E4A26",
+                            broad=dict(maxzoom=10, exaggeration=0.75)),  # GM-070: große Bergrücken auch nah sichtbar
+                overlay_opacity={"forest": ["interpolate", ["linear"], ["zoom"], 8, 1, 14, 0.95, 17, 0.6]},
+                poi_scale=1.45, building_opacity=0.72,
                 minzoom_shift={"minor": 12.5, "service": 14.5},
                 font="Barlow Condensed SemiBold", label_scale=0.95, letter_spacing=0.06, text_transform="none",
                 poi_suffix="-fv2", poi_minzoom=13, place_color="#F4E7C2", place_halo="#303121", place_halo_width=1.8, place_spacing=0.18)
@@ -258,6 +261,13 @@ def build(P, title):
         sources_extra["dem"] = {"type": "raster-dem", "tiles": [rl["tiles"]], "encoding": "terrarium", "tileSize": 256, "maxzoom": rl["maxzoom"],
                                 "attribution": rl["attribution"]}
         k = next(n for n, l in enumerate(layers) if l["id"] == "water")
+        if rl.get("broad"):
+            sources_extra["dem-broad"] = {**sources_extra["dem"], "maxzoom": rl["broad"]["maxzoom"]}
+            layers.insert(k, {"id": "relief-broad", "type": "hillshade", "source": "dem-broad",
+                              "paint": {"hillshade-illumination-direction": 315, "hillshade-illumination-anchor": "map",
+                                        "hillshade-exaggeration": rl["broad"]["exaggeration"], "hillshade-shadow-color": rl["shadow"],
+                                        "hillshade-highlight-color": rl["highlight"], "hillshade-accent-color": rl["accent"]}})
+            k += 1
         layers.insert(k, {"id": "relief", "type": "hillshade", "source": "dem",
                           "paint": {"hillshade-illumination-direction": 315, "hillshade-illumination-anchor": "map",
                                     "hillshade-exaggeration": rl["exaggeration"], "hillshade-shadow-color": rl["shadow"],
@@ -272,6 +282,8 @@ def build(P, title):
     if P.get("building_opacity"):
         for l in layers:
             if l["id"].startswith("building") and l["type"] == "fill": l["paint"]["fill-opacity"] = P["building_opacity"]
+    if P.get("meadow"):
+        layers.insert(1, {"id": "land-meadow", "type": "background", "paint": {"background-pattern": P["meadow"][0], "background-opacity": P["meadow"][1]}})
     if P.get("grain"):
         layers.insert(1, {"id": "land-grain", "type": "background", "paint": {"background-pattern": P["grain"][0], "background-opacity": P["grain"][1]}})
     if P.get("water_bank"):
@@ -313,6 +325,18 @@ def build(P, title):
         layers.append({"id": "building-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "building", "minzoom": hi.get("minzoom", 15),
                        "layout": {"icon-image": hi["image"], "icon-size": hi["size"], "icon-anchor": hi.get("anchor", "center"),
                                   "icon-padding": 0, "icon-allow-overlap": False}})
+    if P.get("extrude"):  # GM-070: Pixel Quest 3D
+        h = ["coalesce", ["get", "render_height"], 0]
+        k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
+        for lo, hi_, pat_ in P["extrude"]:
+            f = ["all", [">=", h, lo]] + ([["<", h, hi_]] if hi_ else [])
+            layers.insert(k, {"id": f"building-3d-{lo}", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
+                              "minzoom": 14.5, "filter": f,
+                              "paint": {"fill-extrusion-pattern": pat_,
+                                        "fill-extrusion-height": ["*", ["ceil", ["/", h, 4]], 4],
+                                        "fill-extrusion-base": ["coalesce", ["get", "render_min_height"], 0],
+                                        "fill-extrusion-opacity": 1}})
+            k += 1
     layers.append(poi_layer(P))
     layers.append(place_layer(P))  # GM-058: Orts- und Stadtnamen (vorher keine – beim Rauszoomen kein „Frankfurt“)
     return {

@@ -2,6 +2,22 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-070 – Pixel Quest 3D mit dem Marker des Nutzers, Frontier gemalt, Vorschaubilder aus der App
+
+**Ziel:** Nutzer: „die Vorschaubilder sehen kacke aus und sind nicht mal richtig, Frontier sieht null aus wie die Referenz; Pixel Quest: nutz den Pfeil, den ich dir gegeben habe, nur größer, und mach die Map 3D.“
+
+**Dateien:** `App/Assets.xcassets/PixelQuest/px-player`, `px-player-green`, `App/Assets.xcassets/Frontier/fv2-forest-paint`, `fv2-meadow-paint` (neu), `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/FollowCamera.swift`, `App/NeonMapView.swift`, `tools/maplibre/tiles_from_app.py` (neu), `render_previews.py` (veraltet), `tools/mac_build.sh`, `tools/prototype/js/poi.js`, `stylepreview.js`
+
+**Geändert:**
+- Pixel Quest: wieder der Marker des Nutzers (weiß, grün wählbar), zugeschnitten und groß (40 × 56 pt im 60er-Bild). Der Codex-Pfeil aus GM-065 ist raus.
+- Pixel Quest 3D: Kamera 50° schräg (iPhone frei und Navigation, CarPlay), Gebäude ab 10 m als Blocktürme in 4-m-Schritten (Ziegel, ab 14 m Bruchstein), Villager-Häuser stehen mit dem Fuß auf dem Gebäude.
+- Frontier: Die Paket-Kacheln waren fast unsichtbar (Deckkraft 5–20 %). Jetzt eigene gemalte Kacheln: dichte Baumkronen mit Licht aus Nordwest und Schatten nach Südost, fleckige Wiese auf dem ganzen Land. Dazu ein zweites, weiches Relief aus gröberen Höhen (große Bergrücken auch nah), Häuser heller und durchscheinender.
+- Vorschaubilder kommen jetzt aus den Simulator-Bildern der App (`tiles_from_app.py`), nicht mehr aus der Web-Vorschau mit Ersatz-Mustern. Testbilder jetzt auch für Neon City.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Frontier (Zoom 10–16) und Pixel Quest schräg (Zoom 14,5–17,5) angesehen.
+
+**Ungetestet:** siehe Mac-Lauf; 3D-Leistung auf iPhone und CarPlay.
+
 ## GM-069 – Frontier satter, Test auf 8 Produkte
 
 **Ziel:** Nutzer: „Frontier soll wie Far Cry aussehen“ (gemalte Open-World-Geländekarte); Mac-Test schlug fehl (7 statt 8 Produkte).

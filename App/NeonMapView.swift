@@ -240,6 +240,9 @@ final class RouteOverlay {
     }
 
     /// GM-050: Pin und Fahnen stehen auf dem Ziel (Anker unten), Raute und X liegen mittig darauf
+    /// GM-070: Pixel Quest in 3D (schräge Kamera, Blocktürme), alle anderen flach von oben
+    static func pitch(for style: MapStyle) -> CGFloat { style == .pixelQuest ? 50 : 0 }
+
     static func destinationStandsUp(_ style: MapStyle) -> Bool { [.classic, .pixelQuest, .toyTown, .frontier].contains(style) }
 
     /// GM-050: Ziel-Symbol je Stil (eigene Formen): Klassik rote Stecknadel, Neon City leuchtende lila Raute,
@@ -461,6 +464,11 @@ struct NeonMapView: UIViewRepresentable {
             c.style = style
             c.overlay?.switchStyle(style)
             c.crosshair?.isHidden = true
+            if !navigating { // GM-070: Neigung je Stil auch ohne Navigation
+                let cam = map.camera
+                cam.pitch = RouteOverlay.pitch(for: style)
+                map.setCamera(cam, animated: true)
+            }
         }
         c.camera?.setStyle(style) // GM-057: Fahr-Pfeil je Stil
         if c.trailCount != trail.count {
@@ -479,7 +487,7 @@ struct NeonMapView: UIViewRepresentable {
             map.showsUserLocation = !navigating && locationAllowed // GM-022: in der Navigation zeigt unser Pfeil die Fahrposition
             if !navigating {
                 let cam = map.camera
-                cam.pitch = 0
+                cam.pitch = RouteOverlay.pitch(for: style) // GM-070: vorher immer 0
                 map.setCamera(cam, animated: true)
                 if locationAllowed { map.userTrackingMode = .follow }
             }
@@ -781,7 +789,8 @@ enum StylePatterns {
         // GM-065: Toy Town – Codex-Kacheln und Haus-Symbole ("toy-house-1" … in Assets ToyTown)
         for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment",
                      "px-house-1", "px-house-2", "px-house-3", "px-house-4", // GM-067: Villager-Häuser
-                     "fv2-paper-grain", "fv2-forest-canopy", "fv2-grass-mottle", "fv2-rock-grain", "fv2-water-grain"] { // GM-068: Frontier-Körnung
+                     "fv2-paper-grain", "fv2-forest-canopy", "fv2-grass-mottle", "fv2-rock-grain", "fv2-water-grain", // GM-068: Frontier-Körnung
+                     "fv2-forest-paint", "fv2-meadow-paint"] { // GM-070: gemalte Kacheln
             if let img = UIImage(named: name) { out[name] = img }
         }
         // Toy Town (gezeichnet; Codex-Kacheln weiter unten haben Vorrang)
