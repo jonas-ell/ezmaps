@@ -31,14 +31,6 @@
    }
   },
   {
-   "id": "land-grain",
-   "type": "background",
-   "paint": {
-    "background-pattern": "fv2-paper-grain",
-    "background-opacity": 0.45
-   }
-  },
-  {
    "id": "farm",
    "type": "fill",
    "source": "openmaptiles",
@@ -125,38 +117,6 @@
    ]
   },
   {
-   "id": "grass-tex",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "landcover",
-   "paint": {
-    "fill-pattern": "fv2-grass-mottle",
-    "fill-opacity": [
-     "interpolate",
-     [
-      "linear"
-     ],
-     [
-      "zoom"
-     ],
-     8,
-     0.65,
-     13,
-     0.5,
-     17,
-     0.2
-    ]
-   },
-   "filter": [
-    "==",
-    [
-     "get",
-     "class"
-    ],
-    "grass"
-   ]
-  },
-  {
    "id": "rock",
    "type": "fill",
    "source": "openmaptiles",
@@ -181,44 +141,6 @@
    ]
   },
   {
-   "id": "rock-tex",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "landcover",
-   "paint": {
-    "fill-pattern": "fv2-rock-grain",
-    "fill-opacity": [
-     "interpolate",
-     [
-      "linear"
-     ],
-     [
-      "zoom"
-     ],
-     8,
-     0.65,
-     13,
-     0.5,
-     17,
-     0.2
-    ]
-   },
-   "filter": [
-    "in",
-    [
-     "get",
-     "class"
-    ],
-    [
-     "literal",
-     [
-      "rock",
-      "sand"
-     ]
-    ]
-   ]
-  },
-  {
    "id": "park",
    "type": "fill",
    "source": "openmaptiles",
@@ -226,30 +148,6 @@
    "paint": {
     "fill-color": "#86924E",
     "fill-antialias": true
-   }
-  },
-  {
-   "id": "park-tex",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "park",
-   "paint": {
-    "fill-pattern": "fv2-grass-mottle",
-    "fill-opacity": [
-     "interpolate",
-     [
-      "linear"
-     ],
-     [
-      "zoom"
-     ],
-     8,
-     0.65,
-     13,
-     0.5,
-     17,
-     0.2
-    ]
    }
   },
   {
@@ -368,24 +266,6 @@
    "paint": {
     "fill-color": "#86A6AC",
     "fill-antialias": true
-   },
-   "filter": [
-    "!=",
-    [
-     "get",
-     "class"
-    ],
-    "swimming_pool"
-   ]
-  },
-  {
-   "id": "water-tex",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "water",
-   "paint": {
-    "fill-pattern": "fv2-water-grain",
-    "fill-opacity": 0.35
    },
    "filter": [
     "!=",

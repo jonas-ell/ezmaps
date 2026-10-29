@@ -221,7 +221,7 @@ enum PlayerMarker {
         guard let img else { return RouteOverlay.arrowImage() }
         return UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { ctx in
             ctx.cgContext.interpolationQuality = .none
-            img.draw(in: CGRect(x: 10, y: 2, width: 40, height: 56)) // GM-070: Marker des Nutzers (10 × 14 Pixel), groß
+            img.draw(in: CGRect(x: 15, y: 9, width: 30, height: 42)) // GM-075: etwas kleiner (verdeckte Ortsnamen)
         }
     }
 

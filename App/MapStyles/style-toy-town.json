@@ -2248,7 +2248,8 @@
     "icon-size": [
      "interpolate",
      [
-      "linear"
+      "exponential",
+      1.6
      ],
      [
       "zoom"
@@ -2256,9 +2257,11 @@
      15,
      0.4,
      17,
-     0.7,
+     0.75,
      19,
-     1.05
+     1.9,
+     20,
+     2.8
     ],
     "icon-anchor": "center",
     "icon-padding": 0,

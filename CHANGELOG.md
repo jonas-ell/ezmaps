@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-075 – Ruckeln Pixel Quest und Frontier, Toy-Town-Häuschen nah größer
+
+**Ziel:** Nutzer schickt 16 iPhone-Bilder: „schau, was verbesserungsbedürftig ist, die neue Map laggt“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `App/FollowCamera.swift`
+
+**Geändert:**
+- Pixel Quest: unter Zoom 15 ein einziger einfarbiger Block-Layer statt vier Muster-Layern (Muster-Extrusion ist teuer, schräge Kamera lädt viele Kacheln). Wasser-Animation 0,5 s statt 0,2 s (jedes Bild zeichnete die ganze 3D-Karte neu). Kleine Häuser gemischt Eiche/Fichte. Marker etwas kleiner (verdeckte Ortsnamen).
+- Frontier: nur noch Wald-Körnung, kein Vollbild-Papierkorn und keine Wiesen-/Fels-/Wasser-Körnung (bis die gemalten Kacheln kommen).
+- Toy Town: Häuschen wachsen nah mit (vorher kleines Haus auf großer roter Fläche).
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest Zoom 13,5–18.
+
+**Ungetestet:** Mac-Lauf, Ruckeln auf dem iPhone.
+
 ## GM-074 – Frontier: Grundlage für gemalte Kartenkacheln (Daten, Rechen-Skript, Codex-Prompts)
 
 **Ziel:** Nutzer: „ja gut, hol das alles und für Assets gib Prompts“ (gemalter Frontier-Look über vorberechnete Bildkacheln).

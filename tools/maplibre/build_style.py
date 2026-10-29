@@ -90,7 +90,7 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              # GM-073: Nutzer „die Häuser-Kacheln dürfen nie zu sehen sein, immer ein hochgezogenes 3D-Modell“ – jedes Gebäude ist ein Block
              # (Höhe in 4-m-Schritten, mindestens 1 Block), Holz/Fichte/Ziegel/Bruchstein nach Höhe; Villager-Bilder raus (bis 3D-Modelle kommen)
              extrude=[(0, 8, "ez-pat-oak-px"), (8, 12, "ez-pat-spruce-px"), (12, 16, "ez-pat-brick-px"), (16, None, "ez-pat-cobble-px")],
-             extrude_only=True, extrude_minzoom=13,
+             extrude_only=True, extrude_minzoom=15, extrude_far=(13, "#7a5a32"),  # GM-075: ruckelte – unter Zoom 15 einfarbig
              label_spacing=420, casing_add=(0.8, 0.8), water_line_pattern="ez-pat-water-px",
              zoom_patterns=["ez-pat-grass-px", "ez-pat-leaves-px", "ez-pat-farm-px", "ez-pat-stone-px"],  # GM-072: Blöcke wachsen beim Zoomen
              # GM-067: weit weg flach wie eine Karte im Spiel – Felder, Dächer, Industrie ohne Muster (Streifen und Krümel)
@@ -108,7 +108,7 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
                                     3, "toy-house-4", 4, "toy-house-5", "toy-house-6"],
                                    10, ["match", ["%", ["to-number", ["id"], 0], 3], 0, "toy-shop", 1, "toy-school", "toy-police"],
                                    14, "toy-apartment"],
-                            size=["interpolate", ["linear"], ["zoom"], 15, 0.4, 17, 0.7, 19, 1.05]),  # GM-067: größer
+                            size=["interpolate", ["exponential", 1.6], ["zoom"], 15, 0.4, 17, 0.75, 19, 1.9, 20, 2.8]),  # GM-075: nah mitwachsen
            water_edge="#f2d48b", road_dash="#ffffff", building_ink="#2f3640",
            textile=("toy-tex-weave", 0.75),  # GM-071: Teppich-Flor über allem (Nutzer: „wirkliche Teppich-Grafiken mit Textil-Details“)
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
@@ -125,9 +125,8 @@ FRONTIER = dict(land="#9C9A5E", residential="#9C9A5E", industrial="#B0A274", far
                 # Breiten in px je Zoom 8/12/15/18 (ART-DIRECTION Maßstäbe), Rand je Seite 0,8 px
                 road_px={0: (1.2, 2.0, 3.4, 6.5), 1: (1.1, 1.8, 3.1, 6.0), 2: (1.0, 1.5, 2.8, 5.5), 3: (0.7, 1.2, 2.3, 4.6),
                          4: (0.5, 1.0, 2.0, 4.0), 5: (0.4, 0.8, 1.5, 3.3), 6: (0.3, 0.6, 1.2, 2.6), 7: (0.2, 0.5, 1.0, 2.2)},
-                grain=("fv2-paper-grain", 0.45),  # GM-072: Wiesen-Kachel und zweites Relief raus (ruckelte)
-                overlays=[("forest", "fv2-forest-canopy"), ("grass", "fv2-grass-mottle"), ("park", "fv2-grass-mottle"),
-                          ("rock", "fv2-rock-grain"), ("water", "fv2-water-grain")],
+                # GM-075: ruckelte weiter – nur noch Wald-Körnung, kein Vollbild-Papierkorn (bis die gemalten Kacheln kommen)
+                overlays=[("forest", "fv2-forest-canopy")],
                 relief=dict(tiles="https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png", maxzoom=15,
                             attribution="Höhen: <a href=\"https://registry.opendata.aws/terrain-tiles/\">Terrain Tiles</a> (SRTM, EU-DEM u. a.)",
                             exaggeration=["interpolate", ["linear"], ["zoom"], 7, 1.0, 12, 1.0, 15, 0.8, 18, 0.45],  # Vorgabe 0,65–0,8: im Taunus zu flach
@@ -364,8 +363,22 @@ def build(P, title):
         if P.get("extrude_only"):  # GM-073: keine flachen Gebäude, Schatten oder Kanten mehr
             layers[:] = [l for l in layers if not (l.get("source-layer") == "building" and l["type"] in ("fill", "line"))]
             k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
+        if P.get("extrude_far"):  # GM-075: weit weg ein einfarbiger Block-Layer (Muster-Extrusion ist teuer)
+            z0, col = P["extrude_far"]
+            layers.insert(k, {"id": "building-3d-far", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
+                              "minzoom": z0, "maxzoom": P.get("extrude_minzoom", 15),
+                              "paint": {"fill-extrusion-color": col, "fill-extrusion-height": ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]],
+                                        "fill-extrusion-base": 0, "fill-extrusion-vertical-gradient": True}})
+            k += 1
         for lo, hi_, pat_ in P["extrude"]:
             f = ["all", [">=", h, lo]] + ([["<", h, hi_]] if hi_ else [])
+            if lo == 0:  # GM-075: kleine Häuser gemischt Eiche/Fichte (vorher alles gleich braun)
+                f = ["all", ["<", h, hi_], ["!=", ["%", ["to-number", ["id"], 0], 3], 0]]
+                layers.insert(k, {**json.loads(json.dumps({"id": "building-3d-spruce", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
+                              "minzoom": P.get("extrude_minzoom", 14.5), "filter": ["all", ["<", h, hi_], ["==", ["%", ["to-number", ["id"], 0], 3], 0]],
+                              "paint": {"fill-extrusion-pattern": "ez-pat-spruce-px", "fill-extrusion-height": ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]],
+                                        "fill-extrusion-base": 0, "fill-extrusion-opacity": 1}}))})
+                k += 1
             layers.insert(k, {"id": f"building-3d-{lo}", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
                               "minzoom": P.get("extrude_minzoom", 14.5), "filter": f,
                               "paint": {"fill-extrusion-pattern": pat_,

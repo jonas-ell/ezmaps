@@ -1761,25 +1761,49 @@
    ]
   },
   {
-   "id": "building-3d-0",
+   "id": "building-3d-far",
    "type": "fill-extrusion",
    "source": "openmaptiles",
    "source-layer": "building",
    "minzoom": 13,
+   "maxzoom": 15,
+   "paint": {
+    "fill-extrusion-color": "#7a5a32",
+    "fill-extrusion-height": [
+     "max",
+     4,
+     [
+      "*",
+      [
+       "ceil",
+       [
+        "/",
+        [
+         "coalesce",
+         [
+          "get",
+          "render_height"
+         ],
+         0
+        ],
+        4
+       ]
+      ],
+      4
+     ]
+    ],
+    "fill-extrusion-base": 0,
+    "fill-extrusion-vertical-gradient": true
+   }
+  },
+  {
+   "id": "building-3d-spruce",
+   "type": "fill-extrusion",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "minzoom": 15,
    "filter": [
     "all",
-    [
-     ">=",
-     [
-      "coalesce",
-      [
-       "get",
-       "render_height"
-      ],
-      0
-     ],
-     0
-    ],
     [
      "<",
      [
@@ -1791,6 +1815,86 @@
       0
      ],
      8
+    ],
+    [
+     "==",
+     [
+      "%",
+      [
+       "to-number",
+       [
+        "id"
+       ],
+       0
+      ],
+      3
+     ],
+     0
+    ]
+   ],
+   "paint": {
+    "fill-extrusion-pattern": "ez-pat-spruce-px",
+    "fill-extrusion-height": [
+     "max",
+     4,
+     [
+      "*",
+      [
+       "ceil",
+       [
+        "/",
+        [
+         "coalesce",
+         [
+          "get",
+          "render_height"
+         ],
+         0
+        ],
+        4
+       ]
+      ],
+      4
+     ]
+    ],
+    "fill-extrusion-base": 0,
+    "fill-extrusion-opacity": 1
+   }
+  },
+  {
+   "id": "building-3d-0",
+   "type": "fill-extrusion",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "minzoom": 15,
+   "filter": [
+    "all",
+    [
+     "<",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     8
+    ],
+    [
+     "!=",
+     [
+      "%",
+      [
+       "to-number",
+       [
+        "id"
+       ],
+       0
+      ],
+      3
+     ],
+     0
     ]
    ],
    "paint": {
@@ -1834,7 +1938,7 @@
    "type": "fill-extrusion",
    "source": "openmaptiles",
    "source-layer": "building",
-   "minzoom": 13,
+   "minzoom": 15,
    "filter": [
     "all",
     [
@@ -1903,7 +2007,7 @@
    "type": "fill-extrusion",
    "source": "openmaptiles",
    "source-layer": "building",
-   "minzoom": 13,
+   "minzoom": 15,
    "filter": [
     "all",
     [
@@ -1972,7 +2076,7 @@
    "type": "fill-extrusion",
    "source": "openmaptiles",
    "source-layer": "building",
-   "minzoom": 13,
+   "minzoom": 15,
    "filter": [
     "all",
     [
