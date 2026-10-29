@@ -25,7 +25,7 @@ async def main():
         for st in STYLES:
             # in CarPlay-Größe rendern (720 × 480 = 3× der Vorschau) – dann ist es ein verkleinertes CarPlay-Bild
             pg = await b.new_page(viewport={"width": W * 3, "height": H * 3}, device_scale_factor=1)
-            await pg.goto(f"{URL}?style={st}")
+            await pg.goto(f"{URL}?style={st}" + ("&z=12.3" if st == "frontier" else ""))  # GM-069: Frontier zeigt das Gelände
             await pg.wait_for_function("document.title == 'ready'", timeout=120000)
             out = shots / f"{st}.png"
             await pg.screenshot(path=str(out))

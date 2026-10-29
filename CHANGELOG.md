@@ -12,6 +12,8 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Tatsächlich geprüft:** STIL OK; Web-Vorschau Idstein bei 5 Zoomstufen angesehen.
 
+**Nachtrag:** Vorschaubilder aller Stile neu (`render_previews.py`), Frontier weiter herausgezoomt (Zoom 12,3), damit das Gelände zu sehen ist; `StyleTiles/style-frontier` neu.
+
 **Ungetestet:** siehe Mac-Lauf, iPhone, CarPlay.
 
 ## GM-068 – Neuer Stil Frontier (Feldkarte mit echtem Bergrelief)
