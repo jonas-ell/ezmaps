@@ -188,7 +188,18 @@ enum PlayerMarker {
         case .wildWest:
             // GM-064: Codex-Pfeil, sonst gezeichnet
             let a = UIImage(named: "west-arrow").map { img in
-                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { _ in img.draw(in: CGRect(x: 4, y: 4, width: 52, height: 52)) }
+                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { ctx in
+                    // GM-066: dunkler Tintenrand + Schatten – heller Pfeil war auf dem Papier kaum zu sehen (Testbild)
+                    let r = CGRect(x: 4, y: 4, width: 52, height: 52)
+                    let ink = img.withTintColor(StyleTheme.hex(0x2b1a10), renderingMode: .alwaysOriginal)
+                    ctx.cgContext.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.45).cgColor)
+                    ink.draw(in: r.offsetBy(dx: 0, dy: 1))
+                    ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
+                    for (dx, dy) in [(-2.0, 0.0), (2.0, 0.0), (0.0, -2.0), (0.0, 2.0), (-1.5, -1.5), (1.5, -1.5), (-1.5, 1.5), (1.5, 1.5)] {
+                        ink.draw(in: r.offsetBy(dx: dx, dy: dy))
+                    }
+                    img.draw(in: r)
+                }
             } ?? arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60)
             return (a, a)
         case .classic:

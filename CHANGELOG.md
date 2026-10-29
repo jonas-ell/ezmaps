@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-066 – Wild-West-Pfeil mit dunklem Rand
+
+**Ziel:** Nutzer: „schau ins repo und mach weiter“, App aufs iPhone. Fehlersuche in den neuen iPhone-Testbildern (GM-065).
+
+**Dateien:** `App/FollowCamera.swift`
+
+**Geändert:** Wild-West-Standortpfeil bekommt einen dunklen Tintenrand und einen weichen Schatten. Auf den Testbildern war der helle Pfeil ohne Navigation auf dem Papier kaum zu sehen.
+
+**Tatsächlich geprüft:** iPhone-Testbilder GM-065 (Simulator): Klassik-Pfeil, Pixel-Pfeil (weiß), Toy-Town-Auto und Spielzeughäuser sichtbar; Wild-West-Pfeil zu schwach (behoben in diesem Eintrag).
+
+**Ungetestet:** neuer Rand selbst (Mac-Lauf folgt), CarPlay.
+
 ## GM-065 – Toy Town mit Codex-Grafiken, Pixel-Pfeil von Codex, Standort-Marker sichtbar
 
 **Ziel:** Nutzer schickt ZIP mit den Toy-Town- und Pixel-Quest-Grafiken; „Standort-Pfeil wird nicht angezeigt“; Screenshots mobil und CarPlay, Fehler suchen.
