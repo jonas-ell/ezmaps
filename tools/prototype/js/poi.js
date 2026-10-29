@@ -142,7 +142,11 @@ async function preloadAssetImages(base) {
   // GM-068: Frontier-Symbole unter den Namen der Stile (ez-poi-<art>-fv2 → fv2-poi-<datei>), wie RouteOverlay in der App
   const fv2 = { shop: 'shop', cross: 'hospital', fuel: 'fuel', parking: 'parking', food: 'food', fastfood: 'food', coffee: 'coffee', charge: 'charge',
     shirt: 'clothing', cash: 'bank', cinema: 'cinema', barber: 'barber', hotel: 'hotel', school: 'school', church: 'church', playground: 'playground' };
-  for (const [k, f] of Object.entries(fv2)) jobs.push(new Promise(ok => { const im = new Image(); im.onload = () => { ASSET_IMAGES[`ez-poi-${k}-fv2`] = im; ok(); };
+  for (const [k, f] of Object.entries(fv2)) jobs.push(new Promise(ok => { const im = new Image(); im.onload = () => { // GM-076: dunkler runder Knopf wie im Zielbild (App: RouteOverlay.poiImages)
+    const c = document.createElement('canvas'); c.width = c.height = 80; const g = c.getContext('2d');
+    g.fillStyle = 'rgba(34,39,25,0.92)'; g.beginPath(); g.arc(40, 40, 34, 0, 7); g.fill();
+    g.strokeStyle = 'rgba(244,231,194,0.55)'; g.lineWidth = 2; g.stroke(); g.drawImage(im, 16, 16, 48, 48);
+    ASSET_IMAGES[`ez-poi-${k}-fv2`] = g.getImageData(0, 0, 80, 80); ok(); };
     im.onerror = ok; im.src = `${base}App/Assets.xcassets/Frontier/fv2-poi-${f}.imageset/fv2-poi-${f}@2x.png`; }));
   // GM-072: Wild-West-Kacheln wie in der App (StylePatterns: west-tex-* haben Vorrang)
   for (const [k, f] of Object.entries({ 'ez-pat-paper-west': 'west-tex-paper', 'ez-pat-forest-west': 'west-tex-forest', 'ez-pat-water-west': 'west-tex-water' }))

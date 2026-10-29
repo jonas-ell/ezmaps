@@ -126,13 +126,13 @@ FRONTIER = dict(land="#9C9A5E", residential="#9C9A5E", industrial="#B0A274", far
                 road_px={0: (1.2, 2.0, 3.4, 6.5), 1: (1.1, 1.8, 3.1, 6.0), 2: (1.0, 1.5, 2.8, 5.5), 3: (0.7, 1.2, 2.3, 4.6),
                          4: (0.5, 1.0, 2.0, 4.0), 5: (0.4, 0.8, 1.5, 3.3), 6: (0.3, 0.6, 1.2, 2.6), 7: (0.2, 0.5, 1.0, 2.2)},
                 # GM-075: ruckelte weiter – nur noch Wald-Körnung, kein Vollbild-Papierkorn (bis die gemalten Kacheln kommen)
-                overlays=[("forest", "fv2-forest-canopy")],
-                relief=dict(tiles="https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png", maxzoom=15,
+                overlays=[],  # GM-076: auch Wald-Körnung raus (Ruckeln)
+                relief=dict(tiles="https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png", maxzoom=11,  # GM-076: vorher 15 – jede Kachel neu laden und schattieren ruckelte extrem
                             attribution="Höhen: <a href=\"https://registry.opendata.aws/terrain-tiles/\">Terrain Tiles</a> (SRTM, EU-DEM u. a.)",
                             exaggeration=["interpolate", ["linear"], ["zoom"], 7, 1.0, 12, 1.0, 15, 0.8, 18, 0.45],  # Vorgabe 0,65–0,8: im Taunus zu flach
                             shadow="#232B14", highlight="#EADFB8", accent="#4E4A26"),
                 overlay_opacity={"forest": ["interpolate", ["linear"], ["zoom"], 8, 1, 14, 0.95, 17, 0.6]},
-                poi_scale=1.45, building_opacity=0.72,
+                poi_scale=1.0, building_opacity=0.72,
                 minzoom_shift={"minor": 12.5, "service": 14.5},
                 font="Barlow Condensed SemiBold", label_scale=0.95, letter_spacing=0.06, text_transform="none",
                 poi_suffix="-fv2", poi_minzoom=13, place_color="#F4E7C2", place_halo="#303121", place_halo_width=1.8, place_spacing=0.18)

@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-076 – Frontier: Knopf-Symbole wie im Zielbild, Ruckeln; Neon-Pfeil nach Stilwechsel winzig
+
+**Ziel:** Nutzer: Frontier „ruckelt extremst und du hast die falschen Icons genutzt“; „wieso ist der Pfeil bei Neon City auf einmal so klein?!“.
+
+**Dateien:** `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-frontier.json`, `tools/prototype/js/poi.js`
+
+**Geändert:**
+- Frontier-Symbole: helles Zeichen aus dem Paket auf dunklem runden Knopf (#222719) wie im Navigations-Zielbild. Vorher freistehende Zeichen, die das Paket so lieferte, die aber nicht zum Zielbild passten. Wieder normale Größe.
+- Frontier-Ruckeln: Höhen nur bis Zoom 11 laden (vorher 15 – jede neue Kachel wurde geladen und schattiert), Wald-Körnung raus.
+- Standort-Pfeil: Beim Stilwechsel wurde der Rahmen gesetzt, während der Pfeil gedreht war. iOS verkleinert ihn dann (Neon-Pfeil winzig nach Toy Town oder Wild West). Größe jetzt über bounds/center.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Frontier Zoom 11–16,5.
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
 ## GM-075 – Ruckeln Pixel Quest und Frontier, Toy-Town-Häuschen nah größer
 
 **Ziel:** Nutzer schickt 16 iPhone-Bilder: „schau, was verbesserungsbedürftig ist, die neue Map laggt“.

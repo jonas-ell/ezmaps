@@ -17,7 +17,7 @@
    ],
    "encoding": "terrarium",
    "tileSize": 256,
-   "maxzoom": 15,
+   "maxzoom": 11,
    "attribution": "Höhen: <a href=\"https://registry.opendata.aws/terrain-tiles/\">Terrain Tiles</a> (SRTM, EU-DEM u. a.)"
   }
  },
@@ -56,38 +56,6 @@
    "paint": {
     "fill-color": "#4F6230",
     "fill-antialias": true
-   },
-   "filter": [
-    "==",
-    [
-     "get",
-     "class"
-    ],
-    "wood"
-   ]
-  },
-  {
-   "id": "forest-tex",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "landcover",
-   "paint": {
-    "fill-pattern": "fv2-forest-canopy",
-    "fill-opacity": [
-     "interpolate",
-     [
-      "linear"
-     ],
-     [
-      "zoom"
-     ],
-     8,
-     1,
-     14,
-     0.95,
-     17,
-     0.6
-    ]
    },
    "filter": [
     "==",
@@ -1414,9 +1382,9 @@
       "zoom"
      ],
      14.5,
-     0.72,
+     0.5,
      17,
-     1.04
+     0.72
     ],
     "icon-padding": 44
    }

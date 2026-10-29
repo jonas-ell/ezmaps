@@ -380,7 +380,16 @@ final class RouteOverlay {
             out["ez-poi-" + kind + "-west"] = UIImage(named: "west-poi-" + kind) ?? westBadge(sym) // GM-062: Codex-Knöpfe, wo vorhanden
             out["ez-poi-" + kind + "-px"] = UIImage(named: "px-" + kind).map(StylePatterns.pixelIcon) ?? StylePatterns.pixelSign(kind)
             out["ez-poi-" + kind + "-toy"] = UIImage(named: "toy-poi-" + kind) ?? StylePatterns.toyBadge(kind, symbol: sym) // GM-065: Codex
-            out["ez-poi-" + kind + "-fv2"] = frontierPoi[kind].flatMap { UIImage(named: "fv2-poi-" + $0) } ?? outlined(sym, StyleTheme.hex(0xf4e7c2))
+            // GM-076: wie im Zielbild – helles Zeichen auf dunklem runden Knopf (vorher freistehend, Nutzer: „falsche Icons“)
+            let glyph = frontierPoi[kind].flatMap { UIImage(named: "fv2-poi-" + $0) } ?? outlined(sym, StyleTheme.hex(0xf4e7c2))
+            out["ez-poi-" + kind + "-fv2"] = UIGraphicsImageRenderer(size: CGSize(width: 40, height: 40)).image { ctx in
+                let r = CGRect(x: 3, y: 3, width: 34, height: 34)
+                ctx.cgContext.setShadow(offset: CGSize(width: 0, height: 1), blur: 2, color: UIColor.black.withAlphaComponent(0.4).cgColor)
+                StyleTheme.hex(0x222719).withAlphaComponent(0.92).setFill(); ctx.cgContext.fillEllipse(in: r)
+                ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
+                StyleTheme.hex(0xf4e7c2).withAlphaComponent(0.55).setStroke(); ctx.cgContext.setLineWidth(1); ctx.cgContext.strokeEllipse(in: r.insetBy(dx: 0.5, dy: 0.5))
+                glyph?.draw(in: CGRect(x: 8, y: 8, width: 24, height: 24))
+            }
         }
         return out
     }
@@ -679,7 +688,9 @@ final class PlayerLocationView: MLNUserLocationAnnotationView {
             arrow.image = style == .neonCity ? PlayerLocationView.image : PlayerMarker.images(for: style).plain
             let size: CGFloat = style == .neonCity ? 30 : 46 // GM-065: vorher 34 – Marker kaum sichtbar
             frame.size = CGSize(width: size, height: size)
-            arrow.frame = bounds
+            // GM-076: frame bei gedrehtem Pfeil verkleinert ihn (Neon-Pfeil nach Stilwechsel winzig) – Größe über bounds/center
+            arrow.bounds = CGRect(x: 0, y: 0, width: size, height: size)
+            arrow.center = CGPoint(x: size / 2, y: size / 2)
             arrow.contentMode = .scaleAspectFit
             arrow.layer.magnificationFilter = style == .pixelQuest ? .nearest : .linear
         }
