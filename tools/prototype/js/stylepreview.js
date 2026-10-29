@@ -19,6 +19,7 @@
     attributionControl: false, interactive: false,
     preserveDrawingBuffer: true, padding: { top: Math.max(0, 2 * H * 0.58 - H), bottom: 0, left: 0, right: 0 } });
   window.previewMap = map; // zum Prüfen im Browser
+  map.on('styledata', () => addAssetImages(map));
   map.on('styleimagemissing', e => {
     const img = styleImage(e.id); if (img && !map.hasImage(e.id)) map.addImage(e.id, img.data, { pixelRatio: img.pixelRatio });
   });

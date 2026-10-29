@@ -11,7 +11,9 @@ final class PurchaseManager {
     static let shared = PurchaseManager()
 
     private(set) var products: [String: Product] = [:]
-    private(set) var access = StyleAccess()
+    /// GM-071: beim Start der zuletzt bekannte Stand – sonst zeigte die App erst Klassik und sprang nach der
+    /// App-Store-Antwort zum gewählten Stil (Nutzer). refreshEntitlements korrigiert kurz danach.
+    private(set) var access = StyleAccess(owned: Set(UserDefaults.standard.stringArray(forKey: "ownedCache") ?? []))
     private(set) var isBusy = false
     /// Kurzer Fehlertext für die Paywall
     var errorText: String?
@@ -70,6 +72,7 @@ final class PurchaseManager {
         }
         if testMode { owned.formUnion(UserDefaults.standard.stringArray(forKey: testKey) ?? []) }
         access = StyleAccess(owned: owned)
+        UserDefaults.standard.set(Array(owned), forKey: "ownedCache")
     }
 
     func price(_ id: String) -> String? { products[id]?.displayPrice ?? (testMode ? TestStore.price(id) : nil) }

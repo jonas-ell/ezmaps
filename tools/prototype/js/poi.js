@@ -135,7 +135,7 @@ function toyBadge(kind) {
 // GM-067: Haus-Bilder wie in der App aus dem Asset-Katalog (Toy Town: Spielzeughäuser, Pixel Quest: Villager-Häuser) – vor der Karte laden
 const ASSET_IMAGES = {};
 async function preloadAssetImages(base) {
-  const sets = { ToyTown: ['toy-house-1', 'toy-house-2', 'toy-house-3', 'toy-house-4', 'toy-house-5', 'toy-house-6', 'toy-shop', 'toy-school', 'toy-police', 'toy-apartment'],
+  const sets = { ToyTown: ['toy-house-1', 'toy-house-2', 'toy-house-3', 'toy-house-4', 'toy-house-5', 'toy-house-6', 'toy-shop', 'toy-school', 'toy-police', 'toy-apartment', 'toy-tex-weave'],
     PixelQuest: ['px-house-1', 'px-house-2', 'px-house-3', 'px-house-4'],
     Frontier: ['fv2-paper-grain', 'fv2-forest-canopy', 'fv2-grass-mottle', 'fv2-rock-grain', 'fv2-water-grain', 'fv2-forest-paint', 'fv2-meadow-paint'] };
   const jobs = [];
@@ -149,6 +149,11 @@ async function preloadAssetImages(base) {
       im.src = `${base}App/Assets.xcassets/${dir}/${n}.imageset/${n}@2x.png`; }));
   }
   await Promise.all(jobs);
+}
+
+// GM-071: Asset-Bilder gleich beim Stil-Laden anmelden – Hintergrund-Muster lösen kein styleimagemissing aus (wie die App: alle beim Laden)
+function addAssetImages(map) {
+  for (const [k, im] of Object.entries(ASSET_IMAGES)) if (!map.hasImage(k)) map.addImage(k, im, { pixelRatio: 2 });
 }
 
 // Bild für einen fehlenden Namen (styleimagemissing): Symbole und Muster aller Stile; pixelRatio dazu

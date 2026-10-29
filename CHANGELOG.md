@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-071 – Toy Town als echter Teppich, kein Klassik-Blitz beim Start
+
+**Ziel:** Nutzer: „Toy Town sieht null wie der Spielteppich aus, wirkliche Teppich-Grafiken mit Textil-Details“; „beim Start sieht man erst die Standard-Map, dann wechselt es zur ausgewählten“.
+
+**Dateien:** `App/Assets.xcassets/ToyTown/toy-tex-weave` (neu), `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `App/NeonMapView.swift`, `App/PurchaseManager.swift`, `tools/prototype/js/poi.js`, `stylepreview.js`, `live.js`
+
+**Geändert:**
+- Toy Town: Teppich-Flor (getuftete Schlingen mit Licht oben links, Schatten unten rechts, lose Fasern, nahtlos) liegt ab Zoom 12 über Rasen, Straßen und Häusern, unter Schrift, Häuschen und Symbolen.
+- Start: Die App merkt sich die gekauften Produkte (`ownedCache`) und zeigt sofort den gewählten Stil. Vorher galt bis zur App-Store-Antwort nichts als gekauft, also kam erst Klassik.
+- Prototyp meldet Asset-Bilder beim Stil-Laden an (Hintergrund-Muster fragen nicht nach).
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Toy Town bei Zoom 13–17,5 angesehen.
+
+**Ungetestet:** siehe Mac-Lauf; Start auf dem iPhone.
+
 ## GM-070 – Pixel Quest 3D mit dem Marker des Nutzers, Frontier gemalt, Vorschaubilder aus der App
 
 **Ziel:** Nutzer: „die Vorschaubilder sehen kacke aus und sind nicht mal richtig, Frontier sieht null aus wie die Referenz; Pixel Quest: nutz den Pfeil, den ich dir gegeben habe, nur größer, und mach die Map 3D.“

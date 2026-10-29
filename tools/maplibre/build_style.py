@@ -105,6 +105,7 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
                                    14, "toy-apartment"],
                             size=["interpolate", ["linear"], ["zoom"], 15, 0.4, 17, 0.7, 19, 1.05]),  # GM-067: größer
            water_edge="#f2d48b", road_dash="#ffffff", building_ink="#2f3640",
+           textile=("toy-tex-weave", 0.9),  # GM-071: Teppich-Flor über allem (Nutzer: „wirkliche Teppich-Grafiken mit Textil-Details“)
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
            poi_suffix="-toy", poi_minzoom=14, place_color="#ffffff", place_halo="#2f3640", place_halo_width=2.4, place_transform="none")
 
@@ -325,6 +326,10 @@ def build(P, title):
         layers.append({"id": "building-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "building", "minzoom": hi.get("minzoom", 15),
                        "layout": {"icon-image": hi["image"], "icon-size": hi["size"], "icon-anchor": hi.get("anchor", "center"),
                                   "icon-padding": 0, "icon-allow-overlap": False}})
+    if P.get("textile"):  # GM-071: Stoff über Flächen, Straßen und Häusern, unter Schrift und Symbolen
+        k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
+        layers.insert(k, {"id": "textile", "type": "background", "minzoom": 12,
+                          "paint": {"background-pattern": P["textile"][0], "background-opacity": P["textile"][1]}})
     if P.get("extrude"):  # GM-070: Pixel Quest 3D
         h = ["coalesce", ["get", "render_height"], 0]
         k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")

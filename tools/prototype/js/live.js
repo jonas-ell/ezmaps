@@ -143,7 +143,7 @@ function makeMap(el, pixelRatio = devicePixelRatio) {
   map.on('styleimagemissing', e => {
     const img = styleImage(e.id); if (img && !map.hasImage(e.id)) map.addImage(e.id, img.data, { pixelRatio: img.pixelRatio }); // App: ~40 pt Bild × icon-size
   });
-  map.on('style.load', () => addOverlay(map));
+  map.on('style.load', () => { addAssetImages(map); addOverlay(map); });
   return map;
 }
 
