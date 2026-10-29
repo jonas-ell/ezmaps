@@ -87,14 +87,10 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              far_simple=True, minzoom_shift={"tertiary": 12, "minor": 13.5, "service": 15},
              building_pattern=["ez-pat-oak-px", "ez-pat-spruce-px", "ez-pat-brick-px", "ez-pat-cobble-px"],
              building_shadow=True, block_edges=("#2a1d0e", "#d2a868"),
-             # GM-067: Villager-Häuser (Bilder des Nutzers) auf kleinen Gebäuden, große bleiben Blöcke
-             # GM-072: 16 Varianten (gespiegelt, Fichte, Birke) statt 4, nur auf Gebäuden unter 8 m – darüber Blocktürme
-             house_icons=dict(image=["step", ["coalesce", ["get", "render_height"], 0],
-                                     ["concat", "px-house-", ["to-string", ["+", 1, ["%", ["to-number", ["id"], 0], 16]]]], 8, ""],
-                              size=["interpolate", ["linear"], ["zoom"], 15, 0.65, 17, 1.1, 19, 1.6], minzoom=15, anchor="bottom"),
-             # GM-070: 3D – Gebäude ab 10 m als Blocktürme (Höhe in 4-m-Blöcken), Muster wie die Dächer
-             extrude=[(8, 12, "ez-pat-oak-px"), (12, 16, "ez-pat-brick-px"), (16, None, "ez-pat-cobble-px")],
-             small_hide=(8, 15),  # GM-072: ab Zoom 15 keine flachen Holzplatten unter den Villager-Häusern
+             # GM-073: Nutzer „die Häuser-Kacheln dürfen nie zu sehen sein, immer ein hochgezogenes 3D-Modell“ – jedes Gebäude ist ein Block
+             # (Höhe in 4-m-Schritten, mindestens 1 Block), Holz/Fichte/Ziegel/Bruchstein nach Höhe; Villager-Bilder raus (bis 3D-Modelle kommen)
+             extrude=[(0, 8, "ez-pat-oak-px"), (8, 12, "ez-pat-spruce-px"), (12, 16, "ez-pat-brick-px"), (16, None, "ez-pat-cobble-px")],
+             extrude_only=True, extrude_minzoom=13,
              label_spacing=420, casing_add=(0.8, 0.8), water_line_pattern="ez-pat-water-px",
              zoom_patterns=["ez-pat-grass-px", "ez-pat-leaves-px", "ez-pat-farm-px", "ez-pat-stone-px"],  # GM-072: Blöcke wachsen beim Zoomen
              # GM-067: weit weg flach wie eine Karte im Spiel – Felder, Dächer, Industrie ohne Muster (Streifen und Krümel)
@@ -105,7 +101,8 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
            water="#4ab0ea", building=by_height(["#e3412f", "#ef7d2d", "#3d78c9", "#8b8f96"]),
            buildingEdge="#2f3640", rail="#2f3640", casing="#c9cbce", label="#ffffff",
            road=lambda r: "#66686c", widen=1.4, label_halo="#2f3640",
-           pat=dict(land="ez-pat-lawn-toy", forest="ez-pat-trees-toy", park="ez-pat-park-toy", water="ez-pat-water-toy"),
+           # GM-073: echte Spielteppiche sind flach bedruckt – keine sich wiederholenden Kacheln mehr, Bäume einzeln am Waldrand
+           tree_edges=dict(image="toy-tree", spacing=34, size=["interpolate", ["linear"], ["zoom"], 13, 0.35, 16, 0.6, 18, 0.9]),
            house_icons=dict(image=["step", ["coalesce", ["get", "render_height"], 0],
                                    ["match", ["%", ["to-number", ["id"], 0], 6], 0, "toy-house-1", 1, "toy-house-2", 2, "toy-house-3",
                                     3, "toy-house-4", 4, "toy-house-5", "toy-house-6"],
@@ -113,7 +110,7 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
                                    14, "toy-apartment"],
                             size=["interpolate", ["linear"], ["zoom"], 15, 0.4, 17, 0.7, 19, 1.05]),  # GM-067: größer
            water_edge="#f2d48b", road_dash="#ffffff", building_ink="#2f3640",
-           textile=("toy-tex-weave", 0.9),  # GM-071: Teppich-Flor über allem (Nutzer: „wirkliche Teppich-Grafiken mit Textil-Details“)
+           textile=("toy-tex-weave", 0.75),  # GM-071: Teppich-Flor über allem (Nutzer: „wirkliche Teppich-Grafiken mit Textil-Details“)
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
            poi_suffix="-toy", poi_minzoom=14, place_color="#ffffff", place_halo="#2f3640", place_halo_width=2.4, place_transform="none")
 
@@ -335,6 +332,13 @@ def build(P, title):
         layers.append({"id": "building-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "building", "minzoom": hi.get("minzoom", 15),
                        "layout": {"icon-image": hi["image"], "icon-size": hi["size"], "icon-anchor": hi.get("anchor", "center"),
                                   "icon-padding": 0, "icon-allow-overlap": False}})
+    if P.get("tree_edges"):  # GM-073: Bäume als einzelne Bilder entlang der Waldkante (Toy Town)
+        te = P["tree_edges"]
+        k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
+        layers.insert(k, {"id": "forest-trees", "type": "symbol", "source": "openmaptiles", "source-layer": "landcover", "minzoom": 13,
+                          "filter": ["==", ["get", "class"], "wood"],
+                          "layout": {"symbol-placement": "line", "symbol-spacing": te["spacing"], "icon-image": te["image"], "icon-size": te["size"],
+                                     "icon-rotation-alignment": "viewport", "icon-keep-upright": True, "icon-allow-overlap": True, "icon-anchor": "bottom"}})
     if P.get("textile"):  # GM-071: Stoff über Flächen, Straßen und Häusern, unter Schrift und Symbolen
         k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
         layers.insert(k, {"id": "textile", "type": "background", "minzoom": 12,
@@ -357,12 +361,15 @@ def build(P, title):
     if P.get("extrude"):  # GM-070: Pixel Quest 3D
         h = ["coalesce", ["get", "render_height"], 0]
         k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
+        if P.get("extrude_only"):  # GM-073: keine flachen Gebäude, Schatten oder Kanten mehr
+            layers[:] = [l for l in layers if not (l.get("source-layer") == "building" and l["type"] in ("fill", "line"))]
+            k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
         for lo, hi_, pat_ in P["extrude"]:
             f = ["all", [">=", h, lo]] + ([["<", h, hi_]] if hi_ else [])
             layers.insert(k, {"id": f"building-3d-{lo}", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
-                              "minzoom": 14.5, "filter": f,
+                              "minzoom": P.get("extrude_minzoom", 14.5), "filter": f,
                               "paint": {"fill-extrusion-pattern": pat_,
-                                        "fill-extrusion-height": ["*", ["ceil", ["/", h, 4]], 4],
+                                        "fill-extrusion-height": ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]],
                                         "fill-extrusion-base": ["coalesce", ["get", "render_min_height"], 0],
                                         "fill-extrusion-opacity": 1}})
             k += 1

@@ -17,8 +17,7 @@
    "id": "land",
    "type": "background",
    "paint": {
-    "background-color": "#8dc63f",
-    "background-pattern": "ez-pat-lawn-toy"
+    "background-color": "#8dc63f"
    }
   },
   {
@@ -46,8 +45,7 @@
    "source-layer": "landcover",
    "paint": {
     "fill-color": "#62b235",
-    "fill-antialias": true,
-    "fill-pattern": "ez-pat-trees-toy"
+    "fill-antialias": true
    },
    "filter": [
     "==",
@@ -65,8 +63,7 @@
    "source-layer": "landcover",
    "paint": {
     "fill-color": "#7cc142",
-    "fill-antialias": true,
-    "fill-pattern": "ez-pat-park-toy"
+    "fill-antialias": true
    },
    "filter": [
     "==",
@@ -84,8 +81,7 @@
    "source-layer": "park",
    "paint": {
     "fill-color": "#7cc142",
-    "fill-antialias": true,
-    "fill-pattern": "ez-pat-park-toy"
+    "fill-antialias": true
    }
   },
   {
@@ -147,8 +143,7 @@
    "source-layer": "landuse",
    "paint": {
     "fill-color": "#7cc142",
-    "fill-antialias": true,
-    "fill-pattern": "ez-pat-park-toy"
+    "fill-antialias": true
    },
    "filter": [
     "in",
@@ -175,8 +170,7 @@
    "source-layer": "water",
    "paint": {
     "fill-color": "#4ab0ea",
-    "fill-antialias": true,
-    "fill-pattern": "ez-pat-water-toy"
+    "fill-antialias": true
    },
    "filter": [
     "!=",
@@ -2072,12 +2066,51 @@
    "minzoom": 14
   },
   {
+   "id": "forest-trees",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "landcover",
+   "minzoom": 13,
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "wood"
+   ],
+   "layout": {
+    "symbol-placement": "line",
+    "symbol-spacing": 34,
+    "icon-image": "toy-tree",
+    "icon-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     13,
+     0.35,
+     16,
+     0.6,
+     18,
+     0.9
+    ],
+    "icon-rotation-alignment": "viewport",
+    "icon-keep-upright": true,
+    "icon-allow-overlap": true,
+    "icon-anchor": "bottom"
+   }
+  },
+  {
    "id": "textile",
    "type": "background",
    "minzoom": 12,
    "paint": {
     "background-pattern": "toy-tex-weave",
-    "background-opacity": 0.9
+    "background-opacity": 0.75
    }
   },
   {

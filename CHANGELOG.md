@@ -2,6 +2,36 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-073 – Pixel Quest nur noch 3D-Blöcke, Toy Town flach bedruckt wie ein echter Spielteppich
+
+**Ziel:** Nutzer: „die Häuser-Kacheln dürfen nie zu sehen sein, es muss immer ein hochgezogenes 3D-Modell sein“; „beim Spielteppich nerven die Kacheln, schau dir echte Spielteppiche an“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `style-toy-town.json`, `App/NeonMapView.swift`, `App/Assets.xcassets/ToyTown/toy-tree` (neu), `toy-tex-weave`, `tools/prototype/js/poi.js`
+
+**Geändert:**
+- Pixel Quest: jedes Gebäude ab Zoom 13 als Block (mindestens 4 m, Höhe in 4-m-Schritten; Eiche, Fichte, Ziegel, Bruchstein nach Höhe). Keine flachen Gebäude, Schatten oder Kanten mehr. Villager-Bilder raus, bis die 3D-Modelle aus `villager-house-with-animations.zip` eingebaut sind.
+- Toy Town: Rasen, Wald, Park und Wasser flach wie gedruckt (keine sich wiederholenden Kacheln), Bäume einzeln entlang der Waldkante, Teppich-Flor feiner und gleichmäßig auf großer Kachel (Wiederholung kaum sichtbar), etwas schwächer.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest (Zoom 13,5–18, schräg) und Toy Town (Zoom 13–17,5).
+
+**Ungetestet:** Mac-Lauf, iPhone, Leistung mit allen Gebäuden in 3D.
+
+## GM-072 – Mängelliste Pixel Quest, Wild West, Stil-Seite; Himmel; Frontier ruckelt weniger
+
+**Ziel:** Nutzer schickt 16 iPhone-Bilder: „nenne alles, was du bemängelst“, dann „mach alles, bau was mit den Sky-Texturen“; Frontier „gefällt gar nicht und laggt extrem“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `check_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `App/FollowCamera.swift`, `App/ShopScreens.swift`, `App/ExploreScreens.swift`, `App/StyleTheme.swift`, `App/Assets.xcassets/WildWest/west-tex-paper`, `west-tex-forest`, `tools/prototype/js/poi.js`, `.gitignore`, `tools/mac_device.sh`, `mac_drive.sh`, `mac_screens.sh`; nur lokal (Spielbilder, Test-Builds schicken sie mit): `App/Assets.xcassets/PixelQuest/px-sky`, `px-house-1…16`
+
+**Geändert:**
+- Pixel Quest: Marker steht aufrecht. 16 Villager-Varianten statt 4. Ab Zoom 15 keine Holzplatten unter den Häusern. Ab 8 m Blocktürme. Straße aus 4 × 4 Bruchstein-Blöcken, schmaler Rand, Straßennamen seltener, Flüsse mit Wasser-Textur. Gras, Laub, Weizen und Stein wachsen ab Zoom 16/17/18 mit (2×/4×/8×). Himmel des Nutzers oben über der schrägen Karte, weich übergeblendet.
+- Wild West: Papier nahtlos, Wald mit zufällig verteilten Codex-Bäumen ohne Raster, Wohn-/Gewerbe-/Feld-/Parkflächen mit Papier, Straßennamen neben der Linie (vorher Punkte zwischen den Buchstaben), weit weg weniger Straßen, Küste scharf, Häuser sichtbar.
+- Stil-Seite und Erkunden: Symbole und Muster werden angemeldet (vorher Karte ohne Texturen), Vorschau mit dem Marker des Stils, Pixel Quest schräg, Pixel-Titel kleiner.
+- Frontier: zweites Relief und Wiesen-Kachel raus, Wald wieder feine Körnung (Ruckeln).
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest (Zoom 14,5–18, schräg) und Wild West (Zoom 9–16,5).
+
+**Ungetestet:** Mac-Lauf, Himmel (nur App), Leistung auf dem iPhone.
+
 ## GM-071 – Toy Town als echter Teppich, kein Klassik-Blitz beim Start
 
 **Ziel:** Nutzer: „Toy Town sieht null wie der Spielteppich aus, wirkliche Teppich-Grafiken mit Textil-Details“; „beim Start sieht man erst die Standard-Map, dann wechselt es zur ausgewählten“.

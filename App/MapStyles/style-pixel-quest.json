@@ -491,652 +491,6 @@
    ]
   },
   {
-   "id": "building-shadow",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "paint": {
-    "fill-color": "rgba(0,0,0,0.38)",
-    "fill-antialias": false,
-    "fill-translate": [
-     "interpolate",
-     [
-      "exponential",
-      2
-     ],
-     [
-      "zoom"
-     ],
-     14,
-     [
-      "literal",
-      [
-       1,
-       1
-      ]
-     ],
-     18,
-     [
-      "literal",
-      [
-       9,
-       9
-      ]
-     ]
-    ]
-   },
-   "minzoom": 13,
-   "filter": [
-    "any",
-    [
-     ">=",
-     [
-      "coalesce",
-      [
-       "get",
-       "render_height"
-      ],
-      0
-     ],
-     8
-    ],
-    [
-     "<",
-     [
-      "zoom"
-     ],
-     15
-    ]
-   ]
-  },
-  {
-   "id": "building-far",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "paint": {
-    "fill-color": "#8b6a3e",
-    "fill-antialias": true,
-    "fill-outline-color": "#3b2a17"
-   },
-   "filter": [
-    "all",
-    [
-     "all",
-     [
-      "<",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      7
-     ]
-    ],
-    [
-     "any",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      8
-     ],
-     [
-      "<",
-      [
-       "zoom"
-      ],
-      15
-     ]
-    ]
-   ],
-   "maxzoom": 13.5,
-   "minzoom": 13
-  },
-  {
-   "id": "building",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "paint": {
-    "fill-color": "#8b6a3e",
-    "fill-antialias": true,
-    "fill-outline-color": "#3b2a17",
-    "fill-pattern": "ez-pat-oak-px"
-   },
-   "filter": [
-    "all",
-    [
-     "all",
-     [
-      "<",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      7
-     ]
-    ],
-    [
-     "any",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      8
-     ],
-     [
-      "<",
-      [
-       "zoom"
-      ],
-      15
-     ]
-    ]
-   ],
-   "minzoom": 13.5
-  },
-  {
-   "id": "building-1-far",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "paint": {
-    "fill-color": "#8b6a3e",
-    "fill-antialias": true,
-    "fill-outline-color": "#3b2a17"
-   },
-   "filter": [
-    "all",
-    [
-     "all",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      7
-     ],
-     [
-      "<",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      10
-     ]
-    ],
-    [
-     "any",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      8
-     ],
-     [
-      "<",
-      [
-       "zoom"
-      ],
-      15
-     ]
-    ]
-   ],
-   "maxzoom": 13.5,
-   "minzoom": 13
-  },
-  {
-   "id": "building-1",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "paint": {
-    "fill-color": "#8b6a3e",
-    "fill-antialias": true,
-    "fill-outline-color": "#3b2a17",
-    "fill-pattern": "ez-pat-spruce-px"
-   },
-   "filter": [
-    "all",
-    [
-     "all",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      7
-     ],
-     [
-      "<",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      10
-     ]
-    ],
-    [
-     "any",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      8
-     ],
-     [
-      "<",
-      [
-       "zoom"
-      ],
-      15
-     ]
-    ]
-   ],
-   "minzoom": 13.5
-  },
-  {
-   "id": "building-2-far",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "paint": {
-    "fill-color": "#8b6a3e",
-    "fill-antialias": true,
-    "fill-outline-color": "#3b2a17"
-   },
-   "filter": [
-    "all",
-    [
-     "all",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      10
-     ],
-     [
-      "<",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      14
-     ]
-    ],
-    [
-     "any",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      8
-     ],
-     [
-      "<",
-      [
-       "zoom"
-      ],
-      15
-     ]
-    ]
-   ],
-   "maxzoom": 13.5,
-   "minzoom": 13
-  },
-  {
-   "id": "building-2",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "paint": {
-    "fill-color": "#8b6a3e",
-    "fill-antialias": true,
-    "fill-outline-color": "#3b2a17",
-    "fill-pattern": "ez-pat-brick-px"
-   },
-   "filter": [
-    "all",
-    [
-     "all",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      10
-     ],
-     [
-      "<",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      14
-     ]
-    ],
-    [
-     "any",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      8
-     ],
-     [
-      "<",
-      [
-       "zoom"
-      ],
-      15
-     ]
-    ]
-   ],
-   "minzoom": 13.5
-  },
-  {
-   "id": "building-3-far",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "paint": {
-    "fill-color": "#8b6a3e",
-    "fill-antialias": true,
-    "fill-outline-color": "#3b2a17"
-   },
-   "filter": [
-    "all",
-    [
-     "all",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      14
-     ]
-    ],
-    [
-     "any",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      8
-     ],
-     [
-      "<",
-      [
-       "zoom"
-      ],
-      15
-     ]
-    ]
-   ],
-   "maxzoom": 13.5,
-   "minzoom": 13
-  },
-  {
-   "id": "building-3",
-   "type": "fill",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "paint": {
-    "fill-color": "#8b6a3e",
-    "fill-antialias": true,
-    "fill-outline-color": "#3b2a17",
-    "fill-pattern": "ez-pat-cobble-px"
-   },
-   "filter": [
-    "all",
-    [
-     "all",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      14
-     ]
-    ],
-    [
-     "any",
-     [
-      ">=",
-      [
-       "coalesce",
-       [
-        "get",
-        "render_height"
-       ],
-       0
-      ],
-      8
-     ],
-     [
-      "<",
-      [
-       "zoom"
-      ],
-      15
-     ]
-    ]
-   ],
-   "minzoom": 13.5
-  },
-  {
-   "id": "building-highlight",
-   "type": "line",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "layout": {
-    "line-cap": "round",
-    "line-join": "miter"
-   },
-   "paint": {
-    "line-color": "#d2a868",
-    "line-width": [
-     "interpolate",
-     [
-      "exponential",
-      2
-     ],
-     [
-      "zoom"
-     ],
-     14,
-     0.6,
-     18,
-     3
-    ],
-    "line-offset": [
-     "interpolate",
-     [
-      "exponential",
-      2
-     ],
-     [
-      "zoom"
-     ],
-     14,
-     0.8,
-     18,
-     4
-    ],
-    "line-opacity": 0.8
-   },
-   "minzoom": 15,
-   "filter": [
-    "any",
-    [
-     ">=",
-     [
-      "coalesce",
-      [
-       "get",
-       "render_height"
-      ],
-      0
-     ],
-     8
-    ],
-    [
-     "<",
-     [
-      "zoom"
-     ],
-     15
-    ]
-   ]
-  },
-  {
-   "id": "building-edge",
-   "type": "line",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "layout": {
-    "line-cap": "round",
-    "line-join": "miter"
-   },
-   "paint": {
-    "line-color": "#2a1d0e",
-    "line-width": [
-     "interpolate",
-     [
-      "exponential",
-      2
-     ],
-     [
-      "zoom"
-     ],
-     14,
-     0.8,
-     18,
-     3.5
-    ]
-   },
-   "minzoom": 14,
-   "filter": [
-    "any",
-    [
-     ">=",
-     [
-      "coalesce",
-      [
-       "get",
-       "render_height"
-      ],
-      0
-     ],
-     8
-    ],
-    [
-     "<",
-     [
-      "zoom"
-     ],
-     15
-    ]
-   ]
-  },
-  {
    "id": "rail",
    "type": "line",
    "source": "openmaptiles",
@@ -2407,11 +1761,80 @@
    ]
   },
   {
+   "id": "building-3d-0",
+   "type": "fill-extrusion",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "minzoom": 13,
+   "filter": [
+    "all",
+    [
+     ">=",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     0
+    ],
+    [
+     "<",
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     8
+    ]
+   ],
+   "paint": {
+    "fill-extrusion-pattern": "ez-pat-oak-px",
+    "fill-extrusion-height": [
+     "max",
+     4,
+     [
+      "*",
+      [
+       "ceil",
+       [
+        "/",
+        [
+         "coalesce",
+         [
+          "get",
+          "render_height"
+         ],
+         0
+        ],
+        4
+       ]
+      ],
+      4
+     ]
+    ],
+    "fill-extrusion-base": [
+     "coalesce",
+     [
+      "get",
+      "render_min_height"
+     ],
+     0
+    ],
+    "fill-extrusion-opacity": 1
+   }
+  },
+  {
    "id": "building-3d-8",
    "type": "fill-extrusion",
    "source": "openmaptiles",
    "source-layer": "building",
-   "minzoom": 14.5,
+   "minzoom": 13,
    "filter": [
     "all",
     [
@@ -2440,25 +1863,29 @@
     ]
    ],
    "paint": {
-    "fill-extrusion-pattern": "ez-pat-oak-px",
+    "fill-extrusion-pattern": "ez-pat-spruce-px",
     "fill-extrusion-height": [
-     "*",
+     "max",
+     4,
      [
-      "ceil",
+      "*",
       [
-       "/",
+       "ceil",
        [
-        "coalesce",
+        "/",
         [
-         "get",
-         "render_height"
+         "coalesce",
+         [
+          "get",
+          "render_height"
+         ],
+         0
         ],
-        0
-       ],
-       4
-      ]
-     ],
-     4
+        4
+       ]
+      ],
+      4
+     ]
     ],
     "fill-extrusion-base": [
      "coalesce",
@@ -2476,7 +1903,7 @@
    "type": "fill-extrusion",
    "source": "openmaptiles",
    "source-layer": "building",
-   "minzoom": 14.5,
+   "minzoom": 13,
    "filter": [
     "all",
     [
@@ -2507,23 +1934,27 @@
    "paint": {
     "fill-extrusion-pattern": "ez-pat-brick-px",
     "fill-extrusion-height": [
-     "*",
+     "max",
+     4,
      [
-      "ceil",
+      "*",
       [
-       "/",
+       "ceil",
        [
-        "coalesce",
+        "/",
         [
-         "get",
-         "render_height"
+         "coalesce",
+         [
+          "get",
+          "render_height"
+         ],
+         0
         ],
-        0
-       ],
-       4
-      ]
-     ],
-     4
+        4
+       ]
+      ],
+      4
+     ]
     ],
     "fill-extrusion-base": [
      "coalesce",
@@ -2541,7 +1972,7 @@
    "type": "fill-extrusion",
    "source": "openmaptiles",
    "source-layer": "building",
-   "minzoom": 14.5,
+   "minzoom": 13,
    "filter": [
     "all",
     [
@@ -2560,23 +1991,27 @@
    "paint": {
     "fill-extrusion-pattern": "ez-pat-cobble-px",
     "fill-extrusion-height": [
-     "*",
+     "max",
+     4,
      [
-      "ceil",
+      "*",
       [
-       "/",
+       "ceil",
        [
-        "coalesce",
+        "/",
         [
-         "get",
-         "render_height"
+         "coalesce",
+         [
+          "get",
+          "render_height"
+         ],
+         0
         ],
-        0
-       ],
-       4
-      ]
-     ],
-     4
+        4
+       ]
+      ],
+      4
+     ]
     ],
     "fill-extrusion-base": [
      "coalesce",
@@ -2654,68 +2089,6 @@
     "text-color": "#ffffff",
     "text-halo-color": "#000000",
     "text-halo-width": 1.6
-   }
-  },
-  {
-   "id": "building-icons",
-   "type": "symbol",
-   "source": "openmaptiles",
-   "source-layer": "building",
-   "minzoom": 15,
-   "layout": {
-    "icon-image": [
-     "step",
-     [
-      "coalesce",
-      [
-       "get",
-       "render_height"
-      ],
-      0
-     ],
-     [
-      "concat",
-      "px-house-",
-      [
-       "to-string",
-       [
-        "+",
-        1,
-        [
-         "%",
-         [
-          "to-number",
-          [
-           "id"
-          ],
-          0
-         ],
-         16
-        ]
-       ]
-      ]
-     ],
-     8,
-     ""
-    ],
-    "icon-size": [
-     "interpolate",
-     [
-      "linear"
-     ],
-     [
-      "zoom"
-     ],
-     15,
-     0.65,
-     17,
-     1.1,
-     19,
-     1.6
-    ],
-    "icon-anchor": "bottom",
-    "icon-padding": 0,
-    "icon-allow-overlap": false
    }
   },
   {

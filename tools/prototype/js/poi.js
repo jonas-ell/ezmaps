@@ -135,7 +135,7 @@ function toyBadge(kind) {
 // GM-067: Haus-Bilder wie in der App aus dem Asset-Katalog (Toy Town: Spielzeughäuser, Pixel Quest: Villager-Häuser) – vor der Karte laden
 const ASSET_IMAGES = {};
 async function preloadAssetImages(base) {
-  const sets = { ToyTown: ['toy-house-1', 'toy-house-2', 'toy-house-3', 'toy-house-4', 'toy-house-5', 'toy-house-6', 'toy-shop', 'toy-school', 'toy-police', 'toy-apartment', 'toy-tex-weave'],
+  const sets = { ToyTown: ['toy-house-1', 'toy-house-2', 'toy-house-3', 'toy-house-4', 'toy-house-5', 'toy-house-6', 'toy-shop', 'toy-school', 'toy-police', 'toy-apartment', 'toy-tex-weave', 'toy-tree'],
     PixelQuest: Array.from({ length: 16 }, (_, i) => `px-house-${i + 1}`), // GM-072: 16 Varianten
     Frontier: ['fv2-paper-grain', 'fv2-forest-canopy', 'fv2-grass-mottle', 'fv2-rock-grain', 'fv2-water-grain', 'fv2-forest-paint', 'fv2-meadow-paint'] };
   const jobs = [];

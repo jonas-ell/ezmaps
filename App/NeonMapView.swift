@@ -842,7 +842,7 @@ enum StylePatterns {
                      "px-sky", // GM-072
                      "fv2-paper-grain", "fv2-forest-canopy", "fv2-grass-mottle", "fv2-rock-grain", "fv2-water-grain", // GM-068: Frontier-Körnung
                      "fv2-forest-paint", "fv2-meadow-paint", // GM-070: gemalte Kacheln
-                     "toy-tex-weave"] { // GM-071: Teppich-Flor
+                     "toy-tex-weave", "toy-tree"] { // GM-071: Teppich-Flor; GM-073: Baum am Waldrand
             if let img = UIImage(named: name) { out[name] = img }
         }
         for k in 1...16 { if let img = UIImage(named: "px-house-\(k)") { out["px-house-\(k)"] = img } } // GM-072: 16 Villager-Varianten
