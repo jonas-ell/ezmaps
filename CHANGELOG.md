@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-078 – Pixel Quest: Dächer auf allen Blöcken, Hochhäuser mit Glasfassade, echte Höhen
+
+**Ziel:** Nutzer: „die Frankfurt-Skyline ist wirklich so groß, aber die Textur sieht schrecklich aus“; „kannst du nicht noch Dächer drauf bauen, auch wenn die flach sind?“
+
+**Dateien:** `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `tools/prototype/js/poi.js`
+
+**Geändert:**
+- Echte Gebäudehöhen wieder an (die 12-m-Grenze aus GM-077 ist raus).
+- Ab 20 m Hochhaus-Fassade: heller Stein mit Glasfenstern, wenige erleuchtet (vorher grauer Bruchstein). 12–20 m Ziegel.
+- Dach-Platte (1 m) oben auf jedem Block: rote Schindeln auf Häusern, graue Steinplatte auf Hochhäusern. Oben und Wand sehen jetzt verschieden aus.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Frankfurt-Bankenviertel und Idstein (schräg).
+
+**Ungetestet:** Mac-Lauf, iPhone, Leistung mit den zusätzlichen Dach-Ebenen.
+
 ## GM-077 – Pixel Quest: Himmel raus, flachere Kamera, Blöcke höchstens 3 hoch
 
 **Ziel:** Nutzer: „das sieht so schlecht aus, mach den Himmel weg, das ist schrecklich. Hast du keine andere Lösung?“

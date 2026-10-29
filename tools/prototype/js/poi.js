@@ -96,6 +96,15 @@ const PATTERNS = {
   'ez-pat-oak-px': () => pixelTile(16, (x, y) => (x === 15 || y === 15) ? rgbS(70, 50, 26) : y % 4 === 3 ? rgbS(84, 62, 34) : (x + Math.floor(y / 4) * 5) % 8 === 0 ? rgbS(98, 72, 40) : patHash(x, y, 8) < 0.25 ? rgbS(150, 116, 66) : rgbS(139, 106, 62)),
   'ez-pat-spruce-px': () => pixelTile(16, (x, y) => (x === 15 || y === 15) ? rgbS(40, 27, 14) : y % 4 === 3 ? rgbS(52, 36, 20) : patHash(x, y, 9) < 0.25 ? rgbS(104, 76, 46) : rgbS(92, 66, 38)),
   'ez-pat-cobble-px': () => pixelTile(16, (x, y) => ((x + (Math.floor(y / 4) % 2) * 2) % 4 === 0 || y % 4 === 0) ? rgbS(80, 80, 80) : patHash(x, y, 10) < 0.3 ? rgbS(150, 150, 150) : rgbS(124, 124, 124)),
+  'ez-pat-tower-px': () => pixelTile(16, (x, y) => { const fx = x % 4, fy = y % 4; // GM-078
+    if (fy === 0 || fx === 0) return patHash(x, y, 12) < 0.2 ? rgbS(196, 192, 182) : rgbS(214, 210, 200);
+    if (fy === 1 && fx === 1) return rgbS(186, 222, 240);
+    return patHash(Math.floor(x / 4), Math.floor(y / 4), 13) < 0.08 ? rgbS(232, 196, 110) : rgbS(98, 146, 186); }),
+  'ez-pat-roof-px': () => pixelTile(16, (x, y) => { const row = Math.floor(y / 4), off = (x + (row % 2) * 2) % 4; // GM-078
+    if (y % 4 === 3) return rgbS(70, 30, 24); if (off === 0) return rgbS(96, 40, 30);
+    return patHash(x, y, 14) < 0.3 ? rgbS(150, 62, 44) : rgbS(128, 52, 38); }),
+  'ez-pat-slab-px': () => pixelTile(16, (x, y) => (x === 0 || y === 0) ? rgbS(120, 120, 120) : (x === 8 || y === 8) ? rgbS(140, 140, 140)
+    : patHash(x, y, 15) < 0.25 ? rgbS(176, 176, 176) : rgbS(162, 162, 162)),
   'ez-pat-brick-px': () => pixelTile(16, (x, y) => (y % 4 === 3 || (x + (Math.floor(y / 4) % 2) * 4) % 8 === 7) ? rgbS(196, 180, 170) : patHash(x, y, 11) < 0.3 ? rgbS(160, 70, 52) : rgbS(146, 60, 44)),
   'ez-pat-lawn-toy': () => canvasTile(64, g => { g.fillStyle = rgbS(141, 198, 63); g.fillRect(0, 0, 64, 64); g.fillStyle = rgbS(163, 214, 90);
     g.beginPath(); g.ellipse(17, 16.5, 11, 6.5, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(47, 45.5, 9, 5.5, 0, 0, 7); g.fill(); }),

@@ -794,6 +794,25 @@ enum StylePatterns {
             let mortar = y % 4 == 3 || (x + (y / 4) % 2 * 4) % 8 == 7
             return mortar ? rgb(196, 180, 170) : hash(x, y, 11) < 0.3 ? rgb(160, 70, 52) : rgb(146, 60, 44)
         }
+        // GM-078: Hochhaus-Fassade – heller Stein mit Glasfenstern (vorher grauer Bruchstein, wirkte schrecklich)
+        out["ez-pat-tower-px"] = pixelTile(16) { x, y in
+            let fx = x % 4, fy = y % 4
+            if fy == 0 || fx == 0 { return hash(x, y, 12) < 0.2 ? rgb(196, 192, 182) : rgb(214, 210, 200) }   // Rahmen
+            if fy == 1 && fx == 1 { return rgb(186, 222, 240) }                                              // Glanz
+            return hash(x / 4, y / 4, 13) < 0.08 ? rgb(232, 196, 110) : rgb(98, 146, 186)                    // Glas, wenige erleuchtet
+        }
+        // GM-078: Dächer – Schindeln (Häuser) und Steinplatte (Hochhäuser), oben auf jedem Block
+        out["ez-pat-roof-px"] = pixelTile(16) { x, y in
+            let row = y / 4, off = (x + row % 2 * 2) % 4
+            if y % 4 == 3 { return rgb(70, 30, 24) }
+            if off == 0 { return rgb(96, 40, 30) }
+            return hash(x, y, 14) < 0.3 ? rgb(150, 62, 44) : rgb(128, 52, 38)
+        }
+        out["ez-pat-slab-px"] = pixelTile(16) { x, y in
+            if x == 0 || y == 0 { return rgb(120, 120, 120) }
+            if x == 8 || y == 8 { return rgb(140, 140, 140) }
+            return hash(x, y, 15) < 0.25 ? rgb(176, 176, 176) : rgb(162, 162, 162)
+        }
         out["ez-pat-grass-px"] = UIImage(named: "px-tex-grass") ?? out["ez-pat-grass-px-own"]
         out["ez-pat-road-px"] = UIImage(named: "px-tex-cobble") ?? out["ez-pat-road-px-own"]
         out["ez-pat-water-px"] = UIImage(named: "px-tex-water") ?? out["ez-pat-water-px-own"]

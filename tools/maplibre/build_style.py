@@ -89,7 +89,8 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              building_shadow=True, block_edges=("#2a1d0e", "#d2a868"),
              # GM-073: Nutzer „die Häuser-Kacheln dürfen nie zu sehen sein, immer ein hochgezogenes 3D-Modell“ – jedes Gebäude ist ein Block
              # (Höhe in 4-m-Schritten, mindestens 1 Block), Holz/Fichte/Ziegel/Bruchstein nach Höhe; Villager-Bilder raus (bis 3D-Modelle kommen)
-             extrude=[(0, 8, "ez-pat-oak-px"), (8, 12, "ez-pat-spruce-px"), (12, 16, "ez-pat-brick-px"), (16, None, "ez-pat-cobble-px")],
+             extrude=[(0, 8, "ez-pat-oak-px"), (8, 12, "ez-pat-spruce-px"), (12, 20, "ez-pat-brick-px"), (20, None, "ez-pat-tower-px")],  # GM-078: echte Höhen, Hochhäuser Glas
+             roofs=[((0, 20), "ez-pat-roof-px"), ((20, None), "ez-pat-slab-px")],
              extrude_only=True, extrude_minzoom=15, extrude_far=(13, "#7a5a32"),  # GM-075: ruckelte – unter Zoom 15 einfarbig
              label_spacing=420, casing_add=(0.8, 0.8), water_line_pattern="ez-pat-water-px",
              zoom_patterns=["ez-pat-grass-px", "ez-pat-leaves-px", "ez-pat-farm-px", "ez-pat-stone-px"],  # GM-072: Blöcke wachsen beim Zoomen
@@ -367,7 +368,7 @@ def build(P, title):
             z0, col = P["extrude_far"]
             layers.insert(k, {"id": "building-3d-far", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
                               "minzoom": z0, "maxzoom": P.get("extrude_minzoom", 15),
-                              "paint": {"fill-extrusion-color": col, "fill-extrusion-height": ["min", 12, ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]]],
+                              "paint": {"fill-extrusion-color": col, "fill-extrusion-height": ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]],
                                         "fill-extrusion-base": 0, "fill-extrusion-vertical-gradient": True}})
             k += 1
         for lo, hi_, pat_ in P["extrude"]:
@@ -376,14 +377,25 @@ def build(P, title):
                 f = ["all", ["<", h, hi_], ["!=", ["%", ["to-number", ["id"], 0], 3], 0]]
                 layers.insert(k, {**json.loads(json.dumps({"id": "building-3d-spruce", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
                               "minzoom": P.get("extrude_minzoom", 14.5), "filter": ["all", ["<", h, hi_], ["==", ["%", ["to-number", ["id"], 0], 3], 0]],
-                              "paint": {"fill-extrusion-pattern": "ez-pat-spruce-px", "fill-extrusion-height": ["min", 12, ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]]],
+                              "paint": {"fill-extrusion-pattern": "ez-pat-spruce-px", "fill-extrusion-height": ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]],
                                         "fill-extrusion-base": 0, "fill-extrusion-opacity": 1}}))})
                 k += 1
             layers.insert(k, {"id": f"building-3d-{lo}", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
                               "minzoom": P.get("extrude_minzoom", 14.5), "filter": f,
                               "paint": {"fill-extrusion-pattern": pat_,
-                                        "fill-extrusion-height": ["min", 12, ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]]],
+                                        "fill-extrusion-height": ["max", 4, ["*", ["ceil", ["/", h, 4]], 4]],
                                         "fill-extrusion-base": ["coalesce", ["get", "render_min_height"], 0],
+                                        "fill-extrusion-opacity": 1}})
+            k += 1
+    if P.get("roofs"):  # GM-078: Dach-Platte (1 m) oben auf jedem Block – Oberseite sieht anders aus als die Wand
+        hb = ["max", 4, ["*", ["ceil", ["/", ["coalesce", ["get", "render_height"], 0], 4]], 4]]
+        k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
+        for lim, pat_ in P["roofs"]:
+            lo, hi_ = lim
+            f = ["all", [">=", ["coalesce", ["get", "render_height"], 0], lo]] + ([["<", ["coalesce", ["get", "render_height"], 0], hi_]] if hi_ else [])
+            layers.insert(k, {"id": f"roof-{lo}", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
+                              "minzoom": P.get("extrude_minzoom", 14.5), "filter": f,
+                              "paint": {"fill-extrusion-pattern": pat_, "fill-extrusion-base": hb, "fill-extrusion-height": ["+", hb, 1],
                                         "fill-extrusion-opacity": 1}})
             k += 1
     layers.append(poi_layer(P))
