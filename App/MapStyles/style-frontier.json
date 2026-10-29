@@ -27,7 +27,7 @@
    "id": "land",
    "type": "background",
    "paint": {
-    "background-color": "#A69E70"
+    "background-color": "#9C9A5E"
    }
   },
   {
@@ -44,7 +44,7 @@
    "source": "openmaptiles",
    "source-layer": "landcover",
    "paint": {
-    "fill-color": "#B4A77B",
+    "fill-color": "#ADA36A",
     "fill-antialias": true
    },
    "filter": [
@@ -62,7 +62,7 @@
    "source": "openmaptiles",
    "source-layer": "landcover",
    "paint": {
-    "fill-color": "#626A3E",
+    "fill-color": "#4F6230",
     "fill-antialias": true
    },
    "filter": [
@@ -112,7 +112,7 @@
    "source": "openmaptiles",
    "source-layer": "landcover",
    "paint": {
-    "fill-color": "#92915A",
+    "fill-color": "#86924E",
     "fill-antialias": true
    },
    "filter": [
@@ -224,7 +224,7 @@
    "source": "openmaptiles",
    "source-layer": "park",
    "paint": {
-    "fill-color": "#92915A",
+    "fill-color": "#86924E",
     "fill-antialias": true
    }
   },
@@ -258,7 +258,7 @@
    "source": "openmaptiles",
    "source-layer": "landuse",
    "paint": {
-    "fill-color": "#A69E70",
+    "fill-color": "#9C9A5E",
     "fill-antialias": true
    },
    "filter": [
@@ -283,7 +283,7 @@
    "source": "openmaptiles",
    "source-layer": "landuse",
    "paint": {
-    "fill-color": "#B4A77B",
+    "fill-color": "#B0A274",
     "fill-antialias": true
    },
    "filter": [
@@ -310,7 +310,7 @@
    "source": "openmaptiles",
    "source-layer": "landuse",
    "paint": {
-    "fill-color": "#92915A",
+    "fill-color": "#86924E",
     "fill-antialias": true
    },
    "filter": [
@@ -347,17 +347,17 @@
       "zoom"
      ],
      7,
-     0.9,
+     1.0,
      12,
      1.0,
      15,
-     0.75,
+     0.8,
      18,
-     0.4
+     0.45
     ],
-    "hillshade-shadow-color": "#2E3520",
-    "hillshade-highlight-color": "#E2D8B4",
-    "hillshade-accent-color": "#5F5A35"
+    "hillshade-shadow-color": "#232B14",
+    "hillshade-highlight-color": "#EADFB8",
+    "hillshade-accent-color": "#4E4A26"
    }
   },
   {
@@ -366,7 +366,7 @@
    "source": "openmaptiles",
    "source-layer": "water",
    "paint": {
-    "fill-color": "#98ADB0",
+    "fill-color": "#86A6AC",
     "fill-antialias": true
    },
    "filter": [
@@ -442,7 +442,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#98ADB0",
+    "line-color": "#86A6AC",
     "line-width": [
      "interpolate",
      [
@@ -517,7 +517,7 @@
     "line-join": "round"
    },
    "paint": {
-    "line-color": "#98ADB0",
+    "line-color": "#86A6AC",
     "line-width": [
      "interpolate",
      [

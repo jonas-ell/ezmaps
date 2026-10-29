@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-069 – Frontier satter, Test auf 8 Produkte
+
+**Ziel:** Nutzer: „Frontier soll wie Far Cry aussehen“ (gemalte Open-World-Geländekarte); Mac-Test schlug fehl (7 statt 8 Produkte).
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-frontier.json`, `Core/Tests/EzMapsCoreTests/StoreAndJournalTests.swift`
+
+**Geändert:** Frontier-Grün satter, Wald tiefer, Wasser kühler, Relief mit dunklerem Schatten und hellerem Licht. Test erwartet 8 Produkt-IDs (mit Frontier). Spielname nur hier intern, nicht in App oder Store.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Idstein bei 5 Zoomstufen angesehen.
+
+**Ungetestet:** siehe Mac-Lauf, iPhone, CarPlay.
+
 ## GM-068 – Neuer Stil Frontier (Feldkarte mit echtem Bergrelief)
 
 **Ziel:** Nutzer schickt `Assets/Generated/Maneuvers/ezmaps-frontier-v2-claude.zip` („hier eine neue Map“): Paket Frontier V2 mit Zielbildern, 39 Grafiken und Gestaltungsauftrag.

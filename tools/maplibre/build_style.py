@@ -109,8 +109,9 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
 # GM-068: Frontier (Paket ezmaps-frontier-v2, docs/frontier-v2): gedruckte Feldkarte mit echtem Relief aus Höhendaten,
 # oliv/khaki, dichter Wald, blasses Wasser mit dunklem Ufer, schmale Sandstraßen, kleine helle Zeichen, Route Amber.
 # Höhen: Terrain Tiles (AWS Open Data, Terrarium) – Quellen-Hinweis in der Attribution.
-FRONTIER = dict(land="#A69E70", residential="#A69E70", industrial="#B4A77B", farm="#B4A77B", park="#92915A", forest="#626A3E",
-                water="#98ADB0", building="#3D3D2A", buildingEdge="#3D3D2A", rail="#69613F", casing="#69613F", label="#F4E7C2",
+# GM-069: Nutzer „soll wie eine gemalte Open-World-Geländekarte aussehen“ – Grün satter, Wald tiefer, Wasser kühler, Relief kräftiger
+FRONTIER = dict(land="#9C9A5E", residential="#9C9A5E", industrial="#B0A274", farm="#ADA36A", park="#86924E", forest="#4F6230",
+                water="#86A6AC", building="#3D3D2A", buildingEdge="#3D3D2A", rail="#69613F", casing="#69613F", label="#F4E7C2",
                 road=lambda r: "#D5C38C", widen=1.0, label_halo="#303121", label_halo_width=1.6,
                 rock="#B7AD85", water_bank="#666F4A",
                 # Breiten in px je Zoom 8/12/15/18 (ART-DIRECTION Maßstäbe), Rand je Seite 0,8 px
@@ -121,8 +122,8 @@ FRONTIER = dict(land="#A69E70", residential="#A69E70", industrial="#B4A77B", far
                           ("rock", "fv2-rock-grain"), ("water", "fv2-water-grain")],
                 relief=dict(tiles="https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png", maxzoom=15,
                             attribution="Höhen: <a href=\"https://registry.opendata.aws/terrain-tiles/\">Terrain Tiles</a> (SRTM, EU-DEM u. a.)",
-                            exaggeration=["interpolate", ["linear"], ["zoom"], 7, 0.9, 12, 1.0, 15, 0.75, 18, 0.4],  # Vorgabe 0,65–0,8: im Taunus zu flach
-                            shadow="#2E3520", highlight="#E2D8B4", accent="#5F5A35"),
+                            exaggeration=["interpolate", ["linear"], ["zoom"], 7, 1.0, 12, 1.0, 15, 0.8, 18, 0.45],  # Vorgabe 0,65–0,8: im Taunus zu flach
+                            shadow="#232B14", highlight="#EADFB8", accent="#4E4A26"),
                 overlay_opacity={"forest": ["interpolate", ["linear"], ["zoom"], 8, 0.95, 13, 0.8, 17, 0.35]},
                 poi_scale=1.45, building_opacity=0.88,
                 minzoom_shift={"minor": 12.5, "service": 14.5},
