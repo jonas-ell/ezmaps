@@ -442,6 +442,7 @@ struct NeonMapView: UIViewRepresentable {
     var revision: Int
     var navigating: Bool
     var recenterRequest: Int
+    var cubeExitRequest: Int = 0 // GM-086
     /// GM-022: Fahrposition (auf der Route) und Richtung – während der Navigation folgt die Kamera dem
     var follow: Coordinate? = nil
     var heading: Double = 0
@@ -527,6 +528,10 @@ struct NeonMapView: UIViewRepresentable {
             map.isHidden = !visible
             map.preferredFramesPerSecond = visible ? .default : .lowPower
         }
+        if c.cubeExit != cubeExitRequest { // GM-086: aus dem Welt-Würfel zurück in die Karte
+            c.cubeExit = cubeExitRequest
+            map.setCenter(map.centerCoordinate, zoomLevel: 4, animated: true)
+        }
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest
             if !navigating { if locationAllowed { map.userTrackingMode = .follow } } else { c.camera?.attach() } // GM-045: Mitte → Pfeil wieder fest
@@ -536,6 +541,7 @@ struct NeonMapView: UIViewRepresentable {
 
     final class Coordinator: NSObject, MLNMapViewDelegate {
         var overlay: RouteOverlay?
+        var cubeExit = 0 // GM-086
         var revision = -1
         var selected = -1
         var navigating = false
@@ -557,6 +563,16 @@ struct NeonMapView: UIViewRepresentable {
         }
 
         /// GM-045: Nutzer wischt/zoomt in der Navigation → Kamera hält an, Pfeil bleibt auf der Fahrposition (vorher wanderte er mit)
+        /// GM-086: Zoomstufe für den Welt-Würfel melden (nur bei spürbarer Änderung)
+        func mapViewRegionIsChanging(_ mapView: MLNMapView) { reportZoom(mapView) }
+        func mapView(_ mapView: MLNMapView, regionDidChangeAnimated animated: Bool) { reportZoom(mapView) }
+        private func reportZoom(_ mapView: MLNMapView) {
+            let z = mapView.zoomLevel
+            MainActor.assumeIsolated {
+                if abs(AppModel.shared.mapZoom - z) > 0.1 { AppModel.shared.mapZoom = z }
+            }
+        }
+
         func mapView(_ mapView: MLNMapView, regionWillChangeWith reason: MLNCameraChangeReason, animated: Bool) {
             let gestures: MLNCameraChangeReason = [.gesturePan, .gesturePinch, .gestureRotate, .gestureZoomIn, .gestureZoomOut, .gestureOneFingerZoom, .gestureTilt]
             guard !reason.intersection(gestures).isEmpty else { return }

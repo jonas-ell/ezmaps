@@ -86,6 +86,10 @@ final class AppModel {
     var message: String?
     /// Zählt hoch, wenn die Karte wieder dem Standort folgen soll
     private(set) var recenterRequest = 0
+    /// GM-086: aktuelle Zoomstufe der iPhone-Karte (Pixel Quest zeigt ganz weit weg den Welt-Würfel)
+    var mapZoom: Double = 15
+    /// GM-086: Würfel verlassen → Karte zoomt hinein
+    private(set) var cubeExitRequest = 0
     /// GM-041: Ergebnis „Stadt aufdecken“ der letzten Fahrt (für den Ankunft-Screen)
     private(set) var lastReveal: TripReveal?
     /// GM-043: Fahrten, Favoriten, Zuhause/Arbeit, Parkplatz, Abzeichen, Mission (lokal)
@@ -193,6 +197,8 @@ final class AppModel {
 
     /// GM-043: Standort erst nach dem Onboarding-Schritt „Wo bist du gerade?“ abfragen (erst Nutzen erklären)
     func onAppear() { if settings.onboarded || ScreenshotMode.state != nil { location.requestPermission() } }
+
+    func enterFromCube() { cubeExitRequest += 1 } // GM-086
 
     func recenter() {
         location.requestPermission() // GM-045: wer im Onboarding „Später“ gewählt hat, wird hier gefragt

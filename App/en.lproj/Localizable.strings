@@ -261,3 +261,7 @@
 "Standort-Marker" = "Location marker";
 "Weiß" = "White";
 "Grün" = "Green";
+
+/* GM-086 */
+"Weltkarte" = "World map";
+"Heranzoomen zum Betreten" = "Zoom in to enter";

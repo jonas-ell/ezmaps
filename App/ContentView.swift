@@ -20,6 +20,7 @@ struct ContentView: View {
                 revision: model.routeRevision,
                 navigating: model.screen == .navigating,
                 recenterRequest: model.recenterRequest,
+                cubeExitRequest: model.cubeExitRequest,
                 follow: model.navCoordinate,
                 heading: model.navHeading,
                 speedKmh: model.navSpeedKmh,
@@ -32,6 +33,11 @@ struct ContentView: View {
             .ignoresSafeArea()
 
             StatusBarScrim()
+
+            // GM-086: Pixel Quest ganz weit weg – Welt als Würfel
+            if !onboarding && model.activeStyle == .pixelQuest && model.screen == .map && model.mapZoom < 2.2 {
+                WorldCubeView { model.enterFromCube() }.transition(.opacity)
+            }
 
             switch model.screen {
             case .map: if !onboarding { MapHome(model: model, showSettings: $showSettings, showExplore: $showExplore) } // GM-045: nicht unter dem Onboarding
