@@ -470,6 +470,10 @@ struct NeonMapView: UIViewRepresentable {
         overlay.mapStyle = style
         context.coordinator.overlay = overlay
         context.coordinator.style = style
+        // GM-093: Neigung des Stils schon beim Start (vorher nur beim Stilwechsel – Pixel Quest startete flach)
+        let startCam = map.camera
+        startCam.pitch = RouteOverlay.pitch(for: style)
+        map.setCamera(startCam, animated: false)
         let village = VillageLayer(map: map) // GM-092: 3D-Villager-Häuser (Pixel Quest)
         village.enabled = style == .pixelQuest
         context.coordinator.village = village

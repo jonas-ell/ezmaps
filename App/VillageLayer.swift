@@ -139,8 +139,8 @@ final class VillageLayer {
             let s = ppm * Float(house.size)
             house.node.scale = SCNVector3(s, s, s)
             house.node.position = SCNVector3(Float(p.x - w / 2), Float(h / 2 - p.y), Float(p.y))
-            // GM-093: Die Codex-.scn steht schon mit „oben“ zur Kamera (Z-up) – nur nach Kartenneigung kippen, um Z nach Gebäudekante drehen
-            house.node.eulerAngles = SCNVector3(pitch, 0, -Float((house.angle - dir) * .pi / 180))
+            // Modell Y-up: um 90° minus Kartenneigung kippen (flach von oben sieht man nur das Dach), um Y nach Gebäudekante drehen
+            house.node.eulerAngles = SCNVector3(.pi / 2 - pitch, -Float((house.angle - dir) * .pi / 180), 0)
         }
     }
 }
