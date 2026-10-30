@@ -1,6 +1,6 @@
 import Foundation
 
-/// GM-069: gegen das Ruckeln des Pfeils/der Kamera. GPS kommt ~1×/s; dazwischen wird weitergerechnet.
+/// GM-085: gegen das Ruckeln des Pfeils/der Kamera. GPS kommt ~1×/s; dazwischen wird weitergerechnet.
 /// Vorher sprang das Kameraziel bei jeder neuen Meldung auf den neuen Punkt (Schätzung und Messung weichen fast
 /// immer etwas ab – GPS hinkt hinterher, Tempo schwankt) → sichtbarer Ruck einmal pro Sekunde, Richtung in Stufen.
 /// Jetzt: Weiterrechnen inkl. Kurve (Drehrate aus den letzten Meldungen) und die Abweichung bei einer neuen Meldung
@@ -83,7 +83,7 @@ public struct FreeMotionSmoother: Sendable {
     static func norm(_ h: Double) -> Double { (h.truncatingRemainder(dividingBy: 360) + 360).truncatingRemainder(dividingBy: 360) }
 }
 
-/// GM-069: dasselbe für die Navigation, aber auf der Route: Fortschritt (Meter) weiterrechnen und die Abweichung
+/// GM-085: dasselbe für die Navigation, aber auf der Route: Fortschritt (Meter) weiterrechnen und die Abweichung
 /// bei einer neuen Meldung weich ausgleichen. Position und Richtung holt die App aus der Route am Fortschritt.
 public struct RouteProgressSmoother: Sendable {
     public var blend: Double = 0.6

@@ -1,6 +1,6 @@
 import Foundation
 
-/// GM-074: Land/Wasser der Erde (0,5°-Raster, Natural Earth). Daten in LandMaskData.swift (erzeugt).
+/// GM-090: Land/Wasser der Erde (0,5°-Raster, Natural Earth). Daten in LandMaskData.swift (erzeugt).
 public struct LandMask: Sendable {
     public let width: Int
     public let height: Int
@@ -26,7 +26,7 @@ public struct LandMask: Sendable {
     }
 }
 
-/// GM-074: Pixel Quest – beim ganz Rauszoomen wird die Erde zu einem Würfel aus Blöcken (Nutzer-Wunsch).
+/// GM-090: Pixel Quest – beim ganz Rauszoomen wird die Erde zu einem Würfel aus Blöcken (Nutzer-Wunsch).
 /// Jede Würfelseite ist ein n × n Raster; Land ragt einen Block hoch, Wasser ist flach.
 /// Seiten in der Reihenfolge von SCNBox (vorn +z = 0° Länge, rechts +x = 90° Ost, hinten, links, oben = Nordpol, unten).
 /// Mirror in tools/prototype/js/cubeearth.js – change both.

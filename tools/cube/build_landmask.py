@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""GM-074: Land/Wasser-Maske der Erde für die Pixel-Quest-Würfel-Erde.
+"""GM-090: Land/Wasser-Maske der Erde für die Pixel-Quest-Würfel-Erde.
 
 Quelle: Natural Earth 1:50m Land (gemeinfrei), als TopoJSON aus dem npm-Paket world-atlas@2.0.2.
 Ausgabe: 720 × 360 Bit (0,5°), Zeilen von Nord (+90°) nach Süd, Spalten von −180° nach Osten, MSB zuerst,
@@ -83,7 +83,7 @@ def main():
                 bits[i >> 3] |= 0x80 >> (i & 7)
                 land += 1
     b64 = base64.b64encode(bytes(bits)).decode()
-    note = "GM-074: erzeugt von tools/cube/build_landmask.py (Natural Earth 1:50m, gemeinfrei) – nicht von Hand ändern"
+    note = "GM-090: erzeugt von tools/cube/build_landmask.py (Natural Earth 1:50m, gemeinfrei) – nicht von Hand ändern"
     lines = [b64[i:i + 120] for i in range(0, len(b64), 120)]
     swift = (f"// {note}\n\nextension LandMask {{\n    static let worldWidth = {W}\n    static let worldHeight = {H}\n"
              "    static let worldBase64 = \"\"\"\n" + "\n".join("        " + l for l in lines) + "\n        \"\"\"\n}\n")

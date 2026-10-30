@@ -1,4 +1,4 @@
-// GM-074: Würfel-Erde für Pixel Quest (ganz rausgezoomt). Mirror von Core/Sources/EzMapsCore/CubeEarth.swift – change both.
+// GM-090: Würfel-Erde für Pixel Quest (ganz rausgezoomt). Mirror von Core/Sources/EzMapsCore/CubeEarth.swift – change both.
 (function () {
   const M = window.LANDMASK;
   const bits = Uint8Array.from(atob(M.base64), c => c.charCodeAt(0));

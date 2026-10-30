@@ -25,13 +25,13 @@ for p in STYLES:
     if p.read_bytes().replace(bytes([13, 10]), bytes([10])) != before[p].replace(bytes([13, 10]), bytes([10])):
         errors.append(f"{p.name} war nicht aktuell (build_style.py neu ausgeführt – bitte committen)")
 swift = (ROOT / "App" / "NeonMapView.swift").read_text(encoding="utf-8")
-drawn = set(re.findall(r'"(ez-(?:poi|pat)-[a-z-]+)"', swift))  # GM-050: auch Muster (fill-pattern, background-pattern)
+drawn = set(re.findall(r'"(ez-(?:poi|pat)-[a-z0-9-]+)"', swift))  # GM-050: auch Muster (fill-pattern, background-pattern)
 # GM-057: Symbole je Art und Stil (RouteOverlay.poiKinds × poiSuffixes)
 _kinds = re.search(r"poiKinds: \[String: \(String, UIColor\)\] = \[(.*?)\n    \]", swift, re.S)
 _suff = re.search(r"poiSuffixes = \[(.*?)\]", swift)
 if _kinds and _suff:
     for k in re.findall(r'"([a-z]+)": \(', _kinds.group(1)):
-        for sfx in re.findall(r'"([a-z-]*)"', _suff.group(1)):
+        for sfx in re.findall(r'"([a-z0-9-]*)"', _suff.group(1)):  # GM-068: auch "-fv2"
             drawn.add(f"ez-poi-{k}{sfx}")
 fonts_all = set()
 for STYLE in STYLES:
@@ -56,6 +56,7 @@ for STYLE in STYLES:
         expr = [l.get("layout", {}).get("icon-image"), l.get("paint", {})]  # GM-050: auch fill-/line-/background-pattern
         if any(expr):
             used.update(x for x in json.dumps(expr).split('"') if x.startswith(("ez-poi-", "ez-pat-")))
+    used = {re.sub(r"-[248]$", "", u) if re.sub(r"-[248]$", "", u) in drawn else u for u in used}  # GM-072: StylePatterns.scaled
     for name in sorted(used - drawn):
         errors.append(f"{STYLE.name}: Symbol {name} wird nicht in poiImages gezeichnet")
     if "OpenStreetMap" not in json.dumps(style["sources"]):

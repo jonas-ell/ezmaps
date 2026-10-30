@@ -17,8 +17,7 @@
    "id": "land",
    "type": "background",
    "paint": {
-    "background-color": "#8dc63f",
-    "background-pattern": "ez-pat-lawn-toy"
+    "background-color": "#8dc63f"
    }
   },
   {
@@ -46,8 +45,7 @@
    "source-layer": "landcover",
    "paint": {
     "fill-color": "#62b235",
-    "fill-antialias": true,
-    "fill-pattern": "ez-pat-trees-toy"
+    "fill-antialias": true
    },
    "filter": [
     "==",
@@ -65,8 +63,7 @@
    "source-layer": "landcover",
    "paint": {
     "fill-color": "#7cc142",
-    "fill-antialias": true,
-    "fill-pattern": "ez-pat-park-toy"
+    "fill-antialias": true
    },
    "filter": [
     "==",
@@ -84,8 +81,7 @@
    "source-layer": "park",
    "paint": {
     "fill-color": "#7cc142",
-    "fill-antialias": true,
-    "fill-pattern": "ez-pat-park-toy"
+    "fill-antialias": true
    }
   },
   {
@@ -147,8 +143,7 @@
    "source-layer": "landuse",
    "paint": {
     "fill-color": "#7cc142",
-    "fill-antialias": true,
-    "fill-pattern": "ez-pat-park-toy"
+    "fill-antialias": true
    },
    "filter": [
     "in",
@@ -175,8 +170,7 @@
    "source-layer": "water",
    "paint": {
     "fill-color": "#4ab0ea",
-    "fill-antialias": true,
-    "fill-pattern": "ez-pat-water-toy"
+    "fill-antialias": true
    },
    "filter": [
     "!=",
@@ -2072,6 +2066,54 @@
    "minzoom": 14
   },
   {
+   "id": "forest-trees",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "landcover",
+   "minzoom": 13,
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "wood"
+   ],
+   "layout": {
+    "symbol-placement": "line",
+    "symbol-spacing": 34,
+    "icon-image": "toy-tree",
+    "icon-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     13,
+     0.35,
+     16,
+     0.6,
+     18,
+     0.9
+    ],
+    "icon-rotation-alignment": "viewport",
+    "icon-keep-upright": true,
+    "icon-allow-overlap": true,
+    "icon-anchor": "bottom"
+   }
+  },
+  {
+   "id": "textile",
+   "type": "background",
+   "minzoom": 12,
+   "paint": {
+    "background-pattern": "toy-tex-weave",
+    "background-opacity": 0.75
+   }
+  },
+  {
    "id": "road-names",
    "type": "symbol",
    "source": "openmaptiles",
@@ -2160,11 +2202,19 @@
       [
        "%",
        [
-        "to-number",
+        "floor",
         [
-         "id"
-        ],
-        0
+         "*",
+         [
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
+         ],
+         2.3
+        ]
        ],
        6
       ],
@@ -2186,11 +2236,19 @@
       [
        "%",
        [
-        "to-number",
+        "floor",
         [
-         "id"
-        ],
-        0
+         "*",
+         [
+          "coalesce",
+          [
+           "get",
+           "render_height"
+          ],
+          0
+         ],
+         1.3
+        ]
        ],
        3
       ],
@@ -2206,18 +2264,22 @@
     "icon-size": [
      "interpolate",
      [
-      "linear"
+      "exponential",
+      1.6
      ],
      [
       "zoom"
      ],
      15,
-     0.3,
+     0.4,
      17,
-     0.55,
+     0.75,
      19,
-     0.9
+     1.9,
+     20,
+     2.8
     ],
+    "icon-anchor": "center",
     "icon-padding": 0,
     "icon-allow-overlap": false
    }
@@ -2321,9 +2383,11 @@
       "zoom"
      ],
      14.5,
-     0.36,
+     0.5,
      17,
-     0.52
+     0.72,
+     19,
+     0.72
     ],
     "icon-padding": 44
    }

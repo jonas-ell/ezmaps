@@ -3,7 +3,7 @@ import UIKit
 import CoreLocation
 import EzMapsCore
 
-/// GM-074: Pixel Quest – ganz rausgezoomt wird die Erde ein großer Block-Würfel (Nutzer-Wunsch).
+/// GM-090: Pixel Quest – ganz rausgezoomt wird die Erde ein großer Block-Würfel (Nutzer-Wunsch).
 /// Netz kommt aus Core (`CubeEarth`, getestet), Design aus tools/prototype/wuerfel.html.
 /// Ziehen dreht (Norden bleibt oben), Tippen fliegt zur Stelle, Aufziehen (Pinch) zurück zur Karte an der Mitte.
 final class CubeEarthView: UIView {

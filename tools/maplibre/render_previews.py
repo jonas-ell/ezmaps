@@ -1,4 +1,5 @@
-"""GM-049: Stil-Vorschauen „wie im Einsatz in CarPlay“ aus den echten App-Stilen rendern.
+"""Veraltet seit GM-070 – Kacheln kommen aus echten App-Bildern: tools/maplibre/tiles_from_app.py.
+GM-049: Stil-Vorschauen „wie im Einsatz in CarPlay“ aus den echten App-Stilen rendern.
 
 Vorher in einem zweiten Fenster: python tools/prototype/serve.py (Server auf Port 8765, Repo-Hauptordner).
 Aufruf: python tools/maplibre/render_previews.py
@@ -13,7 +14,7 @@ from playwright.async_api import async_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 URL = "http://localhost:8765/tools/prototype/stylepreview.html"
-STYLES = ["classic", "neon-city", "wild-west", "pixel-quest", "toy-town"]
+STYLES = ["classic", "neon-city", "wild-west", "pixel-quest", "toy-town", "frontier"]
 W, H = 240, 160  # Punkte; Karten im Onboarding/Shop schneiden mit scaledToFill zu
 
 
@@ -25,7 +26,7 @@ async def main():
         for st in STYLES:
             # in CarPlay-Größe rendern (720 × 480 = 3× der Vorschau) – dann ist es ein verkleinertes CarPlay-Bild
             pg = await b.new_page(viewport={"width": W * 3, "height": H * 3}, device_scale_factor=1)
-            await pg.goto(f"{URL}?style={st}")
+            await pg.goto(f"{URL}?style={st}" + ("&z=12.3" if st == "frontier" else ""))  # GM-069: Frontier zeigt das Gelände
             await pg.wait_for_function("document.title == 'ready'", timeout=120000)
             out = shots / f"{st}.png"
             await pg.screenshot(path=str(out))

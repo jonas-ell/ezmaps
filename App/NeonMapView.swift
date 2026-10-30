@@ -82,10 +82,11 @@ final class RouteOverlay {
         waterTimer?.invalidate()
         waterTimer = nil
         guard on, !Self.waterFrames.isEmpty else { return }
-        waterTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
+        // GM-075: 0,5 s statt 0,2 s – jedes Bild zeichnete die 3D-Karte neu (Ruckeln)
+        waterTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let self, self.styleReady, let style = self.map?.style else { return }
-                // GM-069: Muster-Bild tauschen baut Kacheln neu auf – während der Fahrt gab das alle 0,2 s einen Ruck. Wasser läuft nur im Stand.
+                // GM-085: Muster-Bild tauschen baut Kacheln neu auf – während der Fahrt gab das alle 0,2 s einen Ruck. Wasser läuft nur im Stand.
                 let model = AppModel.shared
                 if model.screen == .navigating || model.driveKmh > 5 { return }
                 self.waterFrame = (self.waterFrame + 1) % Self.waterFrames.count
@@ -94,11 +95,16 @@ final class RouteOverlay {
         }
     }
 
+    /// GM-072: Symbole und Muster für jede Karte (auch Stil-Seite und Erkunden – dort fehlten sie, Karte ohne Texturen)
+    static func registerImages(_ style: MLNStyle) {
+        for (name, image) in RouteOverlay.poiImages() { style.setImage(image, forName: name) } // GM-026
+        for (name, image) in StylePatterns.all() { style.setImage(image, forName: name) } // GM-050: Muster Pixel Quest / Toy Town
+    }
+
     func styleLoaded(_ style: MLNStyle) {
         styleReady = true
         animateWater(mapStyle == .pixelQuest)
-        for (name, image) in RouteOverlay.poiImages() { style.setImage(image, forName: name) } // GM-026
-        for (name, image) in StylePatterns.all() { style.setImage(image, forName: name) } // GM-050: Muster Pixel Quest / Toy Town
+        RouteOverlay.registerImages(style)
         let empty = MLNShapeCollectionFeature(shapes: [])
         let alt = MLNShapeSource(identifier: "ez-alt", shape: empty, options: nil)
         let main = MLNShapeSource(identifier: "ez-route", shape: empty, options: nil)
@@ -243,7 +249,10 @@ final class RouteOverlay {
     }
 
     /// GM-050: Pin und Fahnen stehen auf dem Ziel (Anker unten), Raute und X liegen mittig darauf
-    static func destinationStandsUp(_ style: MapStyle) -> Bool { [.classic, .pixelQuest, .toyTown].contains(style) }
+    /// GM-070: Pixel Quest in 3D (schräge Kamera, Blocktürme), alle anderen flach von oben
+    static func pitch(for style: MapStyle) -> CGFloat { style == .pixelQuest ? 32 : 0 } // GM-077: 32° statt 50° – kein Horizont, kein Himmel nötig
+
+    static func destinationStandsUp(_ style: MapStyle) -> Bool { [.classic, .pixelQuest, .toyTown, .frontier].contains(style) }
 
     /// GM-050: Ziel-Symbol je Stil (eigene Formen): Klassik rote Stecknadel, Neon City leuchtende lila Raute,
     /// Wild West rotes Tinten-X im Kreis, Pixel Quest Pixel-Fahne, Toy Town karierte Spielzeug-Fahne. Mirror: tools/prototype/js/poi.js
@@ -295,6 +304,14 @@ final class RouteOverlay {
                 px(2, 1, 2, 15, 0x1b1206); px(3, 1, 1, 14, 0x8a5a2b)           // Stange mit Rand
                 px(4, 1, 9, 7, 0x1b1206); px(4, 2, 8, 5, 0xe8453c); px(5, 3, 3, 2, 0xffcc33)   // Fahne
                 px(0, 15, 7, 1, 0x1b1206)                                       // Fuß
+            case .frontier:
+                if let f = UIImage(named: "fv2-destination") { // GM-068: Fahne, Fuß unten
+                    f.draw(in: CGRect(x: 2, y: 2, width: 44, height: 44))
+                    return
+                }
+                let x = UIBezierPath(ovalIn: CGRect(x: 14, y: 14, width: 20, height: 20))
+                StyleTheme.hex(0xe0a047).setFill(); x.fill()
+                StyleTheme.hex(0x303121).setStroke(); x.lineWidth = 3; x.stroke()
             case .toyTown:
                 if let f = UIImage(named: "toy-flag") { // GM-065: Codex
                     f.draw(in: CGRect(x: 4, y: 4, width: 40, height: 40))
@@ -322,7 +339,11 @@ final class RouteOverlay {
         "barber": ("scissors", .white), "hotel": ("bed.double.fill", .white), "school": ("book.fill", .white),
         "church": ("bell.fill", .white), "playground": ("figure.play", .white)
     ]
-    static let poiSuffixes = ["", "-neon", "-west", "-px", "-toy"]
+    static let poiSuffixes = ["", "-neon", "-west", "-px", "-toy", "-fv2"]
+    /// GM-068: Frontier-Zeichen (Assets Frontier/fv2-poi-<datei>) je Art
+    static let frontierPoi = ["shop": "shop", "cross": "hospital", "fuel": "fuel", "parking": "parking", "food": "food", "fastfood": "food",
+                              "coffee": "coffee", "charge": "charge", "shirt": "clothing", "cash": "bank", "cinema": "cinema", "barber": "barber",
+                              "hotel": "hotel", "school": "school", "church": "church", "playground": "playground"]
 
     /// GM-026/057: Kartensymbole je Stil – Klassik/Neon weiße (Neon teils farbige) Silhouette mit schwarzem Rand,
     /// Wild West schwarzer Knopf, Pixel Quest Item-Grafiken des Nutzers (Assets PixelQuest/px-<art>), Toy Town bunte Knöpfe
@@ -362,6 +383,16 @@ final class RouteOverlay {
             out["ez-poi-" + kind + "-west"] = UIImage(named: "west-poi-" + kind) ?? westBadge(sym) // GM-062: Codex-Knöpfe, wo vorhanden
             out["ez-poi-" + kind + "-px"] = UIImage(named: "px-" + kind).map(StylePatterns.pixelIcon) ?? StylePatterns.pixelSign(kind)
             out["ez-poi-" + kind + "-toy"] = UIImage(named: "toy-poi-" + kind) ?? StylePatterns.toyBadge(kind, symbol: sym) // GM-065: Codex
+            // GM-076: wie im Zielbild – helles Zeichen auf dunklem runden Knopf (vorher freistehend, Nutzer: „falsche Icons“)
+            let glyph = frontierPoi[kind].flatMap { UIImage(named: "fv2-poi-" + $0) } ?? outlined(sym, StyleTheme.hex(0xf4e7c2))
+            out["ez-poi-" + kind + "-fv2"] = UIGraphicsImageRenderer(size: CGSize(width: 40, height: 40)).image { ctx in
+                let r = CGRect(x: 3, y: 3, width: 34, height: 34)
+                ctx.cgContext.setShadow(offset: CGSize(width: 0, height: 1), blur: 2, color: UIColor.black.withAlphaComponent(0.4).cgColor)
+                StyleTheme.hex(0x222719).withAlphaComponent(0.92).setFill(); ctx.cgContext.fillEllipse(in: r)
+                ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
+                StyleTheme.hex(0xf4e7c2).withAlphaComponent(0.55).setStroke(); ctx.cgContext.setLineWidth(1); ctx.cgContext.strokeEllipse(in: r.insetBy(dx: 0.5, dy: 0.5))
+                glyph?.draw(in: CGRect(x: 8, y: 8, width: 24, height: 24))
+            }
         }
         return out
     }
@@ -451,9 +482,14 @@ struct NeonMapView: UIViewRepresentable {
             c.style = style
             c.overlay?.switchStyle(style)
             c.crosshair?.isHidden = true
-            c.hideCube() // GM-074: Würfel-Erde nur in Pixel Quest
+            c.hideCube() // GM-090: Würfel-Erde nur in Pixel Quest
+            if !navigating { // GM-070: Neigung je Stil auch ohne Navigation
+                let cam = map.camera
+                cam.pitch = RouteOverlay.pitch(for: style)
+                map.setCamera(cam, animated: true)
+            }
         }
-        // GM-074: nie weiter raus, als die Welt den Bildschirm hoch füllt – sonst Rand in Grundfarbe über dem Nordpol
+        // GM-090: nie weiter raus, als die Welt den Bildschirm hoch füllt – sonst Rand in Grundfarbe über dem Nordpol
         // (Nutzer-Bild: grüner Streifen in Pixel Quest)
         if map.bounds.height > 0 {
             let fill = max(0, log2(Double(map.bounds.height) / 512) + 0.05)
@@ -477,7 +513,7 @@ struct NeonMapView: UIViewRepresentable {
             map.showsUserLocation = !navigating && locationAllowed // GM-022: in der Navigation zeigt unser Pfeil die Fahrposition
             if !navigating {
                 let cam = map.camera
-                cam.pitch = 0
+                cam.pitch = RouteOverlay.pitch(for: style) // GM-070: vorher immer 0
                 map.setCamera(cam, animated: true)
                 if locationAllowed { map.userTrackingMode = .follow }
             }
@@ -504,7 +540,7 @@ struct NeonMapView: UIViewRepresentable {
         }
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest
-            c.hideCube() // GM-074
+            c.hideCube() // GM-090
             if !navigating { if locationAllowed { map.userTrackingMode = .follow } } else { c.camera?.attach() } // GM-045: Mitte → Pfeil wieder fest
             c.crosshair?.isHidden = true
         }
@@ -521,7 +557,7 @@ struct NeonMapView: UIViewRepresentable {
         var trailCount = 0
         var allowed = false
         var crosshair: CrosshairView?
-        /// GM-074: Würfel-Erde (Pixel Quest, ganz rausgezoomt)
+        /// GM-090: Würfel-Erde (Pixel Quest, ganz rausgezoomt)
         var cube: CubeEarthView?
         static let cubeZoom = 1.4
 
@@ -529,7 +565,7 @@ struct NeonMapView: UIViewRepresentable {
             overlay?.styleLoaded(style)
         }
 
-        /// GM-074: Pixel Quest – nach dem Rauszoomen bis fast ganz raus wird die Erde ein Block-Würfel
+        /// GM-090: Pixel Quest – nach dem Rauszoomen bis fast ganz raus wird die Erde ein Block-Würfel
         func mapView(_ mapView: MLNMapView, regionDidChangeWith reason: MLNCameraChangeReason, animated: Bool) {
             MainActor.assumeIsolated {
                 guard style == .pixelQuest, !navigating, cube == nil, mapView.zoomLevel < Self.cubeZoom else { return }
@@ -608,6 +644,7 @@ final class CrosshairView: UIView {
         switch style {
         case .neonCity: return UIColor(white: 1, alpha: 0.9)
         case .wildWest: return UIColor(red: 0x9b / 255.0, green: 0x16 / 255.0, blue: 0x12 / 255.0, alpha: 0.9)
+        case .frontier: return UIColor(red: 0xf4 / 255.0, green: 0xe7 / 255.0, blue: 0xc2 / 255.0, alpha: 0.9) // GM-068: offenes cremefarbenes Kreuz
         default: return nil
         }
     }
@@ -642,11 +679,11 @@ final class CrosshairView: UIView {
 struct OSMAttribution: View {
     var body: some View {
         Text(L("© OpenMapTiles · © OpenStreetMap-Mitwirkende")) // GM-020: OpenFreeMap verlangt beide Hinweise
-            .font(.caption2)
+            .font(.system(size: 9, weight: .medium)) // GM-083: kleiner, weniger dominant (bleibt immer sichtbar)
             .foregroundStyle(.white.opacity(0.85))
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background(.black.opacity(0.55), in: RoundedRectangle(cornerRadius: 4))
+            .padding(.horizontal, 5)
+            .padding(.vertical, 1.5)
+            .background(.black.opacity(0.3), in: RoundedRectangle(cornerRadius: 3))
             .accessibilityLabel(L("© OpenMapTiles · © OpenStreetMap-Mitwirkende"))
     }
 }
@@ -672,9 +709,11 @@ final class PlayerLocationView: MLNUserLocationAnnotationView {
             shownStyle = style
             shownGreen = green
             arrow.image = style == .neonCity ? PlayerLocationView.image : PlayerMarker.images(for: style).plain
-            let size: CGFloat = style == .neonCity ? 30 : style == .pixelQuest ? 64 : 46 // GM-065: vorher 34; GM-073: Pixel viel größer
+            let size: CGFloat = style == .neonCity ? 30 : 46 // GM-065: vorher 34 – Marker kaum sichtbar
             frame.size = CGSize(width: size, height: size)
-            arrow.frame = bounds
+            // GM-076: frame bei gedrehtem Pfeil verkleinert ihn (Neon-Pfeil nach Stilwechsel winzig) – Größe über bounds/center
+            arrow.bounds = CGRect(x: 0, y: 0, width: size, height: size)
+            arrow.center = CGPoint(x: size / 2, y: size / 2)
             arrow.contentMode = .scaleAspectFit
             arrow.layer.magnificationFilter = style == .pixelQuest ? .nearest : .linear
         }
@@ -683,7 +722,7 @@ final class PlayerLocationView: MLNUserLocationAnnotationView {
         } else if let h = userLocation?.heading?.trueHeading, h >= 0 {
             lastHeading = h
         }
-        let rot: Double = (lastHeading - (mapView?.direction ?? 0)) * .pi / 180
+        let rot: Double = style == .pixelQuest ? 0 : (lastHeading - (mapView?.direction ?? 0)) * .pi / 180 // GM-072: Pixel-Marker steht aufrecht
         arrow.transform = CGAffineTransform(rotationAngle: CGFloat(rot))
     }
 
@@ -717,6 +756,26 @@ enum StylePatterns {
     }
 
     static func rgb(_ r: Int, _ g: Int, _ b: Int) -> UIColor { UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: 1) }
+
+    /// GM-072: Bild hart (ohne Glätten) vergrößern
+    static func scaled(_ img: UIImage, _ f: CGFloat) -> UIImage {
+        let size = CGSize(width: img.size.width * f, height: img.size.height * f)
+        let fmt = UIGraphicsImageRendererFormat(); fmt.scale = img.scale
+        return UIGraphicsImageRenderer(size: size, format: fmt).image { ctx in
+            ctx.cgContext.interpolationQuality = .none
+            img.draw(in: CGRect(origin: .zero, size: size))
+        }
+    }
+
+    /// GM-072: Bild n × n mal nebeneinander (gleiche Pixelgröße)
+    static func tiled(_ img: UIImage, _ n: Int) -> UIImage {
+        let size = CGSize(width: img.size.width * CGFloat(n), height: img.size.height * CGFloat(n))
+        let fmt = UIGraphicsImageRendererFormat(); fmt.scale = img.scale
+        return UIGraphicsImageRenderer(size: size, format: fmt).image { ctx in
+            ctx.cgContext.interpolationQuality = .none
+            for y in 0..<n { for x in 0..<n { img.draw(in: CGRect(x: CGFloat(x) * img.size.width, y: CGFloat(y) * img.size.height, width: img.size.width, height: img.size.height)) } }
+        }
+    }
 
     /// Kachel aus Kunstpixeln (je 2 pt), harte Kanten
     static func pixelTile(_ cells: Int, _ color: (Int, Int) -> UIColor) -> UIImage {
@@ -784,6 +843,32 @@ enum StylePatterns {
             let mortar = y % 4 == 3 || (x + (y / 4) % 2 * 4) % 8 == 7
             return mortar ? rgb(196, 180, 170) : hash(x, y, 11) < 0.3 ? rgb(160, 70, 52) : rgb(146, 60, 44)
         }
+        // GM-078: Hochhaus-Fassade – heller Stein mit Glasfenstern (vorher grauer Bruchstein, wirkte schrecklich)
+        out["ez-pat-tower-px"] = pixelTile(16) { x, y in
+            let fx = x % 4, fy = y % 4
+            if fy == 0 || fx == 0 { return hash(x, y, 12) < 0.2 ? rgb(196, 192, 182) : rgb(214, 210, 200) }   // Rahmen
+            if fy == 1 && fx == 1 { return rgb(186, 222, 240) }                                              // Glanz
+            return hash(x / 4, y / 4, 13) < 0.08 ? rgb(232, 196, 110) : rgb(98, 146, 186)                    // Glas, wenige erleuchtet
+        }
+        // GM-081: zweites Dach – dunkles Schiefer-Grau (Altstadt war eine einzige rote Fläche)
+        out["ez-pat-roof2-px"] = pixelTile(16) { x, y in
+            let off = (x + (y / 4) % 2 * 2) % 4
+            if y % 4 == 3 { return rgb(38, 42, 52) }
+            if off == 0 { return rgb(52, 58, 70) }
+            return hash(x, y, 16) < 0.3 ? rgb(86, 94, 110) : rgb(72, 80, 94)
+        }
+        // GM-078: Dächer – Schindeln (Häuser) und Steinplatte (Hochhäuser), oben auf jedem Block
+        out["ez-pat-roof-px"] = pixelTile(16) { x, y in
+            let row = y / 4, off = (x + row % 2 * 2) % 4
+            if y % 4 == 3 { return rgb(70, 30, 24) }
+            if off == 0 { return rgb(96, 40, 30) }
+            return hash(x, y, 14) < 0.3 ? rgb(150, 62, 44) : rgb(128, 52, 38)
+        }
+        out["ez-pat-slab-px"] = pixelTile(16) { x, y in
+            if x == 0 || y == 0 { return rgb(120, 120, 120) }
+            if x == 8 || y == 8 { return rgb(140, 140, 140) }
+            return hash(x, y, 15) < 0.25 ? rgb(176, 176, 176) : rgb(162, 162, 162)
+        }
         out["ez-pat-grass-px"] = UIImage(named: "px-tex-grass") ?? out["ez-pat-grass-px-own"]
         out["ez-pat-road-px"] = UIImage(named: "px-tex-cobble") ?? out["ez-pat-road-px-own"]
         out["ez-pat-water-px"] = UIImage(named: "px-tex-water") ?? out["ez-pat-water-px-own"]
@@ -814,8 +899,19 @@ enum StylePatterns {
         if let f = UIImage(named: "west-tex-forest") { out["ez-pat-forest-west"] = f }
         out["ez-pat-water-west"] = UIImage(named: "west-tex-water") ?? pixelTile(2) { _, _ in rgb(170, 163, 146) }
         // GM-065: Toy Town – Codex-Kacheln und Haus-Symbole ("toy-house-1" … in Assets ToyTown)
-        for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment"] {
+        for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment",
+                     "fv2-paper-grain", "fv2-forest-canopy", "fv2-grass-mottle", "fv2-rock-grain", "fv2-water-grain", // GM-068: Frontier-Körnung
+                     "fv2-forest-paint", "fv2-meadow-paint", // GM-070: gemalte Kacheln
+                     "toy-tex-weave", "toy-tree"] { // GM-071: Teppich-Flor; GM-073: Baum am Waldrand
             if let img = UIImage(named: name) { out[name] = img }
+        }
+        for k in 1...16 { if let img = UIImage(named: "px-house-\(k)") { out["px-house-\(k)"] = img } } // GM-072: 16 Villager-Varianten
+        // GM-072: Straße aus 4 × 4 Bruchstein-Blöcken (line-pattern zieht das Bild auf Straßenbreite – vorher graue Streifen)
+        if let c = out["ez-pat-road-px"] { out["ez-pat-road-px-4"] = tiled(c, 4) } // GM-081: nur nah (mittelweit verschwamm es zu Grau)
+        // GM-072: Blöcke wachsen beim Heranzoomen (build_style zoom_patterns: 2×/4×/8× ab Zoom 16/17/18)
+        for n in ["ez-pat-grass-px", "ez-pat-leaves-px", "ez-pat-farm-px", "ez-pat-stone-px"] {
+            guard let img = out[n] else { continue }
+            for f in [2, 4, 8] { out[n + "-\(f)"] = scaled(img, CGFloat(f)) }
         }
         // Toy Town (gezeichnet; Codex-Kacheln weiter unten haben Vorrang)
         out["ez-pat-lawn-toy"] = UIGraphicsImageRenderer(size: CGSize(width: 64, height: 64)).image { ctx in

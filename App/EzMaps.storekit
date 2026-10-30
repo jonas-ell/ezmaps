@@ -101,6 +101,26 @@
       "productID": "ezmaps.style.toy",
       "referenceName": "Toy Town",
       "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29.99",
+      "familyShareable": true,
+      "internalID": "1503293768",
+      "localizations": [
+        {
+          "description": "Kartenstil Frontier",
+          "displayName": "Frontier",
+          "locale": "de"
+        },
+        {
+          "description": "Kartenstil Frontier",
+          "displayName": "Frontier",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "ezmaps.style.frontier",
+      "referenceName": "Frontier",
+      "type": "NonConsumable"
     }
   ],
   "settings": {

@@ -1,4 +1,4 @@
-// GM-074: erzeugt von tools/cube/build_landmask.py (Natural Earth 1:50m, gemeinfrei) – nicht von Hand ändern
+// GM-090: erzeugt von tools/cube/build_landmask.py (Natural Earth 1:50m, gemeinfrei) – nicht von Hand ändern
 
 extension LandMask {
     static let worldWidth = 720

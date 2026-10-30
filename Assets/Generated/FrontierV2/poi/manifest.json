@@ -1,0 +1,722 @@
+[
+  {
+    "id": "fv2-poi-airport",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact airport silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-airport.svg",
+    "files": [
+      {
+        "file": "fv2-poi-airport.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-airport@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-airport@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-airport-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-bank",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact bank silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-bank.svg",
+    "files": [
+      {
+        "file": "fv2-poi-bank.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-bank@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-bank@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-bank-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-barber",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact barber silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-barber.svg",
+    "files": [
+      {
+        "file": "fv2-poi-barber.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-barber@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-barber@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-barber-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-camping",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact camping silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-camping.svg",
+    "files": [
+      {
+        "file": "fv2-poi-camping.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-camping@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-camping@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-camping-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-charge",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact charge silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-charge.svg",
+    "files": [
+      {
+        "file": "fv2-poi-charge.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-charge@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-charge@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-charge-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-church",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact church silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-church.svg",
+    "files": [
+      {
+        "file": "fv2-poi-church.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-church@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-church@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-church-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-cinema",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact cinema silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-cinema.svg",
+    "files": [
+      {
+        "file": "fv2-poi-cinema.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-cinema@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-cinema@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-cinema-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-clothing",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact clothing silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-clothing.svg",
+    "files": [
+      {
+        "file": "fv2-poi-clothing.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-clothing@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-clothing@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-clothing-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-coffee",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact coffee silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-coffee.svg",
+    "files": [
+      {
+        "file": "fv2-poi-coffee.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-coffee@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-coffee@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-coffee-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-food",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact food silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-food.svg",
+    "files": [
+      {
+        "file": "fv2-poi-food.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-food@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-food@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-food-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-fuel",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact fuel silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-fuel.svg",
+    "files": [
+      {
+        "file": "fv2-poi-fuel.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-fuel@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-fuel@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-fuel-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-hospital",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact hospital silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-hospital.svg",
+    "files": [
+      {
+        "file": "fv2-poi-hospital.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-hospital@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-hospital@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-hospital-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-hotel",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact hotel silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-hotel.svg",
+    "files": [
+      {
+        "file": "fv2-poi-hotel.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-hotel@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-hotel@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-hotel-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-lookout",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact lookout silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-lookout.svg",
+    "files": [
+      {
+        "file": "fv2-poi-lookout.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-lookout@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-lookout@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-lookout-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-marina",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact marina silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-marina.svg",
+    "files": [
+      {
+        "file": "fv2-poi-marina.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-marina@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-marina@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-marina-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-parking",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact parking silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-parking.svg",
+    "files": [
+      {
+        "file": "fv2-poi-parking.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-parking@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-parking@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-parking-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-playground",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact playground silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-playground.svg",
+    "files": [
+      {
+        "file": "fv2-poi-playground.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-playground@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-playground@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-playground-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-repair",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact repair silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-repair.svg",
+    "files": [
+      {
+        "file": "fv2-poi-repair.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-repair@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-repair@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-repair-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-school",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact school silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-school.svg",
+    "files": [
+      {
+        "file": "fv2-poi-school.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-school@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-school@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-school-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  },
+  {
+    "id": "fv2-poi-shop",
+    "folder": "poi",
+    "base": 32,
+    "description": "Compact shop silhouette, cream face and dark casing; no plaque, no surrounding badge.",
+    "svg": "fv2-poi-shop.svg",
+    "files": [
+      {
+        "file": "fv2-poi-shop.png",
+        "width": 32,
+        "height": 32,
+        "scale": 1
+      },
+      {
+        "file": "fv2-poi-shop@2x.png",
+        "width": 64,
+        "height": 64,
+        "scale": 2
+      },
+      {
+        "file": "fv2-poi-shop@3x.png",
+        "width": 96,
+        "height": 96,
+        "scale": 3
+      },
+      {
+        "file": "fv2-poi-shop-master.png",
+        "width": 1024,
+        "height": 1024,
+        "scale": null
+      }
+    ],
+    "anchor": "center",
+    "tile": false,
+    "sdf": false
+  }
+]

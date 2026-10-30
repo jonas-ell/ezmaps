@@ -131,7 +131,7 @@ final class AppModel {
     /// pro Sekunde, die Kamera glitt hinterher und schnitt Kurven). Navigation: Fortschritt auf der Route; frei: GPS + Kurs.
     @ObservationIgnored private var navAnchor: (progress: Double, mps: Double, time: Date)?
     @ObservationIgnored private var driveAnchor: (coordinate: Coordinate, mps: Double, time: Date)?
-    /// GM-069: gegen das Ruckeln – Weiterrechnen mit weichem Ausgleich bei jeder neuen Meldung (Core, getestet)
+    /// GM-085: gegen das Ruckeln – Weiterrechnen mit weichem Ausgleich bei jeder neuen Meldung (Core, getestet)
     @ObservationIgnored private var freeSmoother = FreeMotionSmoother()
     @ObservationIgnored private var routeSmoother = RouteProgressSmoother()
     /// gleiche Uhr für Meldungen und Kamerabilder (läuft stetig, unabhängig von der Uhrzeit)
@@ -177,7 +177,7 @@ final class AppModel {
         let now = Date()
         if screen == .navigating, let c = navCoordinate {
             // GM-050: auf der Route weiterrechnen, Richtung über ±12 m gemittelt → runde Kurven
-            // GM-069: Fortschritt aus RouteProgressSmoother – bei neuer Meldung kein Ruck mehr
+            // GM-085: Fortschritt aus RouteProgressSmoother – bei neuer Meldung kein Ruck mehr
             if nav?.offRoute != true, let route = session?.route, let d = routeSmoother.value(at: clock, limit: route.length) {
                 if let p = route.coordinate(at: d), let p0 = route.coordinate(at: d - 12), let p1 = route.coordinate(at: d + 12) {
                     return .init(coordinate: p, heading: p0.bearing(to: p1), kmh: navSpeedKmh)
@@ -186,7 +186,7 @@ final class AppModel {
             return .init(coordinate: c, heading: navHeading, kmh: navSpeedKmh)
         }
         guard let c = currentCoordinate else { return nil }
-        // frei fahren: GM-069 weiterrechnen inkl. Kurve, Abweichung bei neuer Meldung weich ausgleichen (im Stand nicht)
+        // frei fahren: GM-085 weiterrechnen inkl. Kurve, Abweichung bei neuer Meldung weich ausgleichen (im Stand nicht)
         if demoPosition == nil, let p = freeSmoother.pose(at: clock) {
             return .init(coordinate: p.coordinate, heading: p.heading, kmh: driveKmh)
         }
@@ -285,7 +285,7 @@ final class AppModel {
         guard let route = selected, let dest = destination else { return }
         let s = NavigationSession(route: route, destinationName: dest.name)
         session = s
-        routeSmoother.reset() // GM-069: neue Fahrt, neuer Fortschritt
+        routeSmoother.reset() // GM-085: neue Fahrt, neuer Fortschritt
         nav = nil
         navCoordinate = route.coordinate(at: 0)
         navHeading = route.heading(at: 0)

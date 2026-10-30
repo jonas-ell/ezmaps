@@ -2,7 +2,7 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
-## GM-074 – Pixel Quest: Erde als großer Block-Würfel; kein grüner Rand mehr beim Rauszoomen
+## GM-090 – Pixel Quest: Erde als großer Block-Würfel; kein grüner Rand mehr beim Rauszoomen
 
 **Ziel:** Nutzer-Bild: ganz rausgezoomt grüner Streifen über der Weltkarte. Wunsch: „die Erde bei Pixel Quest zu einem riesigen 3D-Würfel machen“.
 
@@ -19,7 +19,9 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Ungetestet:** Nicht auf dem Mac gebaut – SceneKit-Code ist nicht kompiliert. Farben in SceneKit (sRGB/linear), Bildrate, Speicher, Gesten-Gefühl, Übergang Karte ↔ Würfel und der Mindest-Zoom auf dem Gerät nicht gesehen.
 
-## GM-073 – Pixel Quest: Symbole und Pfeil viel größer; Stand von main übernommen
+## GM-089 – Pixel Quest: Symbole und Pfeil viel größer; Stand von main übernommen
+
+**Nachtrag (Merge mit main bis GM-083):** überholt – main hat Pixel-Symbole (GM-079) und Marker (GM-070/075) selbst angepasst und auf dem Mac gebaut. Deren Werte gelten, meine 2,2×/88 pt/64 pt sind raus.
 
 **Ziel:** Nutzer: „bei pixelquest müssen die icons und der navigationspfeil viel größer sein“.
 
@@ -29,25 +31,25 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 - POI-Symbole: neuer Faktor `poi_scale` je Stil, Pixel Quest 2,2× (Größe 0,79 → 1,14 statt 0,36 → 0,52). Andere Stile unverändert.
 - Fahr-Pfeil Pixel Quest: 88-pt-Fläche, Pfeil 70 pt hoch (vorher 44 pt in 60 pt), scharf ohne Glätten; `arrow.bounds` richtet sich nach dem Bild.
 - Standort-Marker im Stand: Pixel Quest 64 pt (vorher 46 pt).
-- Merge mit main: doppelte, ungenutzte Toy-Town-/Wild-West-Bilder aus GM-071 entfernt (main nutzt die Codex-Bilder unter eigenen Namen). Wasser-Pause beim Fahren (GM-069) nach dem Merge wieder drin.
+- Merge mit main: doppelte, ungenutzte Toy-Town-/Wild-West-Bilder aus GM-087 entfernt (main nutzt die Codex-Bilder unter eigenen Namen). Wasser-Pause beim Fahren (GM-085) nach dem Merge wieder drin.
 
 **Tatsächlich geprüft:** `check_style.py` → STIL OK; Swift-Dateien parsen; `Core` `swift test` grün (Linux).
 
 **Ungetestet:** Nicht auf dem Mac gebaut. Größe auf dem Gerät (zu groß? überlappt?) nicht gesehen. Dorfhäuser für Pixel Quest fehlen weiter – die Bilder liegen nur lokal (`Assets/Generated/minecraft/`, nicht im Repo).
 
-## GM-072 – Pixel-Quest-Satz von Codex wieder raus
+## GM-088 – Pixel-Quest-Satz von Codex wieder raus
 
 **Ziel:** Nutzer: „lass pixelquest assets raus“.
 
 **Dateien:** `Assets/Generated/PixelQuest/` (gelöscht)
 
-**Geändert:** Der Pixel-Satz der Codex-Lieferung (GM-071) ist entfernt. Pixel Quest nutzt weiter die Grafiken des Nutzers (`App/Assets.xcassets/PixelQuest/`), unverändert. GM-071 Auftrag 6 entfällt.
+**Geändert:** Der Pixel-Satz der Codex-Lieferung (GM-087) ist entfernt. Pixel Quest nutzt weiter die Grafiken des Nutzers (`App/Assets.xcassets/PixelQuest/`), unverändert. GM-087 Auftrag 6 entfällt.
 
 **Tatsächlich geprüft:** Ordner weg, App-Bildsätze Pixel Quest unverändert.
 
 **Ungetestet:** –
 
-## GM-071 – Codex-Lieferung: Toy Town komplett, Wild West Rest, eigene Pixel-Symbole
+## GM-087 – Codex-Lieferung: Toy Town komplett, Wild West Rest, eigene Pixel-Symbole
 
 **Ziel:** Nutzer hat `ezmaps-assets.zip` von Codex hochgeladen (Auftrag aus dem Chat, selbstständig ohne Repo-Zugriff).
 
@@ -82,7 +84,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 5. **Wild-West-Texturen neu** (Wald-Stempel jetzt scharf, Papier/Schraffur/Wasser kräftiger): einbauen, wenn sie die Straßen nicht stören.
 6. Pixel Quest erst nach Entscheidung des Nutzers umstellen. Code-Namen wären `px-<art>`, Codex-Datei `px-poi-<codex-name>`, Zuordnung wie bei Wild West.
 
-## GM-070 – Ganz Europa: Texte angepasst (Technik konnte es schon)
+## GM-086 – Ganz Europa: Texte angepasst (Technik konnte es schon)
 
 **Ziel:** Nutzer: „sollte nicht ganz Europa auf der Karte sein?“
 
@@ -102,7 +104,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Ungetestet:** Fahrt im Ausland auf dem Gerät.
 
-## GM-069 – Gegen das Ruckeln: Position weich weiterrechnen, Pixel-Wasser nur im Stand
+## GM-085 – Gegen das Ruckeln: Position weich weiterrechnen, Pixel-Wasser nur im Stand
 
 **Ziel:** Nutzer: „was machen wir gegen das ruckeln wenn sich der standort bewegt?“
 
@@ -135,7 +137,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
    Gegenmittel: Leuchtspur nur alle 2 s, HUD-Werte in eine eigene kleine `@Observable`-Klasse.
 3. In CarPlay `maxFPS` 30 lassen, aber prüfen, ob das Autoradio wirklich 30 schafft.
 
-## GM-068 – Replay-Kamera wie Freifahren in CarPlay (aus der Cloud, dort zuerst als GM-045 geführt, dann GM-063)
+## GM-084 – Replay-Kamera wie Freifahren in CarPlay (aus der Cloud, dort zuerst als GM-045 geführt, dann GM-063)
 
 **Ziel:** Nutzer: Im Replay soll die Kamera so stehen wie beim Freifahren, mit dem Pfeil groß in der Mitte.
 
@@ -151,6 +153,274 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 **Tatsächlich geprüft:** `swift test` Core grün (Linux). Prototyp-Video erzeugt und angesehen. `swiftc -parse` ReplayExporter.
 
 **Ungetestet:** App-Export auf dem Mac. Seit GM-057 gibt es einen Standort-Marker je Stil – das Replay sollte den Marker des aktiven Stils nehmen statt immer `PlayerNeonGlow` (für den lokalen Claude).
+## GM-083 – Overlays: Knopf-Leiste, kleiner Hinweis, Navigation aufgeräumt; Toy-Town-Häuschen gemischt
+
+**Ziel:** Nutzer gibt Overlay-Vorschläge 3, 4, 6, 7, 8, 9 und 11 frei (1 und 2 ausdrücklich nicht; 5 offen).
+
+**Dateien:** `App/ContentView.swift`, `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `docs/overlay-vorschlag/` (Vorher/Nachher-Bilder)
+
+**Geändert:**
+- 3: Hinweis „© OpenMapTiles · © OpenStreetMap-Mitwirkende“ kleiner (9 pt), halbtransparent, unten links. Bleibt auf jedem Kartenbildschirm.
+- 4: Karte ohne Navigation: eine schmale Knopf-Leiste (Zentrieren, Stile, Entdecken, Einstellungen) statt vier runder Knöpfe. Kompass blendet MapLibre nur bei gedrehter Karte ein.
+- 6: „danach …“ als Zeile im Abbiege-Panel statt eigenem Balken.
+- 7, 8, 9: Unten eine Leiste im Stil des Abbiege-Panels: Tempo-Schild links, Ankunftszeit, Ton und Zentrieren, kleineres X. Kein Tempo-Schild mehr rechts oben, keine Knöpfe mehr über der Route.
+- 11: Toy-Town-Häuschen nach Höhe gemischt (Ausdruck mit `id` gab überall dasselbe Häuschen).
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** Mac-Lauf, Simulator-Bilder, iPhone.
+
+## GM-082 – Pixel Quest: Schienen in echter Breite, Straßen weit weg ohne dunklen Rand
+
+**Ziel:** Nutzer: „Schienen und generell Sachen sollen bei ihrer gleichen Größe bleiben und nicht immer kleiner werden, wenn man nah ranzoomt“; Bilder mit dunklen Straßen weit weg.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`
+
+**Geändert:** Schienen 3,4 m breit (wachsen mit wie Straßen und Häuser, mindestens 6 px), vorher feste 8–18 px. Straßenrand erst ab Zoom 14,5–16 (weit weg überdeckte der dunkle Rand die dünne Pflasterlinie).
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
+## GM-081 – Pixel Quest: Pflaster mittelweit wieder sichtbar, Schieferdächer zwischen den roten
+
+**Ziel:** Nutzer schickt 4 iPhone-Bilder (Frankfurt, Pixel Quest) ohne Text – Fehler selbst suchen.
+
+**Dateien:** `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `tools/prototype/js/poi.js`
+
+**Geändert:**
+- Straßen: Das 4×4-Pflaster (GM-072) wurde mittelweit auf die schmale Linie gequetscht und verschwamm zu Dunkelgrau. Jetzt einfaches Pflaster, 4×4 erst ab Zoom 17,5.
+- Dächer: Altstadt war eine einzige rote Fläche. Jetzt gibt es eine eigene Ebene mit grauem Schiefer, Verteilung nach Höhe. Muster je Gebäude als Ausdruck und Filter nach `id` funktionierten in MapLibre nicht verlässlich (alle gleich), deshalb getrennte Ebenen und Höhe als Merkmal.
+- Bekannt, nicht behebbar mit MapLibre: Symbole liegen am Boden und wirken in 3D wie an Hauswänden.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Idstein Zoom 15,5–18 (Pflaster überall, Schiefer gemischt).
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
+## GM-080 – Frontier: ganz herausgezoomt kein Relief mehr
+
+**Ziel:** Nutzer: „wenn man bei der Far-Cry-Map ganz rauszoomt, laggt es“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-frontier.json`
+
+**Geändert:** Relief erst ab Zoom 8. Darunter musste MapLibre Höhen für ganze Länder laden und schattieren.
+
+**Tatsächlich geprüft:** STIL OK. GM-079 (Items größer): Mac-Lauf ALLES OK, auf dem iPhone installiert.
+
+**Ungetestet:** Mac-Lauf GM-080, iPhone.
+
+## GM-079 – Pixel Quest: Items größer
+
+**Ziel:** Nutzer (Bild mit kleinem Hähnchen auf dem Dach): „das Chicken z. B. muss größer sein“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`
+
+**Geändert:** Pixel-Quest-Symbole 1,6× so groß und ab Zoom 17 bis 19 nochmals bis 1,8× wachsend (vorher ab Zoom 17 fest, wirkte nah winzig neben den Blöcken).
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
+## GM-078 – Pixel Quest: Dächer auf allen Blöcken, Hochhäuser mit Glasfassade, echte Höhen
+
+**Ziel:** Nutzer: „die Frankfurt-Skyline ist wirklich so groß, aber die Textur sieht schrecklich aus“; „kannst du nicht noch Dächer drauf bauen, auch wenn die flach sind?“
+
+**Dateien:** `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `tools/prototype/js/poi.js`
+
+**Geändert:**
+- Echte Gebäudehöhen wieder an (die 12-m-Grenze aus GM-077 ist raus).
+- Ab 20 m Hochhaus-Fassade: heller Stein mit Glasfenstern, wenige erleuchtet (vorher grauer Bruchstein). 12–20 m Ziegel.
+- Dach-Platte (1 m) oben auf jedem Block: rote Schindeln auf Häusern, graue Steinplatte auf Hochhäusern. Oben und Wand sehen jetzt verschieden aus.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Frankfurt-Bankenviertel und Idstein (schräg).
+
+**Ungetestet:** Mac-Lauf, iPhone, Leistung mit den zusätzlichen Dach-Ebenen.
+
+## GM-077 – Pixel Quest: Himmel raus, flachere Kamera, Blöcke höchstens 3 hoch
+
+**Ziel:** Nutzer: „das sieht so schlecht aus, mach den Himmel weg, das ist schrecklich. Hast du keine andere Lösung?“
+
+**Dateien:** `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `tools/prototype/js/stylepreview.js`
+
+**Geändert:**
+- Himmel (SkyOverlay) komplett entfernt.
+- Kamera 32° statt 50° geneigt: Der Horizont ist nicht mehr zu sehen, ein Himmel ist nicht nötig.
+- Blöcke höchstens 12 m (3 Blöcke). Vorher ragten in Städten graue Hochhaus-Wände über die ganze Karte.
+- Gras, Laub, Weizen und Stein höchstens 4× vergrößert (8× wirkte nah wie riesige Kacheln).
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest Zoom 13,5–18.
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
+## GM-076 – Frontier: Knopf-Symbole wie im Zielbild, Ruckeln; Neon-Pfeil nach Stilwechsel winzig
+
+**Ziel:** Nutzer: Frontier „ruckelt extremst und du hast die falschen Icons genutzt“; „wieso ist der Pfeil bei Neon City auf einmal so klein?!“.
+
+**Dateien:** `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-frontier.json`, `tools/prototype/js/poi.js`
+
+**Geändert:**
+- Frontier-Symbole: helles Zeichen aus dem Paket auf dunklem runden Knopf (#222719) wie im Navigations-Zielbild. Vorher freistehende Zeichen, die das Paket so lieferte, die aber nicht zum Zielbild passten. Wieder normale Größe.
+- Frontier-Ruckeln: Höhen nur bis Zoom 11 laden (vorher 15 – jede neue Kachel wurde geladen und schattiert), Wald-Körnung raus.
+- Standort-Pfeil: Beim Stilwechsel wurde der Rahmen gesetzt, während der Pfeil gedreht war. iOS verkleinert ihn dann (Neon-Pfeil winzig nach Toy Town oder Wild West). Größe jetzt über bounds/center.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Frontier Zoom 11–16,5.
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
+## GM-075 – Ruckeln Pixel Quest und Frontier, Toy-Town-Häuschen nah größer
+
+**Ziel:** Nutzer schickt 16 iPhone-Bilder: „schau, was verbesserungsbedürftig ist, die neue Map laggt“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `App/FollowCamera.swift`
+
+**Geändert:**
+- Pixel Quest: unter Zoom 15 ein einziger einfarbiger Block-Layer statt vier Muster-Layern (Muster-Extrusion ist teuer, schräge Kamera lädt viele Kacheln). Wasser-Animation 0,5 s statt 0,2 s (jedes Bild zeichnete die ganze 3D-Karte neu). Kleine Häuser gemischt Eiche/Fichte. Marker etwas kleiner (verdeckte Ortsnamen).
+- Frontier: nur noch Wald-Körnung, kein Vollbild-Papierkorn und keine Wiesen-/Fels-/Wasser-Körnung (bis die gemalten Kacheln kommen).
+- Toy Town: Häuschen wachsen nah mit (vorher kleines Haus auf großer roter Fläche).
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest Zoom 13,5–18.
+
+**Nachtrag:** erster Mac-Lauf scheiterte (Kommentar verschluckte die Klammer am Wasser-Timer), behoben; dann ALLES OK, auf dem iPhone installiert.
+
+**Ungetestet:** Ruckeln auf dem iPhone.
+
+## GM-074 – Frontier: Grundlage für gemalte Kartenkacheln (Daten, Rechen-Skript, Codex-Prompts)
+
+**Ziel:** Nutzer: „ja gut, hol das alles und für Assets gib Prompts“ (gemalter Frontier-Look über vorberechnete Bildkacheln).
+
+**Dateien:** `tools/terrain/fetch_data.py` (neu), `tools/terrain/render_tiles.py` (neu), `docs/FRONTIER_KACHELN.md` (neu), `docs/frontier-v2/kacheln-z11.jpg`, `-z12.jpg`, `-z14.jpg`
+
+**Geändert:**
+- Copernicus DEM GLO-30 (78 Kacheln) und ESA WorldCover 2021 (15 Kacheln) für Deutschland geladen, 3,6 GB in `C:/Users/jonas/EzMapsData` (außerhalb von OneDrive und Repo).
+- Rechen-Skript: Höhen und Bodenklassen je Kachel nach Web-Mercator, Materialien weich gemischt (über Weltpixel, nahtlos), Relief mit Licht 315° (olivbrauner Schatten, warmes Licht), dunkles Ufer, leichter Malfilter. Höhen und Klassen werden passend zum Zoom geglättet (vorher Treppen im Relief, eckige Flächen bei Zoom 14). Bis Codex liefert: berechnete Platzhalter-Materialien.
+- Doku mit Quellenhinweisen und 9 Codex-Prompts (Wald, Wiese, Feld, Fels, Busch, Feuchtgebiet, Siedlung, Wasser, Schnee).
+
+**Tatsächlich geprüft:** Vorschau Taunus bei Zoom 11, 12 und 14 gerechnet und angesehen.
+
+**Ungetestet:** App (noch keine Kacheln online), echte Materialien, Rechenzeit für ganz Deutschland.
+
+## GM-073 – Pixel Quest nur noch 3D-Blöcke, Toy Town flach bedruckt wie ein echter Spielteppich
+
+**Ziel:** Nutzer: „die Häuser-Kacheln dürfen nie zu sehen sein, es muss immer ein hochgezogenes 3D-Modell sein“; „beim Spielteppich nerven die Kacheln, schau dir echte Spielteppiche an“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `style-toy-town.json`, `App/NeonMapView.swift`, `App/Assets.xcassets/ToyTown/toy-tree` (neu), `toy-tex-weave`, `tools/prototype/js/poi.js`
+
+**Geändert:**
+- Pixel Quest: jedes Gebäude ab Zoom 13 als Block (mindestens 4 m, Höhe in 4-m-Schritten; Eiche, Fichte, Ziegel, Bruchstein nach Höhe). Keine flachen Gebäude, Schatten oder Kanten mehr. Villager-Bilder raus, bis die 3D-Modelle aus `villager-house-with-animations.zip` eingebaut sind.
+- Toy Town: Rasen, Wald, Park und Wasser flach wie gedruckt (keine sich wiederholenden Kacheln), Bäume einzeln entlang der Waldkante, Teppich-Flor feiner und gleichmäßig auf großer Kachel (Wiederholung kaum sichtbar), etwas schwächer.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest (Zoom 13,5–18, schräg) und Toy Town (Zoom 13–17,5).
+
+**Tatsächlich geprüft (Nachtrag):** Mac-Lauf ALLES OK (64 Tests), 22 Simulator-Bilder, auf dem iPhone installiert. Vorschaubilder aller 6 Stile neu aus den App-Bildern (`tiles_from_app.py`), erst im nächsten Build auf dem iPhone.
+
+**Ungetestet:** Leistung mit allen Gebäuden in 3D auf dem iPhone und in CarPlay.
+
+## GM-072 – Mängelliste Pixel Quest, Wild West, Stil-Seite; Himmel; Frontier ruckelt weniger
+
+**Ziel:** Nutzer schickt 16 iPhone-Bilder: „nenne alles, was du bemängelst“, dann „mach alles, bau was mit den Sky-Texturen“; Frontier „gefällt gar nicht und laggt extrem“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `check_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `App/FollowCamera.swift`, `App/ShopScreens.swift`, `App/ExploreScreens.swift`, `App/StyleTheme.swift`, `App/Assets.xcassets/WildWest/west-tex-paper`, `west-tex-forest`, `tools/prototype/js/poi.js`, `.gitignore`, `tools/mac_device.sh`, `mac_drive.sh`, `mac_screens.sh`; nur lokal (Spielbilder, Test-Builds schicken sie mit): `App/Assets.xcassets/PixelQuest/px-sky`, `px-house-1…16`
+
+**Geändert:**
+- Pixel Quest: Marker steht aufrecht. 16 Villager-Varianten statt 4. Ab Zoom 15 keine Holzplatten unter den Häusern. Ab 8 m Blocktürme. Straße aus 4 × 4 Bruchstein-Blöcken, schmaler Rand, Straßennamen seltener, Flüsse mit Wasser-Textur. Gras, Laub, Weizen und Stein wachsen ab Zoom 16/17/18 mit (2×/4×/8×). Himmel des Nutzers oben über der schrägen Karte, weich übergeblendet.
+- Wild West: Papier nahtlos, Wald mit zufällig verteilten Codex-Bäumen ohne Raster, Wohn-/Gewerbe-/Feld-/Parkflächen mit Papier, Straßennamen neben der Linie (vorher Punkte zwischen den Buchstaben), weit weg weniger Straßen, Küste scharf, Häuser sichtbar.
+- Stil-Seite und Erkunden: Symbole und Muster werden angemeldet (vorher Karte ohne Texturen), Vorschau mit dem Marker des Stils, Pixel Quest schräg, Pixel-Titel kleiner.
+- Frontier: zweites Relief und Wiesen-Kachel raus, Wald wieder feine Körnung (Ruckeln).
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest (Zoom 14,5–18, schräg) und Wild West (Zoom 9–16,5).
+
+**Ungetestet:** Mac-Lauf, Himmel (nur App), Leistung auf dem iPhone.
+
+## GM-071 – Toy Town als echter Teppich, kein Klassik-Blitz beim Start
+
+**Ziel:** Nutzer: „Toy Town sieht null wie der Spielteppich aus, wirkliche Teppich-Grafiken mit Textil-Details“; „beim Start sieht man erst die Standard-Map, dann wechselt es zur ausgewählten“.
+
+**Dateien:** `App/Assets.xcassets/ToyTown/toy-tex-weave` (neu), `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `App/NeonMapView.swift`, `App/PurchaseManager.swift`, `tools/prototype/js/poi.js`, `stylepreview.js`, `live.js`
+
+**Geändert:**
+- Toy Town: Teppich-Flor (getuftete Schlingen mit Licht oben links, Schatten unten rechts, lose Fasern, nahtlos) liegt ab Zoom 12 über Rasen, Straßen und Häusern, unter Schrift, Häuschen und Symbolen.
+- Start: Die App merkt sich die gekauften Produkte (`ownedCache`) und zeigt sofort den gewählten Stil. Vorher galt bis zur App-Store-Antwort nichts als gekauft, also kam erst Klassik.
+- Prototyp meldet Asset-Bilder beim Stil-Laden an (Hintergrund-Muster fragen nicht nach).
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Toy Town bei Zoom 13–17,5 angesehen.
+
+**Ungetestet:** siehe Mac-Lauf; Start auf dem iPhone.
+
+## GM-070 – Pixel Quest 3D mit dem Marker des Nutzers, Frontier gemalt, Vorschaubilder aus der App
+
+**Ziel:** Nutzer: „die Vorschaubilder sehen kacke aus und sind nicht mal richtig, Frontier sieht null aus wie die Referenz; Pixel Quest: nutz den Pfeil, den ich dir gegeben habe, nur größer, und mach die Map 3D.“
+
+**Dateien:** `App/Assets.xcassets/PixelQuest/px-player`, `px-player-green`, `App/Assets.xcassets/Frontier/fv2-forest-paint`, `fv2-meadow-paint` (neu), `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/FollowCamera.swift`, `App/NeonMapView.swift`, `tools/maplibre/tiles_from_app.py` (neu), `render_previews.py` (veraltet), `tools/mac_build.sh`, `tools/prototype/js/poi.js`, `stylepreview.js`
+
+**Geändert:**
+- Pixel Quest: wieder der Marker des Nutzers (weiß, grün wählbar), zugeschnitten und groß (40 × 56 pt im 60er-Bild). Der Codex-Pfeil aus GM-065 ist raus.
+- Pixel Quest 3D: Kamera 50° schräg (iPhone frei und Navigation, CarPlay), Gebäude ab 10 m als Blocktürme in 4-m-Schritten (Ziegel, ab 14 m Bruchstein), Villager-Häuser stehen mit dem Fuß auf dem Gebäude.
+- Frontier: Die Paket-Kacheln waren fast unsichtbar (Deckkraft 5–20 %). Jetzt eigene gemalte Kacheln: dichte Baumkronen mit Licht aus Nordwest und Schatten nach Südost, fleckige Wiese auf dem ganzen Land. Dazu ein zweites, weiches Relief aus gröberen Höhen (große Bergrücken auch nah), Häuser heller und durchscheinender.
+- Vorschaubilder kommen jetzt aus den Simulator-Bildern der App (`tiles_from_app.py`), nicht mehr aus der Web-Vorschau mit Ersatz-Mustern. Testbilder jetzt auch für Neon City.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Frontier (Zoom 10–16) und Pixel Quest schräg (Zoom 14,5–17,5) angesehen.
+
+**Ungetestet:** siehe Mac-Lauf; 3D-Leistung auf iPhone und CarPlay.
+
+## GM-069 – Frontier satter, Test auf 8 Produkte
+
+**Ziel:** Nutzer: „Frontier soll wie Far Cry aussehen“ (gemalte Open-World-Geländekarte); Mac-Test schlug fehl (7 statt 8 Produkte).
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-frontier.json`, `Core/Tests/EzMapsCoreTests/StoreAndJournalTests.swift`
+
+**Geändert:** Frontier-Grün satter, Wald tiefer, Wasser kühler, Relief mit dunklerem Schatten und hellerem Licht. Test erwartet 8 Produkt-IDs (mit Frontier). Spielname nur hier intern, nicht in App oder Store.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Idstein bei 5 Zoomstufen angesehen.
+
+**Nachtrag:** Vorschaubilder aller Stile neu (`render_previews.py`), Frontier weiter herausgezoomt (Zoom 12,3), damit das Gelände zu sehen ist; `StyleTiles/style-frontier` neu.
+
+**Ungetestet:** siehe Mac-Lauf, iPhone, CarPlay.
+
+## GM-068 – Neuer Stil Frontier (Feldkarte mit echtem Bergrelief)
+
+**Ziel:** Nutzer schickt `Assets/Generated/Maneuvers/ezmaps-frontier-v2-claude.zip` („hier eine neue Map“): Paket Frontier V2 mit Zielbildern, 39 Grafiken und Gestaltungsauftrag.
+
+**Dateien:** `Assets/Generated/FrontierV2/` (Paket, ohne 1024er-Master und Atlas), `docs/frontier-v2/` (Auftrag, Zielbilder, Palette), `App/Assets.xcassets/Frontier/` (20 Zeichen, Pfeil, Fahne, Wegpunkt, Parkauto, Fadenkreuz, 5 Körnungen), `tools/maplibre/build_style.py`, `check_style.py`, `render_previews.py`, `App/MapStyles/style-frontier.json` (neu), `Core/Sources/EzMapsCore/MapStyle.swift`, `Purchases.swift`, `TestStore.swift`, `App/StyleTheme.swift`, `ContentView.swift`, `FollowCamera.swift`, `NeonMapView.swift`, `OnboardingView.swift`, `ShopScreens.swift`, `en.lproj/Localizable.strings`, `EzMaps.storekit`, `tools/mac_build.sh`, `tools/prototype/js/poi.js`, `stylepreview.js`
+
+**Geändert:**
+- Neuer Stil `frontier`: Boden oliv/khaki, Wald `#626A3E` mit feiner Kronen-Körnung, Fels, blasses Wasser mit dunklem Ufer, dunkle echte Grundrisse, schmale Sandstraßen mit Rand (Breiten je Zoom nach ART-DIRECTION), Papierkorn, Orts- und Straßennamen creme mit dunklem Halo.
+- Relief aus echten Höhen: Terrain Tiles (AWS Open Data, Terrarium), Licht 315° an die Karte gebunden, olivbrauner Schatten, kreidiges Licht; unter Wasser, Häusern und Straßen. Stärke etwas über der Vorgabe (Taunus sonst zu flach).
+- Route Amber `#E0A047` mit dunkler Einfassung, cremefarbener Pfeil, Fahne mit Fuß unten, offenes cremefarbenes Fadenkreuz beim Umschauen, dunkles Navi-Panel `#222719`.
+- Einzelkauf `ezmaps.style.frontier` (Test 29,99 €), Plus-Text „alle 6 Stile“, Onboarding-Karte, StoreKit-Testdatei.
+- Mac-Testbilder und CarPlay „frei“ mit Frontier.
+
+**Tatsächlich geprüft:** STIL OK (6 Stile, gl-style-validate); Web-Vorschau Idstein/Taunus bei Zoom 10, 11,5, 13, 14,5 und 16,5 mit dem Zielbild verglichen.
+
+**Ungetestet:** App auf dem Mac (folgt), iPhone, CarPlay. Hinweis Höhen-Quelle in der Attribution prüfen; vor dem Store Nutzungsbedingungen der Terrain Tiles klären und Produkt in App Store Connect anlegen.
+
+## GM-067 – Pixel Quest mit Villager-Häusern, ruhige Fernansicht, größere Symbole
+
+**Ziel:** Nutzer: „Du nutzt nicht mal die Villager-Häuser für die Pixel-Quest-Map, im rausgezoomten Modus sieht die Map schlecht aus, die Icons sind zu klein.“
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/*.json`, `App/NeonMapView.swift`, `tools/prototype/js/poi.js`, `live.js`, `stylepreview.js`, `tools/mac_device.sh`, `mac_drive.sh`, `mac_screens.sh`, `.gitignore`
+
+**Geändert:**
+- Pixel Quest: Villager-Häuser (4 Bilder des Nutzers aus `Assets/Generated/minecraft/`) stehen ab Zoom 15 auf kleinen Gebäuden, große Gebäude bleiben Blöcke. `house_icons` ist jetzt je Stil einstellbar (Bild-Ausdruck, Größe).
+- Pixel Quest weit weg (unter Zoom 13,5): Felder, Dächer und Industrie flach statt Muster (Weizen wurde zu großen Streifen), Gebäude erst ab Zoom 13 (vorher braune Krümel).
+- Symbole in allen Stilen etwa 40 % größer, Toy-Town-Häuser größer.
+- Die Villager-Bilder sind Spielbilder: Sie liegen nur lokal (`.gitignore`), Test-Builds schicken sie mit. Store-Build (`mac_archive.sh`) ohne sie, vor dem Store braucht es eigene Häuser (Codex).
+- Prototyp lädt die Haus-Bilder aus dem Asset-Katalog wie die App.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Pixel Quest und Toy Town bei Zoom 12, 13, 14, 15,5 und 17 angesehen.
+
+**Ungetestet:** App auf dem Mac (folgt), iPhone, CarPlay.
+
+## GM-066 – Wild-West-Pfeil mit dunklem Rand
+
+**Ziel:** Nutzer: „schau ins repo und mach weiter“, App aufs iPhone. Fehlersuche in den neuen iPhone-Testbildern (GM-065).
+
+**Dateien:** `App/FollowCamera.swift`
+
+**Geändert:** Wild-West-Standortpfeil bekommt einen dunklen Tintenrand und einen weichen Schatten. Auf den Testbildern war der helle Pfeil ohne Navigation auf dem Papier kaum zu sehen.
+
+**Tatsächlich geprüft:** iPhone-Testbilder GM-065 (Simulator): Klassik-Pfeil, Pixel-Pfeil (weiß), Toy-Town-Auto und Spielzeughäuser sichtbar; Wild-West-Pfeil zu schwach (behoben in diesem Eintrag).
+
+**Ungetestet:** neuer Rand selbst (Mac-Lauf folgt), CarPlay.
 
 ## GM-065 – Toy Town mit Codex-Grafiken, Pixel-Pfeil von Codex, Standort-Marker sichtbar
 

@@ -23,6 +23,8 @@ final class FollowCamera: NSObject {
 
     /// GM-057: Standort-Marker je Stil (Zielbilder): Neon Codex-Pfeil, Pixel Quest Marker des Nutzers, Toy Town Spielzeugauto …
     func setStyle(_ style: MapStyle) {
+        let p = RouteOverlay.pitch(for: style) // GM-070: Pixel Quest schräg (3D)
+        if pitch != p { pitch = p; lastSet = nil }
         let key = style
         guard markerStyle != key || style == .pixelQuest else { return }
         markerStyle = key
@@ -30,8 +32,6 @@ final class FollowCamera: NSObject {
         plainArrow = m.plain
         glowArrow = m.glow
         arrow.image = plainArrow
-        arrow.bounds = CGRect(origin: .zero, size: plainArrow.size) // GM-073: Pixel-Pfeil 88 pt, andere 60 pt
-        arrow.layer.magnificationFilter = style == .pixelQuest ? .nearest : .linear
         lastSet = nil
     }
     private lazy var arrow = UIImageView(image: plainArrow)
@@ -140,7 +140,7 @@ final class FollowCamera: NSObject {
             // Pfeil auf die Fahrposition setzen, gedreht relativ zur Karte; außerhalb des Bildes ausblenden
             let p = map.convert(CLLocationCoordinate2D(latitude: lat, longitude: lon), toPointTo: map)
             arrow.center = p
-            arrow.transform = CGAffineTransform(rotationAngle: CGFloat((heading - map.direction) * .pi / 180))
+            arrow.transform = markerStyle == .pixelQuest ? .identity : CGAffineTransform(rotationAngle: CGFloat((heading - map.direction) * .pi / 180)) // GM-072
             arrow.isHidden = !map.bounds.insetBy(dx: -30, dy: -30).contains(p)
             return
         }
@@ -190,8 +190,25 @@ enum PlayerMarker {
         case .wildWest:
             // GM-064: Codex-Pfeil, sonst gezeichnet
             let a = UIImage(named: "west-arrow").map { img in
-                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { _ in img.draw(in: CGRect(x: 4, y: 4, width: 52, height: 52)) }
+                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { ctx in
+                    // GM-066: dunkler Tintenrand + Schatten – heller Pfeil war auf dem Papier kaum zu sehen (Testbild)
+                    let r = CGRect(x: 4, y: 4, width: 52, height: 52)
+                    let ink = img.withTintColor(StyleTheme.hex(0x2b1a10), renderingMode: .alwaysOriginal)
+                    ctx.cgContext.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.45).cgColor)
+                    ink.draw(in: r.offsetBy(dx: 0, dy: 1))
+                    ctx.cgContext.setShadow(offset: .zero, blur: 0, color: nil)
+                    for (dx, dy) in [(-2.0, 0.0), (2.0, 0.0), (0.0, -2.0), (0.0, 2.0), (-1.5, -1.5), (1.5, -1.5), (-1.5, 1.5), (1.5, 1.5)] {
+                        ink.draw(in: r.offsetBy(dx: dx, dy: dy))
+                    }
+                    img.draw(in: r)
+                }
             } ?? arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60)
+            return (a, a)
+        case .frontier:
+            // GM-068: cremefarbener Pfeil (Paket Frontier V2), zeigt im Bild nach Norden
+            let a = UIImage(named: "fv2-player").map { img in
+                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { _ in img.draw(in: CGRect(x: 2, y: 2, width: 56, height: 56)) }
+            } ?? arrow(fill: StyleTheme.hex(0xf4e7c2), rim: StyleTheme.hex(0x303121), size: 60)
             return (a, a)
         case .classic:
             let a = classic()
@@ -202,11 +219,9 @@ enum PlayerMarker {
     /// Marker der Nutzer-Grafik scharf (ohne Glätten) auf 60 pt
     static func pixel(_ img: UIImage?) -> UIImage {
         guard let img else { return RouteOverlay.arrowImage() }
-        // GM-073: viel größer (Nutzer) – 88 pt Fläche, Pfeil 70 pt hoch, ohne Glätten
-        return UIGraphicsImageRenderer(size: CGSize(width: 88, height: 88)).image { ctx in
+        return UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { ctx in
             ctx.cgContext.interpolationQuality = .none
-            let w: CGFloat = img.size.width >= img.size.height ? 70 : 52 // GM-065: Codex-Pfeil ist quadratisch
-            img.draw(in: CGRect(x: 44 - w / 2, y: 9, width: w, height: 70))
+            img.draw(in: CGRect(x: 15, y: 9, width: 30, height: 42)) // GM-075: etwas kleiner (verdeckte Ortsnamen)
         }
     }
 

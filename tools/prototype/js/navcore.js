@@ -133,7 +133,7 @@ async function loadSpeedLimits(route) {
 let session = null, rerouting = false;
 function startNav() {
   const r = S.routes[S.sel]; if (!r || !S.dest) return;
-  session = new NavigationSession(r, S.dest.name); S.nav = null; routeSmoother.reset();   // GM-069
+  session = new NavigationSession(r, S.dest.name); S.nav = null; routeSmoother.reset();   // GM-085
   S.navCoord = coordAt(r, 0); S.navHeading = headingAt(r, 0); S.navKmh = r.speeds[0] || 50;
   S.screen = 'navigating'; S.routes = [r]; S.sel = 0; S.trail = [];
   say(session.startAnnouncement()); loadSpeedLimits(r);
@@ -147,7 +147,7 @@ function feed(pos, speed, course, simFactor = 1) {
   S.navCoord = u.state.offRoute ? pos : coordAt(r, u.state.progress); S.navHeading = u.state.offRoute ? (course == null ? S.navHeading : course) : headingAt(r, u.state.progress);
   S.navKmh = r.speeds[segIndex(r, u.state.progress)] || 50;
   S.navAnchor = { progress: u.state.progress, mps: (speed == null ? S.navKmh / 3.6 : speed) * simFactor, t: performance.now() };   // GM-050
-  routeSmoother.fix(u.state.progress, (speed == null ? S.navKmh / 3.6 : speed) * simFactor, clockS());   // GM-069
+  routeSmoother.fix(u.state.progress, (speed == null ? S.navKmh / 3.6 : speed) * simFactor, clockS());   // GM-085
   if (u.announcement) say(u.announcement);
   if (u.shouldReroute) reroute(pos, course);
   if (u.state.arrived && S.screen === 'navigating') { sim = null; manual = null; S.screen = 'arrived'; }
@@ -173,7 +173,7 @@ let sim = null, manual = null, gpsTimer = 0; const keys = {};
 function onFix(p, h, kmh, simFactor = 1) {                 // AppModel.handleGPS: Richtung nur ab 1,5 m/s
   S.pos = { p, h: kmh > 5.4 || !S.pos ? h : S.pos.h, kmh };
   S.driveAnchor = { p, mps: kmh / 3.6 * simFactor, t: performance.now() };   // GM-050
-  freeSmoother.fix(p, kmh / 3.6 * simFactor, kmh > 5.4 ? h : null, clockS());   // GM-069
+  freeSmoother.fix(p, kmh / 3.6 * simFactor, kmh > 5.4 ? h : null, clockS());   // GM-085
   S.trail.push(p); if (S.trail.length > 600) S.trail.shift();
   feed(p, kmh / 3.6, h, simFactor);
   for (const m of maps()) pushOverlay(m); render();
@@ -226,7 +226,7 @@ async function driveTo(lngLat) {
   } catch (e) { show('Keine Straße dorthin'); }
 }
 
-// GM-069: Mirror of Core/Sources/EzMapsCore/MotionSmoother.swift – change both.
+// GM-085: Mirror of Core/Sources/EzMapsCore/MotionSmoother.swift – change both.
 // Weiterrechnen (frei: mit Drehrate) und Abweichung bei neuer Meldung weich über `blend` s ausgleichen → kein Ruck 1×/s.
 const dAng = (a, b) => { let d = (b - a) % 360; if (d > 180) d -= 360; else if (d < -180) d += 360; return d; };
 const nAng = h => ((h % 360) + 360) % 360;

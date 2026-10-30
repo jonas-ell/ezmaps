@@ -96,6 +96,18 @@ const PATTERNS = {
   'ez-pat-oak-px': () => pixelTile(16, (x, y) => (x === 15 || y === 15) ? rgbS(70, 50, 26) : y % 4 === 3 ? rgbS(84, 62, 34) : (x + Math.floor(y / 4) * 5) % 8 === 0 ? rgbS(98, 72, 40) : patHash(x, y, 8) < 0.25 ? rgbS(150, 116, 66) : rgbS(139, 106, 62)),
   'ez-pat-spruce-px': () => pixelTile(16, (x, y) => (x === 15 || y === 15) ? rgbS(40, 27, 14) : y % 4 === 3 ? rgbS(52, 36, 20) : patHash(x, y, 9) < 0.25 ? rgbS(104, 76, 46) : rgbS(92, 66, 38)),
   'ez-pat-cobble-px': () => pixelTile(16, (x, y) => ((x + (Math.floor(y / 4) % 2) * 2) % 4 === 0 || y % 4 === 0) ? rgbS(80, 80, 80) : patHash(x, y, 10) < 0.3 ? rgbS(150, 150, 150) : rgbS(124, 124, 124)),
+  'ez-pat-tower-px': () => pixelTile(16, (x, y) => { const fx = x % 4, fy = y % 4; // GM-078
+    if (fy === 0 || fx === 0) return patHash(x, y, 12) < 0.2 ? rgbS(196, 192, 182) : rgbS(214, 210, 200);
+    if (fy === 1 && fx === 1) return rgbS(186, 222, 240);
+    return patHash(Math.floor(x / 4), Math.floor(y / 4), 13) < 0.08 ? rgbS(232, 196, 110) : rgbS(98, 146, 186); }),
+  'ez-pat-roof-px': () => pixelTile(16, (x, y) => { const row = Math.floor(y / 4), off = (x + (row % 2) * 2) % 4; // GM-078
+    if (y % 4 === 3) return rgbS(70, 30, 24); if (off === 0) return rgbS(96, 40, 30);
+    return patHash(x, y, 14) < 0.3 ? rgbS(150, 62, 44) : rgbS(128, 52, 38); }),
+  'ez-pat-slab-px': () => pixelTile(16, (x, y) => (x === 0 || y === 0) ? rgbS(120, 120, 120) : (x === 8 || y === 8) ? rgbS(140, 140, 140)
+    : patHash(x, y, 15) < 0.25 ? rgbS(176, 176, 176) : rgbS(162, 162, 162)),
+  'ez-pat-roof2-px': () => pixelTile(16, (x, y) => { const off = (x + (Math.floor(y / 4) % 2) * 2) % 4; // GM-081
+    if (y % 4 === 3) return rgbS(38, 42, 52); if (off === 0) return rgbS(52, 58, 70);
+    return patHash(x, y, 16) < 0.3 ? rgbS(86, 94, 110) : rgbS(72, 80, 94); }),
   'ez-pat-brick-px': () => pixelTile(16, (x, y) => (y % 4 === 3 || (x + (Math.floor(y / 4) % 2) * 4) % 8 === 7) ? rgbS(196, 180, 170) : patHash(x, y, 11) < 0.3 ? rgbS(160, 70, 52) : rgbS(146, 60, 44)),
   'ez-pat-lawn-toy': () => canvasTile(64, g => { g.fillStyle = rgbS(141, 198, 63); g.fillRect(0, 0, 64, 64); g.fillStyle = rgbS(163, 214, 90);
     g.beginPath(); g.ellipse(17, 16.5, 11, 6.5, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(47, 45.5, 9, 5.5, 0, 0, 7); g.fill(); }),
@@ -132,8 +144,49 @@ function toyBadge(kind) {
     g.drawImage(t, 9, 9, 22, 22);
   });
 }
+// GM-067: Haus-Bilder wie in der App aus dem Asset-Katalog (Toy Town: Spielzeughäuser, Pixel Quest: Villager-Häuser) – vor der Karte laden
+const ASSET_IMAGES = {};
+async function preloadAssetImages(base) {
+  const sets = { ToyTown: ['toy-house-1', 'toy-house-2', 'toy-house-3', 'toy-house-4', 'toy-house-5', 'toy-house-6', 'toy-shop', 'toy-school', 'toy-police', 'toy-apartment', 'toy-tex-weave', 'toy-tree'],
+    PixelQuest: Array.from({ length: 16 }, (_, i) => `px-house-${i + 1}`), // GM-072: 16 Varianten
+    Frontier: ['fv2-paper-grain', 'fv2-forest-canopy', 'fv2-grass-mottle', 'fv2-rock-grain', 'fv2-water-grain', 'fv2-forest-paint', 'fv2-meadow-paint'] };
+  const jobs = [];
+  // GM-068: Frontier-Symbole unter den Namen der Stile (ez-poi-<art>-fv2 → fv2-poi-<datei>), wie RouteOverlay in der App
+  const fv2 = { shop: 'shop', cross: 'hospital', fuel: 'fuel', parking: 'parking', food: 'food', fastfood: 'food', coffee: 'coffee', charge: 'charge',
+    shirt: 'clothing', cash: 'bank', cinema: 'cinema', barber: 'barber', hotel: 'hotel', school: 'school', church: 'church', playground: 'playground' };
+  for (const [k, f] of Object.entries(fv2)) jobs.push(new Promise(ok => { const im = new Image(); im.onload = () => { // GM-076: dunkler runder Knopf wie im Zielbild (App: RouteOverlay.poiImages)
+    const c = document.createElement('canvas'); c.width = c.height = 80; const g = c.getContext('2d');
+    g.fillStyle = 'rgba(34,39,25,0.92)'; g.beginPath(); g.arc(40, 40, 34, 0, 7); g.fill();
+    g.strokeStyle = 'rgba(244,231,194,0.55)'; g.lineWidth = 2; g.stroke(); g.drawImage(im, 16, 16, 48, 48);
+    ASSET_IMAGES[`ez-poi-${k}-fv2`] = g.getImageData(0, 0, 80, 80); ok(); };
+    im.onerror = ok; im.src = `${base}App/Assets.xcassets/Frontier/fv2-poi-${f}.imageset/fv2-poi-${f}@2x.png`; }));
+  // GM-072: Wild-West-Kacheln wie in der App (StylePatterns: west-tex-* haben Vorrang)
+  for (const [k, f] of Object.entries({ 'ez-pat-paper-west': 'west-tex-paper', 'ez-pat-forest-west': 'west-tex-forest', 'ez-pat-water-west': 'west-tex-water' }))
+    jobs.push(new Promise(ok => { const im = new Image(); im.onload = () => { ASSET_IMAGES[k] = im; ok(); }; im.onerror = ok;
+      im.src = `${base}App/Assets.xcassets/WildWest/${f}.imageset/${f}@2x.png`; }));
+  for (const [dir, names] of Object.entries(sets)) for (const n of names) {
+    jobs.push(new Promise(ok => { const im = new Image(); im.onload = () => { ASSET_IMAGES[n] = im; ok(); }; im.onerror = ok;
+      im.src = `${base}App/Assets.xcassets/${dir}/${n}.imageset/${n}@2x.png`; }));
+  }
+  await Promise.all(jobs);
+}
+
+// GM-071: Asset-Bilder gleich beim Stil-Laden anmelden – Hintergrund-Muster lösen kein styleimagemissing aus (wie die App: alle beim Laden)
+function addAssetImages(map) {
+  for (const [k, im] of Object.entries(ASSET_IMAGES)) if (!map.hasImage(k)) map.addImage(k, im, { pixelRatio: 2 });
+}
+
 // Bild für einen fehlenden Namen (styleimagemissing): Symbole und Muster aller Stile; pixelRatio dazu
 function styleImage(id) {
+  if (ASSET_IMAGES[id]) return { data: ASSET_IMAGES[id], pixelRatio: 2 };
+  const zs = /^(ez-pat-[a-z-]+-px)-([248])$/.exec(id); // GM-072: Blöcke wachsen beim Zoomen (wie StylePatterns.scaled)
+  if (zs && PATTERNS[zs[1]]) {
+    const d = PATTERNS[zs[1]](), f = +zs[2], src = document.createElement('canvas'), c = document.createElement('canvas');
+    src.width = d.width; src.height = d.height; src.getContext('2d').putImageData(d, 0, 0);
+    c.width = d.width * f; c.height = d.height * f;
+    const g = c.getContext('2d'); g.imageSmoothingEnabled = false; g.drawImage(src, 0, 0, c.width, c.height);
+    return { data: g.getImageData(0, 0, c.width, c.height), pixelRatio: 2 };
+  }
   if (PATTERNS[id]) return { data: PATTERNS[id](), pixelRatio: 2 };
   const m = /^ez-poi-([a-z]+)(-neon|-west|-px|-toy)?$/.exec(id); if (!m) return null;
   if (m[2] === '-px') return { data: pixelSign(m[1]), pixelRatio: 2 };
