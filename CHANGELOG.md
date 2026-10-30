@@ -2,6 +2,20 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-088 – Würfel kleiner mit weichem Übergang, Fußballfeld klebt am Boden
+
+**Ziel:** Nutzer: „Übergang von Würfel zu Karte ist voll unsmooth, braucht mehr Animation, der Würfel ist am Ende viel zu groß“; „wieso klebt das Fußballfeld nicht am Boden im weißen Rahmen“.
+
+**Dateien:** `App/WorldCubeView.swift`, `App/ContentView.swift`, `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `App/Assets.xcassets/ToyTown/toy-pat-pitch`, `docs/vorher-nachher/toy-teppich-felder.png`
+
+**Geändert:**
+- Würfel: deutlich kleiner und über der Mitte (frei vom Blatt unten), wächst beim Einblenden aus der Karte. Tippen oder Auseinanderziehen: Würfel dreht die Weltkarte zur Kamera, die Kamera fährt darauf (0,7 s), dann fliegt die Karte weich hinein (1,4 s). Ein- und Ausblenden 0,6 s.
+- Toy Town Sportplatz: kein schwebendes Fußballfeld-Bild mehr. Rasenstreifen in der echten Platzform, weißer Rand plus zweite Linie innen (Spielfeldrand), wächst mit der Karte.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Toy Town Sportgelände Idstein.
+
+**Ungetestet:** Mac-Lauf, iPhone (Würfel-Animation nur in der App).
+
 ## GM-087 – Toy Town: Flächen als bedruckte Teppich-Felder (Vorschlag, wartet auf Freigabe)
 
 **Ziel:** Nutzer: „Sollten Parkplätze nicht Segmente im Boden sein wie beim echten Teppich? Blauer Teppich mit P, dasselbe Prinzip bei allem.“

@@ -476,6 +476,56 @@
    "minzoom": 13
   },
   {
+   "id": "rug-inner-pitch",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#ffffff",
+    "line-width": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     15,
+     1,
+     18,
+     3.5
+    ],
+    "line-offset": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     15,
+     3.0,
+     18,
+     24
+    ],
+    "line-opacity": 0.9
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "pitch"
+   ],
+   "minzoom": 15
+  },
+  {
    "id": "water",
    "type": "fill",
    "source": "openmaptiles",
@@ -2431,44 +2481,6 @@
    ],
    "layout": {
     "icon-image": "toy-playground",
-    "icon-size": [
-     "interpolate",
-     [
-      "exponential",
-      2
-     ],
-     [
-      "zoom"
-     ],
-     14,
-     0.25,
-     16,
-     0.6,
-     18,
-     2.2
-    ],
-    "icon-allow-overlap": true,
-    "icon-ignore-placement": true,
-    "icon-pitch-alignment": "map",
-    "icon-rotation-alignment": "map"
-   }
-  },
-  {
-   "id": "rug-icon-pitch",
-   "type": "symbol",
-   "source": "openmaptiles",
-   "source-layer": "landuse",
-   "minzoom": 14.5,
-   "filter": [
-    "==",
-    [
-     "get",
-     "class"
-    ],
-    "pitch"
-   ],
-   "layout": {
-    "icon-image": "toy-football-pitch",
     "icon-size": [
      "interpolate",
      [

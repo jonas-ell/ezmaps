@@ -22,7 +22,7 @@ struct WorldCubeView: View {
                     .font(.custom("PressStart2P-Regular", size: 9)).foregroundStyle(.white.opacity(0.75))
                     .shadow(color: .black, radius: 0, x: 1, y: 1)
             }
-            .padding(.bottom, 300)
+            .padding(.bottom, 330)
             .allowsHitTesting(false)
         }
         .ignoresSafeArea()
@@ -86,12 +86,17 @@ private struct CubeScene: UIViewRepresentable {
         let cam = SCNNode()
         cam.camera = SCNCamera()
         cam.camera?.usesOrthographicProjection = true
-        cam.camera?.orthographicScale = 2.6
-        cam.position = SCNVector3(0, 0.35, 8)
+        cam.camera?.orthographicScale = 4.4 // GM-088: kleiner (füllte fast den ganzen Bildschirm)
+        cam.position = SCNVector3(0, -0.9, 8) // Würfel etwas über der Mitte, frei vom Blatt unten
         scene.rootNode.addChildNode(cam)
         view.pointOfView = cam
 
         context.coordinator.cube = node
+        context.coordinator.tilt = tilt
+        context.coordinator.camera = cam
+        // GM-088: Einflug – Würfel wächst aus der Karte heraus
+        node.scale = SCNVector3(0.3, 0.3, 0.3)
+        node.runAction(.scale(to: 1, duration: 0.6), forKey: "in")
         view.addGestureRecognizer(UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.pan(_:))))
         view.addGestureRecognizer(UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.tap)))
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.pinch(_:))))
@@ -103,7 +108,30 @@ private struct CubeScene: UIViewRepresentable {
     final class Coordinator: NSObject {
         var onEnter: () -> Void
         weak var cube: SCNNode?
+        weak var tilt: SCNNode?
+        weak var camera: SCNNode?
         private var startY: Float = 0
+        private var entering = false
+
+        /// GM-088: weicher Übergang in die Karte – Würfel dreht die Oberseite zur Kamera, Kamera fährt auf die Weltkarte,
+        /// erst danach zoomt die Karte hinein (vorher sprang es hart um)
+        func enter() {
+            guard !entering, let cube, let tilt, let camera else { return }
+            entering = true
+            cube.removeAllActions()
+            let y = (cube.eulerAngles.y / (.pi / 2)).rounded() * (.pi / 2)
+            SCNTransaction.begin()
+            SCNTransaction.animationDuration = 0.7
+            SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            cube.eulerAngles.y = y
+            tilt.eulerAngles.x = .pi / 2
+            camera.camera?.orthographicScale = 0.9
+            camera.position = SCNVector3(0, 0, 8)
+            SCNTransaction.completionBlock = { [weak self] in
+                DispatchQueue.main.async { self?.onEnter(); self?.entering = false }
+            }
+            SCNTransaction.commit()
+        }
         init(onEnter: @escaping () -> Void) { self.onEnter = onEnter }
 
         @objc func pan(_ g: UIPanGestureRecognizer) {
@@ -120,10 +148,10 @@ private struct CubeScene: UIViewRepresentable {
             }
         }
 
-        @objc func tap() { onEnter() }
+        @objc func tap() { enter() }
 
         @objc func pinch(_ g: UIPinchGestureRecognizer) {
-            if g.state == .changed, g.scale > 1.25 { g.isEnabled = false; g.isEnabled = true; onEnter() }
+            if g.state == .changed, g.scale > 1.25 { g.isEnabled = false; g.isEnabled = true; enter() }
         }
     }
 }

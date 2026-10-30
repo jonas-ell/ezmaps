@@ -530,7 +530,9 @@ struct NeonMapView: UIViewRepresentable {
         }
         if c.cubeExit != cubeExitRequest { // GM-086: aus dem Welt-Würfel zurück in die Karte
             c.cubeExit = cubeExitRequest
-            map.setCenter(map.centerCoordinate, zoomLevel: 4, animated: true)
+            // GM-088: langsamer Flug statt Sprung
+            let cam = MLNMapCamera(lookingAtCenter: map.centerCoordinate, altitude: map.camera.altitude / 6, pitch: map.camera.pitch, heading: 0)
+            map.fly(to: cam, withDuration: 1.4, peakAltitude: map.camera.altitude, completionHandler: nil)
         }
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest

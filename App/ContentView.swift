@@ -10,6 +10,8 @@ struct ContentView: View {
     @State private var showExplore = false
     @Environment(\.scenePhase) private var scenePhase
     private var onboarding: Bool { !model.settings.onboarded && ScreenshotMode.state == nil }
+    /// GM-086/088: Welt-Würfel bei Pixel Quest ganz weit weg
+    private var showCube: Bool { !onboarding && model.activeStyle == .pixelQuest && model.screen == .map && model.mapZoom < 2.2 }
 
     var body: some View {
         ZStack {
@@ -35,8 +37,9 @@ struct ContentView: View {
             StatusBarScrim()
 
             // GM-086: Pixel Quest ganz weit weg – Welt als Würfel
-            if !onboarding && model.activeStyle == .pixelQuest && model.screen == .map && model.mapZoom < 2.2 {
-                WorldCubeView { model.enterFromCube() }.transition(.opacity)
+            if showCube {
+                WorldCubeView { model.enterFromCube() }
+                    .transition(.asymmetric(insertion: .opacity, removal: .opacity.combined(with: .scale(scale: 1.6)))) // GM-088: weich
             }
 
             switch model.screen {
@@ -51,6 +54,7 @@ struct ContentView: View {
                 OnboardingView(model: model).transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 0.6), value: showCube) // GM-088
         .overlay(alignment: .top) {
             if let m = model.message {
                 Text(m)
