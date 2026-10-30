@@ -79,8 +79,12 @@ final class VillageLayer {
         let center = CGPoint(x: map.bounds.midX, y: map.bounds.midY)
         var seen = Set<Int64>()
         var found: [(CLLocationCoordinate2D, Double, Double, CGFloat, Int)] = []
+        // GM-093: Die Kacheln fassen gleich hohe Nachbarhäuser zu einem Objekt zusammen – jedes Teil einzeln nehmen
+        var polys: [MLNPolygon] = []
         for f in feats {
-            guard let poly = (f as? MLNPolygon) ?? (f as? MLNMultiPolygon)?.polygons.first else { continue }
+            if let m = f as? MLNMultiPolygon { polys.append(contentsOf: m.polygons) } else if let p = f as? MLNPolygon { polys.append(p) }
+        }
+        for poly in polys {
             let n = Int(poly.pointCount)
             guard n >= 3 else { continue }
             let pts = UnsafeBufferPointer(start: poly.coordinates, count: n)
@@ -104,7 +108,7 @@ final class VillageLayer {
             found.append((c, angle, min(14, max(7, best * 0.9)), hypot(sp.x - center.x, sp.y - center.y), variant))
         }
         found.sort { $0.3 < $1.3 }
-        debug.text = " Modelle \(templates.count) · Gebäude \(feats.count) · sichtbar \(found.count)"
+        debug.text = " Modelle \(templates.count) · Gebäude \(polys.count) · sichtbar \(found.count)"
         clear()
         for (c, angle, size, _, v) in found.prefix(Self.maxHouses) {
             let node = templates[v % templates.count].clone()
