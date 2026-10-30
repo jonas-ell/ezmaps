@@ -120,8 +120,9 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
                         "pitch": "toy-pat-pitch", "stadium": "toy-pat-pitch", "playground": "toy-pat-play", "kindergarten": "toy-pat-play",
                         "school": "toy-pat-school", "college": "toy-pat-school", "university": "toy-pat-school",
                         "hospital": "toy-pat-hospital", "railway": "toy-pat-rail"},
-           rug_icons={"parking": "toy-parking-lot"}, rug_area_icons={"playground": "toy-playground"},
-           rug_inner={"pitch": 6},  # GM-088: Spielfeld-Linie innen am Rand der echten Fläche (Bild klebte nicht im Rahmen)  # GM-071: Teppich-Flor über allem (Nutzer: „wirkliche Teppich-Grafiken mit Textil-Details“)
+           # GM-089: keine Parkplatz-Aufkleber mehr (standen schief und gestapelt über Häusern), keine zweite Innenlinie
+           # (doppelte Rahmen) – Felder nur noch aus echten Flächen; runde blaue P-Schilder bleiben
+           rug_icons={}, rug_area_icons={"playground": "toy-playground"},  # GM-071: Teppich-Flor über allem (Nutzer: „wirkliche Teppich-Grafiken mit Textil-Details“)
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
            poi_suffix="-toy", poi_minzoom=14, place_color="#ffffff", place_halo="#2f3640", place_halo_width=2.4, place_transform="none")
 
@@ -349,7 +350,7 @@ def build(P, title):
         new = []
         for cls, pat_ in P["rug_patches"].items():
             new.append({**fill(f"rug-{cls}", "landuse", "#cccccc", ["==", ["get", "class"], cls], pattern=pat_), "minzoom": 13})
-        new.append({**line("rug-edge", "landuse", "#ffffff", ["interpolate", ["linear"], ["zoom"], 13, 1, 17, 4],
+        new.append({**line("rug-edge", "landuse", "#ffffff", ["interpolate", ["exponential", 2], ["zoom"], 13, 1, 17, 4, 20, 20],
                            ["in", ["get", "class"], ["literal", list(P["rug_patches"])]]), "minzoom": 13})
         for cls, off in P.get("rug_inner", {}).items():  # zweite weiße Linie innen = Spielfeldrand, liegt fest auf der Fläche
             inner = {**line(f"rug-inner-{cls}", "landuse", "#ffffff", ["interpolate", ["linear"], ["zoom"], 15, 1, 18, 3.5], ["==", ["get", "class"], cls]), "minzoom": 15}
@@ -357,10 +358,10 @@ def build(P, title):
             inner["paint"]["line-opacity"] = 0.9
             new.append(inner)
         layers[k:k] = new
-        sz = ["interpolate", ["exponential", 2], ["zoom"], 14, 0.25, 16, 0.6, 18, 2.2]  # wächst mit der Karte
+        sz = ["interpolate", ["exponential", 2], ["zoom"], 15.5, 0.3, 17, 0.6, 19, 1.6]  # wächst mit der Karte; GM-089 kleiner
         k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
         for cls, img in P.get("rug_area_icons", {}).items():
-            layers.insert(k, {"id": f"rug-icon-{cls}", "type": "symbol", "source": "openmaptiles", "source-layer": "landuse", "minzoom": 14.5,
+            layers.insert(k, {"id": f"rug-icon-{cls}", "type": "symbol", "source": "openmaptiles", "source-layer": "landuse", "minzoom": 15.5,
                               "filter": ["==", ["get", "class"], cls],
                               "layout": {"icon-image": img, "icon-size": sz, "icon-allow-overlap": True, "icon-ignore-placement": True,
                                          "icon-pitch-alignment": "map", "icon-rotation-alignment": "map"}})

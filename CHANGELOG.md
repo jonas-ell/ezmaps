@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-089 – Toy Town: Parkplatz-Aufkleber raus, Sportplatz mit einem Rahmen
+
+**Ziel:** Nutzer (6 Bilder: Parkplatz-Bilder schief und gestapelt über Häusern, Sportplätze mit Doppelrahmen): „find eine Lösung“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `docs/vorher-nachher/toy-parkplatz-sportplatz.png`
+
+**Geändert:** Parkplatz-Bilder an Parkplatz-Punkten entfernt (die Daten haben keine Parkplatz-Fläche, das Bild stand daher irgendwo und stapelte sich). Parkplätze bleiben: runde blaue P-Schilder und Gewerbe-/Handelsflächen mit Stellplatz-Druck. Sportplatz: nur noch ein weißer Rand, der beim Heranzoomen mitwächst (Innenlinie gab Doppelrahmen). Spielplatz-Bild erst ab Zoom 15,5 und kleiner.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Idstein Altstadt und Sportgelände (Vorher/Nachher).
+
+**Ungetestet:** iPhone.
+
 ## GM-088 – Würfel kleiner mit weichem Übergang, Fußballfeld klebt am Boden
 
 **Ziel:** Nutzer: „Übergang von Würfel zu Karte ist voll unsmooth, braucht mehr Animation, der Würfel ist am Ende viel zu groß“; „wieso klebt das Fußballfeld nicht am Boden im weißen Rahmen“.

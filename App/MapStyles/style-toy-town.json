@@ -437,7 +437,8 @@
     "line-width": [
      "interpolate",
      [
-      "linear"
+      "exponential",
+      2
      ],
      [
       "zoom"
@@ -445,7 +446,9 @@
      13,
      1,
      17,
-     4
+     4,
+     20,
+     20
     ]
    },
    "filter": [
@@ -474,56 +477,6 @@
     ]
    ],
    "minzoom": 13
-  },
-  {
-   "id": "rug-inner-pitch",
-   "type": "line",
-   "source": "openmaptiles",
-   "source-layer": "landuse",
-   "layout": {
-    "line-cap": "round",
-    "line-join": "round"
-   },
-   "paint": {
-    "line-color": "#ffffff",
-    "line-width": [
-     "interpolate",
-     [
-      "linear"
-     ],
-     [
-      "zoom"
-     ],
-     15,
-     1,
-     18,
-     3.5
-    ],
-    "line-offset": [
-     "interpolate",
-     [
-      "exponential",
-      2
-     ],
-     [
-      "zoom"
-     ],
-     15,
-     3.0,
-     18,
-     24
-    ],
-    "line-opacity": 0.9
-   },
-   "filter": [
-    "==",
-    [
-     "get",
-     "class"
-    ],
-    "pitch"
-   ],
-   "minzoom": 15
   },
   {
    "id": "water",
@@ -2428,49 +2381,11 @@
    "minzoom": 14
   },
   {
-   "id": "rug-poi-parking",
-   "type": "symbol",
-   "source": "openmaptiles",
-   "source-layer": "poi",
-   "minzoom": 14.5,
-   "filter": [
-    "==",
-    [
-     "get",
-     "class"
-    ],
-    "parking"
-   ],
-   "layout": {
-    "icon-image": "toy-parking-lot",
-    "icon-size": [
-     "interpolate",
-     [
-      "exponential",
-      2
-     ],
-     [
-      "zoom"
-     ],
-     14,
-     0.25,
-     16,
-     0.6,
-     18,
-     2.2
-    ],
-    "icon-allow-overlap": true,
-    "icon-ignore-placement": true,
-    "icon-pitch-alignment": "map",
-    "icon-rotation-alignment": "map"
-   }
-  },
-  {
    "id": "rug-icon-playground",
    "type": "symbol",
    "source": "openmaptiles",
    "source-layer": "landuse",
-   "minzoom": 14.5,
+   "minzoom": 15.5,
    "filter": [
     "==",
     [
@@ -2490,12 +2405,12 @@
      [
       "zoom"
      ],
-     14,
-     0.25,
-     16,
+     15.5,
+     0.3,
+     17,
      0.6,
-     18,
-     2.2
+     19,
+     1.6
     ],
     "icon-allow-overlap": true,
     "icon-ignore-placement": true,
