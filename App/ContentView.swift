@@ -256,6 +256,13 @@ struct SearchScreen: View {
     @Bindable var model: AppModel
     @FocusState private var focused: Bool
 
+    /// GM-085: Suche im Stil (Vorher/Nachher 14) – nur Stile mit eigenem Panel, Klassik und Neon bleiben Glas
+    private var look: NavPanelLook? {
+        let l = NavPanelLook.of(model.activeStyle)
+        if case .glass = l.kind { return nil }
+        return l
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 10) {
@@ -270,7 +277,8 @@ struct SearchScreen: View {
                 }
                 .padding(.horizontal, 12)
                 .frame(height: 48)
-                .neutralGlass(14, selected: true)
+                .foregroundStyle(look?.text ?? .white)
+                .modifier(SearchFieldLook(look: look))
                 Button(L("Abbrechen")) { model.closeSearch() }
                     .foregroundStyle(.white)
                     .lineLimit(1)
@@ -286,20 +294,20 @@ struct SearchScreen: View {
                         [model.journal.home.map { (L("Zuhause"), "house", $0) }, model.journal.work.map { (L("Arbeit"), "briefcase", $0) }].compactMap { $0 }
                     if !mine.isEmpty {
                         Section(L("Meine Orte")) {
-                            ForEach(Array(mine.enumerated()), id: \.offset) { _, item in PlaceRow(place: item.2, model: model, title: item.0, icon: item.1) }
+                            ForEach(Array(mine.enumerated()), id: \.offset) { _, item in PlaceRow(place: item.2, model: model, title: item.0, icon: item.1, look: look) }
                         }
                     }
                     if !model.journal.favorites.isEmpty {
-                        Section(L("Favoriten")) { ForEach(model.journal.favorites, id: \.self) { PlaceRow(place: $0, model: model, icon: "star.fill") } }
+                        Section(L("Favoriten")) { ForEach(model.journal.favorites, id: \.self) { PlaceRow(place: $0, model: model, icon: "star.fill", look: look) } }
                     }
                     if !model.recents.isEmpty {
-                        Section(L("Zuletzt")) { ForEach(model.recents, id: \.self) { PlaceRow(place: $0, model: model, icon: "clock") } }
+                        Section(L("Zuletzt")) { ForEach(model.recents, id: \.self) { PlaceRow(place: $0, model: model, icon: "clock", look: look) } }
                     }
                 } else {
                     if model.isSearching && model.results.isEmpty {
                         HStack { ProgressView(); Text(L("Suche …")).foregroundStyle(.secondary) }.listRowBackground(SwiftUI.Color.clear)
                     }
-                    ForEach(model.results, id: \.self) { PlaceRow(place: $0, model: model, icon: "mappin") }
+                    ForEach(model.results, id: \.self) { PlaceRow(place: $0, model: model, icon: "mappin", look: look) }
                 }
             }
             .listStyle(.plain)
@@ -317,8 +325,37 @@ struct PlaceRow: View {
     let model: AppModel
     var title: String?
     var icon: String = "mappin"
+    var look: NavPanelLook? = nil
 
     var body: some View {
+        if let look { styled(look) } else { glassRow }
+    }
+
+    /// GM-085: Zeile als Panel des Stils (Schrift und Farben aus NavPanelLook)
+    private func styled(_ look: NavPanelLook) -> some View {
+        Button { model.choose(place) } label: {
+            HStack(spacing: 12) {
+                Image(systemName: icon).font(.system(size: 16, weight: .bold)).foregroundStyle(look.symbol).frame(width: 32)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title ?? place.name).font(look.streetFont).lineLimit(1)
+                    Text(title == nil ? place.subtitle : place.name).font(look.actionFont).opacity(0.75).lineLimit(1)
+                }
+                Spacer()
+                if let here = model.currentCoordinate {
+                    Text(Formatting.distance(here.distance(to: place.coordinate))).font(look.actionFont)
+                }
+            }
+            .foregroundStyle(look.text)
+            .padding(.horizontal, 14).padding(.vertical, 12)
+            .modifier(NavPanel(look: look))
+        }
+        .buttonStyle(.plain)
+        .listRowBackground(SwiftUI.Color.clear)
+        .listRowSeparator(.hidden)
+        .listRowInsets(EdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 16))
+    }
+
+    private var glassRow: some View {
         Button { model.choose(place) } label: {
             HStack(spacing: 12) {
                 Image(systemName: icon)
@@ -337,6 +374,14 @@ struct PlaceRow: View {
             }
         }
         .listRowBackground(SwiftUI.Color.clear)
+    }
+}
+
+/// GM-085: Suchfeld im Stil oder Glas
+struct SearchFieldLook: ViewModifier {
+    let look: NavPanelLook?
+    func body(content: Content) -> some View {
+        if let look { content.modifier(NavPanel(look: look)) } else { content.neutralGlass(14, selected: true) }
     }
 }
 
@@ -440,19 +485,22 @@ struct NavigationHUD: View {
     var body: some View {
         let s = model.nav
         let look = NavPanelLook.of(model.activeStyle)
+        let topLook = look.top // GM-085
         VStack(spacing: 8) {
             HStack(spacing: 14) {
                 Image(systemName: Self.symbol(for: s?.maneuver?.kind))
                     .font(.system(size: 40, weight: .bold))
-                    .foregroundStyle(look.symbol)
-                    .frame(width: 56)
+                    .foregroundStyle(topLook.symbol)
+                    .frame(width: topLook.symbolTile ? 74 : 56, height: topLook.symbolTile ? 74 : nil)
+                    .background(topLook.symbolTile ? AnyShapeStyle(SwiftUI.Color.white) : AnyShapeStyle(SwiftUI.Color.clear),
+                                in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 VStack(alignment: .leading, spacing: 2) {
                     Text(s.map { Formatting.distance($0.distanceToManeuver) } ?? "…")
-                        .font(look.distanceFont).minimumScaleFactor(0.6).lineLimit(1)
-                    Text(look.uppercaseStreet ? Self.street(s).uppercased() : Self.street(s))
+                        .font(topLook.distanceFont).minimumScaleFactor(0.6).lineLimit(1)
+                    Text(topLook.uppercaseStreet ? Self.street(s).uppercased() : Self.street(s))
                         .font(look.streetFont).lineLimit(1).minimumScaleFactor(0.6)
                     // GM-051: Abbiege-Text als dritte Zeile wie in den Referenzen (Wild West, Pixel Quest, Toy Town)
-                    if look.showsAction, let m = s?.maneuver, !Self.street(s).isEmpty {
+                    if topLook.showsAction, let m = s?.maneuver, !Self.street(s).isEmpty {
                         Text(m.text).font(look.actionFont).opacity(0.75).lineLimit(1)
                     }
                     // GM-083: „danach“ im Panel statt eigenem Balken
@@ -466,10 +514,13 @@ struct NavigationHUD: View {
                 }
                 Spacer(minLength: 0)
             }
-            .foregroundStyle(look.text)
+            .foregroundStyle(topLook.text)
             .padding(.horizontal, 18)
             .padding(.vertical, 14)
-            .modifier(NavPanel(look: look))
+            .modifier(NavPanel(look: topLook))
+            .overlay(alignment: .bottomTrailing) {
+                if case .parchment = topLook.kind { WaxSeal().offset(x: 6, y: 14) } // GM-085
+            }
             .accessibilityElement(children: .combine)
 
             if let n = model.roadNotice { RoadNoticeBanner(ahead: n) }
@@ -533,6 +584,41 @@ struct NavigationHUD: View {
         case .some(.destination): return "flag.checkered"
         case .none: return "arrow.up"
         }
+    }
+}
+
+/// GM-085: Rechteck mit unregelmäßig gerissenem Rand (fest, ohne Zufall – wackelt nicht beim Neuzeichnen)
+struct TornEdge: Shape {
+    func path(in r: CGRect) -> Path {
+        func j(_ i: Int) -> CGFloat { CGFloat(sin(Double(i) * 12.9898) * 43758.5453).truncatingRemainder(dividingBy: 1) * 3.5 }
+        var p = Path()
+        let step: CGFloat = 9
+        var i = 0
+        p.move(to: CGPoint(x: r.minX, y: r.minY + j(i)))
+        var x = r.minX; while x < r.maxX { x = min(r.maxX, x + step); i += 1; p.addLine(to: CGPoint(x: x, y: r.minY + j(i))) }
+        var y = r.minY; while y < r.maxY { y = min(r.maxY, y + step); i += 1; p.addLine(to: CGPoint(x: r.maxX + j(i), y: y)) }
+        x = r.maxX; while x > r.minX { x = max(r.minX, x - step); i += 1; p.addLine(to: CGPoint(x: x, y: r.maxY + j(i))) }
+        y = r.maxY; while y > r.minY { y = max(r.minY, y - step); i += 1; p.addLine(to: CGPoint(x: r.minX + j(i), y: y)) }
+        p.closeSubpath()
+        return p
+    }
+}
+
+/// GM-085: rotes Wachssiegel (Wild West, oben rechts am Abbiege-Panel)
+struct WaxSeal: View {
+    var body: some View {
+        ZStack {
+            ForEach(0..<14, id: \.self) { k in
+                Circle().fill(SwiftUI.Color(red: 0.59, green: 0.08, blue: 0.09)).frame(width: 10, height: 10)
+                    .offset(x: 21 * cos(Double(k) * .pi / 7), y: 21 * sin(Double(k) * .pi / 7))
+            }
+            Circle().fill(SwiftUI.Color(red: 0.59, green: 0.08, blue: 0.09)).frame(width: 44, height: 44)
+            Circle().strokeBorder(SwiftUI.Color(red: 0.43, green: 0.04, blue: 0.05), lineWidth: 2).frame(width: 30, height: 30)
+            Text("EZ").font(.custom("Rye-Regular", size: 15)).foregroundStyle(SwiftUI.Color(red: 0.43, green: 0.04, blue: 0.05))
+        }
+        .frame(width: 56, height: 56)
+        .shadow(color: .black.opacity(0.3), radius: 2, y: 1)
+        .accessibilityHidden(true)
     }
 }
 
@@ -758,7 +844,15 @@ struct BadgeChip: View {
 /// Neon City lila Glas, Klassik blaues Glas, Wild West Pergament mit Doppelrahmen und Western-Schrift,
 /// Pixel Quest dunkelblau mit weißem Rahmen und Pixelschrift, Toy Town weiß mit dunklem Rand und runder Schrift.
 struct NavPanelLook {
-    enum Kind { case glass(SwiftUI.Color), parchment, pixel, toy }
+    enum Kind { case glass(SwiftUI.Color), parchment, pixel, toy, toyBold }
+    /// GM-085: Abbiege-Panel oben – Toy Town orange mit weißer Schrift, sonst wie die Leiste unten
+    var top: NavPanelLook {
+        guard case .toy = kind else { return self }
+        return NavPanelLook(kind: .toyBold, text: .white, symbol: symbol, distanceFont: distanceFont, streetFont: streetFont,
+                            actionFont: actionFont, uppercaseStreet: false, showsAction: showsAction)
+    }
+    /// GM-085: Abbiege-Symbol auf eigenem weißen Feld (Toy Town)
+    var symbolTile: Bool { if case .toyBold = kind { return true } else { return false } }
     let kind: Kind
     let text: SwiftUI.Color
     let symbol: SwiftUI.Color
@@ -811,12 +905,12 @@ struct NavPanel: ViewModifier {
         case .glass(let tint):
             content.glass(GlassTokens.sheet, tint: tint)
         case .parchment:
-            let brown = SwiftUI.Color(red: 0x3a / 255.0, green: 0x24 / 255.0, blue: 0x14 / 255.0)
+            // GM-085: gerissenes Pergament statt Rahmen (Vorher/Nachher 13)
+            let brown = SwiftUI.Color(red: 0x6e / 255.0, green: 0x46 / 255.0, blue: 0x23 / 255.0)
             content
-                .background(SwiftUI.Color(red: 0xef / 255.0, green: 0xe2 / 255.0, blue: 0xc0 / 255.0), in: RoundedRectangle(cornerRadius: 6))
-                .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(brown, lineWidth: 2.5))
-                .overlay(RoundedRectangle(cornerRadius: 3).strokeBorder(brown.opacity(0.6), lineWidth: 1).padding(5))
-                .shadow(color: .black.opacity(0.35), radius: 8, y: 4)
+                .background(TornEdge().fill(SwiftUI.Color(red: 0xef / 255.0, green: 0xe2 / 255.0, blue: 0xc0 / 255.0)))
+                .overlay(TornEdge().stroke(brown, lineWidth: 1.5))
+                .shadow(color: SwiftUI.Color(red: 0.24, green: 0.14, blue: 0.06).opacity(0.45), radius: 7, x: 2, y: 4)
         case .pixel:
             content
                 .background(SwiftUI.Color(red: 0x1a / 255.0, green: 0x2a / 255.0, blue: 0x6c / 255.0))
@@ -827,6 +921,13 @@ struct NavPanel: ViewModifier {
                 .background(.white, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(SwiftUI.Color(red: 0x2f / 255.0, green: 0x36 / 255.0, blue: 0x40 / 255.0), lineWidth: 2.5))
                 .shadow(color: .black.opacity(0.25), radius: 6, y: 3)
+        case .toyBold:
+            // GM-085: oranges Plastik wie ein Spielzeug-Schild (Vorher/Nachher 5, freigegeben)
+            let ink = SwiftUI.Color(red: 0x2f / 255.0, green: 0x36 / 255.0, blue: 0x40 / 255.0)
+            content
+                .background(SwiftUI.Color(red: 1, green: 0x7a / 255.0, blue: 0), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(ink, lineWidth: 3))
+                .shadow(color: .black.opacity(0.3), radius: 7, y: 4)
         }
     }
 }

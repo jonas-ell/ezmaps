@@ -932,10 +932,16 @@ enum StylePatterns {
 
     /// GM-057: Item-Grafik (Pixel Quest) mit hartem Schatten, 28 pt
     static func pixelIcon(_ item: UIImage) -> UIImage {
-        UIGraphicsImageRenderer(size: CGSize(width: 32, height: 32)).image { ctx in
-            ctx.cgContext.interpolationQuality = .none
-            ctx.cgContext.setShadow(offset: CGSize(width: 1.5, height: 1.5), blur: 0, color: UIColor.black.withAlphaComponent(0.6).cgColor)
-            item.draw(in: CGRect(x: 2, y: 2, width: 28, height: 28))
+        // GM-085: auf einem Holzpfosten mit Bodenschatten (Vorher/Nachher 10) – in 3D steht das Symbol, statt an Wänden zu kleben
+        UIGraphicsImageRenderer(size: CGSize(width: 32, height: 54)).image { ctx in
+            let g = ctx.cgContext
+            g.interpolationQuality = .none
+            UIColor.black.withAlphaComponent(0.35).setFill(); g.fillEllipse(in: CGRect(x: 8, y: 48, width: 16, height: 5))
+            StylePatterns.rgb(50, 32, 14).setFill(); g.fill(CGRect(x: 13, y: 26, width: 6, height: 25))
+            StylePatterns.rgb(120, 84, 44).setFill(); g.fill(CGRect(x: 14, y: 27, width: 4, height: 23))
+            StylePatterns.rgb(160, 118, 66).setFill(); g.fill(CGRect(x: 14, y: 27, width: 2, height: 23))
+            g.setShadow(offset: CGSize(width: 1.5, height: 1.5), blur: 0, color: UIColor.black.withAlphaComponent(0.6).cgColor)
+            item.draw(in: CGRect(x: 2, y: 0, width: 28, height: 28))
         }
     }
 

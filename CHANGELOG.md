@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-085 – Freigegebene Vorher/Nachher-Punkte: Toy-Panel, Pixel-Pfosten, Pergament mit Siegel, Suche im Stil
+
+**Ziel:** Nutzer: „A ja, 5 ja, 10 ja, 12+16 nein, 13 ja, 14 ja, B nein“.
+
+**Dateien:** `App/ContentView.swift`, `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/*.json`
+
+**Geändert:**
+- 5: Toy Town Abbiege-Panel orange mit weißer Schrift, Pfeil auf weißem Feld. Die Leiste unten bleibt weiß.
+- 10: Pixel-Quest-Symbole stehen auf einem Holzpfosten mit Bodenschatten (Bild 32 × 54, Ankerpunkt unten).
+- 13: Wild West Panels als gerissenes Pergament, rotes Wachssiegel am Abbiege-Panel.
+- 14: Suche bei Pixel Quest, Wild West und Toy Town: Suchfeld und Ergebnisse als Panels des Stils. Klassik und Neon bleiben Glas.
+- A (Frontier-Materialien): im Rechen-Skript seit GM-084. In der App erst, wenn die Kacheln online sind (Cloudflare fehlt).
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** Mac-Lauf, iPhone.
+
 ## GM-084 – Vorher/Nachher-Bilder zur Freigabe; Frontier-Materialien abgestimmt
 
 **Ziel:** Nutzer: „alles umsetzen, aber immer ein Vorher-Nachher-Bild 1:1, das ich absegnen muss“; Spielgrafiken bleiben in der App.

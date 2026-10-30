@@ -2611,6 +2611,7 @@
     ]
    ],
    "layout": {
+    "icon-anchor": "bottom",
     "icon-image": [
      "match",
      [
