@@ -8,7 +8,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Dateien:** `App/Assets.xcassets/ToyTown/toy-pitch-mark` (neu), `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `App/NeonMapView.swift`, `tools/prototype/js/poi.js`
 
-**Geändert:** Weißer Mittelkreis mit Anstoßpunkt flach auf jedem Sportplatz, ca. 24 m groß, wächst mit der Karte. Mittellinie und Strafräume gehen nicht: Die Daten sagen nicht, wie ein Platz gedreht ist.
+**Geändert:** Teppich-Flor auch ganz weit weg (vorher erst ab Zoom 12). Weißer Mittelkreis mit Anstoßpunkt flach auf jedem Sportplatz, ca. 24 m groß, wächst mit der Karte. Mittellinie und Strafräume gehen nicht: Die Daten sagen nicht, wie ein Platz gedreht ist.
 
 **Tatsächlich geprüft:** STIL OK; Web-Vorschau Idstein Sportgelände.
 

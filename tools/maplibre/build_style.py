@@ -388,7 +388,7 @@ def build(P, title):
                                      "icon-rotation-alignment": "viewport", "icon-keep-upright": True, "icon-allow-overlap": True, "icon-anchor": "bottom"}})
     if P.get("textile"):  # GM-071: Stoff über Flächen, Straßen und Häusern, unter Schrift und Symbolen
         k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
-        layers.insert(k, {"id": "textile", "type": "background", "minzoom": 12,
+        layers.insert(k, {"id": "textile", "type": "background",  # GM-090: auch weit weg (vorher erst ab Zoom 12)
                           "paint": {"background-pattern": P["textile"][0], "background-opacity": P["textile"][1]}})
     if P.get("small_hide"):  # GM-072: kleine Gebäude ab Zoom z nur noch als Villager-Haus
         lim, z = P["small_hide"]

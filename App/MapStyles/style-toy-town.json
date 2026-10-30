@@ -2496,7 +2496,6 @@
   {
    "id": "textile",
    "type": "background",
-   "minzoom": 12,
    "paint": {
     "background-pattern": "toy-tex-weave",
     "background-opacity": 0.75
