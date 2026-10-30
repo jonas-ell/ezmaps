@@ -3,6 +3,16 @@
 # Unsigniert für den Simulator + swift test für EzMapsCore.
 set -u
 cd "$(dirname "$0")/.."
+if [ -f tools/.do_scene_assets ]; then
+  rm -f tools/.do_scene_assets
+  swift tools/export_villager_scn.swift Assets/Generated/PixelQuest/3d || exit 1
+  for asset in Assets/Generated/PixelQuest/3d/villager-house*.scn; do
+    echo "SCN_ASSET_BEGIN $(basename "$asset")"
+    base64 -i "$asset"
+    echo "SCN_ASSET_END"
+  done
+  exit 0
+fi
 echo "=== EzMaps Build $(date '+%Y-%m-%d %H:%M:%S') ==="
 command -v xcodegen >/dev/null || { echo "xcodegen fehlt (brew install xcodegen)"; exit 1; }
 
