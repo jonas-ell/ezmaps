@@ -470,6 +470,9 @@ struct NeonMapView: UIViewRepresentable {
         overlay.mapStyle = style
         context.coordinator.overlay = overlay
         context.coordinator.style = style
+        let village = VillageLayer(map: map) // GM-092: 3D-Villager-Häuser (Pixel Quest)
+        village.enabled = style == .pixelQuest
+        context.coordinator.village = village
         if locationAllowed { map.setUserTrackingMode(.follow, animated: false, completionHandler: nil) }
         return map
     }
@@ -480,6 +483,7 @@ struct NeonMapView: UIViewRepresentable {
             c.style = style
             c.overlay?.switchStyle(style)
             c.crosshair?.isHidden = true
+            c.village?.enabled = style == .pixelQuest // GM-092
             if !navigating { // GM-070: Neigung je Stil auch ohne Navigation
                 let cam = map.camera
                 cam.pitch = RouteOverlay.pitch(for: style)
@@ -544,6 +548,7 @@ struct NeonMapView: UIViewRepresentable {
     final class Coordinator: NSObject, MLNMapViewDelegate {
         var overlay: RouteOverlay?
         var cubeExit = 0 // GM-086
+        var village: VillageLayer? // GM-092
         var revision = -1
         var selected = -1
         var navigating = false
@@ -558,6 +563,9 @@ struct NeonMapView: UIViewRepresentable {
             overlay?.styleLoaded(style)
         }
 
+        /// GM-092: Villager-Häuser nachladen, wenn Kacheln da sind
+        func mapViewDidBecomeIdle(_ mapView: MLNMapView) { MainActor.assumeIsolated { village?.refresh() } }
+
         /// GM-048: eigener Standort als heller Pfeil (Minikarte der Vorlage) statt lila Punkt
         func mapView(_ mapView: MLNMapView, viewFor annotation: MLNAnnotation) -> MLNAnnotationView? {
             guard annotation is MLNUserLocation else { return nil }
@@ -566,8 +574,11 @@ struct NeonMapView: UIViewRepresentable {
 
         /// GM-045: Nutzer wischt/zoomt in der Navigation → Kamera hält an, Pfeil bleibt auf der Fahrposition (vorher wanderte er mit)
         /// GM-086: Zoomstufe für den Welt-Würfel melden (nur bei spürbarer Änderung)
-        func mapViewRegionIsChanging(_ mapView: MLNMapView) { reportZoom(mapView) }
-        func mapView(_ mapView: MLNMapView, regionDidChangeAnimated animated: Bool) { reportZoom(mapView) }
+        func mapViewRegionIsChanging(_ mapView: MLNMapView) { reportZoom(mapView); MainActor.assumeIsolated { village?.layout() } }
+        func mapView(_ mapView: MLNMapView, regionDidChangeAnimated animated: Bool) {
+            reportZoom(mapView)
+            MainActor.assumeIsolated { village?.layout() }
+        }
         private func reportZoom(_ mapView: MLNMapView) {
             let z = mapView.zoomLevel
             MainActor.assumeIsolated {

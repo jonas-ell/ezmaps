@@ -93,7 +93,8 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              roofs=[((0, 20), "ez-pat-roof-px"), ((20, None), "ez-pat-slab-px")], roof_alt=("ez-pat-roof2-px", 3),  # GM-081: jedes 3. Haus Schiefer
              road_pattern_near=True,
              poi_scale=1.6, poi_near=1.8, poi_anchor_bottom=True,  # GM-085: Pfosten steht auf dem Ort  # GM-079: Items größer (Nutzer: „das Chicken muss größer sein“)
-             extrude_only=True, extrude_minzoom=15, extrude_far=(13, "#7a5a32"),  # GM-075: ruckelte – unter Zoom 15 einfarbig
+             extrude_only=True, extrude_minzoom=15,
+             house_models=15,  # GM-092: Blöcke unter 8 m ab Zoom 15 aus – dort stehen die 3D-Villager-Häuser (App/VillageLayer.swift) extrude_far=(13, "#7a5a32"),  # GM-075: ruckelte – unter Zoom 15 einfarbig
              label_spacing=420, casing_add=(0.8, 0.8), water_line_pattern="ez-pat-water-px",
              zoom_patterns=["ez-pat-grass-px", "ez-pat-leaves-px", "ez-pat-farm-px", "ez-pat-stone-px"],  # GM-072: Blöcke wachsen beim Zoomen
              # GM-067: weit weg flach wie eine Karte im Spiel – Felder, Dächer, Industrie ohne Muster (Streifen und Krümel)
@@ -420,6 +421,8 @@ def build(P, title):
             k += 1
         for lo, hi_, pat_ in P["extrude"]:
             f = ["all", [">=", h, lo]] + ([["<", h, hi_]] if hi_ else [])
+            if lo == 0 and P.get("house_models"):  # GM-092: kleine Häuser sind 3D-Modelle
+                continue
             if lo == 0:  # GM-075: kleine Häuser gemischt Eiche/Fichte (vorher alles gleich braun)
                 f = ["all", ["<", h, hi_], ["!=", ["%", ["to-number", ["id"], 0], 3], 0]]
                 layers.insert(k, {**json.loads(json.dumps({"id": "building-3d-spruce", "type": "fill-extrusion", "source": "openmaptiles", "source-layer": "building",
@@ -441,6 +444,8 @@ def build(P, title):
         for lim, pat_ in P["roofs"]:  # GM-081: Muster je Gebäude nur über eigene Ebenen (Ausdruck zeichnete fast nur eines)
             lo, hi_ = lim
             f = ["all", [">=", ["coalesce", ["get", "render_height"], 0], lo]] + ([["<", ["coalesce", ["get", "render_height"], 0], hi_]] if hi_ else [])
+            if lo == 0 and P.get("house_models"):  # GM-092: keine Dachplatten über den 3D-Häusern
+                f = f + [[">=", ["coalesce", ["get", "render_height"], 0], 8]]
             if lo == 0 and P.get("roof_alt"):
                 alt, n = P["roof_alt"]
                 sel = ["==", ["%", ["floor", ["*", ["coalesce", ["get", "render_height"], 0], 1.7]], n], 0]  # ["id"] wirkte im Filter nicht
