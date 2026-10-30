@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-091 – Codex-Lieferung: Würfel-Texturen, Mittelkreis; 3D-Villager und Teppich-Teile geprüft
+
+**Ziel:** Nutzer: „mach auf iPhone und schau dir die neuen Assets an“.
+
+**Dateien:** `Assets/Generated/PixelQuest/cube/`, `Assets/Generated/ToyTown/rug/`, Codex-Werkzeuge in `tools/` (neu); `App/Assets.xcassets/PixelQuest/px-cube-top`, `-side`, `-bottom`, `App/Assets.xcassets/ToyTown/toy-pitch-mark`
+
+**Geändert:** Würfel nutzt die Codex-Texturen (Weltkarte mit Klimazonen, Seiten mit Erd- und Steinschichten, Erzen, Höhlen). Mittelkreis auf Sportplätzen ist jetzt die Codex-Grafik. Noch nicht eingebaut: Kreisel-Inseln, Brunnen, Zebrastreifen, P-Feld (die Kartendaten haben dafür keine Orte) und die 3D-Villager-Häuser (USDZ, eigener Umbau mit SceneKit-Ebene; liegen lokal, nicht im Repo, bis der Nutzer das Hochladen erlaubt).
+
+**Tatsächlich geprüft:** Codex-Vorschauen angesehen; GM-090 auf dem iPhone installiert.
+
+**Ungetestet:** Mac-Lauf GM-091, iPhone.
+
 ## GM-090 – Toy Town: Mittelkreis auf jedem Sportplatz
 
 **Ziel:** Nutzer: „wo ist die Zeichnung im Sportplatz“.

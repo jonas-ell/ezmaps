@@ -1,0 +1,65 @@
+[
+  {
+    "name": "px-cube-top",
+    "correction": "Correct this map for an exact SQUARE cube-top texture. Output 1024x1024 square canvas, NOT landscape. Keep whole world longitude range, north up, central meridian 10 E Europe. Web Mercator vertical mapping with northern edge 70 degrees N and southern edge 60 degrees S. Stretch horizontal world extent to fit square; do not crop America or Asia. Simplify to EXACTLY 128 by 128 large square pixels, every pixel uniformly colored, no miniature pixel texture within blocks, no grid outlines, no shading or lighting. Oceans ONLY two solid blue colors deep #1558A6 and coastal #39A7DB. Land climate blocks green grass, dark green forests, tan desert, gray mountain ranges, white ice. Original design, no text.",
+    "prompt": "Original EzMaps Pixel Quest block-world game texture, no copying any existing game. Single square opaque 1024x1024 PNG, flat unlit albedo, no lighting, shadows, bevels, text, borders or perspective. Hard square pixels, strictly aligned regular grid, no antialiasing. World map texture on a 128x128 block grid. Recognizable geographically accurate continents in Web Mercator, north up, longitude centered on Europe 10 degrees E, full world width, latitude crop exactly 70 N to 60 S. Greenland clipped at top, Australia visible. Land built of grass, forests, sand deserts, snow and stone depending on climate. Mountain ranges are gray stone pixels. Oceans exactly two blue tones: deep dark blue and light blue shallow coastal water. Polar land snow and ice. No decorative objects.",
+    "transparent": false,
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a188a3-f7bf-79e0-806a-2ec696737ea7\\exec-4d6378e3-6343-4f40-b5b0-c77d190ffc31.png"
+  },
+  {
+    "name": "px-cube-side",
+    "prompt": "Original EzMaps Pixel Quest block-world game texture, no copying any existing game. Single square opaque 1024x1024 PNG, flat unlit albedo, no lighting, shadows, bevels, text, borders or perspective. Hard square pixels, strictly aligned regular grid, no antialiasing. 64x64 pixel grid. Full square geological soil cutaway. Top 1/8 height is bright green grass edge with a few short hanging grass blades blending into brown earth. Below layered dirt transitioning down into gray stone, sparse coal, iron and gold ore pixels and a few small dark caves; darkest bedrock along bottom. Fill entire square. No sky.",
+    "transparent": false,
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a188a3-f7bf-79e0-806a-2ec696737ea7\\exec-8ea7c81e-8287-4e5e-b50c-dd6b510e4cb4.png"
+  },
+  {
+    "name": "px-cube-bottom",
+    "prompt": "Original EzMaps Pixel Quest block-world game texture, no copying any existing game. Single square opaque 1024x1024 PNG, flat unlit albedo, no lighting, shadows, bevels, text, borders or perspective. Hard square pixels, strictly aligned regular grid, no antialiasing. 64x64 pixel grid. Uniform dark charcoal bedrock, subtly irregular interlocking rock blocks in 4 close dark gray tones. No ores, no large isolated features.",
+    "transparent": false,
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a188a3-f7bf-79e0-806a-2ec696737ea7\\exec-b55e8ca6-52eb-469d-bf14-3b674f734eb7.png"
+  },
+  {
+    "name": "toy-roundabout-island-pond",
+    "prompt": "Original EzMaps Toy Town printed children's play rug asset. Strict orthographic directly overhead, flat printed textile with visible fine woven fibers, bold cheerful grass green, cyan blue, white, red/yellow accents, dark #2F3640 outlines, matching the play carpet references viewed earlier. Transparent background outside asset, no exterior shadows, no perspective, no text except explicitly requested. Centered isolated asset with minimal safe margin. Round roundabout island, 128 pt square: green lawn bounded by a white curb ring and dark outline; small organic blue pond in center. Entire circular island visible.",
+    "transparent": true,
+    "correction": "Remove the entire outer gray road and its dashed lane marking. Keep ONLY the central circular green lawn, small blue pond and white curb ring. Outside the curb fully transparent. Enlarge this central island to occupy the square canvas with small safe margin. Flat overhead printed textile, same colors, no shadows.",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a188a3-f7bf-79e0-806a-2ec696737ea7\\exec-2d67cdce-64dc-4828-a539-9a1ed8df2bc7.png"
+  },
+  {
+    "name": "toy-roundabout-island-flowers",
+    "prompt": "Original EzMaps Toy Town printed children's play rug asset. Strict orthographic directly overhead, flat printed textile with visible fine woven fibers, bold cheerful grass green, cyan blue, white, red/yellow accents, dark #2F3640 outlines, matching the play carpet references viewed earlier. Transparent background outside asset, no exterior shadows, no perspective, no text except explicitly requested. Centered isolated asset with minimal safe margin. Round roundabout island, 128 pt square: green lawn bounded by a white curb ring and dark outline; small colorful red yellow white flower bed in center. Entire circular island visible.",
+    "transparent": true,
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a188a3-f7bf-79e0-806a-2ec696737ea7\\exec-3d428465-a8f0-432c-8f2a-e131a6141210.png"
+  },
+  {
+    "name": "toy-roundabout-island-tree",
+    "prompt": "Original EzMaps Toy Town printed children's play rug asset. Strict orthographic directly overhead, flat printed textile with visible fine woven fibers, bold cheerful grass green, cyan blue, white, red/yellow accents, dark #2F3640 outlines, matching the play carpet references viewed earlier. Transparent background outside asset, no exterior shadows, no perspective, no text except explicitly requested. Centered isolated asset with minimal safe margin. Round roundabout island, 128 pt square: green lawn bounded by a white curb ring and dark outline; one small leafy green tree canopy viewed EXACTLY overhead in center, no sideways trunk. Entire circular island visible.",
+    "transparent": true,
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a188a3-f7bf-79e0-806a-2ec696737ea7\\exec-658d2df8-baf2-4658-b53c-3856ec4b7e86.png"
+  },
+  {
+    "name": "toy-pitch-center",
+    "prompt": "Original EzMaps Toy Town printed children's play rug asset. Strict orthographic directly overhead, flat printed textile with visible fine woven fibers, bold cheerful grass green, cyan blue, white, red/yellow accents, dark #2F3640 outlines, matching the play carpet references viewed earlier. Transparent background outside asset, no exterior shadows, no perspective, no text except explicitly requested. Centered isolated asset with minimal safe margin. 128 pt square soccer pitch overlay: ONLY a clean white center circle, white center spot, and straight white halfway line vertically across center. All areas between white linework fully transparent, no green fill, no outline around white paint. Faint textile print grain inside the white ink.",
+    "transparent": true,
+    "correction": "Replace this full pitch with ONLY its white central circle and white center dot. Enlarge circle to fill 85 percent of square canvas. REMOVE ALL green grass, all rectangular boundaries, goals, penalty boxes and halfway line. Exactly one white circular outline and one white dot at center, everything else genuinely transparent including inside circle. No text, no shadows. Retain subtle textile grain only in white ink.",
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a188a3-f7bf-79e0-806a-2ec696737ea7\\exec-2ba5e0cc-adb0-4b7a-9d17-667584ad9a37.png"
+  },
+  {
+    "name": "toy-lot-p",
+    "prompt": "Original EzMaps Toy Town printed children's play rug asset. Strict orthographic directly overhead, flat printed textile with visible fine woven fibers, bold cheerful grass green, cyan blue, white, red/yellow accents, dark #2F3640 outlines, matching the play carpet references viewed earlier. Transparent background outside asset, no exterior shadows, no perspective, no text except explicitly requested. Centered isolated asset with minimal safe margin. 64 pt square single blue parking bay, square with white inner border and one large clear white letter P in center. Dark outer contour. Printed textile texture. Exactly one P, no other text.",
+    "transparent": true,
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a188a3-f7bf-79e0-806a-2ec696737ea7\\exec-74fdc028-a997-4337-8b4e-35d0172eccd5.png"
+  },
+  {
+    "name": "toy-fountain",
+    "prompt": "Original EzMaps Toy Town printed children's play rug asset. Strict orthographic directly overhead, flat printed textile with visible fine woven fibers, bold cheerful grass green, cyan blue, white, red/yellow accents, dark #2F3640 outlines, matching the play carpet references viewed earlier. Transparent background outside asset, no exterior shadows, no perspective, no text except explicitly requested. Centered isolated asset with minimal safe margin. 96 pt square circular fountain seen directly from zenith: thick pale stone circular rim outlined dark, bright blue round basin, small concentric white water rings around a small central nozzle. Flat printed rug illustration, no perspective, no splash outside circle.",
+    "transparent": true,
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a188a3-f7bf-79e0-806a-2ec696737ea7\\exec-4b02168b-1f42-47d3-b9d7-d958a182b4ef.png"
+  },
+  {
+    "name": "toy-crosswalk",
+    "prompt": "Original EzMaps Toy Town printed children's play rug asset. Strict orthographic directly overhead, flat printed textile with visible fine woven fibers, bold cheerful grass green, cyan blue, white, red/yellow accents, dark #2F3640 outlines, matching the play carpet references viewed earlier. Transparent background outside asset, no exterior shadows, no perspective, no text except explicitly requested. Centered isolated asset with minimal safe margin. 64 by 32 pt rectangular zebra crossing overlay: six evenly spaced parallel white rectangular bars across the width, bars vertical, all spaces and outside fully transparent. Aspect ratio 2:1. White ink subtly shows textile grain, no contours, no road background.",
+    "transparent": true,
+    "source": "C:\\Users\\jonas\\.codex\\generated_images\\01a188a3-f7bf-79e0-806a-2ec696737ea7\\exec-5b723b0d-a747-451c-bf70-0407abe0a64e.png"
+  }
+]

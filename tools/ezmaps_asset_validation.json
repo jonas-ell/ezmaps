@@ -1,0 +1,264 @@
+{
+  "cube": {
+    "top": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "grid": 128,
+      "colors": 8
+    },
+    "side": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "grid": 64,
+      "colors": 2534
+    },
+    "bottom": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "grid": 64,
+      "colors": 478
+    }
+  },
+  "rug": {
+    "toy-crosswalk@2x.png": {
+      "size": [
+        128,
+        64
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-crosswalk@3x.png": {
+      "size": [
+        192,
+        96
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-fountain@2x.png": {
+      "size": [
+        192,
+        192
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-fountain@3x.png": {
+      "size": [
+        288,
+        288
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-lot-p@2x.png": {
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-lot-p@3x.png": {
+      "size": [
+        192,
+        192
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-pitch-center@2x.png": {
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-pitch-center@3x.png": {
+      "size": [
+        384,
+        384
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-roundabout-island-flowers@2x.png": {
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-roundabout-island-flowers@3x.png": {
+      "size": [
+        384,
+        384
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-roundabout-island-pond@2x.png": {
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-roundabout-island-pond@3x.png": {
+      "size": [
+        384,
+        384
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-roundabout-island-tree@2x.png": {
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    },
+    "toy-roundabout-island-tree@3x.png": {
+      "size": [
+        384,
+        384
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ]
+    }
+  },
+  "models": {
+    "villager-house-birch.usdz": {
+      "triangles": 2364,
+      "textures": 14,
+      "min": [
+        -0.5,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.9287413954734802,
+        0.5
+      ],
+      "animations": 0
+    },
+    "villager-house-oak.usdz": {
+      "triangles": 2364,
+      "textures": 14,
+      "min": [
+        -0.5,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.9287413954734802,
+        0.5
+      ],
+      "animations": 0
+    },
+    "villager-house-sand.usdz": {
+      "triangles": 2364,
+      "textures": 14,
+      "min": [
+        -0.5,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.9287413954734802,
+        0.5
+      ],
+      "animations": 0
+    },
+    "villager-house-spruce.usdz": {
+      "triangles": 2364,
+      "textures": 14,
+      "min": [
+        -0.5,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.9287413954734802,
+        0.5
+      ],
+      "animations": 0
+    },
+    "villager-house.usdz": {
+      "triangles": 2364,
+      "textures": 14,
+      "min": [
+        -0.5,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.9287413954734802,
+        0.5
+      ],
+      "animations": 0
+    }
+  }
+}
