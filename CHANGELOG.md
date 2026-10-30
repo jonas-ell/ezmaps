@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-094 – 3D-Villager-Häuser zurückgenommen
+
+**Ziel:** Nutzer: „revert den Change mit den neuen Häusern, das sieht schlecht aus“.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `App/NeonMapView.swift`
+
+**Geändert:** Häuser-Ebene aus, kleine Gebäude wieder als Blöcke mit Dächern wie vor GM-092. Code (`App/VillageLayer.swift`) bleibt, ist aber abgeschaltet.
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** iPhone.
+
 ## GM-093 – 3D-Villager-Häuser sichtbar (Fehlersuche im Simulator)
 
 **Ziel:** Nutzer: „die Häuser werden nicht angezeigt, mach alles eigenständig, in 30 Minuten ist alles fertig“.
