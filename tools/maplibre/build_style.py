@@ -94,7 +94,7 @@ PIXEL = dict(land="#5d9b37", residential="#5d9b37", industrial="#8a8a8a", farm="
              road_pattern_near=True,
              poi_scale=1.6, poi_near=1.8, poi_anchor_bottom=True,  # GM-085: Pfosten steht auf dem Ort  # GM-079: Items größer (Nutzer: „das Chicken muss größer sein“)
              extrude_only=True, extrude_minzoom=15,
-             house_models=15,  # GM-092: Blöcke unter 8 m ab Zoom 15 aus – dort stehen die 3D-Villager-Häuser (App/VillageLayer.swift) extrude_far=(13, "#7a5a32"),  # GM-075: ruckelte – unter Zoom 15 einfarbig
+             extrude_far=(13, "#7a5a32"),  # GM-075: ruckelte – unter Zoom 15 einfarbig; GM-094: 3D-Villager (house_models=15) zurückgenommen
              label_spacing=420, casing_add=(0.8, 0.8), water_line_pattern="ez-pat-water-px",
              zoom_patterns=["ez-pat-grass-px", "ez-pat-leaves-px", "ez-pat-farm-px", "ez-pat-stone-px"],  # GM-072: Blöcke wachsen beim Zoomen
              # GM-067: weit weg flach wie eine Karte im Spiel – Felder, Dächer, Industrie ohne Muster (Streifen und Krümel)

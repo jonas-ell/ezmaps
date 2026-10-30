@@ -8,7 +8,7 @@ Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
 **Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `App/NeonMapView.swift`
 
-**Geändert:** Häuser-Ebene aus, kleine Gebäude wieder als Blöcke mit Dächern wie vor GM-092. Code (`App/VillageLayer.swift`) bleibt, ist aber abgeschaltet.
+**Geändert:** Häuser-Ebene aus, kleine Gebäude wieder als Blöcke mit Dächern wie vor GM-092. Dabei gefunden: Seit GM-092 hatte ein Kommentar die einfarbigen Fern-Blöcke (Zoom 13–15) verschluckt – wieder an. Code (`App/VillageLayer.swift`) bleibt, ist aber abgeschaltet.
 
 **Tatsächlich geprüft:** STIL OK.
 

@@ -475,7 +475,7 @@ struct NeonMapView: UIViewRepresentable {
         startCam.pitch = RouteOverlay.pitch(for: style)
         map.setCamera(startCam, animated: false)
         let village = VillageLayer(map: map) // GM-092: 3D-Villager-Häuser (Pixel Quest)
-        village.enabled = style == .pixelQuest
+        village.enabled = false // GM-094: zurückgenommen (Nutzer: „sieht schlecht aus“)
         context.coordinator.village = village
         if locationAllowed { map.setUserTrackingMode(.follow, animated: false, completionHandler: nil) }
         return map
@@ -487,7 +487,7 @@ struct NeonMapView: UIViewRepresentable {
             c.style = style
             c.overlay?.switchStyle(style)
             c.crosshair?.isHidden = true
-            c.village?.enabled = style == .pixelQuest // GM-092
+            c.village?.enabled = false // GM-094: zurückgenommen
             if !navigating { // GM-070: Neigung je Stil auch ohne Navigation
                 let cam = map.camera
                 cam.pitch = RouteOverlay.pitch(for: style)
