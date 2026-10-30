@@ -565,6 +565,13 @@ struct NeonMapView: UIViewRepresentable {
 
         func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
             overlay?.styleLoaded(style)
+            // GM-093: Neigung des Stils, sobald die Karte steht (beim Start griff sie vorher nicht)
+            MainActor.assumeIsolated {
+                if !navigating {
+                    let p = RouteOverlay.pitch(for: self.style)
+                    if abs(mapView.camera.pitch - p) > 1 { let cam = mapView.camera; cam.pitch = p; mapView.setCamera(cam, animated: false) }
+                }
+            }
         }
 
         /// GM-092: Villager-Häuser nachladen, wenn Kacheln da sind

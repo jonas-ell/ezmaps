@@ -140,7 +140,10 @@ final class VillageLayer {
             house.node.scale = SCNVector3(s, s, s)
             house.node.position = SCNVector3(Float(p.x - w / 2), Float(h / 2 - p.y), Float(p.y))
             // Modell Y-up: um 90° minus Kartenneigung kippen (flach von oben sieht man nur das Dach), um Y nach Gebäudekante drehen
-            house.node.eulerAngles = SCNVector3(.pi / 2 - pitch, -Float((house.angle - dir) * .pi / 180), 0)
+            // GM-093: erst um die eigene Hochachse drehen, dann kippen (eulerAngles drehte in falscher Reihenfolge – Häuser kippten seitlich)
+            let yaw = simd_quatf(angle: -Float((house.angle - dir) * .pi / 180), axis: SIMD3<Float>(0, 1, 0))
+            let tilt = simd_quatf(angle: .pi / 2 - pitch, axis: SIMD3<Float>(1, 0, 0))
+            house.node.simdOrientation = tilt * yaw
         }
     }
 }
