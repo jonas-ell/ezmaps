@@ -2,6 +2,18 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-090 – Toy Town: Mittelkreis auf jedem Sportplatz
+
+**Ziel:** Nutzer: „wo ist die Zeichnung im Sportplatz“.
+
+**Dateien:** `App/Assets.xcassets/ToyTown/toy-pitch-mark` (neu), `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `App/NeonMapView.swift`, `tools/prototype/js/poi.js`
+
+**Geändert:** Weißer Mittelkreis mit Anstoßpunkt flach auf jedem Sportplatz, ca. 24 m groß, wächst mit der Karte. Mittellinie und Strafräume gehen nicht: Die Daten sagen nicht, wie ein Platz gedreht ist.
+
+**Tatsächlich geprüft:** STIL OK; Web-Vorschau Idstein Sportgelände.
+
+**Ungetestet:** iPhone.
+
 ## GM-089 – Toy Town: Parkplatz-Aufkleber raus, Sportplatz mit einem Rahmen
 
 **Ziel:** Nutzer (6 Bilder: Parkplatz-Bilder schief und gestapelt über Häusern, Sportplätze mit Doppelrahmen): „find eine Lösung“.

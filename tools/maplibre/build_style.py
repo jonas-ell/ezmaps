@@ -370,6 +370,15 @@ def build(P, title):
                               "filter": ["==", ["get", "class"], cls],
                               "layout": {"icon-image": img, "icon-size": sz, "icon-allow-overlap": True, "icon-ignore-placement": True,
                                          "icon-pitch-alignment": "map", "icon-rotation-alignment": "map"}})
+    if P.get("rug_patches") and "pitch" in P["rug_patches"]:
+        # GM-090: Mittelkreis mit Anstoßpunkt auf jedem Sportplatz – liegt flach auf der Fläche, Größe in Metern (≈ 24 m),
+        # unabhängig von der Drehung des Platzes (Mittellinie/Strafräume bräuchten die Ausrichtung, die die Daten nicht haben)
+        k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
+        layers.insert(k, {"id": "rug-pitch-mark", "type": "symbol", "source": "openmaptiles", "source-layer": "landuse", "minzoom": 15,
+                          "filter": ["==", ["get", "class"], "pitch"],
+                          "layout": {"icon-image": "toy-pitch-mark", "icon-size": ["interpolate", ["exponential", 2], ["zoom"], 15, 0.122, 20, 3.92],
+                                     "icon-allow-overlap": True, "icon-ignore-placement": True,
+                                     "icon-pitch-alignment": "map", "icon-rotation-alignment": "map"}})
     if P.get("tree_edges"):  # GM-073: Bäume als einzelne Bilder entlang der Waldkante (Toy Town)
         te = P["tree_edges"]
         k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
