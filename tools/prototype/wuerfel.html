@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Würfel-Erde – Pixel Quest</title>
+<!-- GM-074: Pixel Quest ganz rausgezoomt → Erde als Block-Würfel. Logik: js/cubeearth.js (= Core CubeEarth.swift) -->
+<style>
+  html, body { margin: 0; height: 100%; background: #0b1030; overflow: hidden; font-family: -apple-system, system-ui, sans-serif; }
+  #phone { position: absolute; inset: 0; margin: auto; width: 390px; height: 844px; max-height: 100%; border-radius: 44px; overflow: hidden;
+           background: #0b1030; box-shadow: 0 0 0 10px #000, 0 20px 60px rgba(0,0,0,.6); }
+  canvas { display: block; touch-action: none; }
+  #hint { position: absolute; left: 0; right: 0; bottom: 120px; text-align: center; color: #fff; font: 10px "Press Start 2P", monospace;
+          text-shadow: 2px 2px 0 #000; opacity: .85; }
+  #back { position: absolute; top: 60px; right: 16px; width: 48px; height: 48px; border-radius: 24px; border: 0; background: rgba(20,20,22,.8); color: #fff; font-size: 22px; }
+  #attr { position: absolute; right: 8px; bottom: 96px; font-size: 10px; color: #fff; background: rgba(0,0,0,.55); padding: 2px 6px; border-radius: 4px; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="phone">
+  <button id="back" title="Zur Karte">➤</button>
+  <div id="hint">Tippen: hinfliegen</div>
+  <div id="attr">Natural Earth · © OpenStreetMap-Mitwirkende</div>
+</div>
+<script src="js/landmask.js"></script>
+<script src="js/cubeearth.js"></script>
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+const N = 48, C = window.CubeEarth, phone = document.getElementById('phone');
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(2, devicePixelRatio));
+renderer.setSize(phone.clientWidth, phone.clientHeight);
+phone.prepend(renderer.domElement);
+const scene = new THREE.Scene();
+// Pixel-Sterne als Hintergrund
+const sky = document.createElement('canvas'); sky.width = 195; sky.height = 422;
+const g = sky.getContext('2d'); g.fillStyle = '#0b1030'; g.fillRect(0, 0, 195, 422);
+for (let i = 0; i < 120; i++) { g.fillStyle = C.hash(i, 3, 9) > 0.8 ? '#ffe9a8' : '#ffffff'; g.fillRect(Math.floor(C.hash(i, 1, 7) * 195), Math.floor(C.hash(i, 2, 8) * 422), 1, 1); }
+const skyTex = new THREE.CanvasTexture(sky); skyTex.magFilter = THREE.NearestFilter; skyTex.colorSpace = THREE.SRGBColorSpace;
+scene.background = skyTex;
+const camera = new THREE.PerspectiveCamera(30, phone.clientWidth / phone.clientHeight, 0.1, 80);
+// Abstand so, dass der Würfel groß, aber fast ganz in die Breite passt – gleiche Formel in CubeEarthView.swift
+camera.position.set(0, 0, 1.6 / (Math.tan(15 * Math.PI / 180) * Math.min(1, camera.aspect)));
+scene.add(new THREE.AmbientLight(0xffffff, 1.6));
+const sun = new THREE.DirectionalLight(0xffffff, 2.2); sun.position.set(-3, 4, 5); scene.add(sun);
+function geo(m) {
+  const geom = new THREE.BufferGeometry();
+  geom.setAttribute('position', new THREE.Float32BufferAttribute(m.positions, 3));
+  geom.setAttribute('normal', new THREE.Float32BufferAttribute(m.normals, 3));
+  const lin = m.colors.map(c => Math.pow(c, 2.2)); // Farben sind sRGB
+  geom.setAttribute('color', new THREE.Float32BufferAttribute(lin, 3));
+  geom.setIndex(m.indices);
+  return geom;
+}
+const earth = new THREE.Group(); scene.add(earth);
+const world = new THREE.Mesh(geo(C.mesh(N, C.blocks(N))), new THREE.MeshLambertMaterial({ vertexColors: true }));
+earth.add(world);
+const cloudMesh = new THREE.Mesh(geo(C.clouds(N)), new THREE.MeshLambertMaterial({ vertexColors: true, transparent: true, opacity: 0.75, side: THREE.DoubleSide }));
+earth.add(cloudMesh);
+// Standort: roter Block mit weißer Spitze (Idstein)
+const home = { lat: 50.22, lon: 8.27 }, k = C.cell(home.lat, home.lon, N), t = 2 / N;
+const [nv, r, d] = C.BASIS[k.face];
+const u = -1 + (k.col + 0.5) * t, v = -1 + (k.row + 0.5) * t;
+const pin = new THREE.Group();
+const red = new THREE.Mesh(new THREE.BoxGeometry(t * 0.8, t * 0.8, t * 2.2), new THREE.MeshLambertMaterial({ color: 0xe0362b }));
+const tip = new THREE.Mesh(new THREE.BoxGeometry(t * 0.8, t * 0.8, t * 0.6), new THREE.MeshLambertMaterial({ color: 0xffffff }));
+red.position.z = t * 1.1; tip.position.z = t * 2.5; pin.add(red, tip);
+const base = new THREE.Vector3(...nv).multiplyScalar(1 + t).add(new THREE.Vector3(...r).multiplyScalar(u)).add(new THREE.Vector3(...d).multiplyScalar(v));
+pin.position.copy(base); pin.lookAt(base.clone().add(new THREE.Vector3(...nv))); earth.add(pin);
+// Drehung wie in der App: pitch = Breite, yaw = −Länge, Norden oben
+let pitch = home.lat * Math.PI / 180, yaw = -home.lon * Math.PI / 180, idle = 0, drag = null;
+const el = renderer.domElement;
+el.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, moved: 0 }; el.setPointerCapture(e.pointerId); });
+el.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy);
+  yaw += dx * 0.008; pitch = Math.max(-1.4, Math.min(1.4, pitch + dy * 0.008)); idle = 0;
+});
+el.addEventListener('pointerup', e => {
+  if (drag && drag.moved < 6) {
+    const ray = new THREE.Raycaster(), rect = el.getBoundingClientRect();
+    ray.setFromCamera(new THREE.Vector2((e.clientX - rect.left) / rect.width * 2 - 1, -(e.clientY - rect.top) / rect.height * 2 + 1), camera);
+    const hit = ray.intersectObject(world)[0];
+    if (hit) { const p = world.worldToLocal(hit.point.clone()); const c = C.coordinate([p.x, p.y, p.z]);
+      document.getElementById('hint').textContent = `Flug zu ${c.lat.toFixed(1)}°, ${c.lon.toFixed(1)}°`; }
+  }
+  drag = null;
+});
+document.getElementById('back').onclick = () => { pitch = home.lat * Math.PI / 180; yaw = -home.lon * Math.PI / 180; };
+let last = performance.now(), spin = 0;
+(function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now; idle += dt;
+  if (!drag && idle > 3) yaw -= dt * 0.12; // dreht sich langsam weiter, wenn man nichts macht
+  spin += dt * 0.03; cloudMesh.rotation.y = spin;
+  earth.rotation.set(pitch, yaw, 0, 'XYZ');
+  renderer.render(scene, camera); requestAnimationFrame(frame);
+})(last);
+window.__ready = true;
+</script>
+</body>
+</html>

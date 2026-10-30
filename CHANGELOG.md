@@ -2,6 +2,23 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-074 – Pixel Quest: Erde als großer Block-Würfel; kein grüner Rand mehr beim Rauszoomen
+
+**Ziel:** Nutzer-Bild: ganz rausgezoomt grüner Streifen über der Weltkarte. Wunsch: „die Erde bei Pixel Quest zu einem riesigen 3D-Würfel machen“.
+
+**Dateien:** `tools/cube/build_landmask.py` (neu), `Core/Sources/EzMapsCore/CubeEarth.swift` + `LandMaskData.swift` (neu, erzeugt), `Core/Tests/EzMapsCoreTests/CubeEarthTests.swift` (neu), `tools/prototype/wuerfel.html` + `js/cubeearth.js` + `js/landmask.js` (neu), `App/CubeEarthView.swift` (neu), `App/NeonMapView.swift`, `App/en.lproj/Localizable.strings`, `docs/previews/wuerfel-erde-gm074.png`.
+
+**Geändert:**
+- Grüner Rand: Der Streifen war die Grundfarbe des Stils oberhalb des Nordpols (die Karte endet bei 85°). Jetzt ist der kleinste Zoom so, dass die Welt den Bildschirm immer ganz hoch füllt – in allen Stilen.
+- Würfel-Erde (nur Pixel Quest): Zoomt man unter Zoom 1,4, blendet die Karte in einen 3D-Würfel über (SceneKit). Jede Seite 48 × 48 Blöcke; Land steht einen Block hoch (Gras, Wald im Norden, Strand, Schnee an den Polen), Wasser flach (tief dunkler, Eis), Wolken als Platten darüber, Pixel-Sterne im Hintergrund. Roter Stift = eigener Standort.
+- Bedienung: Ziehen dreht (Norden bleibt oben), nach 3 s dreht er sich langsam selbst; Tippen auf eine Stelle → Karte fliegt dorthin (Zoom 5); Aufziehen mit zwei Fingern → Karte an der Stelle in der Mitte. Mitte-Knopf, Stilwechsel und Navigation schließen den Würfel.
+- Land-Daten: Natural Earth 1:50m (gemeinfrei), als 720 × 360-Bit-Maske erzeugt von `tools/cube/build_landmask.py` – nicht von Hand ändern.
+- Logik in Core (`CubeEarth`: Seiten, Blöcke, Netz, Wolken, Drehung) mit JS-Spiegel im Prototyp (`wuerfel.html`, Start über `serve.py`).
+
+**Tatsächlich geprüft:** Linux `swift test`: 78 Tests grün (7 neu: Maske, Seiten/Rückweg, Blockarten, Netz zeigt nach außen, Drehung, Stift, Zufallswerte gleich wie in JS). Prototyp in Chromium gerendert (Bild in `docs/previews/wuerfel-erde-gm074.png`). Swift-Dateien parsen.
+
+**Ungetestet:** Nicht auf dem Mac gebaut – SceneKit-Code ist nicht kompiliert. Farben in SceneKit (sRGB/linear), Bildrate, Speicher, Gesten-Gefühl, Übergang Karte ↔ Würfel und der Mindest-Zoom auf dem Gerät nicht gesehen.
+
 ## GM-073 – Pixel Quest: Symbole und Pfeil viel größer; Stand von main übernommen
 
 **Ziel:** Nutzer: „bei pixelquest müssen die icons und der navigationspfeil viel größer sein“.

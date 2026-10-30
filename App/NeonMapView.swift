@@ -451,6 +451,13 @@ struct NeonMapView: UIViewRepresentable {
             c.style = style
             c.overlay?.switchStyle(style)
             c.crosshair?.isHidden = true
+            c.hideCube() // GM-074: Würfel-Erde nur in Pixel Quest
+        }
+        // GM-074: nie weiter raus, als die Welt den Bildschirm hoch füllt – sonst Rand in Grundfarbe über dem Nordpol
+        // (Nutzer-Bild: grüner Streifen in Pixel Quest)
+        if map.bounds.height > 0 {
+            let fill = max(0, log2(Double(map.bounds.height) / 512) + 0.05)
+            if abs(map.minimumZoomLevel - fill) > 0.01 { map.minimumZoomLevel = fill }
         }
         c.camera?.setStyle(style) // GM-057: Fahr-Pfeil je Stil
         if c.trailCount != trail.count {
@@ -466,6 +473,7 @@ struct NeonMapView: UIViewRepresentable {
         }
         if c.navigating != navigating {
             c.navigating = navigating
+            if navigating { c.hideCube() }
             map.showsUserLocation = !navigating && locationAllowed // GM-022: in der Navigation zeigt unser Pfeil die Fahrposition
             if !navigating {
                 let cam = map.camera
@@ -496,6 +504,7 @@ struct NeonMapView: UIViewRepresentable {
         }
         if c.recenter != recenterRequest {
             c.recenter = recenterRequest
+            c.hideCube() // GM-074
             if !navigating { if locationAllowed { map.userTrackingMode = .follow } } else { c.camera?.attach() } // GM-045: Mitte → Pfeil wieder fest
             c.crosshair?.isHidden = true
         }
@@ -512,9 +521,46 @@ struct NeonMapView: UIViewRepresentable {
         var trailCount = 0
         var allowed = false
         var crosshair: CrosshairView?
+        /// GM-074: Würfel-Erde (Pixel Quest, ganz rausgezoomt)
+        var cube: CubeEarthView?
+        static let cubeZoom = 1.4
 
         func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
             overlay?.styleLoaded(style)
+        }
+
+        /// GM-074: Pixel Quest – nach dem Rauszoomen bis fast ganz raus wird die Erde ein Block-Würfel
+        func mapView(_ mapView: MLNMapView, regionDidChangeWith reason: MLNCameraChangeReason, animated: Bool) {
+            MainActor.assumeIsolated {
+                guard style == .pixelQuest, !navigating, cube == nil, mapView.zoomLevel < Self.cubeZoom else { return }
+                showCube(on: mapView)
+            }
+        }
+
+        @MainActor func showCube(on map: MLNMapView) {
+            let c = map.centerCoordinate
+            let home = allowed ? map.userLocation?.location?.coordinate : nil
+            let v = CubeEarthView(frame: map.bounds, center: Coordinate(latitude: c.latitude, longitude: c.longitude),
+                                  home: home.map { Coordinate(latitude: $0.latitude, longitude: $0.longitude) })
+            v.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            v.alpha = 0
+            v.onPick = { [weak self, weak map] target in
+                guard let self, let map else { return }
+                self.hideCube()
+                map.userTrackingMode = .none
+                map.setCenter(target, zoomLevel: 2.5, animated: false)
+                map.setCenter(target, zoomLevel: 5, animated: true)
+            }
+            map.addSubview(v)
+            cube = v
+            crosshair?.isHidden = true
+            UIView.animate(withDuration: 0.35) { v.alpha = 1 }
+        }
+
+        @MainActor func hideCube() {
+            guard let v = cube else { return }
+            cube = nil
+            UIView.animate(withDuration: 0.3, animations: { v.alpha = 0 }, completion: { _ in v.removeFromSuperview() })
         }
 
         /// GM-048: eigener Standort als heller Pfeil (Minikarte der Vorlage) statt lila Punkt
