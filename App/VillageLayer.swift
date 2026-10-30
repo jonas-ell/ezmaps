@@ -18,6 +18,7 @@ final class VillageLayer {
     private var templates: [SCNNode] = []
     private struct House { let coord: CLLocationCoordinate2D; let angle: Double; let size: Double; let node: SCNNode }
     private var houses: [House] = []
+    private let debug = UILabel() // GM-092: Zählanzeige nur in Test-Builds
 
     /// Modelle vorhanden (Test-Builds schicken sie mit, nicht im öffentlichen Repo)
     var available: Bool { !templates.isEmpty }
@@ -53,7 +54,14 @@ final class VillageLayer {
             for c in s.rootNode.childNodes { t.addChildNode(c.clone()) }
             templates.append(t)
         }
-        map.insertSubview(view, at: min(1, map.subviews.count)) // über der Karte, unter Standort, Pfeil und Knöpfen
+        map.addSubview(view) // über der Karte (Index 1 lag hinter der Zeichenfläche – Häuser unsichtbar)
+        #if DEBUG || EZTEST
+        debug.font = .monospacedSystemFont(ofSize: 10, weight: .bold)
+        debug.textColor = .yellow
+        debug.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        debug.frame = CGRect(x: 8, y: 120, width: 220, height: 14)
+        view.addSubview(debug)
+        #endif
     }
 
     private func clear() {
@@ -95,6 +103,7 @@ final class VillageLayer {
             found.append((c, angle, min(14, max(7, best * 0.9)), hypot(sp.x - center.x, sp.y - center.y), variant))
         }
         found.sort { $0.3 < $1.3 }
+        debug.text = " Modelle \(templates.count) · Gebäude \(feats.count) · sichtbar \(found.count)"
         clear()
         for (c, angle, size, _, v) in found.prefix(Self.maxHouses) {
             let node = templates[v % templates.count].clone()
