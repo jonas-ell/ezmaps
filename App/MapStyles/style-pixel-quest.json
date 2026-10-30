@@ -1836,6 +1836,30 @@
    ]
   },
   {
+   "id": "building-probe",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "paint": {
+    "fill-color": "#000000",
+    "fill-antialias": true,
+    "fill-opacity": 0.01
+   },
+   "filter": [
+    "<",
+    [
+     "coalesce",
+     [
+      "get",
+      "render_height"
+     ],
+     0
+    ],
+    8
+   ],
+   "minzoom": 15
+  },
+  {
    "id": "building-3d-8",
    "type": "fill-extrusion",
    "source": "openmaptiles",

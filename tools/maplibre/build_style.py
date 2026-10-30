@@ -422,6 +422,10 @@ def build(P, title):
         for lo, hi_, pat_ in P["extrude"]:
             f = ["all", [">=", h, lo]] + ([["<", h, hi_]] if hi_ else [])
             if lo == 0 and P.get("house_models"):  # GM-092: kleine Häuser sind 3D-Modelle
+                # GM-093: fast unsichtbare Fläche, damit die App die Gebäude abfragen kann (Quell-Abfrage lieferte nur 1 Gebäude)
+                layers.insert(k, {**fill("building-probe", "building", "#000000", ["<", h, hi_]), "minzoom": P["house_models"]})
+                layers[k]["paint"]["fill-opacity"] = 0.01
+                k += 1
                 continue
             if lo == 0:  # GM-075: kleine Häuser gemischt Eiche/Fichte (vorher alles gleich braun)
                 f = ["all", ["<", h, hi_], ["!=", ["%", ["to-number", ["id"], 0], 3], 0]]

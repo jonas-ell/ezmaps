@@ -71,9 +71,10 @@ final class VillageLayer {
 
     /// Häuser neu suchen (nach dem Verschieben oder wenn Kacheln geladen sind)
     func refresh() {
-        guard enabled, available, let map, map.zoomLevel >= Self.minZoom,
-              let src = map.style?.source(withIdentifier: "openmaptiles") as? MLNVectorTileSource else { clear(); return }
-        let feats = src.features(sourceLayerIdentifiers: ["building"], predicate: NSPredicate(format: "render_height < 8"))
+        guard enabled, available, let map else { clear(); return }
+        guard map.zoomLevel >= Self.minZoom else { clear(); debug.text = String(format: " Zoom %.1f – Häuser ab 15", map.zoomLevel); return }
+        // GM-093: gezeichnete Gebäude der Probe-Ebene abfragen (Quell-Abfrage lieferte fast nichts)
+        let feats = map.visibleFeatures(in: map.bounds, styleLayerIdentifiers: ["building-probe"])
         let area = map.bounds.insetBy(dx: -40, dy: -40)
         let center = CGPoint(x: map.bounds.midX, y: map.bounds.midY)
         var seen = Set<Int64>()

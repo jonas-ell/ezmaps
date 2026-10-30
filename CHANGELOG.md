@@ -2,6 +2,30 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-093 – 3D-Villager: Gebäude über gezeichnete Probe-Ebene finden
+
+**Ziel:** Nutzer-Bilder mit Zählanzeige: „Modelle 4 · Gebäude 1 · sichtbar 0“ – Modelle geladen, aber die Quell-Abfrage von MapLibre lieferte nur 1 Gebäude.
+
+**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `App/VillageLayer.swift`
+
+**Geändert:** Kleine Gebäude (unter 8 m) liegen ab Zoom 15 als fast unsichtbare Fläche `building-probe` im Stil, die App fragt die gezeichneten Gebäude dort ab. Zählanzeige zeigt jetzt auch den Zoom, wenn er zu klein ist.
+
+**Tatsächlich geprüft:** STIL OK.
+
+**Ungetestet:** iPhone.
+
+## GM-092 – Pixel Quest: 3D-Villager-Häuser als SceneKit-Ebene
+
+**Ziel:** Nutzer: „mach und zeig“ (3D-Villager-Häuser aus der Codex-Lieferung).
+
+**Dateien:** `App/VillageLayer.swift` (neu), `App/NeonMapView.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `tools/mac_device.sh`, `mac_drive.sh`, `mac_screens.sh`, `.gitignore`
+
+**Geändert:** Durchsichtige SceneKit-Ebene über der Karte: bis 80 Villager-Häuser (4 Holzarten) auf kleinen Gebäuden ab Zoom 15, gedreht nach der längsten Gebäudekante, Größe aus der Gebäudekante, geneigt wie die Karte, folgt jeder Kamerabewegung. Blöcke und Dachplatten unter 8 m ab Zoom 15 aus. Modelle (`Assets/Generated/PixelQuest/3d/*.scn`) nur lokal, Test-Builds kopieren sie nach `App/Models`. Zählanzeige in Test-Builds.
+
+**Tatsächlich geprüft:** Mac-Lauf ALLES OK, auf dem iPhone installiert; Simulator zeigte keine Häuser (Ebene lag hinter der Karte, behoben); Nutzer-Bilder: Modelle 4, Gebäude 1 (siehe GM-093).
+
+**Ungetestet:** Häuser selbst.
+
 ## GM-091 – Codex-Lieferung: Würfel-Texturen, Mittelkreis; 3D-Villager und Teppich-Teile geprüft
 
 **Ziel:** Nutzer: „mach auf iPhone und schau dir die neuen Assets an“.
