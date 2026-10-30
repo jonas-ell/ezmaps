@@ -2,6 +2,20 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-084 – Vorher/Nachher-Bilder zur Freigabe; Frontier-Materialien abgestimmt
+
+**Ziel:** Nutzer: „alles umsetzen, aber immer ein Vorher-Nachher-Bild 1:1, das ich absegnen muss“; Spielgrafiken bleiben in der App.
+
+**Dateien:** `tools/terrain/render_tiles.py`, `docs/frontier-v2/kacheln-z11/12/14.jpg`, `docs/vorher-nachher/` (neu), `docs/overlay-vorschlag/`
+
+**Geändert:**
+- Frontier-Kacheln: Codex-Materialien auf 35 % verkleinert (Kronen waren riesig), 60 % zur Palettenfarbe gezogen (Felder zu gelb), Relief kräftiger (Überhöhung 2,4, Schatten stärker). Nur im Rechen-Skript, noch nicht in der App.
+- Vorher/Nachher-Bilder in Originalgröße: Frontier Zoom 12/14 (echter Render), 10 Pixel-Symbole auf Pfosten, 12+16 Neon-Leuchtrand und Tempo rot, 13 Wild-West-Pergament mit Siegel, 14 Suche im Pixel-Stil, Pixel-Marker mit Richtungspfeil. Montagen auf Screenshots, außer Frontier.
+
+**Tatsächlich geprüft:** Bilder angesehen.
+
+**Ungetestet:** nichts davon in der App (wartet auf Freigabe).
+
 ## GM-083 – Overlays: Knopf-Leiste, kleiner Hinweis, Navigation aufgeräumt; Toy-Town-Häuschen gemischt
 
 **Ziel:** Nutzer gibt Overlay-Vorschläge 3, 4, 6, 7, 8, 9 und 11 frei (1 und 2 ausdrücklich nicht; 5 offen).

@@ -25,6 +25,8 @@ from scipy.ndimage import gaussian_filter
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DATA = pathlib.Path(os.environ.get("EZMAPS_DATA", pathlib.Path.home() / "EzMapsData"))
 MAT_DIR = ROOT / "tools" / "terrain" / "materials"
+MAT_SCALE = 0.35   # GM-084: Materialgröße relativ zu Weltpixeln
+MAT_TINT = 0.6     # GM-084: Anteil der Grundfarbe aus der Palette
 T = 512           # Kachelgröße in Pixel (512 = scharf auf dem iPhone bei tileSize 512)
 R = 6378137.0
 
@@ -70,7 +72,7 @@ def read(kind, bounds, size, resampling):
     return out
 
 
-def hillshade(dem, cell, az=315, alt=45, exag=1.6):
+def hillshade(dem, cell, az=315, alt=45, exag=2.4):  # GM-084: kräftiger (Zielbild: Gelände ist das Wichtigste)
     dy, dx = np.gradient(dem * exag, cell)
     slope = np.arctan(np.hypot(dx, dy))
     aspect = np.arctan2(-dx, dy)
@@ -99,7 +101,13 @@ def material(name, gx, gy):
     p = MAT_DIR / f"{name}.png"
     if p.exists():
         if name not in _mats:
-            _mats[name] = np.asarray(Image.open(p).convert("RGB"), dtype=np.float32)
+            # GM-084: Codex-Materialien verkleinern (Kronen waren riesig) und Richtung Grundfarbe ziehen (Felder zu gelb)
+            im = Image.open(p).convert("RGB")
+            im = im.resize((int(im.width * MAT_SCALE), int(im.height * MAT_SCALE)), Image.Resampling.LANCZOS)
+            a = np.asarray(im, dtype=np.float32)
+            base = np.array(BASE[name], dtype=np.float32)
+            mean = a.reshape(-1, 3).mean(0)
+            _mats[name] = (a - mean) * 0.85 + (mean * (1 - MAT_TINT) + base * MAT_TINT)
         m = _mats[name]
         return m[(gy % m.shape[0]).astype(np.int64), (gx % m.shape[1]).astype(np.int64)]
     base = np.array(BASE[name], dtype=np.float32)
@@ -138,7 +146,7 @@ def render(z, x, y):
     rgb /= wsum[..., None]
     water = (lc == 80).astype(np.float32)
     # Relief: Schatten olivbraun, Licht warm – nicht auf Wasser
-    shade = (hs - 0.62) * 1.25
+    shade = (hs - 0.6) * 1.7
     tint = np.where(shade[..., None] < 0, np.array([35, 43, 20], np.float32), np.array([234, 223, 184], np.float32))
     a = np.clip(np.abs(shade), 0, 0.85)[..., None] * (1 - water[..., None])
     rgb = rgb * (1 - a) + tint * a
