@@ -11,7 +11,8 @@ OUTDIR=docs/store/iphone-69
 MARK=.do_screens
 if [ "${1:-}" = "carplay" ]; then OUTDIR=docs/store/carplay; MARK=.do_carscreens; fi  # GM-023
 if [ "${1:-}" = "freigabe" ]; then MARK=.do_open_privacy; fi  # GM-024: Einstellungen am Mac öffnen
-if [ "${1:-}" = "tests" ]; then OUTDIR=docs/store/tests; MARK=.do_testshots; fi  # GM-029: kleines iPhone, Englisch, Standort verweigert
+if [ "${1:-}" = "tests" ]; then OUTDIR=docs/store/tests; MARK=.do_testshots; fi
+if [ "${1:-}" = "pixel" ]; then OUTDIR=docs/store/pixel; MARK=.do_pixelshot; fi  # GM-093: nur Pixel Quest nah  # GM-029: kleines iPhone, Englisch, Standort verweigert
 TMP=$(mktemp -d)
 RAW="$TMP/ausgabe.txt"
 

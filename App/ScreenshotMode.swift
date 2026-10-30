@@ -19,6 +19,13 @@ enum ScreenshotMode {
         return MapStyle(rawValue: args[i + 1])
     }
 
+    /// GM-093: Start-Zoom für Prüfbilder (`-EZZoom 16.5`)
+    nonisolated static var zoom: Double? {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-EZZoom"), i + 1 < args.count else { return nil }
+        return Double(args[i + 1])
+    }
+
     /// Ziel für die Bilder: weit genug weg für eine Route mit Alternativen (Idstein → Frankfurt)
     static let target = PhotonClient.Place(
         name: "Römerberg", subtitle: "Platz · Frankfurt am Main",

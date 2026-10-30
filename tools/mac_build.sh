@@ -179,13 +179,14 @@ fi
 
 # GM-029: Test-Screenshots (Marker tools/.do_testshots): kleines iPhone (wie die iPad-Prüfung von Apple, 375 × 667),
 # Englisch, Standort verweigert. Ergebnis landet in docs/store/tests/ (nicht für den Store).
-if [ -f tools/.do_testshots ]; then
-  rm -f tools/.do_testshots
+if [ -f tools/.do_testshots ] || [ -f tools/.do_pixelshot ]; then
+  PONLY=; [ -f tools/.do_pixelshot ] && PONLY=1  # GM-093: schneller Lauf nur Pixel Quest (nah)
+  rm -f tools/.do_testshots tools/.do_pixelshot
   xcodegen generate >/dev/null || exit 1
   OUT=/tmp/eztests; rm -rf "$OUT"; mkdir -p "$OUT"
   shoot() { # Gerät-ID, Name, Zustand, Sprache, Wartezeit
     xcrun simctl terminate "$1" "$BID" 2>/dev/null
-    xcrun simctl launch "$1" "$BID" -EZShot "$3" ${6:+-EZStyle $6} -AppleLanguages "($4)" -AppleLocale "$4" >/dev/null
+    xcrun simctl launch "$1" "$BID" -EZShot "$3" ${6:+-EZStyle $6} ${7:+-EZZoom $7} -AppleLanguages "($4)" -AppleLocale "$4" >/dev/null
     sleep "$5"
     xcrun simctl io "$1" screenshot --type=png "$OUT/$2.png" >/dev/null 2>&1 && echo "Bild: $2"
     # GM-030: läuft die App noch? Sonst Absturz melden
@@ -207,6 +208,12 @@ if [ -f tools/.do_testshots ]; then
   idof() { xcrun simctl list devices available | grep -E "$1" | head -1 | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}'; }
   SMALL=$(idof "^ +iPhone SE"); [ -n "$SMALL" ] || SMALL=$(idof "^ +iPhone 1[6-9]e")
   BIG=$(idof "^ +iPhone 1[6-9] Pro Max")
+  if [ -n "$PONLY" ]; then
+    prep "$BIG" || exit 1
+    for Z in 15.2 16.2 17.2; do shoot "$BIG" "pixel-z$Z" karte de 14 pixel-quest "$Z"; done
+    for F in "$OUT"/*.png; do echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="; done
+    echo "TESTBILDER FERTIG"; exit 0
+  fi
   if [ -n "$SMALL" ]; then
     echo "Kleines Gerät: $(xcrun simctl list devices available | grep "$SMALL" | sed 's/^ *//')"
     prep "$SMALL" && for E in karte:12 suche:10 vorschau:16 navigation:28 einstellungen:8; do shoot "$SMALL" "klein-${E%%:*}" "${E%%:*}" de "${E##*:}"; done

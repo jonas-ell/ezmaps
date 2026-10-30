@@ -34,7 +34,7 @@ enum NeonMap {
         map.backgroundColor = StyleTheme.of(style).background
         // GM-050: direkt am letzten bekannten Standort starten – vorher flog die Kamera beim Öffnen von Idstein dorthin
         let known = FollowCamera.locationAllowed ? CLLocationManager().location?.coordinate : nil
-        map.setCenter(known ?? MapStyleResource.idstein, zoomLevel: zoom, animated: false)
+        map.setCenter(known ?? MapStyleResource.idstein, zoomLevel: ScreenshotMode.zoom ?? zoom, animated: false) // GM-093: Prüfbilder nah
         map.showsUserLocation = FollowCamera.locationAllowed // GM-045: sonst fragt MapLibre beim Start selbst nach dem Standort
         map.showsUserHeadingIndicator = true // GM-048: Kompass-Richtung für den Standort-Pfeil (PlayerLocationView)
         map.logoView.isHidden = true
@@ -577,7 +577,7 @@ struct NeonMapView: UIViewRepresentable {
         func mapViewRegionIsChanging(_ mapView: MLNMapView) { reportZoom(mapView); MainActor.assumeIsolated { village?.layout() } }
         func mapView(_ mapView: MLNMapView, regionDidChangeAnimated animated: Bool) {
             reportZoom(mapView)
-            MainActor.assumeIsolated { village?.layout() }
+            MainActor.assumeIsolated { village?.refresh() } // GM-093: auch nach jeder Bewegung neu suchen
         }
         private func reportZoom(_ mapView: MLNMapView) {
             let z = mapView.zoomLevel
