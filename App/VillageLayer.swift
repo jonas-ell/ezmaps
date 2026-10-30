@@ -59,7 +59,7 @@ final class VillageLayer {
         debug.font = .monospacedSystemFont(ofSize: 10, weight: .bold)
         debug.textColor = .yellow
         debug.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        debug.frame = CGRect(x: 8, y: 120, width: 220, height: 14)
+        debug.frame = CGRect(x: 8, y: 120, width: 300, height: 14)
         view.addSubview(debug)
         #endif
     }
@@ -139,7 +139,8 @@ final class VillageLayer {
             let s = ppm * Float(house.size)
             house.node.scale = SCNVector3(s, s, s)
             house.node.position = SCNVector3(Float(p.x - w / 2), Float(h / 2 - p.y), Float(p.y))
-            house.node.eulerAngles = SCNVector3(.pi / 2 - pitch, -Float((house.angle - dir) * .pi / 180), 0)
+            // GM-093: Die Codex-.scn steht schon mit „oben“ zur Kamera (Z-up) – nur nach Kartenneigung kippen, um Z nach Gebäudekante drehen
+            house.node.eulerAngles = SCNVector3(-pitch, 0, -Float((house.angle - dir) * .pi / 180))
         }
     }
 }
