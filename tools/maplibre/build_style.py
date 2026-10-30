@@ -114,7 +114,13 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
                                    14, "toy-apartment"],
                             size=["interpolate", ["exponential", 1.6], ["zoom"], 15, 0.4, 17, 0.75, 19, 1.9, 20, 2.8]),  # GM-075: nah mitwachsen
            water_edge="#f2d48b", road_dash="#ffffff", building_ink="#2f3640",
-           textile=("toy-tex-weave", 0.75),  # GM-071: Teppich-Flor über allem (Nutzer: „wirkliche Teppich-Grafiken mit Textil-Details“)
+           textile=("toy-tex-weave", 0.75),
+           # GM-087: Flächen als bedruckte Teppich-Felder mit weißem Rand (Nutzer: „wie beim echten Teppich, Parkplatz blau mit P“)
+           rug_patches={"retail": "toy-pat-lot", "commercial": "toy-pat-lot", "garages": "toy-pat-lot", "bus_station": "toy-pat-lot",
+                        "pitch": "toy-pat-pitch", "stadium": "toy-pat-pitch", "playground": "toy-pat-play", "kindergarten": "toy-pat-play",
+                        "school": "toy-pat-school", "college": "toy-pat-school", "university": "toy-pat-school",
+                        "hospital": "toy-pat-hospital", "railway": "toy-pat-rail"},
+           rug_icons={"parking": "toy-parking-lot"}, rug_area_icons={"pitch": "toy-football-pitch", "playground": "toy-playground"},  # GM-071: Teppich-Flor über allem (Nutzer: „wirkliche Teppich-Grafiken mit Textil-Details“)
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
            poi_suffix="-toy", poi_minzoom=14, place_color="#ffffff", place_halo="#2f3640", place_halo_width=2.4, place_transform="none")
 
@@ -337,6 +343,26 @@ def build(P, title):
         layers.append({"id": "building-icons", "type": "symbol", "source": "openmaptiles", "source-layer": "building", "minzoom": hi.get("minzoom", 15),
                        "layout": {"icon-image": hi["image"], "icon-size": hi["size"], "icon-anchor": hi.get("anchor", "center"),
                                   "icon-padding": 0, "icon-allow-overlap": False}})
+    if P.get("rug_patches"):  # GM-087: bedruckte Felder über der Wiese, unter Straßen
+        k = next(n for n, l in enumerate(layers) if l["id"] == "water")
+        new = []
+        for cls, pat_ in P["rug_patches"].items():
+            new.append({**fill(f"rug-{cls}", "landuse", "#cccccc", ["==", ["get", "class"], cls], pattern=pat_), "minzoom": 13})
+        new.append({**line("rug-edge", "landuse", "#ffffff", ["interpolate", ["linear"], ["zoom"], 13, 1, 17, 4],
+                           ["in", ["get", "class"], ["literal", list(P["rug_patches"])]]), "minzoom": 13})
+        layers[k:k] = new
+        sz = ["interpolate", ["exponential", 2], ["zoom"], 14, 0.25, 16, 0.6, 18, 2.2]  # wächst mit der Karte
+        k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")
+        for cls, img in P.get("rug_area_icons", {}).items():
+            layers.insert(k, {"id": f"rug-icon-{cls}", "type": "symbol", "source": "openmaptiles", "source-layer": "landuse", "minzoom": 14.5,
+                              "filter": ["==", ["get", "class"], cls],
+                              "layout": {"icon-image": img, "icon-size": sz, "icon-allow-overlap": True, "icon-ignore-placement": True,
+                                         "icon-pitch-alignment": "map", "icon-rotation-alignment": "map"}})
+        for cls, img in P.get("rug_icons", {}).items():
+            layers.insert(k, {"id": f"rug-poi-{cls}", "type": "symbol", "source": "openmaptiles", "source-layer": "poi", "minzoom": 14.5,
+                              "filter": ["==", ["get", "class"], cls],
+                              "layout": {"icon-image": img, "icon-size": sz, "icon-allow-overlap": True, "icon-ignore-placement": True,
+                                         "icon-pitch-alignment": "map", "icon-rotation-alignment": "map"}})
     if P.get("tree_edges"):  # GM-073: Bäume als einzelne Bilder entlang der Waldkante (Toy Town)
         te = P["tree_edges"]
         k = next(n for n, l in enumerate(layers) if l["id"] == "road-names")

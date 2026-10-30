@@ -2,6 +2,30 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-087 – Toy Town: Flächen als bedruckte Teppich-Felder (Vorschlag, wartet auf Freigabe)
+
+**Ziel:** Nutzer: „Sollten Parkplätze nicht Segmente im Boden sein wie beim echten Teppich? Blauer Teppich mit P, dasselbe Prinzip bei allem.“
+
+**Dateien:** `App/Assets.xcassets/ToyTown/toy-pat-*` (neu), `toy-parking-lot`, `toy-football-pitch`, `toy-playground` (Codex), `tools/maplibre/build_style.py`, `App/MapStyles/style-toy-town.json`, `App/NeonMapView.swift`, `tools/prototype/js/poi.js`, `docs/vorher-nachher/toy-teppich-felder.png`
+
+**Geändert:** Flächen mit weißem Druckrand: Gewerbe/Handel/Garagen als Parkplatz mit Stellplätzen und blauen P-Feldern, Sportplätze mit Rasenstreifen und Codex-Fußballfeld, Spielplätze Sand mit bunten Punkten und Codex-Spielplatz, Schulen oranges Pflaster mit Hüpfkästchen, Krankenhaus weiß mit roten Kreuzen, Bahngelände Schotter mit Gleisen. Parkplatz-Punkte bekommen das Codex-Parkplatzbild. Bilder wachsen mit der Karte.
+
+**Tatsächlich geprüft:** STIL OK; Vorher/Nachher aus der Web-Vorschau (Idstein Sportgelände, Zoom 16,3, 45° schräg).
+
+**Ungetestet:** App (Mac-Lauf), iPhone – erst nach Freigabe.
+
+## GM-086 – Pixel Quest: Welt als Grasblock-Würfel ganz weit herausgezoomt
+
+**Ziel:** Nutzer: „mach doch als Würfel, wenn man ganz ganz rauszoomt“; Vorher/Nachher freigegeben („ja gute Idee, aber wir brauchen bessere Assets“).
+
+**Dateien:** `App/WorldCubeView.swift` (neu), `App/AppModel.swift`, `App/NeonMapView.swift`, `App/ContentView.swift`, `App/en.lproj/Localizable.strings`, `App/Assets.xcassets/PixelQuest/px-cube-top`, `px-cube-side`, `px-cube-bottom` (Platzhalter)
+
+**Geändert:** Unter Zoom 2,2 (nur Pixel Quest, Karte ohne Navigation) blendet ein SceneKit-Würfel im Sternenhimmel ein: oben Weltkarte im Pixel-Stil, Seiten Erde mit Graskante, feste Schattierung je Seite, dreht sich langsam, mit dem Finger drehbar. Tippen oder Auseinanderziehen zoomt die Karte auf Zoom 4. Texturen sind Platzhalter, bessere kommen von Codex.
+
+**Tatsächlich geprüft:** Mac-Lauf ALLES OK, auf dem iPhone installiert.
+
+**Ungetestet:** Würfel selbst auf dem iPhone (Aussehen, Übergang, Leistung).
+
 ## GM-085 – Freigegebene Vorher/Nachher-Punkte: Toy-Panel, Pixel-Pfosten, Pergament mit Siegel, Suche im Stil
 
 **Ziel:** Nutzer: „A ja, 5 ja, 10 ja, 12+16 nein, 13 ja, 14 ja, B nein“.

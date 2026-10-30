@@ -164,6 +164,318 @@
    ]
   },
   {
+   "id": "rug-retail",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-lot"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "retail"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-commercial",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-lot"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "commercial"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-garages",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-lot"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "garages"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-bus_station",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-lot"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "bus_station"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-pitch",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-pitch"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "pitch"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-stadium",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-pitch"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "stadium"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-playground",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-play"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "playground"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-kindergarten",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-play"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "kindergarten"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-school",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-school"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "school"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-college",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-school"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "college"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-university",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-school"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "university"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-hospital",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-hospital"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "hospital"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-railway",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "paint": {
+    "fill-color": "#cccccc",
+    "fill-antialias": true,
+    "fill-pattern": "toy-pat-rail"
+   },
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "railway"
+   ],
+   "minzoom": 13
+  },
+  {
+   "id": "rug-edge",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#ffffff",
+    "line-width": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     13,
+     1,
+     17,
+     4
+    ]
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "retail",
+      "commercial",
+      "garages",
+      "bus_station",
+      "pitch",
+      "stadium",
+      "playground",
+      "kindergarten",
+      "school",
+      "college",
+      "university",
+      "hospital",
+      "railway"
+     ]
+    ]
+   ],
+   "minzoom": 13
+  },
+  {
    "id": "water",
    "type": "fill",
    "source": "openmaptiles",
@@ -2064,6 +2376,120 @@
     ]
    ],
    "minzoom": 14
+  },
+  {
+   "id": "rug-poi-parking",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "poi",
+   "minzoom": 14.5,
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "parking"
+   ],
+   "layout": {
+    "icon-image": "toy-parking-lot",
+    "icon-size": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     14,
+     0.25,
+     16,
+     0.6,
+     18,
+     2.2
+    ],
+    "icon-allow-overlap": true,
+    "icon-ignore-placement": true,
+    "icon-pitch-alignment": "map",
+    "icon-rotation-alignment": "map"
+   }
+  },
+  {
+   "id": "rug-icon-playground",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "minzoom": 14.5,
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "playground"
+   ],
+   "layout": {
+    "icon-image": "toy-playground",
+    "icon-size": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     14,
+     0.25,
+     16,
+     0.6,
+     18,
+     2.2
+    ],
+    "icon-allow-overlap": true,
+    "icon-ignore-placement": true,
+    "icon-pitch-alignment": "map",
+    "icon-rotation-alignment": "map"
+   }
+  },
+  {
+   "id": "rug-icon-pitch",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "minzoom": 14.5,
+   "filter": [
+    "==",
+    [
+     "get",
+     "class"
+    ],
+    "pitch"
+   ],
+   "layout": {
+    "icon-image": "toy-football-pitch",
+    "icon-size": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     14,
+     0.25,
+     16,
+     0.6,
+     18,
+     2.2
+    ],
+    "icon-allow-overlap": true,
+    "icon-ignore-placement": true,
+    "icon-pitch-alignment": "map",
+    "icon-rotation-alignment": "map"
+   }
   },
   {
    "id": "forest-trees",

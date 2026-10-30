@@ -869,7 +869,9 @@ enum StylePatterns {
         for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment",
                      "fv2-paper-grain", "fv2-forest-canopy", "fv2-grass-mottle", "fv2-rock-grain", "fv2-water-grain", // GM-068: Frontier-Körnung
                      "fv2-forest-paint", "fv2-meadow-paint", // GM-070: gemalte Kacheln
-                     "toy-tex-weave", "toy-tree"] { // GM-071: Teppich-Flor; GM-073: Baum am Waldrand
+                     "toy-tex-weave", "toy-tree", // GM-071: Teppich-Flor; GM-073: Baum am Waldrand
+                     "toy-pat-lot", "toy-pat-pitch", "toy-pat-play", "toy-pat-school", "toy-pat-hospital", "toy-pat-rail", // GM-087: Teppich-Felder
+                     "toy-parking-lot", "toy-football-pitch", "toy-playground"] {
             if let img = UIImage(named: name) { out[name] = img }
         }
         for k in 1...16 { if let img = UIImage(named: "px-house-\(k)") { out["px-house-\(k)"] = img } } // GM-072: 16 Villager-Varianten
