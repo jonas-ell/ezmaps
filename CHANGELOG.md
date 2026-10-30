@@ -2,17 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
-## GM-093 – 3D-Villager: Gebäude über gezeichnete Probe-Ebene finden
+## GM-093 – 3D-Villager-Häuser sichtbar (Fehlersuche im Simulator)
 
-**Ziel:** Nutzer-Bilder mit Zählanzeige: „Modelle 4 · Gebäude 1 · sichtbar 0“ – Modelle geladen, aber die Quell-Abfrage von MapLibre lieferte nur 1 Gebäude.
+**Ziel:** Nutzer: „die Häuser werden nicht angezeigt, mach alles eigenständig, in 30 Minuten ist alles fertig“.
 
-**Dateien:** `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `App/VillageLayer.swift`
+**Dateien:** `App/VillageLayer.swift`, `App/NeonMapView.swift`, `App/ScreenshotMode.swift`, `tools/maplibre/build_style.py`, `App/MapStyles/style-pixel-quest.json`, `tools/mac_build.sh`, `tools/mac_screens.sh`, `docs/store/pixel/`, `docs/vorher-nachher/pixel-3d-villager.png`
 
-**Geändert:** Kleine Gebäude (unter 8 m) liegen ab Zoom 15 als fast unsichtbare Fläche `building-probe` im Stil, die App fragt die gezeichneten Gebäude dort ab. Zählanzeige zeigt jetzt auch den Zoom, wenn er zu klein ist.
+**Geändert:**
+- Gebäude über die fast unsichtbare Probe-Ebene `building-probe` abfragen (Quell-Abfrage lieferte 1 Gebäude) und jedes Teil zusammengefasster Flächen nehmen (die Kacheln fassen gleich hohe Nachbarhäuser zusammen – vorher nur 4 Gebäude).
+- Drehung als Quaternion: erst um die eigene Hochachse nach der Gebäudekante, dann nach der Kartenneigung kippen (mit eulerAngles kippten Häuser seitlich).
+- Neigung des Stils schon nach dem Laden (Pixel Quest startete flach). Häuser auch nach jeder Kartenbewegung neu suchen, bis 160 im Bild.
+- Schneller Prüflauf `bash tools/mac_screens.sh pixel` (nur Pixel Quest, Zoom 15,2 / 16,2 / 17,2, rund 2 Minuten), Start-Zoom über `-EZZoom`. Zählanzeige nur in Prüfbildern.
 
-**Tatsächlich geprüft:** STIL OK.
+**Tatsächlich geprüft:** Simulator-Bilder: 1006 Gebäude, 268 Kandidaten bei Zoom 16,2, Häuser in vier Holzarten schräg auf den Gebäuden. Mac-Lauf siehe unten.
 
-**Ungetestet:** iPhone.
+**Ungetestet:** iPhone (Leistung, Bewegung beim Schieben/Drehen), CarPlay (dort keine Häuser-Ebene).
 
 ## GM-092 – Pixel Quest: 3D-Villager-Häuser als SceneKit-Ebene
 

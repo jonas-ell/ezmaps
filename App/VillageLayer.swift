@@ -10,7 +10,7 @@ import UIKit
 @MainActor
 final class VillageLayer {
     static let minZoom = 15.0
-    private static let maxHouses = 80
+    private static let maxHouses = 160 // GM-093: Simulator zeigte 268 Kandidaten bei Zoom 16
     private weak var map: MLNMapView?
     private let view = SCNView()
     private let scene = SCNScene()
@@ -55,13 +55,13 @@ final class VillageLayer {
             templates.append(t)
         }
         map.addSubview(view) // über der Karte (Index 1 lag hinter der Zeichenfläche – Häuser unsichtbar)
-        #if DEBUG || EZTEST
+        if ScreenshotMode.state != nil { // GM-093: Zählanzeige nur in Prüfbildern
         debug.font = .monospacedSystemFont(ofSize: 10, weight: .bold)
         debug.textColor = .yellow
         debug.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         debug.frame = CGRect(x: 8, y: 120, width: 300, height: 14)
         view.addSubview(debug)
-        #endif
+        }
     }
 
     private func clear() {
