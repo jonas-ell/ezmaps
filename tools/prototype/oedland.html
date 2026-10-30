@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ödland-Terminal – Demo</title>
+<!-- GM-091: Demo-Idee „Ödland-Terminal“ (Endzeit-Stimmung, grüner Röhrenbildschirm). Nur Prototyp, noch kein App-Stil.
+     Eigene Gestaltung: kein Spielname, keine Spielfigur, kein Logo, keine Spielschrift. Start: python tools/prototype/serve.py
+     → /tools/prototype/oedland.html  (?static=1 hält die Fahrt an, ?boot=0 ohne Startbildschirm) -->
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root { --g: #49ff7a; --g2: #2bd65a; --g3: #138a36; --bg: #031007; }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  #phone { position: absolute; inset: 0; margin: auto; width: 390px; height: 844px; max-height: 100%; border-radius: 44px; overflow: hidden;
+           background: var(--bg); box-shadow: 0 0 0 10px #111, 0 20px 60px rgba(0,0,0,.7); font-family: 'VT323', monospace; color: var(--g); }
+  #m { position: absolute; inset: 0; filter: saturate(1.1) contrast(1.05); }
+  .maplibregl-ctrl-attrib, .maplibregl-ctrl-logo { display: none !important; }
+  /* Röhre: Raster, Zeilen, Vignette, Flimmern */
+  #grid { position: absolute; inset: 0; pointer-events: none;
+          background-image: linear-gradient(rgba(73,255,122,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(73,255,122,.07) 1px, transparent 1px);
+          background-size: 48px 48px; }
+  #scan { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
+          background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px); }
+  #vig { position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 120px 30px rgba(0,0,0,.85);
+         background: radial-gradient(ellipse at center, rgba(73,255,122,.06) 0%, transparent 60%, rgba(0,0,0,.35) 100%); }
+  #roll { position: absolute; left: 0; right: 0; height: 120px; pointer-events: none; top: -120px;
+          background: linear-gradient(180deg, transparent, rgba(73,255,122,.07), transparent); animation: roll 7s linear infinite; }
+  @keyframes roll { to { top: 100%; } }
+  #flick { position: absolute; inset: 0; pointer-events: none; background: rgba(73,255,122,.025); animation: flick .12s steps(2) infinite; }
+  @keyframes flick { 50% { opacity: .4; } }
+  .glow { text-shadow: 0 0 4px rgba(73,255,122,.9), 0 0 12px rgba(73,255,122,.45); }
+  /* Kopfzeile mit Kompass-Band */
+  #top { position: absolute; top: 54px; left: 14px; right: 14px; }
+  #status { display: flex; justify-content: space-between; font-size: 18px; letter-spacing: 1px; opacity: .9; }
+  #compass { position: relative; height: 34px; margin-top: 4px; border-top: 2px solid var(--g2); border-bottom: 2px solid var(--g2); overflow: hidden;
+             background: rgba(3,16,7,.75); }
+  #ticks { position: absolute; top: 0; height: 100%; white-space: nowrap; }
+  #ticks span { position: absolute; top: 4px; font-size: 20px; transform: translateX(-50%); }
+  #ticks i { position: absolute; bottom: 0; width: 2px; height: 8px; background: var(--g2); }
+  #needle { position: absolute; left: 50%; top: -2px; width: 0; height: 0; margin-left: -7px; border: 7px solid transparent; border-top-color: var(--g); }
+  /* Abbiege-Hinweis */
+  #turn { position: absolute; top: 140px; left: 14px; right: 14px; border: 2px solid var(--g2); background: rgba(3,16,7,.82); padding: 8px 12px 10px; }
+  #turn .row { display: flex; align-items: center; gap: 12px; }
+  #turn .arrow { width: 54px; height: 54px; flex: none; }
+  #dist { font-size: 40px; line-height: 1; }
+  #street { font-size: 24px; letter-spacing: 1px; }
+  #next { font-size: 18px; opacity: .75; margin-top: 4px; border-top: 1px dashed var(--g3); padding-top: 4px; }
+  .cur::after { content: '█'; animation: blink 1s steps(1) infinite; margin-left: 2px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  /* Spieler: Winkel-Pfeil */
+  #me { position: absolute; left: 50%; top: 64%; width: 44px; height: 44px; margin: -22px 0 0 -22px; filter: drop-shadow(0 0 6px rgba(73,255,122,.9)); }
+  /* Fußleiste */
+  #bottom { position: absolute; left: 14px; right: 14px; bottom: 34px; display: flex; gap: 10px; align-items: stretch; }
+  .box { border: 2px solid var(--g2); background: rgba(3,16,7,.85); padding: 6px 10px; }
+  #speed { text-align: center; min-width: 74px; }
+  #speed b { display: block; font-size: 38px; line-height: 1; font-weight: normal; }
+  #limit { width: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 50%; border: 3px solid var(--g); font-size: 28px; line-height: 1; }
+  #eta { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  #eta .big { font-size: 30px; line-height: 1; }
+  #eta .small { font-size: 18px; opacity: .8; }
+  .bar { height: 8px; border: 1px solid var(--g2); margin-top: 4px; }
+  .bar div { height: 100%; background: repeating-linear-gradient(90deg, var(--g) 0 6px, transparent 6px 8px); }
+  #attr { position: absolute; left: 14px; bottom: 14px; font-size: 13px; opacity: .65; }
+  /* Startbildschirm */
+  #boot { position: absolute; inset: 0; background: var(--bg); padding: 90px 22px; font-size: 21px; line-height: 1.25; white-space: pre-wrap; z-index: 5; transition: opacity .5s; }
+</style>
+</head>
+<body>
+<div id="phone">
+  <div id="m"></div>
+  <div id="grid"></div>
+  <svg id="me" viewBox="0 0 44 44"><path d="M22 3 L38 39 L22 30 L6 39 Z" fill="#031007" stroke="#49ff7a" stroke-width="3" stroke-linejoin="miter"/><path d="M22 12 L31 33 L22 28 L13 33 Z" fill="#49ff7a"/></svg>
+  <div id="top" class="glow">
+    <div id="status"><span id="clock">12:03</span><span>ÖDLAND-TERMINAL</span><span>SIG ▮▮▮▯</span></div>
+    <div id="compass"><div id="ticks"></div><div id="needle"></div></div>
+  </div>
+  <div id="turn" class="glow">
+    <div class="row">
+      <svg class="arrow" viewBox="0 0 54 54"><path d="M14 50 V24 H36 V14 L50 28 L36 42 V32 H22 V50 Z" fill="none" stroke="#49ff7a" stroke-width="3"/></svg>
+      <div><div id="dist">300 M</div><div id="street" class="cur">RECHTS · LIMESSTRASSE</div></div>
+    </div>
+    <div id="next">DANACH ◀ LINKS · AM BAHNHOF</div>
+  </div>
+  <div id="bottom" class="glow">
+    <div class="box" id="speed"><b id="kmh">48</b>KM/H</div>
+    <div class="box" id="limit">50</div>
+    <div class="box" id="eta"><div class="big" id="etaBig">ANK 12:14</div><div class="small" id="etaSmall">4,2 KM · 11 MIN</div><div class="bar"><div id="prog" style="width:20%"></div></div></div>
+  </div>
+  <div id="attr">© OpenMapTiles · © OpenStreetMap-Mitwirkende</div>
+  <div id="roll"></div><div id="flick"></div><div id="scan"></div><div id="vig"></div>
+  <div id="boot" class="glow"></div>
+</div>
+<script src="js/oedland.js"></script>
+</body>
+</html>

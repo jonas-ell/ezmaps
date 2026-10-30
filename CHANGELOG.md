@@ -2,6 +2,24 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-091 – Demo „Ödland-Terminal“ (Endzeit-Karte, grüner Röhrenbildschirm)
+
+**Ziel:** Nutzer: „Mach mir mal eine Demo für eine Fallout-Map“ (Idee 2 aus der Stil-Ideenliste).
+
+**Dateien:** `tools/prototype/oedland.html`, `tools/prototype/js/oedland.js` (neu), `docs/previews/oedland-demo-1.png`, `-2.png`
+
+**Geändert:**
+- Nur Prototyp, noch kein App-Stil und kein Kaufprodukt. Start: `python tools/prototype/serve.py` → `/tools/prototype/oedland.html` (`?boot=0` ohne Startbildschirm, `?static=1` ohne Fahrt).
+- Karte nur in Grüntönen auf fast Schwarz: Straßen leuchten (Glüh-Ebene darunter), Häuser als Umrisse, Wasser schraffiert, Wald/Park gepunktet, Bahn gestrichelt, Namen in Großbuchstaben, Orte als `[NAME]`.
+- Röhre: Raster, Bildzeilen, laufender Lichtstreifen, leichtes Flimmern, dunkle Ränder.
+- Anzeigen im Terminal-Stil (Schrift VT323, OFL): Kompass-Band oben, Abbiege-Kasten mit blinkendem Cursor und echten Straßennamen, unten Tempo, Tempolimit, Ankunft, Fortschrittsbalken. Startbildschirm „ÖDLAND-TERMINAL v1.0 … GUTE FAHRT, WANDERER.“
+- Fahrt durch Wallrabenstein/Idstein (`tools/drive_wallrabenstein.txt`), doppelte Geschwindigkeit.
+- Recht: kein Spielname, keine Spielfigur, kein Logo, keine Spielschrift, nur die Stimmung. OSM-Hinweis sichtbar.
+
+**Tatsächlich geprüft:** in Chromium dargestellt (Bilder in `docs/previews/oedland-demo-*.png`).
+
+**Ungetestet:** App (nicht gebaut, nur Prototyp), Lesbarkeit im Auto bei Sonne, Leistung der Glüh-Ebenen auf dem iPhone.
+
 ## GM-090 – Pixel Quest: Erde als großer Block-Würfel; kein grüner Rand mehr beim Rauszoomen
 
 **Ziel:** Nutzer-Bild: ganz rausgezoomt grüner Streifen über der Weltkarte. Wunsch: „die Erde bei Pixel Quest zu einem riesigen 3D-Würfel machen“.
