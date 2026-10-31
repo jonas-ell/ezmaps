@@ -801,7 +801,7 @@ struct ArrivalSheet: View {
                     HStack(spacing: 8) {
                         StatTile(value: "+\(reveal.newPercent) %", label: L("neue Straßen"), hot: true)
                         StatTile(value: Formatting.distance(model.journal.trips.first?.meters ?? Double(reveal.totalCells) * ExploreCell.approxMeters), label: L("gefahren"))
-                        StatTile(value: Formatting.distance(model.exploredKm * 1000), label: L("insgesamt entdeckt")) // GM-097: vorher „0 km“ unter 500 m
+                        StatTile(value: Formatting.distance(model.exploredKm * 1000), label: L("gesamt entdeckt")) // GM-097: vorher „0 km“ unter 500 m; „insgesamt“ wurde abgeschnitten
                     }
                 }
                 if model.missionJustDone {
