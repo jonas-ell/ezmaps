@@ -212,18 +212,33 @@ struct StyleDetailView: View {
     private var store: PurchaseManager { model.purchases }
     private var singleID: String? { ProductID.single(style) }
     private var accent: SwiftUI.Color { SwiftUI.Color(uiColor: StyleTheme.of(style).route) }
+    /// GM-097: Hauptknopf in der Farbe des Stils (vorher überall lila)
+    private var styleTint: [SwiftUI.Color] { [accent, accent.opacity(0.75)] }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 hero
+                // GM-097: Testen direkt unter dem Bild (stand unter dem Kleingedruckten, außerhalb des Bildschirms)
+                if !model.isUnlocked(style) && model.trial.canStart(style.trialKey) {
+                    Button {
+                        model.selectStyle(style)
+                        onDone()
+                    } label: {
+                        Label(String(format: L("%@ 10 Minuten kostenlos testen"), L(style.titleKey)), systemImage: "play.fill")
+                            .font(.system(size: 15, weight: .bold))
+                            .frame(maxWidth: .infinity).frame(height: 48)
+                            .overlay(Capsule().strokeBorder(accent.opacity(0.8), lineWidth: 1.5))
+                    }
+                    .foregroundStyle(.white)
+                }
                 features
                 if model.isUnlocked(style) {
                     Button(model.activeStyle == style ? L("Aktiv") : L("Diesen Stil benutzen")) {
                         model.selectStyle(style)
                         onDone()
                     }
-                    .buttonStyle(PrimaryGlassButtonStyle(height: 56))
+                    .buttonStyle(PrimaryGlassButtonStyle(height: 56, tint: styleTint))
                     .disabled(model.activeStyle == style)
                 } else {
                     offers
@@ -233,22 +248,10 @@ struct StyleDetailView: View {
                             if choosePlus { Text(L("Plus holen")) } else { Text(L("Kaufen")); StyleName(style: style, size: 17) }
                         }
                     }
-                    .buttonStyle(PrimaryGlassButtonStyle(height: 58))
+                    .buttonStyle(PrimaryGlassButtonStyle(height: 58, tint: styleTint))
                     .disabled(store.isBusy || !store.canBuy(choosePlus ? ProductID.yearly : (singleID ?? "")))
                     Text(fineText).font(.system(size: 11)).foregroundStyle(GlassTokens.secondary)
                         .multilineTextAlignment(.center).frame(maxWidth: .infinity)
-                    if model.trial.canStart(style.trialKey) {
-                        Button {
-                            model.selectStyle(style)
-                            onDone()
-                        } label: {
-                            Label(String(format: L("%@ 10 Minuten kostenlos testen"), L(style.titleKey)), systemImage: "play.fill")
-                                .font(.system(size: 15, weight: .bold))
-                                .frame(maxWidth: .infinity).frame(height: 48)
-                                .overlay(Capsule().strokeBorder(accent.opacity(0.8), lineWidth: 1.5))
-                        }
-                        .foregroundStyle(.white)
-                    }
                     if store.testMode { TestModeNote() }
                     if let e = store.errorText { Text(e).font(.footnote).foregroundStyle(GlassTokens.danger).frame(maxWidth: .infinity) }
                 }
@@ -327,6 +330,60 @@ struct StyleDetailView: View {
     private func buy() {
         let id = choosePlus ? ProductID.yearly : (singleID ?? ProductID.yearly)
         Task { if await store.purchase(id) { model.purchaseCompleted(for: style); onDone() } }
+    }
+}
+
+/// GM-097: Stil-Wechsler (Palette auf der Karte) – eigene Stile sofort wechseln, gesperrte öffnen ihre Stil-Seite
+struct StylePickerSheet: View {
+    let model: AppModel
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(L("Kartenstil")).font(.system(size: 22, weight: .heavy))
+                Spacer()
+                Button(L("Plus ansehen")) { open(.classic) }
+                    .font(.system(size: 14, weight: .semibold)).foregroundStyle(GlassTokens.accentLight)
+            }
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(MapStyle.allCases, id: \.self) { s in
+                        Button { pick(s) } label: { tile(s) }.buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+        .padding(20)
+        .presentationBackground(.ultraThinMaterial)
+    }
+
+    private func tile(_ s: MapStyle) -> some View {
+        let unlocked = model.isUnlocked(s), active = model.activeStyle == s
+        return VStack(spacing: 8) {
+            StyleTile(style: s, unlocked: unlocked, active: active)
+                .frame(width: 124)
+                .overlay(alignment: .topTrailing) {
+                    if !unlocked {
+                        Image(systemName: "lock.fill").font(.system(size: 12, weight: .heavy)).foregroundStyle(.white)
+                            .padding(7).background(.black.opacity(0.6), in: Circle()).padding(8)
+                    }
+                }
+            Text(active ? L("Aktiv") : unlocked ? L("Benutzen") : model.trial.canStart(s.trialKey) ? L("Testen") : L("Ansehen"))
+                .font(.system(size: 13, weight: .heavy))
+                .foregroundStyle(active ? GlassTokens.ok : .white)
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    private func pick(_ s: MapStyle) {
+        if model.isUnlocked(s) { model.selectStyle(s); dismiss() } else { open(s) }
+    }
+
+    /// Shop erst öffnen, wenn dieses Blatt zu ist (zwei Blätter gleichzeitig zeigt SwiftUI nicht)
+    private func open(_ s: MapStyle) {
+        dismiss()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { model.shopRequest = s }
     }
 }
 

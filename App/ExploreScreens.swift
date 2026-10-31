@@ -66,7 +66,7 @@ struct ExploreScreen: View {
         VStack(alignment: .leading, spacing: 12) {
             SheetGrabber()
             HStack(spacing: 8) {
-                StatTile(value: String(format: "%.0f km", model.exploredKm), label: L("Straßen entdeckt"), hot: true)
+                StatTile(value: Formatting.distance(model.exploredKm * 1000), label: L("Straßen entdeckt"), hot: true) // GM-097
                 StatTile(value: "\(model.journal.trips.count)", label: L("Fahrten"))
                 StatTile(value: "\(model.journal.badges.count) / \(Badge.allCases.count)", label: L("Abzeichen"))
             }
@@ -165,6 +165,10 @@ struct ExploreMapView: UIViewRepresentable {
                 points.append(p)
             }
             src.shape = MLNShapeCollectionFeature(shapes: points)
+        }
+
+        func mapViewDidBecomeIdle(_ mapView: MLNMapView) {
+            self.mapView(mapView, regionDidChangeAnimated: false) // GM-097: auch wenn die Kacheln fertig geladen sind
         }
 
         func mapView(_ mapView: MLNMapView, regionDidChangeAnimated animated: Bool) {

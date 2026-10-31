@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var model = AppModel.shared
     @State private var showSettings = false
     @State private var showExplore = false
+    @State private var showStylePicker = false // GM-097
     @Environment(\.scenePhase) private var scenePhase
     private var onboarding: Bool { (!model.settings.onboarded && ScreenshotMode.state == nil) || ScreenshotMode.state?.hasPrefix("onboarding") == true }
     /// GM-086/088: Welt-Würfel bei Pixel Quest ganz weit weg
@@ -43,7 +44,7 @@ struct ContentView: View {
             }
 
             switch model.screen {
-            case .map: if !onboarding { MapHome(model: model, showSettings: $showSettings, showExplore: $showExplore) } // GM-045: nicht unter dem Onboarding
+            case .map: if !onboarding { MapHome(model: model, showSettings: $showSettings, showExplore: $showExplore, showStylePicker: $showStylePicker) } // GM-045: nicht unter dem Onboarding
             case .search: SearchScreen(model: model)
             case .preview: RoutePreview(model: model)
             case .navigating: NavigationHUD(model: model)
@@ -74,14 +75,20 @@ struct ContentView: View {
             ShopScreen(model: model, focus: style == .classic ? nil : style)
         }
         .sheet(item: Binding(get: { model.trialEnded }, set: { model.trialEnded = $0 })) { style in
-            TrialEndedSheet(model: model, style: style).presentationDetents([.medium])
+            TrialEndedSheet(model: model, style: style).presentationDetents([.height(300)]) // GM-097: obere Hälfte war leer
         }
         .sheet(isPresented: Binding(get: { model.showParkedCar && model.screen == .map }, set: { model.showParkedCar = $0 })) {
             ParkedCarSheet(model: model).presentationDetents([.height(300)])
         }
         .fullScreenCover(isPresented: $showExplore) { ExploreScreen(model: model) }
+        .sheet(isPresented: $showStylePicker) { StylePickerSheet(model: model).presentationDetents([.height(300)]) }
         // GM-031: Store-Screenshot „einstellungen“ – mehrmals versuchen, bis das Blatt offen ist (Task in onAppear ging verloren)
         .task {
+            if ScreenshotMode.state == "stilwahl" { // GM-097
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                showStylePicker = true
+                return
+            }
             // GM-096: Prüfbild „entdecken“
             guard ScreenshotMode.state != "entdecken" else {
                 try? await Task.sleep(nanoseconds: 1_500_000_000)
@@ -121,6 +128,7 @@ struct MapHome: View {
     let model: AppModel
     @Binding var showSettings: Bool
     @Binding var showExplore: Bool
+    @Binding var showStylePicker: Bool
 
     var body: some View {
         VStack(spacing: 10) {
@@ -130,7 +138,7 @@ struct MapHome: View {
                 // GM-083: eine schmale Leiste statt vier runder Knöpfe (verdeckten Straßennamen); Kompass zeigt MapLibre nur bei gedrehter Karte
                 HUDBar(items: [
                     .init(systemImage: "location.north.line", label: L("Auf meinen Standort zentrieren")) { model.recenter() },
-                    .init(systemImage: "paintpalette", label: L("Stile")) { model.shopRequest = .classic },
+                    .init(systemImage: "paintpalette", label: L("Stile")) { showStylePicker = true }, // GM-097: Wechsler statt Shop
                     .init(systemImage: "map", label: L("Entdecken")) { showExplore = true },
                     .init(systemImage: "gearshape", label: L("Einstellungen")) { showSettings = true },
                 ])
@@ -141,7 +149,6 @@ struct MapHome: View {
             HStack { OSMAttribution(); Spacer() } // GM-083: in die Ecke
             VStack(alignment: .leading, spacing: 10) {
                 SheetGrabber()
-                if !model.journal.mission.done { MissionCard(mission: model.journal.mission) }
                 Button { model.openSearch() } label: {
                     HStack(spacing: 10) {
                         Image(systemName: "magnifyingglass").foregroundStyle(GlassTokens.secondary)
@@ -154,6 +161,7 @@ struct MapHome: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(L("Ziel suchen"))
+                if !model.journal.mission.done { MissionLine(mission: model.journal.mission) } // GM-097: Suche zuerst
                 QuickChips(model: model)
             }
             .padding(14)
@@ -212,6 +220,25 @@ struct MissionCard: View {
         }
         .padding(12)
         .neutralGlass(18, selected: true)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// GM-097: Wochenmission als schmale Zeile im Startblatt (die große Karte stand vor der Suche)
+struct MissionLine: View {
+    let mission: WeeklyMission
+    var body: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            HStack(spacing: 6) {
+                Image(systemName: "scope").font(.system(size: 12, weight: .bold)).foregroundStyle(GlassTokens.accentLight)
+                Text(L("Diese Woche")).font(.system(size: 12, weight: .heavy))
+                Text(L(mission.title)).font(.system(size: 12, weight: .medium)).foregroundStyle(GlassTokens.secondary).lineLimit(1)
+                Spacer(minLength: 4)
+                Text(mission.progressText).font(.system(size: 12, weight: .heavy)).fixedSize()
+            }
+            GlassProgress(value: mission.progress, height: 4)
+        }
+        .padding(.horizontal, 4)
         .accessibilityElement(children: .combine)
     }
 }
@@ -441,8 +468,11 @@ struct RoutePreview: View {
                 if model.isRouting {
                     HStack { ProgressView(); Text(L("Route wird berechnet …")).foregroundStyle(GlassTokens.secondary) }
                 }
+                // GM-097: „neue Straßen“ nur zeigen, wenn es die Routen unterscheidet (vorher dreimal „+100 %“)
+                let shares = model.routes.map { model.newShare(of: $0) }
+                let differ = (shares.max() ?? 0) - (shares.min() ?? 0) >= 0.05
                 ForEach(Array(model.routes.enumerated()), id: \.offset) { i, r in
-                    RouteOptionRow(index: i, route: r, selected: i == model.selectedRoute, newShare: model.newShare(of: r)) { model.selectedRoute = i }
+                    RouteOptionRow(index: i, route: r, selected: i == model.selectedRoute, newShare: differ ? shares[i] : 0) { model.selectedRoute = i }
                 }
                 Button(L("Los")) { model.startNavigation() }
                     .buttonStyle(PrimaryGlassButtonStyle(height: 56))
@@ -771,7 +801,7 @@ struct ArrivalSheet: View {
                     HStack(spacing: 8) {
                         StatTile(value: "+\(reveal.newPercent) %", label: L("neue Straßen"), hot: true)
                         StatTile(value: Formatting.distance(model.journal.trips.first?.meters ?? Double(reveal.totalCells) * ExploreCell.approxMeters), label: L("gefahren"))
-                        StatTile(value: String(format: "%.0f km", model.exploredKm), label: L("entdeckt"))
+                        StatTile(value: Formatting.distance(model.exploredKm * 1000), label: L("gesamt entdeckt")) // GM-097: vorher „0 km“ unter 500 m; „insgesamt“ wurde abgeschnitten
                     }
                 }
                 if model.missionJustDone {

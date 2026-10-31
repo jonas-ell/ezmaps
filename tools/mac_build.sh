@@ -217,7 +217,7 @@ if [ -f tools/.do_testshots ] || [ -f tools/.do_pixelshot ] || [ -f tools/.do_ui
   fi
   if [ -n "$UONLY" ]; then
     prep "$BIG" || exit 1
-    for E in karte:12 onboarding:8 onboarding-stil:8 shop:8 stil-neon-city:10 stil-wild-west:10 stil-pixel-quest:10 stil-toy-town:10              testende:8 einstellungen:8 entdecken:8 suche:10 vorschau:16 ankunft:30; do shoot "$BIG" "${E%%:*}" "${E%%:*}" de "${E##*:}"; done
+    for E in karte:12 stilwahl:8 onboarding:8 onboarding-stil:8 shop:8 stil-neon-city:10 stil-wild-west:10 stil-pixel-quest:10 stil-toy-town:10              testende:8 einstellungen:8 entdecken:8 suche:10 vorschau:16 ankunft:30; do shoot "$BIG" "${E%%:*}" "${E%%:*}" de "${E##*:}"; done
     for F in "$OUT"/*.png; do echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="; done
     echo "TESTBILDER FERTIG"; exit 0
   fi
