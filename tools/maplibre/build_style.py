@@ -123,6 +123,7 @@ TOY = dict(land="#8dc63f", residential="#8dc63f", industrial="#cfd0d2", farm="#b
                         "hospital": "toy-pat-hospital", "railway": "toy-pat-rail"},
            # GM-089: keine Parkplatz-Aufkleber mehr (standen schief und gestapelt über Häusern), keine zweite Innenlinie
            # (doppelte Rahmen) – Felder nur noch aus echten Flächen; runde blaue P-Schilder bleiben
+           roundabout_islands=("toy-roundabout-tree", "toy-roundabout-flowers", "toy-roundabout-pond"),  # GM-098
            rug_icons={}, rug_area_icons={"playground": "toy-playground"},  # GM-071: Teppich-Flor über allem (Nutzer: „wirkliche Teppich-Grafiken mit Textil-Details“)
            font="Fredoka Bold", label_scale=1.05, text_transform="none", letter_spacing=0.02, label_halo_width=2,
            poi_suffix="-toy", poi_minzoom=14, place_color="#ffffff", place_halo="#2f3640", place_halo_width=2.4, place_transform="none")
@@ -378,6 +379,18 @@ def build(P, title):
         layers.insert(k, {"id": "rug-pitch-mark", "type": "symbol", "source": "openmaptiles", "source-layer": "landuse", "minzoom": 15,
                           "filter": ["==", ["get", "class"], "pitch"],
                           "layout": {"icon-image": "toy-pitch-mark", "icon-size": ["interpolate", ["exponential", 2], ["zoom"], 15, 0.122, 20, 3.92],
+                                     "icon-allow-overlap": True, "icon-ignore-placement": True,
+                                     "icon-pitch-alignment": "map", "icon-rotation-alignment": "map"}})
+    if P.get("roundabout_islands"):
+        # GM-098: Kreisel-Inseln (Codex: Baum, Blumen, Teich). Die Kacheln kennen keine Kreisel – App und Prototyp suchen
+        # geschlossene runde Straßenringe und füllen die Quelle ez-roundabouts (Punkt, d = Durchmesser in m, v = Bild 0–2).
+        # Größe in Metern: bei Zoom 14 sind 3,07 m ein Punkt (Breite 50°), Bild 128 pt, Insel 120 % des Mittellinien-Rings (Rand liegt unter den Straßen).
+        sources_extra["ez-roundabouts"] = {"type": "geojson", "data": {"type": "FeatureCollection", "features": []}}
+        k = next(n for n, l in enumerate(layers) if l["id"].startswith("road-"))
+        f0 = 1.2 / (128 * 3.07)  # Straßen sind breiter als echt und decken den Rand ab
+        layers.insert(k, {"id": "roundabout-islands", "type": "symbol", "source": "ez-roundabouts", "minzoom": 14,
+                          "layout": {"icon-image": ["match", ["get", "v"], 0, P["roundabout_islands"][0], 1, P["roundabout_islands"][1], P["roundabout_islands"][2]],
+                                     "icon-size": ["interpolate", ["exponential", 2], ["zoom"], 14, ["*", ["get", "d"], f0], 20, ["*", ["get", "d"], f0 * 64]],
                                      "icon-allow-overlap": True, "icon-ignore-placement": True,
                                      "icon-pitch-alignment": "map", "icon-rotation-alignment": "map"}})
     if P.get("tree_edges"):  # GM-073: Bäume als einzelne Bilder entlang der Waldkante (Toy Town)

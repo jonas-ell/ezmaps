@@ -553,7 +553,12 @@ struct NeonMapView: UIViewRepresentable {
         }
 
         /// GM-092: Villager-Häuser nachladen, wenn Kacheln da sind
-        func mapViewDidBecomeIdle(_ mapView: MLNMapView) { MainActor.assumeIsolated { village?.refresh() } }
+        func mapViewDidBecomeIdle(_ mapView: MLNMapView) {
+            MainActor.assumeIsolated {
+                village?.refresh()
+                RoundaboutFinder.fill(mapView) // GM-098: Kreisel-Inseln (nur Stile mit Quelle ez-roundabouts)
+            }
+        }
 
         /// GM-048: eigener Standort als heller Pfeil (Minikarte der Vorlage) statt lila Punkt
         func mapView(_ mapView: MLNMapView, viewFor annotation: MLNAnnotation) -> MLNAnnotationView? {
@@ -870,7 +875,8 @@ enum StylePatterns {
         for name in ["toy-house-1", "toy-house-2", "toy-house-3", "toy-house-4", "toy-house-5", "toy-house-6", "toy-shop", "toy-school", "toy-police", "toy-apartment",
                      "toy-tex-weave", "toy-tree", // GM-071: Teppich-Flor; GM-073: Baum am Waldrand
                      "toy-pat-lot", "toy-pat-pitch", "toy-pat-play", "toy-pat-school", "toy-pat-hospital", "toy-pat-rail", // GM-087: Teppich-Felder
-                     "toy-parking-lot", "toy-football-pitch", "toy-playground", "toy-pitch-mark"] {
+                     "toy-parking-lot", "toy-football-pitch", "toy-playground", "toy-pitch-mark",
+                     "toy-roundabout-tree", "toy-roundabout-flowers", "toy-roundabout-pond"] { // GM-098: Kreisel-Inseln
             if let img = UIImage(named: name) { out[name] = img }
         }
         for k in 1...16 { if let img = UIImage(named: "px-house-\(k)") { out["px-house-\(k)"] = img } } // GM-072: 16 Villager-Varianten
@@ -983,5 +989,61 @@ enum StylePatterns {
                 g.draw(at: CGPoint(x: 20 - g.size.width / 2, y: 20 - g.size.height / 2))
             }
         }
+    }
+}
+
+/// GM-098: Kreisel-Inseln (Toy Town). Die Kacheln kennen keine Kreisel – geschlossene, runde Straßenringe im Bild suchen
+/// und die Quelle ez-roundabouts füllen (d = Durchmesser in m, v = Bild 0–2). Mirror: tools/prototype/js/poi.js (findRoundabouts) – change both.
+@MainActor
+enum RoundaboutFinder {
+    private static var lastSignature: [ObjectIdentifier: String] = [:] // je Quelle (neuer Stil = neue Quelle, wird neu gefüllt)
+
+    static func fill(_ map: MLNMapView) {
+        guard let src = map.style?.source(withIdentifier: "ez-roundabouts") as? MLNShapeSource, map.zoomLevel >= 14 else { return }
+        let ids = Set((map.style?.layers ?? []).map(\.identifier).filter { $0.hasPrefix("road-") && !$0.hasSuffix("-casing") && !$0.hasSuffix("-dash") })
+        var lines: [[CLLocationCoordinate2D]] = []
+        for f in map.visibleFeatures(in: map.bounds, styleLayerIdentifiers: ids) {
+            if let m = f as? MLNMultiPolylineFeature {
+                for l in m.polylines { lines.append(coords(l)) }
+            } else if let l = f as? MLNPolylineFeature {
+                lines.append(coords(l))
+            }
+        }
+        let found = find(lines)
+        let sig = found.map { "\($0.0.latitude),\($0.0.longitude)" }.sorted().joined(separator: ";")
+        guard lastSignature[ObjectIdentifier(src)] != sig else { return } // sonst bei jedem Stillstand neu zeichnen
+        lastSignature[ObjectIdentifier(src)] = sig
+        src.shape = MLNShapeCollectionFeature(shapes: found.map { c, d, v in
+            let p = MLNPointFeature()
+            p.coordinate = c
+            p.attributes = ["d": d, "v": v]
+            return p
+        })
+    }
+
+    private static func coords(_ l: MLNPolyline) -> [CLLocationCoordinate2D] {
+        Array(UnsafeBufferPointer(start: l.coordinates, count: Int(l.pointCount)))
+    }
+
+    /// Geschlossen (Lücke unter 1 m), Radius 6–40 m, rund (größter Abstand höchstens 1,6 × kleinster)
+    static func find(_ lines: [[CLLocationCoordinate2D]]) -> [(CLLocationCoordinate2D, Double, Int)] {
+        var out: [(CLLocationCoordinate2D, Double, Int)] = []
+        var seen = Set<String>()
+        for c in lines where c.count >= 6 {
+            let k = 111_320 * cos(c[0].latitude * .pi / 180)
+            let first = c[0], last = c[c.count - 1]
+            guard hypot((first.longitude - last.longitude) * k, (first.latitude - last.latitude) * 110_540) <= 1 else { continue }
+            let ring = c.dropLast()
+            let lon = ring.map(\.longitude).reduce(0, +) / Double(ring.count)
+            let lat = ring.map(\.latitude).reduce(0, +) / Double(ring.count)
+            let r = ring.map { hypot(($0.longitude - lon) * k, ($0.latitude - lat) * 110_540) }
+            let mean = r.reduce(0, +) / Double(r.count)
+            guard let rMin = r.min(), let rMax = r.max(), mean >= 6, mean <= 40, rMax <= rMin * 1.6 else { continue }
+            let key = "\(Int((lon * 1e4).rounded())),\(Int((lat * 1e4).rounded()))"
+            guard seen.insert(key).inserted else { continue }
+            let v = abs(Int((lon * 1e5).rounded()) + Int((lat * 1e5).rounded())) % 3
+            out.append((CLLocationCoordinate2D(latitude: lat, longitude: lon), 2 * mean, v))
+        }
+        return out
     }
 }

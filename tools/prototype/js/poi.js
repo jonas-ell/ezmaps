@@ -147,7 +147,7 @@ function toyBadge(kind) {
 // GM-067: Haus-Bilder wie in der App aus dem Asset-Katalog (Toy Town: Spielzeughäuser, Pixel Quest: Villager-Häuser) – vor der Karte laden
 const ASSET_IMAGES = {};
 async function preloadAssetImages(base) {
-  const sets = { ToyTown: ['toy-house-1', 'toy-house-2', 'toy-house-3', 'toy-house-4', 'toy-house-5', 'toy-house-6', 'toy-shop', 'toy-school', 'toy-police', 'toy-apartment', 'toy-tex-weave', 'toy-tree', 'toy-pat-lot', 'toy-pat-pitch', 'toy-pat-play', 'toy-pat-school', 'toy-pat-hospital', 'toy-pat-rail', 'toy-parking-lot', 'toy-football-pitch', 'toy-playground', 'toy-pitch-mark'],
+  const sets = { ToyTown: ['toy-house-1', 'toy-house-2', 'toy-house-3', 'toy-house-4', 'toy-house-5', 'toy-house-6', 'toy-shop', 'toy-school', 'toy-police', 'toy-apartment', 'toy-tex-weave', 'toy-tree', 'toy-pat-lot', 'toy-pat-pitch', 'toy-pat-play', 'toy-pat-school', 'toy-pat-hospital', 'toy-pat-rail', 'toy-parking-lot', 'toy-football-pitch', 'toy-playground', 'toy-pitch-mark', 'toy-roundabout-tree', 'toy-roundabout-flowers', 'toy-roundabout-pond'],
     PixelQuest: Array.from({ length: 16 }, (_, i) => `px-house-${i + 1}`), // GM-072: 16 Varianten
     Frontier: ['fv2-paper-grain', 'fv2-forest-canopy', 'fv2-grass-mottle', 'fv2-rock-grain', 'fv2-water-grain', 'fv2-forest-paint', 'fv2-meadow-paint'] };
   const jobs = [];
@@ -192,4 +192,43 @@ function styleImage(id) {
   if (m[2] === '-px') return { data: pixelSign(m[1]), pixelRatio: 2 };
   if (m[2] === '-toy') return { data: toyBadge(m[1]), pixelRatio: 2 };
   return { data: poiImage(id), pixelRatio: 1 };
+}
+
+// GM-098: Kreisel-Inseln (Toy Town). Die Kacheln kennen keine Kreisel – geschlossene, runde Straßenringe suchen und
+// die Quelle ez-roundabouts füllen (d = Durchmesser in m, v = Bild 0–2). Mirror: App/NeonMapView.swift (RoundaboutFinder) – change both.
+function findRoundabouts(lines) {
+  const out = [], seen = new Set();
+  for (const c of lines) {
+    const n = c.length;
+    if (n < 6) continue;
+    const k = 111320 * Math.cos(c[0][1] * Math.PI / 180);
+    const gap = Math.hypot((c[0][0] - c[n - 1][0]) * k, (c[0][1] - c[n - 1][1]) * 110540);
+    if (gap > 1) continue; // nicht geschlossen
+    let lon = 0, lat = 0;
+    for (let i = 0; i < n - 1; i++) { lon += c[i][0]; lat += c[i][1]; }
+    lon /= n - 1; lat /= n - 1;
+    const r = c.slice(0, -1).map(p => Math.hypot((p[0] - lon) * k, (p[1] - lat) * 110540));
+    const rMin = Math.min(...r), rMax = Math.max(...r), rMean = r.reduce((a, b) => a + b, 0) / r.length;
+    if (rMean < 6 || rMean > 40 || rMax > rMin * 1.6) continue; // klein und rund
+    const key = `${Math.round(lon * 1e4)},${Math.round(lat * 1e4)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const v = Math.abs(Math.round(lon * 1e5) + Math.round(lat * 1e5)) % 3;
+    out.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [lon, lat] }, properties: { d: 2 * rMean, v } });
+  }
+  return out;
+}
+function fillRoundabouts(map) {
+  const src = map.getSource('ez-roundabouts');
+  if (!src) return;
+  const lines = [];
+  for (const f of map.querySourceFeatures('openmaptiles', { sourceLayer: 'transportation' })) {
+    const g = f.geometry;
+    if (g.type === 'LineString') lines.push(g.coordinates);
+    else if (g.type === 'MultiLineString') lines.push(...g.coordinates);
+  }
+  const feats = findRoundabouts(lines), sig = feats.map(f => f.geometry.coordinates.join()).sort().join(';');
+  if (sig === map._ezRoundaboutSig) return; // sonst idle → setData → idle … ohne Ende
+  map._ezRoundaboutSig = sig;
+  src.setData({ type: 'FeatureCollection', features: feats });
 }

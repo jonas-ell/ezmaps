@@ -412,6 +412,10 @@ final class CarMapViewController: UIViewController, MLNMapViewDelegate {
         overlay?.styleLoaded(style)
     }
 
+    func mapViewDidBecomeIdle(_ mapView: MLNMapView) {
+        MainActor.assumeIsolated { RoundaboutFinder.fill(mapView) } // GM-098: Kreisel-Inseln auch in CarPlay
+    }
+
     /// GM-043: Stil, Leuchtspur und Test-Uhr (vom CarPlay-Delegate bei jeder Änderung aufgerufen)
     func update(style: MapStyle, trail: [Coordinate], trialRemaining: TimeInterval?) {
         if style != shownStyle {

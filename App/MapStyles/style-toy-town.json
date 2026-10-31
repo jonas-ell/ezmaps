@@ -9,6 +9,13 @@
    "type": "vector",
    "url": "https://tiles.openfreemap.org/planet",
    "attribution": "<a href=\"https://openfreemap.org\">OpenFreeMap</a> · © <a href=\"https://www.openmaptiles.org/\">OpenMapTiles</a> · © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap-Mitwirkende</a>"
+  },
+  "ez-roundabouts": {
+   "type": "geojson",
+   "data": {
+    "type": "FeatureCollection",
+    "features": []
+   }
   }
  },
  "glyphs": "asset://Glyphs/{fontstack}/{range}.pbf",
@@ -847,6 +854,58 @@
      ]
     ]
    ]
+  },
+  {
+   "id": "roundabout-islands",
+   "type": "symbol",
+   "source": "ez-roundabouts",
+   "minzoom": 14,
+   "layout": {
+    "icon-image": [
+     "match",
+     [
+      "get",
+      "v"
+     ],
+     0,
+     "toy-roundabout-tree",
+     1,
+     "toy-roundabout-flowers",
+     "toy-roundabout-pond"
+    ],
+    "icon-size": [
+     "interpolate",
+     [
+      "exponential",
+      2
+     ],
+     [
+      "zoom"
+     ],
+     14,
+     [
+      "*",
+      [
+       "get",
+       "d"
+      ],
+      0.0030537459283387623
+     ],
+     20,
+     [
+      "*",
+      [
+       "get",
+       "d"
+      ],
+      0.19543973941368079
+     ]
+    ],
+    "icon-allow-overlap": true,
+    "icon-ignore-placement": true,
+    "icon-pitch-alignment": "map",
+    "icon-rotation-alignment": "map"
+   }
   },
   {
    "id": "road-service-casing",

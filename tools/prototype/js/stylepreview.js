@@ -24,6 +24,7 @@
     const img = styleImage(e.id); if (img && !map.hasImage(e.id)) map.addImage(e.id, img.data, { pixelRatio: img.pixelRatio });
   });
   map.on('load', () => {
+    map.on('idle', () => fillRoundabouts(map)); // GM-098: Kreisel-Inseln
     const route = pts.slice(i0, i0 + 14).map(p => [p[1], p[0]]);
     map.addSource('r', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: route } } });
     map.addLayer({ id: 'e', type: 'line', source: 'r', paint: { 'line-color': THEME[1], 'line-width': 9 }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
