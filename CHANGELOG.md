@@ -2,6 +2,26 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-097 – Overlay überarbeitet (Vorschläge 1–7 freigegeben)
+
+**Ziel:** Nutzer: „überdenk das ganze Overlay, auch die ‚Diesen Stil benutzen‘-Menüs“ – Vorher/Nachher in `docs/vorher-nachher/overlay-*.jpg`, Freigabe „gut“.
+
+**Dateien:** `App/ContentView.swift`, `App/ShopScreens.swift`, `App/ExploreScreens.swift`, `App/en.lproj/Localizable.strings`, `tools/mac_build.sh`, `docs/store/ui/`, `docs/vorher-nachher/overlay-*.jpg`
+
+**Geändert:**
+1. Palette auf der Karte öffnet den neuen Stil-Wechsler (`StylePickerSheet`) statt des Shops: eigene Stile mit einem Tipp, gesperrte (Schloss) öffnen ihre Stil-Seite, „Plus ansehen“ → Shop.
+2. Startblatt: „Wohin?“ zuerst, Wochenmission als schmale Zeile (`MissionLine`).
+3. Stil-Seite: „10 Minuten testen“ direkt unter dem Bild, Hauptknopf in der Farbe des Stils.
+4. „Test vorbei“ kompakt (300 pt statt halber Bildschirm).
+5. Routen-Vorschau: „neue Straßen“ nur, wenn sich die Routen darin unterscheiden.
+6. Ankunft/Entdecken: entdeckte Strecke in m/km statt „0 km“, Beschriftung „gesamt entdeckt“.
+7. Entdecken: Anteil „Dieses Gebiet“ auch nach dem Laden der Kacheln (vorher „–“).
+- Prüfbild `stilwahl` im Lauf `mac_screens.sh ui`.
+
+**Tatsächlich geprüft:** Simulator-Bilder vorher/nachher (Mac-Build ohne Fehler). „gesamt entdeckt“ danach gekürzt, nicht neu fotografiert.
+
+**Ungetestet:** iPhone.
+
 ## GM-096 – Prüfbilder aller Menüs, „alle 6 Stile“ korrigiert
 
 **Ziel:** Nutzer: „überdenk das ganze Overlay, auch die ‚Diesen Stil benutzen‘-Menüs, Vorschläge mit 1:1-Screenshots“. Dafür echte Vorher-Bilder aller Menüs.
