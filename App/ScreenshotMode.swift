@@ -3,7 +3,7 @@ import EzMapsCore
 
 /// Nur für App-Store-Screenshots im Simulator (tools/mac_screens.sh): Start mit `-EZShot <zustand>` stellt die App
 /// in einen festen Zustand. Ohne dieses Startargument hat der Code keine Wirkung.
-/// Zustände: karte, suche, vorschau, navigation, einstellungen, stil
+/// Zustände: karte, suche, vorschau, navigation, einstellungen, stil, stil-<stil>, shop, testende, entdecken, onboarding, onboarding-stil, ankunft
 @MainActor
 enum ScreenshotMode {
     static var state: String? {
@@ -52,6 +52,16 @@ enum ScreenshotMode {
                 // GM-050: Stil-Seite Neon City (Kauf) – Prüf-Screenshot für App Store Connect
                 try? await Task.sleep(nanoseconds: 1_500_000_000)
                 model.shopRequest = .neonCity
+            case _ where s.hasPrefix("stil-"):
+                // GM-096: Stil-Seite eines bestimmten Stils (`stil-wild-west`), Karte dahinter bleibt Klassik
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                model.shopRequest = MapStyle(rawValue: String(s.dropFirst(5))) ?? .neonCity
+            case "shop":
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                model.shopRequest = .classic
+            case "testende":
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                model.trialEnded = .neonCity
             case "navigation":
                 model.updateSettings { $0.demoDrive = true }
                 model.demoStartOffset = 5_200 // mitten auf der Strecke (Landstraße bei Niedernhausen)

@@ -9,7 +9,7 @@ struct ContentView: View {
     @State private var showSettings = false
     @State private var showExplore = false
     @Environment(\.scenePhase) private var scenePhase
-    private var onboarding: Bool { !model.settings.onboarded && ScreenshotMode.state == nil }
+    private var onboarding: Bool { (!model.settings.onboarded && ScreenshotMode.state == nil) || ScreenshotMode.state?.hasPrefix("onboarding") == true }
     /// GM-086/088: Welt-Würfel bei Pixel Quest ganz weit weg
     private var showCube: Bool { !onboarding && model.activeStyle == .pixelQuest && model.screen == .map && model.mapZoom < 2.2 }
 
@@ -82,6 +82,12 @@ struct ContentView: View {
         .fullScreenCover(isPresented: $showExplore) { ExploreScreen(model: model) }
         // GM-031: Store-Screenshot „einstellungen“ – mehrmals versuchen, bis das Blatt offen ist (Task in onAppear ging verloren)
         .task {
+            // GM-096: Prüfbild „entdecken“
+            guard ScreenshotMode.state != "entdecken" else {
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                showExplore = true
+                return
+            }
             guard ScreenshotMode.state == "einstellungen" else { return }
             for _ in 0..<6 where !showSettings {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)

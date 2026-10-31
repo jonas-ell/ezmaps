@@ -306,7 +306,7 @@ struct StyleDetailView: View {
     private var offers: some View {
         HStack(spacing: 10) {
             OfferCard(selected: choosePlus, accent: GlassTokens.accent, badge: L("Bester Deal"),
-                      title: Text("Plus"), sub: L("alle 6 Stile + jeder neue"),
+                      title: Text("Plus"), sub: String(format: L("alle %d Stile + jeder neue"), MapStyle.allCases.filter { !$0.isFree }.count),
                       price: store.yearlyPerMonth ?? "–", per: L("pro Monat"),
                       note: String(format: L("%@ im Jahr"), store.price(ProductID.yearly) ?? "–")) { choosePlus = true }
             if let id = singleID {

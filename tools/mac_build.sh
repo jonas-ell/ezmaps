@@ -179,9 +179,10 @@ fi
 
 # GM-029: Test-Screenshots (Marker tools/.do_testshots): kleines iPhone (wie die iPad-Prüfung von Apple, 375 × 667),
 # Englisch, Standort verweigert. Ergebnis landet in docs/store/tests/ (nicht für den Store).
-if [ -f tools/.do_testshots ] || [ -f tools/.do_pixelshot ]; then
+if [ -f tools/.do_testshots ] || [ -f tools/.do_pixelshot ] || [ -f tools/.do_uishot ]; then
   PONLY=; [ -f tools/.do_pixelshot ] && PONLY=1  # GM-093: schneller Lauf nur Pixel Quest (nah)
-  rm -f tools/.do_testshots tools/.do_pixelshot
+  UONLY=; [ -f tools/.do_uishot ] && UONLY=1  # GM-096: alle Menüs (Shop, Stil-Seiten, Onboarding …) für Vorher/Nachher
+  rm -f tools/.do_testshots tools/.do_pixelshot tools/.do_uishot
   xcodegen generate >/dev/null || exit 1
   OUT=/tmp/eztests; rm -rf "$OUT"; mkdir -p "$OUT"
   shoot() { # Gerät-ID, Name, Zustand, Sprache, Wartezeit
@@ -211,6 +212,12 @@ if [ -f tools/.do_testshots ] || [ -f tools/.do_pixelshot ]; then
   if [ -n "$PONLY" ]; then
     prep "$BIG" || exit 1
     for Z in 15.2 16.2 17.2; do shoot "$BIG" "pixel-z$Z" karte de 14 pixel-quest "$Z"; done
+    for F in "$OUT"/*.png; do echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="; done
+    echo "TESTBILDER FERTIG"; exit 0
+  fi
+  if [ -n "$UONLY" ]; then
+    prep "$BIG" || exit 1
+    for E in karte:12 onboarding:8 onboarding-stil:8 shop:8 stil-neon-city:10 stil-wild-west:10 stil-pixel-quest:10 stil-toy-town:10              testende:8 einstellungen:8 entdecken:8 suche:10 vorschau:16 ankunft:30; do shoot "$BIG" "${E%%:*}" "${E%%:*}" de "${E##*:}"; done
     for F in "$OUT"/*.png; do echo "===SHOT $(basename "$F" .png)==="; base64 -i "$F"; echo "===END==="; done
     echo "TESTBILDER FERTIG"; exit 0
   fi

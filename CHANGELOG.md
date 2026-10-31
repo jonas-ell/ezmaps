@@ -2,6 +2,20 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-096 – Prüfbilder aller Menüs, „alle 6 Stile“ korrigiert
+
+**Ziel:** Nutzer: „überdenk das ganze Overlay, auch die ‚Diesen Stil benutzen‘-Menüs, Vorschläge mit 1:1-Screenshots“. Dafür echte Vorher-Bilder aller Menüs.
+
+**Dateien:** `App/ScreenshotMode.swift`, `App/ContentView.swift`, `App/OnboardingView.swift`, `App/ShopScreens.swift`, `App/en.lproj/Localizable.strings`, `tools/mac_build.sh`, `tools/mac_screens.sh`
+
+**Geändert:**
+- Neuer Prüflauf `bash tools/mac_screens.sh ui` → `docs/store/ui/`: Karte, Onboarding (Willkommen + Stil-Wahl), Shop, Stil-Seite je Stil, „Test vorbei“, Einstellungen, Entdecken, Suche, Vorschau, Ankunft. Neue Zustände nur mit `-EZShot`.
+- Stil-Seite: „alle 6 Stile“ stimmte seit GM-095 nicht mehr – Zahl wird jetzt gezählt (5).
+
+**Tatsächlich geprüft:** siehe Mac-Lauf.
+
+**Ungetestet:** iPhone.
+
 ## GM-095 – Frontier entfernt
 
 **Ziel:** Nutzer: „mach Frontier raus“.

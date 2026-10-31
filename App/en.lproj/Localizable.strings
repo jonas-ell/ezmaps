@@ -252,7 +252,7 @@
 "Eigene Karte" = "Own map";
 "Eigenes Ziel" = "Own marker";
 "Bester Deal" = "Best deal";
-"alle 6 Stile + jeder neue" = "all 6 styles + every new one";
+"alle %d Stile + jeder neue" = "all %d styles + every new one";
 "Nur dieser Stil" = "Just this style";
 "gehört dir für immer" = "yours forever";
 "kein Abo" = "no subscription";

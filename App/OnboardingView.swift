@@ -30,6 +30,7 @@ struct OnboardingView: View {
             .padding(.bottom, 20)
         }
         .animation(.easeInOut(duration: 0.25), value: step)
+        .onAppear { if ScreenshotMode.state == "onboarding-stil" { step = 2 } } // GM-096: Prüfbild Stil-Wahl
     }
 
     private var welcome: some View {
