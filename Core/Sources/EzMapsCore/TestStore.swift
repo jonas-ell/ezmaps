@@ -13,7 +13,6 @@ public enum TestStore {
         "ezmaps.style.western": Decimal(string: "29.99")!,
         "ezmaps.style.pixel": Decimal(string: "29.99")!,
         "ezmaps.style.toy": Decimal(string: "29.99")!,
-        "ezmaps.style.frontier": Decimal(string: "29.99")!, // GM-068
     ]
 
     /// „4,99 €“ (deutsches Format, wie StoreKit es in Deutschland zeigt)

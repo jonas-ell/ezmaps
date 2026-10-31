@@ -2,6 +2,21 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-095 – Frontier entfernt
+
+**Ziel:** Nutzer: „mach Frontier raus“.
+
+**Dateien:** `Core/Sources/EzMapsCore/MapStyle.swift`, `Purchases.swift`, `TestStore.swift`, `Core/Tests/EzMapsCoreTests/StoreAndJournalTests.swift`, `App/AppModel.swift`, `App/ContentView.swift`, `App/FollowCamera.swift`, `App/NeonMapView.swift`, `App/OnboardingView.swift`, `App/StyleTheme.swift`, `App/EzMaps.storekit`, `App/en.lproj/Localizable.strings`, `tools/mac_build.sh`, `tools/maplibre/*.py`; gelöscht: `App/MapStyles/style-frontier.json`, `App/Assets.xcassets/Frontier/`, `StyleTiles/style-frontier`, `docs/store/stile/frontier.png`
+
+**Geändert:**
+- Stil Frontier, Kauf `ezmaps.style.frontier` und alle Frontier-Grafiken aus der App genommen (5 Kauf-Stile + Klassik bleiben).
+- Wer Frontier gespeichert hatte, landet auf Klassik; die übrigen Einstellungen bleiben erhalten (vorher hätte ein unbekannter Stil alle Einstellungen verworfen).
+- Bleibt zum späteren Wiederholen: Palette `FRONTIER` in `build_style.py`, `tools/terrain/`, `docs/frontier-v2/`, Git-Verlauf.
+
+**Tatsächlich geprüft:** `build_style.py` + `check_style.py`: STIL OK, 5 Stile. Mac-Lauf siehe Commit.
+
+**Ungetestet:** iPhone.
+
 ## GM-094 – 3D-Villager-Häuser zurückgenommen
 
 **Ziel:** Nutzer: „revert den Change mit den neuen Häusern, das sieht schlecht aus“.

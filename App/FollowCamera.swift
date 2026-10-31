@@ -204,12 +204,6 @@ enum PlayerMarker {
                 }
             } ?? arrow(fill: StyleTheme.hex(0xf6ead6), rim: StyleTheme.hex(0x2b231b), size: 60)
             return (a, a)
-        case .frontier:
-            // GM-068: cremefarbener Pfeil (Paket Frontier V2), zeigt im Bild nach Norden
-            let a = UIImage(named: "fv2-player").map { img in
-                UIGraphicsImageRenderer(size: CGSize(width: 60, height: 60)).image { _ in img.draw(in: CGRect(x: 2, y: 2, width: 56, height: 56)) }
-            } ?? arrow(fill: StyleTheme.hex(0xf4e7c2), rim: StyleTheme.hex(0x303121), size: 60)
-            return (a, a)
         case .classic:
             let a = classic()
             return (a, a)

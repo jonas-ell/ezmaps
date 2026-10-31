@@ -528,7 +528,7 @@ def place_layer(P):
 
 # Dateinamen = MapStyle.styleFileName (Core/Sources/EzMapsCore/MapStyle.swift)
 STYLES = {"classic": (CLASSIC, "Klassik"), "neon-city": (NEON, "Neon City"), "wild-west": (WESTERN, "Wild West"),
-          "pixel-quest": (PIXEL, "Pixel Quest"), "toy-town": (TOY, "Toy Town"), "frontier": (FRONTIER, "Frontier")}
+          "pixel-quest": (PIXEL, "Pixel Quest"), "toy-town": (TOY, "Toy Town")}  # GM-095: Frontier entfernt (Palette FRONTIER bleibt zum Wiederholen)
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 for key, (P, title) in STYLES.items():
     out = OUT_DIR / f"style-{key}.json"

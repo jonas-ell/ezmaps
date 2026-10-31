@@ -16,7 +16,6 @@ public enum ProductID {
         case .wildWest: return "ezmaps.style.western"
         case .pixelQuest: return "ezmaps.style.pixel"
         case .toyTown: return "ezmaps.style.toy"
-        case .frontier: return "ezmaps.style.frontier"
         }
     }
 

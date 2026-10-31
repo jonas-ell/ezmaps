@@ -19,7 +19,7 @@ final class StoreAndJournalTests: XCTestCase {
 
     func testProductIDsUnique() {
         XCTAssertEqual(Set(ProductID.all).count, ProductID.all.count)
-        XCTAssertEqual(ProductID.all.count, 8) // GM-068: + Frontier
+        XCTAssertEqual(ProductID.all.count, 7) // GM-095: Frontier entfernt
     }
 
     func testPlanMath() {

@@ -34,7 +34,7 @@ struct AppSettings: Codable, Equatable {
         avoidHighway = try c.decodeIfPresent(Bool.self, forKey: .avoidHighway) ?? false
         avoidToll = try c.decodeIfPresent(Bool.self, forKey: .avoidToll) ?? false
         demoDrive = try c.decodeIfPresent(Bool.self, forKey: .demoDrive) ?? false
-        style = try c.decodeIfPresent(MapStyle.self, forKey: .style) ?? .classic
+        style = (try? c.decode(MapStyle.self, forKey: .style)) ?? .classic // GM-095: entfernter Stil (Frontier) → Klassik statt alle Einstellungen verlieren
         voiceIdentifier = try c.decodeIfPresent(String.self, forKey: .voiceIdentifier)
         speechRate = try c.decodeIfPresent(Double.self, forKey: .speechRate) ?? 1
         onboarded = try c.decodeIfPresent(Bool.self, forKey: .onboarded) ?? false

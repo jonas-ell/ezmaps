@@ -10,7 +10,7 @@ import pathlib
 from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-STYLES = ["classic", "neon-city", "wild-west", "pixel-quest", "toy-town", "frontier"]
+STYLES = ["classic", "neon-city", "wild-west", "pixel-quest", "toy-town"]
 for st in STYLES:
     src = ROOT / "docs" / "store" / "tests" / f"stil-{st}-karte.png"
     if not src.exists():

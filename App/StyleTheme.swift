@@ -29,10 +29,6 @@ struct StyleTheme {
         case .toyTown:
             return StyleTheme(route: hex(0xff7a00), routeEdge: hex(0xffffff), alternative: UIColor(white: 1, alpha: 0.75),
                               background: hex(0x8dc63f), isLight: true)
-        case .frontier:
-            // GM-068: gedämpftes Amber mit dunkler Einfassung (docs/frontier-v2/ART-DIRECTION.md)
-            return StyleTheme(route: hex(0xe0a047), routeEdge: hex(0x303121), alternative: UIColor(red: 0xf4 / 255.0, green: 0xe7 / 255.0, blue: 0xc2 / 255.0, alpha: 0.55),
-                              background: hex(0xa69e70), isLight: true)
         }
     }
 
@@ -65,8 +61,6 @@ struct StyleName: View {
                 .shadow(color: .black, radius: 0, x: 2, y: 2)
         case .toyTown:
             Text(title).font(.custom("Fredoka-Bold", size: size))
-        case .frontier:
-            Text(title).font(.system(size: size, weight: .heavy, design: .serif)).tracking(size * 0.08)
         case .classic:
             Text(title).font(.system(size: size, weight: .bold))
         }

@@ -14,7 +14,7 @@ from playwright.async_api import async_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 URL = "http://localhost:8765/tools/prototype/stylepreview.html"
-STYLES = ["classic", "neon-city", "wild-west", "pixel-quest", "toy-town", "frontier"]
+STYLES = ["classic", "neon-city", "wild-west", "pixel-quest", "toy-town"]
 W, H = 240, 160  # Punkte; Karten im Onboarding/Shop schneiden mit scaledToFill zu
 
 
@@ -26,7 +26,7 @@ async def main():
         for st in STYLES:
             # in CarPlay-Größe rendern (720 × 480 = 3× der Vorschau) – dann ist es ein verkleinertes CarPlay-Bild
             pg = await b.new_page(viewport={"width": W * 3, "height": H * 3}, device_scale_factor=1)
-            await pg.goto(f"{URL}?style={st}" + ("&z=12.3" if st == "frontier" else ""))  # GM-069: Frontier zeigt das Gelände
+            await pg.goto(f"{URL}?style={st}")
             await pg.wait_for_function("document.title == 'ready'", timeout=120000)
             out = shots / f"{st}.png"
             await pg.screenshot(path=str(out))
