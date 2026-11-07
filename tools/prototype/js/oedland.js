@@ -1,4 +1,4 @@
-// GM-091: Demo „Ödland-Terminal“ – grüner Röhrenbildschirm, Fahrt durch Wallrabenstein. Nur Prototyp.
+// GM-098: Demo „Ödland-Terminal“ – grüner Röhrenbildschirm, Fahrt durch Wallrabenstein. Nur Prototyp.
 'use strict';
 (async () => {
   const BASE = location.href.replace(/tools\/prototype\/.*$/, '');

@@ -2,7 +2,22 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
-## GM-091 – Demo „Ödland-Terminal“ (Endzeit-Karte, grüner Röhrenbildschirm)
+## GM-099 – Plan und Prompt für den Autopiloten (Selbst-Verbesserung mit harter Jury)
+
+**Ziel:** Nutzer: Prompt und Plan für den lokalen Claude – ein Programm, das ihn selbst promptet, damit die App immer besser wird. Entscheidungen per harter Jury, vor allem alle möglichen App-Store- und CarPlay-Mängel beheben.
+
+**Dateien:** `docs/AUTOPILOT_PLAN.md` (neu), `CHANGELOG.md`; Demo Ödland von GM-091 auf GM-098 umnummeriert (main hat GM-091 selbst vergeben).
+
+**Geändert:**
+- Plan: Ablauf je Runde (Planer → Jury → Bauer → Prüfungen → Jury → Merge), 5 Juroren (Apple, CarPlay, Technik, Fahrer, Recht), im Zweifel NEIN, Veto bei Blockern, 4/5 bzw. 5/5 bei CarPlay/Käufen/Datenschutz/Recht, Stufen A–E, Not-Aus, Tagesgrenzen, Einführung in 5 Schritten mit Probelauf ohne Merge.
+- Prüfliste App Review + CarPlay mit Verdachtsfällen aus main (GM-097): Pricedown kann über `mac_build.sh` ins App-Store-Archiv gelangen; CarPlay-Grundfenster zeigt Test-Uhr und Tempo-Schild als eigene Views; öffentliche Server; Prüfer in den USA; Spiel-Ähnlichkeit.
+- Hinweis: Der Cloud-Zweig ist nicht in main; main hat eine eigene Würfel-Erde (`WorldCubeView`). Sichtung per Jury eingeplant.
+
+**Tatsächlich geprüft:** Verdachtsfälle im Code von `origin/main` nachgelesen (grep). Kein Code geändert.
+
+**Ungetestet:** Alles – der Autopilot ist noch nicht gebaut.
+
+## GM-098 – Demo „Ödland-Terminal“ (Endzeit-Karte, grüner Röhrenbildschirm)
 
 **Ziel:** Nutzer: „Mach mir mal eine Demo für eine Fallout-Map“ (Idee 2 aus der Stil-Ideenliste).
 
