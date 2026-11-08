@@ -2,6 +2,24 @@
 
 Neue Einträge oben. Nummernreihe: `GM-xxx`.
 
+## GM-098 – Autopilot M1: Gerüst und harte Jury
+
+**Ziel:** Nutzer: Plan `docs/AUTOPILOT_PLAN.md` aus dem Cloud-Zweig übernehmen (nur diese Datei) und den Autopiloten danach bauen. Schritt M1.
+
+**Dateien:** `docs/AUTOPILOT_PLAN.md` (aus `origin/claude/sharp-knuth-8k97wf`), `tools/autopilot/` (`autopilot.py`, `basis.py`, `claude_call.py`, `jury.py`, `backlog.py`, `checks.py`, `pruefliste.py`, `config.yaml`, `prompts/*.md`, `tests/`), `.gitignore`
+
+**Geändert:**
+- `claude_call.py`: `claude -p --output-format json` mit Zeitlimit, Prompt über stdin, Kosten (`total_cost_usd`), JSON-Prüfung mit bis zu 2 neuen Versuchen. Startet in sauberer Umgebung (ohne die Variablen einer laufenden Claude-Sitzung) und mit Hinweis, dass statt des CLAUDE.md-Antwortformats nur JSON gilt.
+- `jury.py`: fünf getrennte Juroren (Apple, CarPlay, Technik, Fahrer, Recht), im Zweifel NEIN (ungültiges JSON, Zeitüberschreitung, Grund ohne Datei:Zeile/Bild/Log), Blocker-Veto, 4 von 5 bzw. 5 von 5 bei CarPlay/Käufen/Datenschutz/Recht/Hintergrund (Pfade und Art), nur Aufgabe/Plan/Diff/Prüfausgaben/Bilder sichtbar, Stufe A zweimal mit neuer Reihenfolge.
+- `basis.py`: STOP-Datei `tools/autopilot/STOP`, Tagesgrenzen (5 Runden, 25 $, 6 h), Protokoll in `.autopilot/` (beides gitignored).
+- `backlog.py`: Aufgaben nur mit Beweis, Reihenfolge A→D (D erst wenn A–C leer, E nie), GM-Nummer = höchste auf origin/main + 1.
+- `checks.py`: Prüfungen ohne KI aus Plan 6.4 und Mac-Build mit Sperre `.autopilot/mac.lock`.
+- `run` ist bewusst gesperrt bis M3 („weiter“).
+
+**Tatsächlich geprüft:** `python tools/autopilot/autopilot.py jury-test` – 50 Tests grün (gefälschte Antworten). Ein echter `claude -p`-Probeaufruf (haiku) liefert gültiges JSON.
+
+**Ungetestet:** Mac (nicht erreichbar); App-Code unverändert.
+
 ## GM-097 – Overlay überarbeitet (Vorschläge 1–7 freigegeben)
 
 **Ziel:** Nutzer: „überdenk das ganze Overlay, auch die ‚Diesen Stil benutzen‘-Menüs“ – Vorher/Nachher in `docs/vorher-nachher/overlay-*.jpg`, Freigabe „gut“.

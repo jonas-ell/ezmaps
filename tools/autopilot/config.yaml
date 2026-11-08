@@ -1,0 +1,36 @@
+# EzMaps-Autopilot (docs/AUTOPILOT_PLAN.md) – Grenzen, Modelle, Jury.
+# Nur der Nutzer ändert diese Datei (Plan 1.4). Der Autopilot liest sie nur.
+
+grenzen:
+  runden_pro_tag: 5          # Plan 9.4: anfangs höchstens 5
+  dollar_pro_tag: 25.0       # Summe total_cost_usd aller claude -p-Aufrufe eines Tages
+  stunden_pro_tag: 6.0       # Laufzeit aller Runden eines Tages
+  zeitlimit_aufruf_s: 900    # ein claude -p-Aufruf
+  json_versuche: 2           # neue Versuche bei ungültigem JSON (Plan 2)
+
+modelle:
+  juror: opus                # stärkstes Modell (Plan 4)
+  finder: opus
+  planer: opus
+  bauer: sonnet              # darf günstiger sein
+
+jury:
+  rollen: [apple, carplay, technik, fahrer, recht]
+  mehrheit_normal: 4         # von 5
+  mehrheit_streng: 5         # CarPlay, Käufe, Standort/Datenschutz, Recht, Hintergrund-Modi
+  zwei_durchlaeufe_stufe: [A]
+  # Pfade, die die strenge Mehrheit auslösen (fnmatch auf den Dateinamen bzw. Pfad)
+  streng_dateinamen: ["CarPlay*", "Purchase*", "PrivacyInfo*", "project.yml", "Info*"]
+  streng_pfade: ["docs/legal/*"]
+  streng_arten: [carplay, kauf, storekit, standort, datenschutz, recht, hintergrund]
+
+werkzeuge:                   # --allowedTools je Rolle
+  finder: [Read, Grep, Glob]
+  planer: [Read, Grep, Glob]
+  juror: [Read, Grep, Glob]
+  bauer: [Read, Grep, Glob, Edit, Write]
+
+# Plan 6.4: Spielnamen, die nirgends in App/, docs/store/ oder App-Texten stehen dürfen
+spielnamen: ["GTA", "Grand Theft Auto", "Rockstar", "Minecraft", "Mojang", "Red Dead", "Far Cry", "Ubisoft", "Villager"]
+# Blitzer-Begriffe (§ 23 Abs. 1c StVO)
+blitzer_begriffe: ["blitzer", "speed camera", "speedcam", "radarfalle", "radar warn"]

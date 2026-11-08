@@ -38,3 +38,8 @@ App/Assets.xcassets/PixelQuest/px-sky.imageset/
 # GM-092: 3D-Villager-Häuser nur lokal (Test-Builds kopieren sie nach App/Models)
 Assets/Generated/PixelQuest/3d/
 Assets/Generated/Maneuvers/villager-house-with-animations.zip
+
+# Autopilot (docs/AUTOPILOT_PLAN.md): Not-Aus und Protokoll/Backlog nie committen
+tools/autopilot/STOP
+.autopilot/
+__pycache__/
